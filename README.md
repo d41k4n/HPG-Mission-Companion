@@ -35,8 +35,8 @@ Rules for working in this repository: `AGENTS.md`. Third-party software and lice
 
 ## Status
 
-Static checks pass; the simulator behaviour (tags arriving through the HPG `speak` command, radio and volume by ear, the real use of the tools) is still being validated. See `docs/testing/RUNTIME_VALIDATION.md`. The code is published to be read; for now any use needs the explicit written consent of the author (see Licence).
+Static checks pass; the simulator behaviour (tags arriving through the HPG `speak` command, radio and volume by ear, the real use of the tools) is still being validated. See `docs/testing/RUNTIME_VALIDATION.md`. Anyone may use the program; modifying or redistributing it needs the explicit written consent of the author (see Licence).
 
 ## Licence
 
-Restricted: you may read the source and fork it on GitHub (for reading only). Running, copying, modifying or distributing the program or the code needs the explicit written consent of the author, as described in LICENSE. Third-party components keep their own licences (THIRD_PARTY.md).
+Use is free for everyone: you may run the program (a build from the author, or built unchanged from this repository) for any purpose, read the source and fork it on GitHub for reading. Modifying the code, copying or redistributing the program or the code, publishing derivative works, sublicensing or selling needs the explicit written consent of the author, as described in LICENSE. Third-party components keep their own licences (THIRD_PARTY.md).
