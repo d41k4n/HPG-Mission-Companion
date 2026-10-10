@@ -26,6 +26,7 @@ const language = arg('language', 'EN');
 const missionSrc = arg('mission-src');
 const soundDir = arg('sound');
 const reportPath = arg('report');
+const excluded = (arg('exclude', '') || '').split(',').filter(Boolean);       // keys left out of the pack (for example SYS.NEWMSG: the tablet plays its own tone)
 const extrasPaths = (arg('extras', '') || '').split(',').filter(Boolean);
 if (!xlsxPath) { console.error('usage: node tools/import-pack.js --xlsx <file> [--out voicepacks/EN.xml] [--version 1] [--mission-src dir] [--sound dir]'); process.exit(2); }
 
@@ -246,10 +247,10 @@ for (const extrasPath of extrasPaths) {
   const dialogs = /dialogs/i.test(extrasPath);       // dialogs file: new messages with a group, not drafts of existing wavs
   const extras = JSON.parse(fs.readFileSync(extrasPath, 'utf8')).messages;
   for (const x of extras) {
-    const k = keyOf(x.lvar.replace('{VCP}', 'AND'));
+    const k = x.lvar ? keyOf(x.lvar.replace('{VCP}', 'AND')) : { key: x.key, role: x.key.split('.')[0] };
     if (messages.some((m) => m.key === x.key)) { console.log('extras: ' + x.key + ' already in the pack, skipped'); continue; }
-    const site = sites[x.lvar.replace('{VCP}', 'AND')];
-    messages.push({ key: x.key, lvar: x.lvar, role: k.role, actor: x.actor || ACTOR[k.role] || 1, wav: x.wav || '', sfx: false, trigger: ascii(x.trigger || ''), options: x.o.map(ascii), sleep: site ? site.sleep : -1, tight: false, draft: !dialogs, group: x.group || '', seq: x.seq || 0, isNew: dialogs });
+    const site = x.lvar ? sites[x.lvar.replace('{VCP}', 'AND')] : null;
+    messages.push({ key: x.key, lvar: x.lvar, role: k.role, actor: x.actor || ACTOR[k.role] || 1, wav: x.wav || '', sfx: false, trigger: ascii(x.trigger || ''), options: x.o.map(ascii), sleep: site ? site.sleep : -1, tight: false, draft: !dialogs, group: x.group || '', seq: x.seq || 0, isNew: dialogs, radio: x.radio || 'auto' });
   }
 }
 
@@ -264,16 +265,23 @@ L.push('    <name role="CPL">Copilot</name>');
 L.push('    <name role="PAX1">Chief</name>');
 L.push('    <name role="PAX2">Paramedic</name>');
 L.push('    <name role="PAX3">Doc</name>');
+L.push('    <name role="VEH_A">ambulance</name>');
+L.push('    <name role="VEH_F">fire engine</name>');
+L.push('    <name role="VEH_P">police</name>');
+L.push('    <name role="AND">and</name>');
+L.push('    <name role="IS">is</name>');
+L.push('    <name role="ARE">are</name>');
 L.push('    <pool role="PLT">Mark, John, Paul, Peter, Chris, David, Simon</pool>');
 L.push('    <pool role="CPL">Anna, Laura, Emma, Kate, Julia, Nina, Clara</pool>');
 L.push('    <pool role="PAX1">Tom, Ben, Jack, Luke, Sam, Ryan, Ian</pool>');
 L.push('    <pool role="PAX2">Eva, Lisa, Mia, Zoe, Ruth, Beth, Joan</pool>');
 L.push('    <pool role="PAX3">Sue, Alex, Dan, Jane, Rob, Matt, Vera</pool>');
 L.push('  </names>');
+for (let i = messages.length - 1; i >= 0; i--) if (excluded.includes(messages[i].key)) { console.log('excluded ' + messages[i].key); messages.splice(i, 1); }
 messages.sort((a, b) => a.key.localeCompare(b.key, 'en', { numeric: true }));
 for (const m of messages) {
-  const tpl = m.lvar.includes('{VCP}') ? m.lvar : m.lvar.replace('AND', '{VCP}');      // L:CPLAND5 -> L:CPL{VCP}5: the mission puts its voice code in {VCP}
-  let a = '    <message key="' + xmlEsc(m.key) + '" actor="' + m.actor + '" radio="auto"' + (m.group ? ' group="' + xmlEsc(m.group) + '" seq="' + m.seq + '"' : '') + ' lvar="' + xmlEsc(tpl) + '"' + (m.wav ? ' wav="' + xmlEsc(m.wav) + '"' : '');
+  const tpl = !m.lvar ? '' : (m.lvar.includes('{VCP}') ? m.lvar : m.lvar.replace('AND', '{VCP}'));      // L:CPLAND5 -> L:CPL{VCP}5: the mission puts its voice code in {VCP}
+  let a = '    <message key="' + xmlEsc(m.key) + '" actor="' + m.actor + '" radio="' + (m.radio || 'auto') + '"' + (m.group ? ' group="' + xmlEsc(m.group) + '" seq="' + m.seq + '"' : '') + (tpl ? ' lvar="' + xmlEsc(tpl) + '"' : '') + (m.wav ? ' wav="' + xmlEsc(m.wav) + '"' : '');
   if (m.sleep >= 0) a += ' sleep="' + m.sleep + '"';
   if (m.tight) a += ' tight="1"';
   if (m.sfx) a += ' sfx="1"';

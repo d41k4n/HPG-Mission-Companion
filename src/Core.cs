@@ -12,9 +12,10 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.6";            // 0.1, 0.2, ... one step per delivered build
-        public const string Author = "(to be added)";
-        public const string Links = "(to be added)";
+        public const string Version = "0.7";            // 0.1, 0.2, ... one step per delivered build
+        public const string Author = "Andrea Daviero";
+        public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
+        public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
         public static string Title { get { return Name + " " + Version; } }
     }
 
@@ -113,6 +114,9 @@ namespace HPGMissionCompanion
         public string BridgePack = "";          // voice pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP); "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
         public string Names = "functions";      // functions | random: names of the crew in the texts
+        public bool UseMissionVolumes = true;   // follow L:VOLUME_CREW and L:VOLUME_CHK of the mission
+        public int AttenCamInside = 9;          // dB less for a voice from outside heard while the view is inside the helicopter (0 = off)
+        public int AttenCamOutside = 12;        // dB less for a voice from inside heard while the view is outside (0 = off)
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
 
         public static Settings Load(string path)
@@ -156,6 +160,8 @@ namespace HPGMissionCompanion
             if (BridgePack == null) BridgePack = "";
             if (Variety != "coherent") Variety = "random";
             if (Names != "random") Names = "functions";
+            AttenCamInside = Math.Max(0, Math.Min(30, AttenCamInside));
+            AttenCamOutside = Math.Max(0, Math.Min(30, AttenCamOutside));
             foreach (LangInfo l in LangInfo.All)
             {
                 LangSetting ls;

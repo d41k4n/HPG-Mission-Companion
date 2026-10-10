@@ -174,6 +174,14 @@ namespace HPGMissionCompanion
         readonly RadioButton namesRandom = new RadioButton();
         readonly Label bridgeInfo = new Label();
 
+        // volume tab
+        readonly CheckBox missionVolCheck = new CheckBox();
+        readonly TrackBar attInBar = new TrackBar();
+        readonly TrackBar attOutBar = new TrackBar();
+        readonly Label attInLabel = new Label();
+        readonly Label attOutLabel = new Label();
+        readonly Label mixInfo = new Label();
+
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
         readonly Label noiseLabel = new Label();
@@ -231,6 +239,7 @@ namespace HPGMissionCompanion
             BuildPiperTab();
             BuildPacksTab();
             BuildRadioTab();
+            BuildVolumeTab();
             BuildToolsTab();
             BuildAboutTab();
             tabs.SelectedIndexChanged += delegate { if (tabs.SelectedIndex == 2) EnsureCatalog(); };
@@ -372,6 +381,8 @@ namespace HPGMissionCompanion
                 logBox.ScrollToCaret();
             }
             if (inhibitInfo.Text != SimLink.Status) inhibitInfo.Text = SimLink.Status;
+            string mix = Mixer.Describe();
+            if (mixInfo.Text != mix) mixInfo.Text = mix;
             string bridge = Say.BridgeStatus();
             if (bridgeInfo.Text != bridge) bridgeInfo.Text = bridge;
             if (exitWithSimArg && DateTime.UtcNow >= nextSimCheck)
@@ -1356,6 +1367,54 @@ namespace HPGMissionCompanion
             Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Service tab.", 10, 488, 706, 40).ForeColor = SystemColors.GrayText;
         }
 
+        // ---- volume tab --------------------------------------------------------------------------
+        void BuildVolumeTab()
+        {
+            TabPage page = new TabPage("Volume");
+            tabs.TabPages.Add(page);
+            Lbl(page, "How loud a voice is: the master volume of the Service tab, the volume tag of the text (<vol:..>), the volumes of the mission and the position of the view. " +
+                "The level is applied to each line when its turn to be spoken comes (not while it is playing): a change of a slider is heard from the next line.", 10, 12, 706, 50);
+
+            missionVolCheck.Text = "Follow the volumes of the mission";
+            missionVolCheck.AutoSize = true;
+            missionVolCheck.Location = new Point(10, 74);
+            missionVolCheck.Checked = Ctx.Settings.UseMissionVolumes;
+            missionVolCheck.CheckedChanged += delegate { Ctx.Settings.UseMissionVolumes = missionVolCheck.Checked; if (!suppress) MarkDirty(); };
+            page.Controls.Add(missionVolCheck);
+            Lbl(page, "Crew voices and sounds follow L:VOLUME_CREW, the checklist voice (actor 11) follows L:VOLUME_CHK: the two sliders of the mission tablet. 100 is the full level.", 30, 98, 690, 36).ForeColor = SystemColors.GrayText;
+
+            Lbl(page, "A voice (not a radio call) from inside, view outside the helicopter:", 10, 140, 0, 0);
+            attOutBar.Minimum = 0; attOutBar.Maximum = 30; attOutBar.TickFrequency = 3; attOutBar.LargeChange = 3;
+            attOutBar.Value = Ctx.Settings.AttenCamOutside;
+            attOutBar.Location = new Point(10, 160);
+            attOutBar.Size = new Size(420, 36);
+            attOutBar.ValueChanged += delegate { attOutLabel.Text = attOutBar.Value == 0 ? "off" : "-" + attOutBar.Value + " dB"; Ctx.Settings.AttenCamOutside = attOutBar.Value; if (!suppress) MarkDirty(); };
+            page.Controls.Add(attOutBar);
+            attOutLabel.AutoSize = true;
+            attOutLabel.Location = new Point(440, 168);
+            attOutLabel.Text = attOutBar.Value == 0 ? "off" : "-" + attOutBar.Value + " dB";
+            page.Controls.Add(attOutLabel);
+
+            Lbl(page, "A voice from outside (technicians, ground unit, patient, crew on the ground), view inside the helicopter:", 10, 210, 0, 0);
+            attInBar.Minimum = 0; attInBar.Maximum = 30; attInBar.TickFrequency = 3; attInBar.LargeChange = 3;
+            attInBar.Value = Ctx.Settings.AttenCamInside;
+            attInBar.Location = new Point(10, 230);
+            attInBar.Size = new Size(420, 36);
+            attInBar.ValueChanged += delegate { attInLabel.Text = attInBar.Value == 0 ? "off" : "-" + attInBar.Value + " dB"; Ctx.Settings.AttenCamInside = attInBar.Value; if (!suppress) MarkDirty(); };
+            page.Controls.Add(attInBar);
+            attInLabel.AutoSize = true;
+            attInLabel.Location = new Point(440, 238);
+            attInLabel.Text = attInBar.Value == 0 ? "off" : "-" + attInBar.Value + " dB";
+            page.Controls.Add(attInLabel);
+
+            Lbl(page, "Radio calls are not changed: they are heard in the headset wherever the view is. Who is inside comes from the context of the mission (L:HMC_CREW_PRESENT), " +
+                "the view from the simulator (CAMERA STATE: 2 is the cockpit, every other view counts as outside). Without the mission context or the view nothing is reduced. " +
+                "Sound files (ringtones) follow L:VOLUME_CREW only. The attenuation is a fixed level, not a distance: a voice is as loud at one metre as at five.", 10, 284, 706, 80).ForeColor = SystemColors.GrayText;
+            mixInfo.Location = new Point(10, 380);
+            mixInfo.Size = new Size(706, 22);
+            page.Controls.Add(mixInfo);
+        }
+
         void TestRadio(bool radio)
         {
             LangInfo li = CurrentLang();
@@ -1562,7 +1621,19 @@ namespace HPGMissionCompanion
             try { built = File.GetLastWriteTime(Application.ExecutablePath).ToString("yyyy-MM-dd HH:mm"); } catch (Exception) { }
             Lbl(page, "Build date:   " + built, 14, 104, 0, 0);
             Lbl(page, "Author:   " + AppInfo.Author, 14, 128, 0, 0);
-            Lbl(page, "Links:   " + AppInfo.Links, 14, 152, 0, 0);
+            Lbl(page, "Discord:", 14, 152, 0, 0);
+            LinkLabel invite = new LinkLabel();
+            invite.Text = "invitation";
+            invite.AutoSize = true;
+            invite.Location = new Point(72, 152);
+            invite.LinkClicked += delegate { try { System.Diagnostics.Process.Start(AppInfo.DiscordInvite); } catch (Exception) { } };
+            page.Controls.Add(invite);
+            LinkLabel channel = new LinkLabel();
+            channel.Text = "channel of the program";
+            channel.AutoSize = true;
+            channel.Location = new Point(140, 152);
+            channel.LinkClicked += delegate { try { System.Diagnostics.Process.Start(AppInfo.DiscordChannel); } catch (Exception) { } };
+            page.Controls.Add(channel);
 
             Lbl(page, "A companion program for the HPG H145 missions: voices for the mission actors (Windows and Piper voices, volume, radio effect, voice packs), " +
                 "the mission work folder and the mission index.", 14, 188, 700, 36);

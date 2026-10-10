@@ -1,18 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="2" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="3" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Captain</name>
     <name role="CPL">Copilot</name>
     <name role="PAX1">Chief</name>
     <name role="PAX2">Paramedic</name>
     <name role="PAX3">Doc</name>
+    <name role="VEH_A">ambulance</name>
+    <name role="VEH_F">fire engine</name>
+    <name role="VEH_P">police</name>
+    <name role="AND">and</name>
+    <name role="IS">is</name>
+    <name role="ARE">are</name>
     <pool role="PLT">Mark, John, Paul, Peter, Chris, David, Simon</pool>
     <pool role="CPL">Anna, Laura, Emma, Kate, Julia, Nina, Clara</pool>
     <pool role="PAX1">Tom, Ben, Jack, Luke, Sam, Ryan, Ian</pool>
     <pool role="PAX2">Eva, Lisa, Mia, Zoe, Ruth, Beth, Joan</pool>
     <pool role="PAX3">Sue, Alex, Dan, Jane, Rob, Matt, Vera</pool>
   </names>
+    <message key="APR.CHF.G" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="ground operation expected">
+      <o>Rear crew: stretcher and bag ready, I follow Doc on the ground.</o>
+      <o>Chief: the stretcher is prepared, I go with Doc when we are down.</o>
+      <o>Rear crew ready for ground operation, stretcher at the door.</o>
+      <o>Chief here, I carry the stretcher and follow the doctor on the ground.</o>
+    </message>
+    <message key="APR.CHF.H" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="hoist expected">
+      <o>Rear crew: hoist checked, Doc goes down first, I operate the winch.</o>
+      <o>Chief: the hoist is ready. The doctor first, I run the cable.</o>
+      <o>Rear crew ready for hoist, harness and stretcher prepared.</o>
+      <o>Chief here, hoist set. I operate it, the doctor goes down first.</o>
+    </message>
+    <message key="APR.CPL.N" actor="2" radio="auto" group="approach" seq="2" new="1" trigger="no police or fire service">
+      <o>Copilot: no police or fire service there. I check the landing area and the obstacles myself.</o>
+      <o>Nobody secures the area, so I look for hazards and obstacles while we descend.</o>
+      <o>No units on the ground, I will scan the area for wires and people.</o>
+      <o>We are on our own there. I watch obstacles and the surroundings.</o>
+    </message>
+    <message key="APR.CPL.S" actor="2" radio="auto" group="approach" seq="2" new="1" trigger="police or fire service on scene or on the way">
+      <o>Copilot: police or fire service is at the scene. I will ask them for the landing area.</o>
+      <o>Ground units are there. I will contact them for the landing area and any hazards.</o>
+      <o>With units on the ground I will coordinate the landing area with them.</o>
+      <o>Units are on site, I will confirm the landing area and hazards on the radio.</o>
+    </message>
+    <message key="APR.DOC.A" actor="3" radio="auto" group="approach" seq="3" new="1" trigger="an ambulance on scene or on the way (its crew has no advanced paramedic)">
+      <o>Doc: the ambulance crew has no advanced paramedic, so I take the lead on the patient and decide the transport with them.</o>
+      <o>Doc here. I lead the medical care, the ambulance crew supports and we decide the transport together.</o>
+      <o>I take over the patient assessment, the ambulance can help and carry out the transport if I agree.</o>
+      <o>Doc: the ambulance will help, but the medical decisions are mine.</o>
+    </message>
+    <message key="APR.DOC.N" actor="3" radio="auto" group="approach" seq="3" new="1" trigger="no ambulance">
+      <o>Doc: no ambulance coming, so we treat and stabilize the patient ourselves and plan the transport with the helicopter.</o>
+      <o>Doc here. Without an ambulance we stabilize and transport the patient ourselves.</o>
+      <o>No ambulance on the way, I assess and stabilize, then we load the patient.</o>
+      <o>Doc: we are on our own medically, we stabilize first and decide the transport after.</o>
+    </message>
+    <message key="APR.END" actor="1" radio="auto" group="approach" seq="5" new="1" trigger="end of the briefing">
+      <o>Good. Everybody stays alert and calls out any obstacle.</o>
+      <o>Thanks, crew. Eyes outside, call out obstacles and wires.</o>
+      <o>Alright. Keep your eyes open and tell me what you see.</o>
+      <o>Understood. Stay focused, we land when the area is clear.</o>
+    </message>
+    <message key="APR.PLT.G" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, a landing spot near the patient is expected">
+      <o>Approaching the scene. We expect a landing close to the patient, so ground operations.</o>
+      <o>Almost there. The plan is to land near the patient and work on the ground.</o>
+      <o>Briefing: we should be able to land close to them. Ground operation.</o>
+      <o>Two miles out. We aim for a landing near the patient, ground operation.</o>
+    </message>
+    <message key="APR.PLT.H" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, no landing spot near the patient: hoist expected">
+      <o>Approaching the scene. There is no good landing area close to the patient, so we plan the hoist.</o>
+      <o>Almost there. We cannot land close to the patient: the plan is a hoist operation.</o>
+      <o>Briefing: no landing spot near them. We prepare for the hoist.</o>
+      <o>Two miles out. No suitable landing near the patient, we expect to hoist.</o>
+    </message>
     <message key="CPL.1" actor="2" radio="auto" lvar="L:CPL{VCP}1" wav="AND.cpl.all.engine.started.successfully.wav" sleep="0">
       <o>All engines started successfully.</o>
       <o>Both engines started successfully.</o>
@@ -415,29 +475,53 @@
       <o>Attention: hold engine start. Ground operations are still in progress.</o>
       <o>Please hold engine start. Ground operations are still in progress.</o>
     </message>
-    <message key="CPL.65" actor="2" radio="auto" group="board" seq="2" lvar="L:CPL{VCP}65" new="1">
+    <message key="CPL.65" actor="2" radio="auto" group="board" seq="2" lvar="L:CPL{VCP}65" sleep="0.4" new="1">
       <o>Copilot, belts fastened and cockpit doors closed.</o>
       <o>Copilot checked. My belt is on and the right door is closed.</o>
       <o>Belts are on up front, doors closed on my side.</o>
       <o>Front seats are secure, copilot ready.</o>
     </message>
-    <message key="CPL.66" actor="2" radio="auto" group="brief" seq="2" lvar="L:CPL{VCP}66" new="1">
+    <message key="CPL.66" actor="2" radio="auto" group="brief" seq="2" lvar="L:CPL{VCP}66" sleep="0.4" new="1">
       <o>Copy. I will set the route and watch the weather.</o>
       <o>Copilot copy. Navigation and radios are mine.</o>
       <o>I take the route and the radio calls.</o>
       <o>Understood. I set the route and monitor the traffic.</o>
     </message>
-    <message key="CPL.67" actor="2" radio="auto" group="debriefok" seq="2" lvar="L:CPL{VCP}67" new="1">
+    <message key="CPL.67" actor="2" radio="auto" group="debriefok" seq="2" lvar="L:CPL{VCP}67" sleep="0.4" new="1">
       <o>Smooth flight, captain. Nice work.</o>
       <o>Copilot: no issues from the cockpit.</o>
       <o>Good flying, captain. The routes were clean.</o>
       <o>Everything on the instruments looked fine.</o>
     </message>
-    <message key="CPL.68" actor="2" radio="auto" group="debriefbad" seq="2" lvar="L:CPL{VCP}68" new="1">
+    <message key="CPL.68" actor="2" radio="auto" group="debriefbad" seq="2" lvar="L:CPL{VCP}68" sleep="0.4" new="1">
       <o>We did what we could, captain.</o>
       <o>Nobody could have done more.</o>
       <o>We followed every procedure, captain.</o>
       <o>It was out of our hands in the end.</o>
+    </message>
+    <message key="DSP.VEH.BOTH" actor="8" radio="on" new="1" trigger="some vehicles on scene (argument 1), others on the way (argument 0)">
+      <o>{list:1} {be:1} already on scene, {list:0} {be:0} on the way.</o>
+      <o>Be advised, {list:1} {be:1} at the accident and {list:0} {be:0} still on the way.</o>
+      <o>On location: {list:1}. On the way: {list:0}.</o>
+      <o>For your information, {list:1} {be:1} on site, {list:0} {be:0} en route.</o>
+    </message>
+    <message key="DSP.VEH.NONE" actor="8" radio="on" new="1" trigger="no rescue vehicles">
+      <o>No rescue vehicles at the location. You will be first on scene.</o>
+      <o>Be advised, no ground units on scene. The helicopter is first on scene.</o>
+      <o>No ground units are on the way. You are the first to arrive.</o>
+      <o>For your information, nobody is on scene yet. You will be first.</o>
+    </message>
+    <message key="DSP.VEH.SCENE" actor="8" radio="on" new="1" trigger="vehicles already on scene (argument 1 = letters)">
+      <o>{list:1} {be:1} already on scene.</o>
+      <o>Be advised, {list:1} {be:1} already at the accident.</o>
+      <o>{list:1} {be:1} on location.</o>
+      <o>For your information, {list:1} {be:1} already on site.</o>
+    </message>
+    <message key="DSP.VEH.WAY" actor="8" radio="on" new="1" trigger="vehicles dispatched, still on the way (argument 0 = letters)">
+      <o>{list:0} {be:0} on the way to the scene.</o>
+      <o>Be advised, {list:0} {be:0} on the way to the accident.</o>
+      <o>{list:0} {be:0} en route to your location.</o>
+      <o>For your information, {list:0} {be:0} on the way.</o>
     </message>
     <message key="FRA.1" actor="6" radio="auto" lvar="L:FRA{VCP}1" wav="AND.frank.doyou.need.fuel.wav" sleep="4.5">
       <o>If you need refueling please ask.</o>
@@ -1108,19 +1192,19 @@
       <o>Hoist two to ground.</o>
       <o>We need to send hoist two to ground.</o>
     </message>
-    <message key="PAX1.90" actor="4" radio="auto" group="board" seq="4" lvar="L:{VCP}90" new="1">
+    <message key="PAX1.90" actor="4" radio="auto" group="board" seq="4" lvar="L:{VCP}90" sleep="0.4" new="1">
       <o>Rear crew ready. Hoist and stretcher are secured.</o>
       <o>Cabin is clear, the hoist and the stretcher are fixed.</o>
       <o>Chief here, the cabin is ready for flight.</o>
       <o>Hoist gear and stretcher are checked, rear is ready.</o>
     </message>
-    <message key="PAX1.91" actor="4" radio="auto" group="brief" seq="4" lvar="L:{VCP}91" new="1">
+    <message key="PAX1.91" actor="4" radio="auto" group="brief" seq="4" lvar="L:{VCP}91" sleep="0.4" new="1">
       <o>Rear crew copy. Hoist and ground gear are ready.</o>
       <o>Chief copy. Equipment for ground or hoist is on board.</o>
       <o>Rear crew ready for hoist or ground operation.</o>
       <o>We are set for whatever the site needs.</o>
     </message>
-    <message key="PAX1.92" actor="4" radio="auto" group="debriefok" seq="4" lvar="L:{VCP}92" new="1">
+    <message key="PAX1.92" actor="4" radio="auto" group="debriefok" seq="4" lvar="L:{VCP}92" sleep="0.4" new="1">
       <o>Rear crew: gear is stowed, nothing to report.</o>
       <o>Hoist and equipment are clean and secured.</o>
       <o>Chief here, the cabin is tidy and ready for the next one.</o>
@@ -1430,7 +1514,7 @@
       <o>Attention: fire service is controlling a hazard. Do not land until cleared.</o>
       <o>For information: fire service is controlling a hazard. Do not land until cleared.</o>
     </message>
-    <message key="PAX3.36" actor="3" radio="auto" lvar="L:PAX3{VCP}36" wav="AND.ops.ground.operations.delayed.wav" trigger="ops_progress_warning becomes 1 after 120 seconds without progress; tablet shows the orange Dispatch warning.">
+    <message key="PAX3.36" actor="3" radio="auto" lvar="L:PAX3{VCP}36" wav="AND.ops.ground.operations.delayed.wav" sleep="2" trigger="ops_progress_warning becomes 1 after 120 seconds without progress; tablet shows the orange Dispatch warning.">
       <o>Ground operations are delayed. Check the Dispatch page for the current status.</o>
       <o>Be advised: ground operations are delayed. Check the Dispatch page for the current status.</o>
       <o>Attention: ground operations are delayed. Check the Dispatch page for the current status.</o>
@@ -1442,25 +1526,25 @@
       <o>Attention: additional patients remain on scene. Await tasking before departure.</o>
       <o>For information: additional patients remain on scene. Await tasking before departure.</o>
     </message>
-    <message key="PAX3.38" actor="3" radio="auto" group="board" seq="3" lvar="L:PAX3{VCP}38" new="1">
+    <message key="PAX3.38" actor="3" radio="auto" group="board" seq="3" lvar="L:PAX3{VCP}38" sleep="0.4" new="1">
       <o>Doc here. Medical kit secured and bags stowed.</o>
       <o>Medical bag is strapped down, Doc ready.</o>
       <o>Doc: the kit is on board and everything is stowed.</o>
       <o>I have the medical equipment secured, Doc is set.</o>
     </message>
-    <message key="PAX3.39" actor="3" radio="auto" group="brief" seq="3" lvar="L:PAX3{VCP}39" new="1">
+    <message key="PAX3.39" actor="3" radio="auto" group="brief" seq="3" lvar="L:PAX3{VCP}39" sleep="0.4" new="1">
       <o>Doc copy. I will assess the patient as soon as we land.</o>
       <o>Doc here. Patient assessment first, then we decide.</o>
       <o>I take the patient on arrival, Doc ready.</o>
       <o>Copy. I will start with the patient assessment.</o>
     </message>
-    <message key="PAX3.40" actor="3" radio="auto" group="debriefok" seq="3" lvar="L:PAX3{VCP}40" new="1">
+    <message key="PAX3.40" actor="3" radio="auto" group="debriefok" seq="3" lvar="L:PAX3{VCP}40" sleep="0.4" new="1">
       <o>Doc: the patient is stable and handed over.</o>
       <o>The patient was delivered in good condition.</o>
       <o>Handover done, the patient is in good hands.</o>
       <o>I am happy with the clinical outcome.</o>
     </message>
-    <message key="PAX3.41" actor="3" radio="auto" group="debriefbad" seq="3" lvar="L:PAX3{VCP}41" new="1">
+    <message key="PAX3.41" actor="3" radio="auto" group="debriefbad" seq="3" lvar="L:PAX3{VCP}41" sleep="0.4" new="1">
       <o>Doc: I will write the clinical report.</o>
       <o>I will file the report and review the case.</o>
       <o>I will document everything for the team.</o>
@@ -1695,55 +1779,55 @@
       <o>Attention: route set to the pickup point.</o>
       <o>For information: route set to the pickup point.</o>
     </message>
-    <message key="PLT.46" actor="1" radio="auto" lvar="L:PLT{VCP}46" wav="AND.dispatch.cancelled.await.tasking.wav" trigger="Cancellation criteria end the current dispatch; HEMS must not continue intervention.">
+    <message key="PLT.46" actor="1" radio="auto" lvar="L:PLT{VCP}46" wav="AND.dispatch.cancelled.await.tasking.wav" sleep="0" trigger="Cancellation criteria end the current dispatch; HEMS must not continue intervention.">
       <o>Dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
       <o>Be advised: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
       <o>Attention: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
       <o>For information: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
     </message>
-    <message key="PLT.47" actor="1" radio="auto" group="board" seq="1" lvar="L:PLT{VCP}47" new="1" trigger="after the crew boarded and the comm check">
+    <message key="PLT.47" actor="1" radio="auto" group="board" seq="1" lvar="L:PLT{VCP}47" sleep="0.4" new="1" trigger="after the crew boarded and the comm check">
       <o>Everybody aboard? Check your belts and doors.</o>
       <o>All aboard. Belts, doors and bags, please check.</o>
       <o>Crew, quick cabin check. Belts and doors.</o>
       <o>Let's make sure we are all set. Belts and doors check.</o>
     </message>
-    <message key="PLT.48" actor="1" radio="auto" group="board" seq="5" lvar="L:PLT{VCP}48" new="1">
+    <message key="PLT.48" actor="1" radio="auto" group="board" seq="5" lvar="L:PLT{VCP}48" sleep="0.4" new="1">
       <o>Good. Let's start the checklist.</o>
       <o>Perfect. Starting the checklist now.</o>
       <o>Thank you all. Checklist time.</o>
       <o>Copy, all set. We go on with the checklist.</o>
     </message>
-    <message key="PLT.49" actor="1" radio="auto" group="brief" seq="1" lvar="L:PLT{VCP}49" new="1" trigger="after the dispatcher read the dispatch">
+    <message key="PLT.49" actor="1" radio="auto" group="brief" seq="1" lvar="L:PLT{VCP}49" sleep="0.4" new="1" trigger="after the dispatcher read the dispatch">
       <o>Dispatch received. Let's take this mission.</o>
       <o>We have our dispatch. Quick briefing, everyone.</o>
       <o>Crew, we got a dispatch. Short briefing.</o>
       <o>Dispatch is in. We take it.</o>
     </message>
-    <message key="PLT.50" actor="1" radio="auto" group="brief" seq="5" lvar="L:PLT{VCP}50" new="1">
+    <message key="PLT.50" actor="1" radio="auto" group="brief" seq="5" lvar="L:PLT{VCP}50" sleep="0.4" new="1">
       <o>Good. We lift off when ready.</o>
       <o>Thanks. Lift off as soon as the checklist is complete.</o>
       <o>Very good. Let's go and help them.</o>
       <o>Alright, let's bring everybody home safe.</o>
     </message>
-    <message key="PLT.51" actor="1" radio="auto" group="debriefok" seq="1" lvar="L:PLT{VCP}51" new="1" trigger="after the mission, landed at the base, patient outcome good">
+    <message key="PLT.51" actor="1" radio="auto" group="debriefok" seq="1" lvar="L:PLT{VCP}51" sleep="0.4" new="1" trigger="after the mission, landed at the base, patient outcome good">
       <o>Good job, everyone. That went well.</o>
       <o>Well done, crew. A clean mission.</o>
       <o>Thank you all. Good teamwork out there.</o>
       <o>That was a solid mission. Thanks, crew.</o>
     </message>
-    <message key="PLT.52" actor="1" radio="auto" group="debriefok" seq="5" lvar="L:PLT{VCP}52" new="1">
+    <message key="PLT.52" actor="1" radio="auto" group="debriefok" seq="5" lvar="L:PLT{VCP}52" sleep="0.4" new="1">
       <o>Thanks. Let's finish the shutdown.</o>
       <o>Copy. Shutdown checklist now.</o>
       <o>Great. Let's secure the helicopter.</o>
       <o>Good. Now the shutdown, then a coffee.</o>
     </message>
-    <message key="PLT.53" actor="1" radio="auto" group="debriefbad" seq="1" lvar="L:PLT{VCP}53" new="1" trigger="after the mission, landed at the base, patient outcome bad">
+    <message key="PLT.53" actor="1" radio="auto" group="debriefbad" seq="1" lvar="L:PLT{VCP}53" sleep="0.4" new="1" trigger="after the mission, landed at the base, patient outcome bad">
       <o>That was a hard one, crew.</o>
       <o>A tough mission. Thank you for staying focused.</o>
       <o>We did all we could, crew.</o>
       <o>Not the outcome we wanted, but we gave everything.</o>
     </message>
-    <message key="PLT.54" actor="1" radio="auto" group="debriefbad" seq="4" lvar="L:PLT{VCP}54" new="1">
+    <message key="PLT.54" actor="1" radio="auto" group="debriefbad" seq="4" lvar="L:PLT{VCP}54" sleep="0.4" new="1">
       <o>Thank you all. We talk about it later.</o>
       <o>Take a moment, then we debrief at base.</o>
       <o>Thanks, crew. We will review it together.</o>
@@ -1810,8 +1894,6 @@
     <message key="SYS.DISPATCHED4" actor="1" radio="auto" lvar="L:{VCP}DISPATCHED4" wav="AND.NEW.DISPATCH4.wav" sleep="0" sfx="1">
     </message>
     <message key="SYS.FOOL" actor="1" radio="auto" lvar="L:{VCP}FOOL" wav="stayngalive.wav" sleep="0" sfx="1">
-    </message>
-    <message key="SYS.NEWMSG" actor="1" radio="auto" lvar="L:{VCP}NEWMSG" wav="AND.NEW.MSG.wav" sleep="0" sfx="1">
     </message>
     <message key="SYS.TEST1" actor="1" radio="auto" lvar="L:{VCP}TEST1" wav="AND.packtest.wav" sleep="0">
       <o>This is the default hoist pack enjoy.</o>

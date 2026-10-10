@@ -48,6 +48,14 @@ The counters carry no tags, so the program decides the radio itself from three v
 
 Rule (`Say.AutoRadio`, only for messages with `radio="auto"` and when the mission sent no radio tag): the dispatcher (actor 8) is always on the radio; helicopter off: voice; speaker aboard (a crew actor whose bit is set): radio; speaker outside (Frank, Sarah, ground unit, patient, a crew member outside): radio when somebody of the crew is aboard, voice when everybody is outside.
 
+## Placeholders for lists of vehicles
+
+`{list:N}` and `{be:N}` take argument N made of the letters A (ambulance), F (fire engine), P (police): `AFP` gives "ambulance, fire engine and police" and "are", `P` gives "police" and "is". The words come from the `<names>` of the pack (`VEH_A`, `VEH_F`, `VEH_P`, `AND`, `IS`, `ARE`) so that a pack of another language can use its own. The mission sends the letters as arguments: `<say:DSP.VEH.BOTH>A//FP` (argument 0 the vehicles on the way, argument 1 the vehicles on scene).
+
+## Volume (Mixer)
+
+The level of a line is: the volume tag of the text, times the volume of the mission (`L:VOLUME_CREW` for the crew and the sound files, `L:VOLUME_CHK` for actor 11; option "Follow the volumes of the mission"), times the position factor, times the master volume. The position factor applies to voices, not to radio calls: with the view outside the helicopter (`CAMERA STATE` other than 2) a speaker aboard is reduced by `AttenCamOutside` dB (default 12); with the view inside a speaker outside is reduced by `AttenCamInside` dB (default 9). Who is aboard comes from `L:HMC_CREW_PRESENT` (the dispatcher, the checklist voice, an unknown speaker or no context: no reduction). The factors are applied to the wav of each line when its turn comes (`Player.Speak`), never while it plays. All three variables are watched like the counters.
+
 ## Crew names and variety
 
 `<names:random>` (the mission sends it at a new shift) draws one name for each of the roles PLT, CPL, PAX1, PAX2, PAX3 from the `<pool role="..">` lists of the pack (a built-in pool when the pack has none), never the same name twice, but only when the user chose "Random names for each shift" in the Voice packs tab; otherwise the functions (Captain, Copilot, Chief, Paramedic, Doc) stay. `Settings.Variety` (random or coherent) is the default of `<variety:..>` and works for the counters too, which carry no tags.

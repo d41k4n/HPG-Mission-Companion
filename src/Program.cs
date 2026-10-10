@@ -28,8 +28,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.6.0.0")]
-[assembly: AssemblyFileVersion("0.6.0.0")]
+[assembly: AssemblyVersion("0.7.0.0")]
+[assembly: AssemblyFileVersion("0.7.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -241,10 +241,11 @@ namespace HPGMissionCompanion
                         if (w[0] == "@watch" && w.Length >= 3)
                         {
                             double val; double prev;
-                            double.TryParse(w[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out val);
-                            bool first = !watchSeen.TryGetValue(w[1], out prev);
-                            Say.OnWatch(w[1], first ? 0 : prev, val, first);
-                            watchSeen[w[1]] = val;
+                            string wname = string.Join(" ", w, 1, w.Length - 2);       // a name may have spaces (CAMERA STATE)
+                            double.TryParse(w[w.Length - 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out val);
+                            bool first = !watchSeen.TryGetValue(wname, out prev);
+                            Say.OnWatch(wname, first ? 0 : prev, val, first);
+                            watchSeen[wname] = val;
                         }
                         else if (w[0] == "@settings")
                         {
@@ -269,7 +270,7 @@ namespace HPGMissionCompanion
                     foreach (Segment s in TagParser.Parse(expanded, notes))
                     {
                         Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
-                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " radio=" + p.Radio + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
+                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " level=" + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + " radio=" + p.Radio + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
                     }
                     foreach (string n in notes) rep.AppendLine("note: " + n);
                 }
@@ -331,9 +332,13 @@ namespace HPGMissionCompanion
                 }
             }
 
-            bool createdNew;
-            Mutex mutex = new Mutex(true, "Local\\HPGMissionCompanion", out createdNew);
-            if (!createdNew) return 0;
+            bool createdNew = true;
+            Mutex mutex = null;
+            if (Option(args, "--screenshot") == null)         // a screenshot run may happen while the program is running
+            {
+                mutex = new Mutex(true, "Local\\HPGMissionCompanion", out createdNew);
+                if (!createdNew) return 0;
+            }
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

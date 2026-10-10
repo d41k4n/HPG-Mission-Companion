@@ -1,3 +1,12 @@
+## Release 0.7
+
+- Installer `HPGMissionCompanionSetup.exe` (built by `tools\build.cmd`, source `setup/Setup.cs`): per-user install in `%LOCALAPPDATA%\Programs\HPG Mission Companion` (or a folder of your choice), no administrator rights, Start menu and desktop shortcuts, entry in Apps and features, `Uninstall.exe`. It embeds the program, the pack EN (installed with the program's own `--install-pack`, which archives an older version) and `SimConnect.dll` when the build machine has the MSFS SDK. An update keeps the settings, Piper, the voices, the audio folder and the backups; the uninstaller asks before removing that data (default no) and removes the program from the EXE.xml of the simulators through the program itself. Switches: `/S`, `/dir=PATH`, `/nodesktop`, `/nostartmenu`, `/nolaunch`, `/uninstall`, `/removedata`.
+- Volume: the program follows `L:VOLUME_CREW` (crew voices and sound files) and `L:VOLUME_CHK` (checklist voice), and lowers a voice that is not a radio call by 12 dB (speaker aboard, view outside) or 9 dB (speaker outside, view inside), from `L:HMC_CREW_PRESENT` and `CAMERA STATE`. New Volume tab. The level is applied to each line when its turn comes.
+- Pack EN 3: 321 messages. The new message tone (`SYS.NEWMSG`) is no longer in the pack: the tablet plays its own sound, which is never inhibited, so it sounded twice. New dispatcher messages `DSP.VEH.*` (one sentence for the vehicles on scene and on the way) and the five-line briefing `APR.*` for the approach to the scene.
+- Placeholders `{list:N}` and `{be:N}` for lists of vehicles (letters A, F, P).
+- About tab: author Andrea Daviero and the Discord links.
+- A screenshot run no longer needs the program to be closed.
+
 ## Release 0.6
 
 - `L:AUDIOINHIBIT` is watched with the changed flag as well: the simulator resets it to 0 at every flight or mission load and the program writes 1 again at the next simulator frame (the read every 5 s stays as a safety net). Without this the mission could start with the voice code of a wav pack while the program played the voices.

@@ -1,6 +1,6 @@
 # Third-party software
 
-None of the following is included in this repository or in the built executable (`SimConnect.dll` is copied beside the executable in the runtime folder at build time, never committed). The app downloads it, on a user click, from the sources below.
+None of the following is included in this repository or in the built executable. `SimConnect.dll` is copied beside the executable in the runtime folder at build time, never committed; the installer `HPGMissionCompanionSetup.exe` embeds it when the machine that builds it has the MSFS SDK (Microsoft ships it for add-on developers to distribute with their add-ons), and the installer is a release asset, never a tracked file. The app downloads it, on a user click, from the sources below.
 
 | Component | Source | Licence | Used for |
 | --- | --- | --- | --- |

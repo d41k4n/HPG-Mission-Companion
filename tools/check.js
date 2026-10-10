@@ -45,6 +45,19 @@ else {
   if (newer(ledger.lastDeliveredVersion, sourceVersion)) errors.push(`release ledger (${ledger.lastDeliveredVersion}) is newer than the sources (${sourceVersion})`);
 }
 
+// installer: same version as the program, compiled by build.cmd, ASCII
+const setupPath = path.join(root, 'setup', 'Setup.cs');
+if (!fs.existsSync(setupPath)) errors.push('setup/Setup.cs is missing');
+else {
+  const setup = read('setup/Setup.cs');
+  const sv = (setup.match(/public const string Version = "([0-9]+\.[0-9]+)";/) || [])[1];
+  if (sv !== sourceVersion) errors.push(`setup/Setup.cs Version is ${sv || 'missing'}, the sources are ${sourceVersion}`);
+  const sa = setup.match(/AssemblyVersion\("([0-9.]+)"\)/);
+  if (!sa || sa[1] !== `${sourceVersion}.0.0`) errors.push(`setup/Setup.cs AssemblyVersion must be ${sourceVersion}.0.0`);
+  if (/[^\x00-\x7F]/.test(setup)) errors.push('setup/Setup.cs has a non-ASCII character');
+  if (!read('tools/build.cmd').includes('setup\\Setup.cs')) errors.push('tools/build.cmd must compile setup/Setup.cs');
+}
+
 // 2. build list
 const build = read('tools/build.cmd');
 const listed = [...build.matchAll(/src\\([A-Za-z]+\.cs)/g)].map((m) => m[1]);

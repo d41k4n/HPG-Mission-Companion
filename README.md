@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.6
+Version 0.7
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
@@ -15,10 +15,14 @@ A companion program for the HPG H145 missions in Microsoft Flight Simulator (202
 
 The program is a single Windows executable built with the compiler that ships with Windows (.NET Framework 4, no SDK). The Piper engine and the voices are not part of this repository.
 
+## Install
+
+Run `HPGMissionCompanionSetup.exe` (from the releases page): it installs for the current user (no administrator rights) in `%LOCALAPPDATA%\Programs\HPG Mission Companion` or a folder you choose, with Start menu and desktop shortcuts, the voice pack EN and `SimConnect.dll`. An update keeps your settings, Piper and the voices. Remove it from Windows Apps (or the Start menu shortcut); the uninstaller asks before deleting your settings and voices. Silent install: `HPGMissionCompanionSetup.exe /S /dir="D:\HPG"`.
+
 ## Build
 
 ```
-tools\build.cmd            builds bin\HPGMissionCompanion.exe
+tools\build.cmd            builds bin\HPGMissionCompanion.exe and bin\HPGMissionCompanionSetup.exe (the installer)
 tools\build.cmd "D:\run"   builds into another folder (for example the runtime folder)
 ```
 
@@ -28,7 +32,8 @@ Run `node tools/check.js` for the static checks (version agreement, source list,
 
 | Path | Content |
 | --- | --- |
-| `src/` | C# sources (core and tags, audio effects, engines and player, server, installer, tools, window, program) |
+| `src/` | C# sources (core and tags, audio effects, engines and player, server, Piper installer, mixer, voice packs, simulator link, window, program) |
+| `setup/` | the installer and uninstaller of the program (`Setup.cs`) |
 | `assets/` | the icon and the script that draws it |
 | `tools/` | build script, static checks, branch guard, release ledger |
 | `docs/` | architecture and runtime test procedures |

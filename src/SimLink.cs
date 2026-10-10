@@ -253,7 +253,7 @@ namespace HPGMissionCompanion
                 int from = g * WatchGroup, count = Math.Min(WatchGroup, names.Length - from);
                 last[g] = new double[count];
                 for (int i = 0; i < count; i++)
-                    if (SimConnect_AddToDataDefinition(h, WatchDefineBase + (uint)g, names[from + i], "number", DatatypeFloat64, 0f, uint.MaxValue) != 0) Ctx.Log("[ERROR] SimConnect: cannot define " + names[from + i]);
+                    if (SimConnect_AddToDataDefinition(h, WatchDefineBase + (uint)g, names[from + i], names[from + i].StartsWith("L:", StringComparison.Ordinal) ? "number" : "enum", DatatypeFloat64, 0f, uint.MaxValue) != 0) Ctx.Log("[ERROR] SimConnect: cannot define " + names[from + i]);
                 if (SimConnect_RequestDataOnSimObject(h, WatchRequestBase + (uint)g, WatchDefineBase + (uint)g, ObjectUser, PeriodSimFrame, FlagChanged, 0, 0, 0) != 0)
                     Ctx.Log("[ERROR] SimConnect: cannot watch the variables of group " + (g + 1));
             }

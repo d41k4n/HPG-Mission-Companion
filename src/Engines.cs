@@ -362,7 +362,7 @@ namespace HPGMissionCompanion
         {
             Plan p = Resolver.Resolve(seg, Ctx.Settings, Ctx.Voices);
             if (p.Voice == null) { Ctx.Log("[ERROR] no voice available"); return; }
-            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + p.Volume.ToString("0.#", CultureInfo.InvariantCulture) + (p.Radio ? ", radio" + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
+            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", CultureInfo.InvariantCulture) + (p.Radio ? ", radio" + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
             DateTime t0 = DateTime.UtcNow;
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
             Ctx.Log("[RENDER] " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms, " + (wav.Length / 1024) + " KB");
@@ -374,7 +374,8 @@ namespace HPGMissionCompanion
                 rs.NoiseLevel = Ctx.Settings.Radio.NoiseLevel; rs.BeepLevel = Ctx.Settings.Radio.BeepLevel;
                 rs.Tail = Ctx.Settings.Radio.Tail; rs.Quality = Ctx.Settings.Radio.Quality; rs.Beep = p.Beep;
             }
-            byte[] fx = AudioFx.Apply(wav, p.Volume, Ctx.Settings.MasterVolume, p.Radio, rs);
+            double level = p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor));
+            byte[] fx = AudioFx.Apply(wav, level, Ctx.Settings.MasterVolume, p.Radio, rs);
             PlayBytes(item, fx, null);
         }
 
@@ -382,7 +383,7 @@ namespace HPGMissionCompanion
         void PlayFile(Item item)
         {
             byte[] fx = null;
-            try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), 100, Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
+            try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), 100 * Mixer.CrewFactor(), Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
             catch (Exception) { fx = null; }
             if (fx != null) PlayBytes(item, fx, null); else PlayBytes(item, null, item.Value);
         }

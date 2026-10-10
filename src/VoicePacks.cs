@@ -207,7 +207,7 @@ namespace HPGMissionCompanion
         static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        static readonly Regex HolderRx = new Regex("\\{([A-Za-z0-9_]+)\\}", RegexOptions.Compiled);
+        static readonly Regex HolderRx = new Regex("\\{([A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
 
         static readonly string[] Roles = { "PLT", "CPL", "PAX1", "PAX2", "PAX3" };
         static readonly string[] RoleDefaults = { "Captain", "Copilot", "Chief", "Paramedic", "Doc" };
@@ -433,6 +433,17 @@ namespace HPGMissionCompanion
             Ctx.Log("[INFO] Crew names for this shift: " + string.Join(", ", new string[] { "pilot " + missionNames["PLT"], "copilot " + missionNames["CPL"], "chief " + missionNames["PAX1"], "paramedic " + missionNames["PAX2"], "doc " + missionNames["PAX3"] }));
         }
 
+        // true: the speaker is aboard, false: outside, null: not known (no context from the mission, or the dispatcher)
+        public static bool? SpeakerInside(int actor)
+        {
+            lock (sync)
+            {
+                if (!ctxValid || actor == 8 || actor == 11) return null;      // the dispatcher is remote, the checklist voice is the tablet: no position
+                if (actor >= 1 && actor <= 5) return (crewMask & (1 << (actor - 1))) != 0;
+                return false;
+            }
+        }
+
         // ---- the simulator LVARs: the program watches the counters of the bridge pack ----
         // Names of the simulator variables to watch: the three context variables and the LVAR of every message of the bridge pack.
         public static List<string> WatchNames()
@@ -441,6 +452,7 @@ namespace HPGMissionCompanion
             lock (sync)
             {
                 watchMap.Clear();
+                list.Add(Mixer.VarCrew); list.Add(Mixer.VarChk); list.Add(Mixer.VarCamera);
                 watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
                 if (watchPack == null) return list;
                 list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew);
@@ -469,6 +481,7 @@ namespace HPGMissionCompanion
         public static void OnWatch(string name, double oldValue, double value, bool baseline)
         {
             PackMessage m; VoicePack p;
+            if (Mixer.IsMixerName(name)) { Mixer.OnWatch(name, value); return; }
             lock (sync)
             {
                 if (name == SimLink.CtxValid) { ctxValid = value > 0.5; return; }
@@ -598,12 +611,55 @@ namespace HPGMissionCompanion
             return k;
         }
 
+        // {list:N} and {be:N}: N is an argument made of the letters A (ambulance), F (fire engine), P (police). The words come from the <names> of the pack
+        // (VEH_A, VEH_F, VEH_P, AND, IS, ARE) so that a pack of another language can say them its own way.
+        static string Helper(string kind, string letters, VoicePack pack, List<string> notes)
+        {
+            List<string> words = new List<string>();
+            foreach (char c in letters.ToUpperInvariant())
+            {
+                string role = c == 'A' ? "VEH_A" : (c == 'F' ? "VEH_F" : (c == 'P' ? "VEH_P" : null));
+                if (role == null) continue;
+                string w;
+                if (pack == null || !pack.Names.TryGetValue(role, out w) || w.Length == 0) w = c == 'A' ? "ambulance" : (c == 'F' ? "fire engine" : "police");
+                words.Add(w);
+            }
+            if (kind == "be")
+            {
+                string w;
+                string key = words.Count == 1 ? "IS" : "ARE";
+                if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
+                return words.Count == 1 ? "is" : "are";
+            }
+            if (kind == "list")
+            {
+                string and = "and";
+                if (pack != null && pack.Names.TryGetValue("AND", out and) && and.Length > 0) { } else and = "and";
+                if (words.Count == 0) return "";
+                if (words.Count == 1) return words[0];
+                return string.Join(", ", words.GetRange(0, words.Count - 1).ToArray()) + " " + and + " " + words[words.Count - 1];
+            }
+            if (notes != null) notes.Add("unknown placeholder helper {" + kind + ":..}");
+            return "";
+        }
         static string Fill(string option, string[] args, VoicePack pack, List<string> notes)
         {
             return HolderRx.Replace(option, delegate (Match m)
             {
                 string name = m.Groups[1].Value;
                 int i;
+                int colon = name.IndexOf(':');
+                if (colon > 0)
+                {
+                    int ai;
+                    string kind = name.Substring(0, colon).ToLowerInvariant();
+                    if (!int.TryParse(name.Substring(colon + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out ai) || ai < 0 || ai >= args.Length)
+                    {
+                        if (notes != null) notes.Add("the message needs argument {" + ai + "} for {" + name + "} but the mission sent " + args.Length);
+                        return "";
+                    }
+                    return Helper(kind, args[ai].Trim(), pack, notes);
+                }
                 if (int.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
                 {
                     if (i >= 0 && i < args.Length) return Literal(args[i].Trim());

@@ -58,6 +58,10 @@ Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2
 
 <plain>   speak the text after the tag as it is, without any tag: <actor8><radio><plain>{0} with the dispatch text in params. The characters < > [ ] are removed.
 
+Lists of vehicles: {list:N} and {be:N} take argument N made of the letters A (ambulance), F (fire engine), P (police): "AFP" gives "ambulance, fire engine and police" and "are". Example: {"speak":{"text":"<say:DSP.VEH.BOTH>{0}//{1}","params":["A","FP"]}} says "fire engine and police are already on scene, ambulance is on the way" (argument 0 is the vehicles on the way, argument 1 the vehicles on scene, as the pack message uses them).
+
+Volume: the program follows the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and lowers a voice (not a radio call) by 12 dB when the view is outside and the speaker is aboard, by 9 dB when the view is inside and the speaker is outside (Volume tab). The level is applied when a line starts, not while it plays.
+
 Names of the crew: by default the functions (Captain, Copilot, Chief, Paramedic, Doc; a pack can change them in its <names> list). At the start of a shift the mission can send <names:PLT=Mark,CPL=Anna,PAX3=Sue>; the names stay until <names:off> or the next <names:..>. A mission that wants functions only never sends the tag.
 
 Variety: <variety:random> (default) picks an option at random for every message and never the same option twice in a row for the same message. <variety:coherent> makes the messages of one conversation (same group="" in the pack) use the same option number, so the alternatives of a dialogue read as one dialogue; a new conversation starts after 3 minutes or with another group. Send the tag when the mission starts (it stays until changed).
