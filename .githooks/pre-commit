@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eu
+
+node tools/assert-main-branch.js
+node tools/check.js
+git diff --cached --check

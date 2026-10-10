@@ -1,0 +1,17 @@
+# build output and local runtime data: never committed
+/bin/
+/obj/
+/old/
+/backups/
+/audio/
+/piper/
+/voices/
+/HPGMissionCompanion.json
+*.exe
+*.dll
+*.pdb
+*.wav
+*.onnx
+*.zip
+*.log
+node_modules/

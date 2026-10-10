@@ -1,0 +1,1280 @@
+// HPG Mission Companion - main window: service, actors and voices, Piper, radio effect, tools, about.
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace HPGMissionCompanion
+{
+    internal sealed class CleanDialog : Form
+    {
+        readonly CheckedListBox list = new CheckedListBox();
+        readonly Label note = new Label();
+        readonly CheckBox backup = new CheckBox();
+        readonly List<CleanGroup> groups;
+
+        public CleanDialog(List<CleanGroup> groups)
+        {
+            this.groups = groups;
+            Text = "Clean the mission work folder";
+            StartPosition = FormStartPosition.CenterParent;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            ShowInTaskbar = false;
+            ClientSize = new Size(560, 330);
+
+            Label info = new Label();
+            info.Text = "Tick what to delete. global.json (the global variables) is never touched.";
+            info.Location = new Point(12, 12);
+            info.Size = new Size(536, 20);
+            Controls.Add(info);
+
+            list.Location = new Point(12, 36);
+            list.Size = new Size(536, 150);
+            list.CheckOnClick = true;
+            foreach (CleanGroup g in groups) list.Items.Add(g, g.Default);
+            list.SelectedIndexChanged += delegate { ShowNote(); };
+            Controls.Add(list);
+
+            note.Location = new Point(12, 192);
+            note.Size = new Size(536, 50);
+            note.ForeColor = SystemColors.GrayText;
+            Controls.Add(note);
+
+            backup.Text = "Back up the files to a zip first (folder backups next to the program)";
+            backup.Checked = true;
+            backup.AutoSize = true;
+            backup.Location = new Point(12, 250);
+            Controls.Add(backup);
+
+            Button ok = new Button();
+            ok.Text = "Delete";
+            ok.Location = new Point(368, 286);
+            ok.Size = new Size(85, 30);
+            ok.Click += delegate { Confirm(); };
+            Controls.Add(ok);
+            Button cancel = new Button();
+            cancel.Text = "Cancel";
+            cancel.DialogResult = DialogResult.Cancel;
+            cancel.Location = new Point(463, 286);
+            cancel.Size = new Size(85, 30);
+            Controls.Add(cancel);
+            CancelButton = cancel;
+            if (list.Items.Count > 0) list.SelectedIndex = 0;
+        }
+
+        void ShowNote()
+        {
+            CleanGroup g = list.SelectedItem as CleanGroup;
+            note.Text = g != null ? g.Note : "";
+        }
+
+        public bool BackupFirst { get { return backup.Checked; } }
+
+        public List<CleanGroup> Selected
+        {
+            get
+            {
+                List<CleanGroup> r = new List<CleanGroup>();
+                foreach (object o in list.CheckedItems) r.Add((CleanGroup)o);
+                return r;
+            }
+        }
+
+        void Confirm()
+        {
+            List<CleanGroup> sel = Selected;
+            int n = 0;
+            foreach (CleanGroup g in sel) n += g.Files.Count;
+            if (n == 0) { MessageBox.Show("Nothing is ticked.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            bool saved = false;
+            foreach (CleanGroup g in sel) if (g.Key == "saved") saved = true;
+            string warn = "Delete " + n + " file" + (n == 1 ? "" : "s") + "?" + (saved ? "\n\nThis includes your saved games, profiles and settings." : "") + (backup.Checked ? "\n\nA zip backup is made first." : "\n\nNo backup will be made.");
+            if (MessageBox.Show(warn, Text, MessageBoxButtons.YesNo, saved ? MessageBoxIcon.Warning : MessageBoxIcon.Question) != DialogResult.Yes) return;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+    }
+
+    internal sealed class MainForm : Form
+    {
+        readonly bool startHidden;
+        readonly bool exitWithSimArg;
+        readonly string simRoot;
+        bool allowShow;
+        readonly Icon appIcon;
+
+        readonly TabControl tabs = new TabControl();
+        readonly Button saveButton = new Button();
+        readonly Label saveLabel = new Label();
+        bool suppress;
+        bool dirty;
+
+        // service tab
+        readonly Label serviceLabel = new Label();
+        readonly Button startStop = new Button();
+        readonly NumericUpDown portBox = new NumericUpDown();
+        readonly TextBox audioBox = new TextBox();
+        readonly ComboBox defaultLangBox = new ComboBox();
+        readonly TrackBar masterBar = new TrackBar();
+        readonly Label masterLabel = new Label();
+        readonly CheckBox simCheck = new CheckBox();
+        readonly CheckBox minimizedCheck = new CheckBox();
+        readonly CheckBox exitCheck = new CheckBox();
+        readonly Label simInfo = new Label();
+        readonly TextBox testBox = new TextBox();
+        readonly TextBox logBox = new TextBox();
+        List<SimTarget> sims = new List<SimTarget>();
+
+        // actors tab
+        readonly ComboBox langBox = new ComboBox();
+        readonly Label[] actorLabel = new Label[Actors.Count];
+        readonly ComboBox[] voiceBox = new ComboBox[Actors.Count];
+        readonly TrackBar[] speedBar = new TrackBar[Actors.Count];
+        readonly Label[] speedLabel = new Label[Actors.Count];
+        readonly Button[] testButton = new Button[Actors.Count];
+
+        // piper tab
+        readonly Label engineLabel = new Label();
+        readonly Button engineButton = new Button();
+        readonly ListView catalogList = new ListView();
+        readonly Button installButton = new Button();
+        readonly Button removeButton = new Button();
+        readonly Button testVoiceButton = new Button();
+        readonly Button refreshButton = new Button();
+        readonly ProgressBar progress = new ProgressBar();
+        readonly Label progressLabel = new Label();
+        Label piperHint;
+        List<CatalogVoice> catalog = new List<CatalogVoice>();
+        bool busy;
+        bool catalogRequested;
+
+        // radio tab
+        readonly TrackBar noiseBar = new TrackBar();
+        readonly Label noiseLabel = new Label();
+        readonly ComboBox beepBox = new ComboBox();
+        readonly TrackBar beepBar = new TrackBar();
+        readonly Label beepLabel = new Label();
+        readonly CheckBox tailCheck = new CheckBox();
+        readonly ComboBox qualityBox = new ComboBox();
+
+        // tools tab
+        readonly ComboBox workCombo = new ComboBox();
+        readonly Label workInfo = new Label();
+        readonly ComboBox indexCombo = new ComboBox();
+        readonly Button indexButton = new Button();
+        readonly TextBox toolsOut = new TextBox();
+
+        Server server;
+        readonly NotifyIcon tray = new NotifyIcon();
+        readonly System.Windows.Forms.Timer tick = new System.Windows.Forms.Timer();
+        readonly ConcurrentQueue<string> logQueue = new ConcurrentQueue<string>();
+        readonly string logFile;
+        bool reallyExit;
+        bool simSeen;
+        DateTime simLastSeen = DateTime.UtcNow;
+        DateTime nextSimCheck = DateTime.UtcNow;
+        bool started;
+
+        public MainForm(bool startHidden, bool exitWithSim, string logFile, string simRoot)
+        {
+            this.startHidden = startHidden;
+            this.exitWithSimArg = exitWithSim;
+            this.logFile = logFile;
+            this.simRoot = simRoot;
+            allowShow = !startHidden;
+
+            Icon ico = null;
+            try { ico = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch (Exception) { }
+            appIcon = ico ?? SystemIcons.Application;
+
+            Text = AppInfo.Title;
+            StartPosition = FormStartPosition.CenterScreen;
+            ClientSize = new Size(760, 650);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            Icon = appIcon;
+
+            Ctx.Log = AppendLog;
+
+            tabs.Location = new Point(12, 12);
+            tabs.Size = new Size(736, 582);
+            Controls.Add(tabs);
+            BuildServiceTab();
+            BuildActorsTab();
+            BuildPiperTab();
+            BuildRadioTab();
+            BuildToolsTab();
+            BuildAboutTab();
+            tabs.SelectedIndexChanged += delegate { if (tabs.SelectedIndex == 2) EnsureCatalog(); };
+
+            saveButton.Text = "Save settings";
+            saveButton.Location = new Point(12, 606);
+            saveButton.Size = new Size(120, 32);
+            saveButton.Click += delegate { SaveSettings(); };
+            Controls.Add(saveButton);
+            saveLabel.AutoSize = true;
+            saveLabel.Location = new Point(144, 614);
+            Controls.Add(saveLabel);
+
+            tray.Icon = appIcon;
+            tray.Text = AppInfo.Name;
+            ContextMenu menu = new ContextMenu();
+            menu.MenuItems.Add("Open", delegate { ShowWindow(); });
+            menu.MenuItems.Add("Exit", delegate { ExitApp(true); });
+            tray.ContextMenu = menu;
+            tray.DoubleClick += delegate { ShowWindow(); };
+            tray.Visible = true;
+
+            tick.Interval = 300;
+            tick.Tick += delegate { OnTick(); };
+            tick.Start();
+        }
+
+        protected override void SetVisibleCore(bool value)
+        {
+            base.SetVisibleCore(allowShow ? value : false);
+        }
+
+        // test helper: saves a picture of every tab (--screenshot <base path>)
+        public void Snapshot(string basePath)
+        {
+            allowShow = true;
+            Show();
+            for (int i = 0; i < 20; i++) { Application.DoEvents(); Thread.Sleep(100); }
+            for (int t = 0; t < tabs.TabPages.Count; t++)
+            {
+                tabs.SelectedIndex = t;
+                for (int i = 0; i < 5; i++) { Application.DoEvents(); Thread.Sleep(60); }
+                using (Bitmap bmp = new Bitmap(Width, Height))
+                {
+                    DrawToBitmap(bmp, new Rectangle(0, 0, Width, Height));
+                    bmp.Save(basePath + "-" + t + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
+            reallyExit = true;
+            StopServer();
+            PiperEngine.StopAll();
+            tray.Visible = false;
+        }
+
+        void ShowWindow()
+        {
+            allowShow = true;
+            Show();
+            WindowState = FormWindowState.Normal;
+            Activate();
+        }
+
+        // ---- small helpers ----------------------------------------------------------------------
+        static Label Lbl(Control page, string text, int x, int y, int w, int h)
+        {
+            Label l = new Label();
+            l.Text = text;
+            l.Location = new Point(x, y);
+            if (w > 0) l.Size = new Size(w, h); else l.AutoSize = true;
+            page.Controls.Add(l);
+            return l;
+        }
+
+        static Button Btn(Control page, string text, int x, int y, int w, int h)
+        {
+            Button b = new Button();
+            b.Text = text;
+            b.Location = new Point(x, y);
+            b.Size = new Size(w, h);
+            page.Controls.Add(b);
+            return b;
+        }
+
+        // ---- startup, log, timer ----------------------------------------------------------------
+        void OnTick()
+        {
+            if (!started)
+            {
+                started = true;
+                Startup();
+            }
+            string line;
+            StringBuilder sb = null;
+            while (logQueue.TryDequeue(out line))
+            {
+                if (sb == null) sb = new StringBuilder();
+                sb.Append(line).Append(Environment.NewLine);
+            }
+            if (sb != null)
+            {
+                if (logBox.TextLength > 60000) logBox.Text = logBox.Text.Substring(logBox.TextLength - 30000);
+                logBox.AppendText(sb.ToString());
+            }
+            if (exitWithSimArg && DateTime.UtcNow >= nextSimCheck)
+            {
+                nextSimCheck = DateTime.UtcNow.AddSeconds(5);
+                if (Tools.SimulatorRunning()) { simSeen = true; simLastSeen = DateTime.UtcNow; }
+                else if (simSeen && (DateTime.UtcNow - simLastSeen).TotalSeconds > 15)
+                {
+                    AppendLog("[INFO] The simulator was closed: leaving.");
+                    ExitApp(false);
+                }
+            }
+        }
+
+        void AppendLog(string line)
+        {
+            string stamped = DateTime.Now.ToString("HH:mm:ss") + " " + line;
+            logQueue.Enqueue(stamped);
+            if (logFile != null)
+            {
+                try { lock (logQueue) { File.AppendAllText(logFile, stamped + Environment.NewLine); } } catch (Exception) { }
+            }
+        }
+
+        void Startup()
+        {
+            VoiceLibrary.Refresh();
+            LoadCatalogFromCache();
+            sims = SimAutostart.Detect(simRoot);
+            suppress = true;
+            simCheck.Checked = false;
+            if (sims.Count == 0)
+            {
+                simCheck.Enabled = false;
+                simInfo.Text = "No Microsoft Flight Simulator installation found on this PC.";
+            }
+            else
+            {
+                bool any = false;
+                StringBuilder sb = new StringBuilder("Found: ");
+                for (int i = 0; i < sims.Count; i++)
+                {
+                    if (i > 0) sb.Append("; ");
+                    sb.Append(sims[i].Name);
+                    if (SimAutostart.IsEnabled(sims[i])) any = true;
+                }
+                simInfo.Text = sb.ToString();
+                simCheck.Checked = any;
+            }
+            suppress = false;
+            UpdateSimOptions();
+            FillActors();
+            FillCatalogList();
+            UpdateEngineState();
+            RefreshTools();
+            if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
+            StartServer(true);
+        }
+
+        void MarkDirty()
+        {
+            dirty = true;
+            saveLabel.Text = "Not saved yet.";
+        }
+
+        void SaveSettings()
+        {
+            LangInfo li = CurrentLang();
+            if (li != null)
+            {
+                for (int i = 0; i < Actors.Count; i++)
+                {
+                    VoiceInfo v = voiceBox[i].SelectedItem as VoiceInfo;
+                    if (v != null) Ctx.Settings.Get(li.Code, i + 1).Voice = v.Id;
+                }
+            }
+            try
+            {
+                Ctx.Settings.Save(Ctx.SettingsPath);
+                dirty = false;
+                saveLabel.Text = "Saved.";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot save: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        // ---- service tab -------------------------------------------------------------------------
+        void BuildServiceTab()
+        {
+            TabPage page = new TabPage("Service");
+            tabs.TabPages.Add(page);
+
+            startStop.Text = "Stop service";
+            startStop.Location = new Point(10, 10);
+            startStop.Size = new Size(130, 30);
+            startStop.Click += delegate { if (server != null) StopServer(); else StartServer(false); };
+            page.Controls.Add(startStop);
+            Lbl(page, "Port:", 160, 17, 0, 0);
+            portBox.Minimum = 1024;
+            portBox.Maximum = 65535;
+            portBox.Value = Ctx.Settings.Port;
+            portBox.Location = new Point(196, 13);
+            portBox.Size = new Size(70, 22);
+            portBox.ValueChanged += delegate { Ctx.Settings.Port = (int)portBox.Value; MarkDirty(); };
+            page.Controls.Add(portBox);
+            serviceLabel.AutoSize = true;
+            serviceLabel.Location = new Point(290, 17);
+            serviceLabel.Text = "Service: stopped";
+            page.Controls.Add(serviceLabel);
+
+            Lbl(page, "Audio folder (wav files of the mission):", 10, 56, 0, 0);
+            audioBox.Location = new Point(10, 76);
+            audioBox.Size = new Size(610, 22);
+            audioBox.Text = Ctx.AudioDir;
+            audioBox.TextChanged += delegate { Ctx.AudioDir = audioBox.Text; Ctx.Settings.AudioFolder = audioBox.Text; MarkDirty(); };
+            page.Controls.Add(audioBox);
+            Button browse = Btn(page, "Browse...", 628, 74, 90, 26);
+            browse.Click += delegate
+            {
+                using (FolderBrowserDialog d = new FolderBrowserDialog())
+                {
+                    d.SelectedPath = Ctx.AudioDir;
+                    if (d.ShowDialog(this) == DialogResult.OK) audioBox.Text = d.SelectedPath;
+                }
+            };
+
+            Lbl(page, "Language of the texts that have no language tag:", 10, 114, 0, 0);
+            defaultLangBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            defaultLangBox.Location = new Point(300, 110);
+            defaultLangBox.Width = 140;
+            foreach (LangInfo l in LangInfo.All) defaultLangBox.Items.Add(l);
+            defaultLangBox.SelectedItem = LangInfo.ByCode(Ctx.Settings.DefaultLanguage);
+            defaultLangBox.SelectedIndexChanged += delegate
+            {
+                LangInfo l = defaultLangBox.SelectedItem as LangInfo;
+                if (l != null) { Ctx.Settings.DefaultLanguage = l.Code; MarkDirty(); }
+            };
+            page.Controls.Add(defaultLangBox);
+
+            Lbl(page, "Master volume of the voices:", 10, 150, 0, 0);
+            masterBar.Minimum = 0; masterBar.Maximum = 100; masterBar.TickFrequency = 10; masterBar.LargeChange = 10;
+            masterBar.Value = Math.Max(0, Math.Min(100, Ctx.Settings.MasterVolume));
+            masterBar.Location = new Point(190, 142);
+            masterBar.Size = new Size(260, 36);
+            masterBar.ValueChanged += delegate
+            {
+                masterLabel.Text = masterBar.Value + "%";
+                Ctx.Settings.MasterVolume = masterBar.Value;
+                MarkDirty();
+            };
+            page.Controls.Add(masterBar);
+            masterLabel.Text = masterBar.Value + "%";
+            masterLabel.AutoSize = true;
+            masterLabel.Location = new Point(456, 150);
+            page.Controls.Add(masterLabel);
+            Lbl(page, "(the mission can set a text with <vol:50>)", 500, 150, 0, 0).ForeColor = SystemColors.GrayText;
+
+            simCheck.Text = "Start this program when Microsoft Flight Simulator starts (2020 and 2024)";
+            simCheck.AutoSize = true;
+            simCheck.Location = new Point(10, 192);
+            simCheck.CheckedChanged += delegate { UpdateSimOptions(); if (!suppress) ApplyAutostart(); };
+            page.Controls.Add(simCheck);
+            minimizedCheck.Text = "Start minimized, in the notification area next to the clock";
+            minimizedCheck.AutoSize = true;
+            minimizedCheck.Checked = Ctx.Settings.StartMinimized;
+            minimizedCheck.Location = new Point(30, 214);
+            minimizedCheck.CheckedChanged += delegate
+            {
+                Ctx.Settings.StartMinimized = minimizedCheck.Checked;
+                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
+            };
+            page.Controls.Add(minimizedCheck);
+            exitCheck.Text = "Close it when the simulator closes";
+            exitCheck.AutoSize = true;
+            exitCheck.Checked = Ctx.Settings.ExitWithSim;
+            exitCheck.Location = new Point(30, 236);
+            exitCheck.CheckedChanged += delegate
+            {
+                Ctx.Settings.ExitWithSim = exitCheck.Checked;
+                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
+            };
+            page.Controls.Add(exitCheck);
+            simInfo.Location = new Point(30, 258);
+            simInfo.Size = new Size(690, 34);
+            simInfo.ForeColor = SystemColors.GrayText;
+            page.Controls.Add(simInfo);
+
+            Lbl(page, "Try a mission text (tags: <actor3> <Microsoft David> <ryan> <speed:1.2> <vol:60> <radio> <EN> <IT> <FR> <DE>):", 10, 298, 0, 0);
+            testBox.Location = new Point(10, 320);
+            testBox.Size = new Size(610, 22);
+            testBox.Text = "<actor3><speed:1.1>Crew three, ready for the next step.";
+            page.Controls.Add(testBox);
+            Button speak = Btn(page, "Speak", 628, 318, 90, 26);
+            speak.Click += delegate { Ctx.Player.EnqueueText(testBox.Text, true); };
+
+            logBox.Multiline = true;
+            logBox.ReadOnly = true;
+            logBox.ScrollBars = ScrollBars.Vertical;
+            logBox.Font = new Font("Consolas", 9F);
+            logBox.Location = new Point(10, 352);
+            logBox.Size = new Size(708, 150);
+            page.Controls.Add(logBox);
+
+            Button exit = Btn(page, "Exit program", 10, 512, 120, 28);
+            exit.Click += delegate { ExitApp(true); };
+            Lbl(page, "Closing the window keeps the program running in the notification area.", 140, 519, 0, 0);
+        }
+
+        // the two sub-options only make sense with the simulator option
+        void UpdateSimOptions()
+        {
+            bool on = simCheck.Checked && sims.Count > 0;
+            minimizedCheck.Enabled = on;
+            exitCheck.Enabled = on;
+        }
+
+        string AutostartArgs()
+        {
+            List<string> a = new List<string>();
+            if (minimizedCheck.Checked) a.Add("--minimized");
+            if (exitCheck.Checked) a.Add("--exit-with-sim");
+            return string.Join(" ", a.ToArray());
+        }
+
+        void ApplyAutostart()
+        {
+            string exe = Application.ExecutablePath;
+            Ctx.Settings.StartWithSim = simCheck.Checked;
+            StringBuilder done = new StringBuilder();
+            foreach (SimTarget t in sims)
+            {
+                try
+                {
+                    if (simCheck.Checked) SimAutostart.Enable(t, exe, AutostartArgs()); else SimAutostart.Disable(t);
+                    done.Append(t.Name).Append("; ");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot change " + t.ExeXml + ":\n" + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            AppendLog("[INFO] Start with the simulator " + (simCheck.Checked ? "ON (" + AutostartArgs() + ")" : "OFF") + ": " + done);
+            try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
+        }
+
+        void StartServer(bool automatic)
+        {
+            Server s = new Server();
+            int port = Ctx.Settings.Port;
+            try
+            {
+                s.Start(port);
+            }
+            catch (SocketException)
+            {
+                List<Process> old = new List<Process>();
+                foreach (string n in new string[] { "HPGMissionAudioService", "HPGMissionAudioOneCore", "HPGMissionAudioLauncher", "HPGVoiceHub" })
+                    old.AddRange(Process.GetProcessesByName(n));
+                DialogResult answer = old.Count > 0
+                    ? MessageBox.Show("Port " + port + " is busy: another HPG audio service is running.\nStop it and start this one?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    : MessageBox.Show("Port " + port + " is busy: another program uses it.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (answer != DialogResult.Yes) { SetServiceState(false); return; }
+                foreach (Process p in old) { try { p.Kill(); p.WaitForExit(3000); } catch (Exception) { } }
+                try { s.Start(port); }
+                catch (Exception ex) { AppendLog("[ERROR] " + ex.Message); SetServiceState(false); return; }
+            }
+            server = s;
+            SetServiceState(true);
+        }
+
+        void StopServer()
+        {
+            if (server == null) return;
+            server.Stop();
+            server = null;
+            SetServiceState(false);
+        }
+
+        void SetServiceState(bool running)
+        {
+            startStop.Text = running ? "Stop service" : "Start service";
+            serviceLabel.Text = running ? "Service: running on port " + Ctx.Settings.Port : "Service: stopped";
+            tray.Text = running ? AppInfo.Name + " - running" : AppInfo.Name + " - stopped";
+        }
+
+        // ---- actors tab --------------------------------------------------------------------------
+        void BuildActorsTab()
+        {
+            TabPage page = new TabPage("Actors and voices");
+            tabs.TabPages.Add(page);
+            Lbl(page, "Language:", 10, 17, 0, 0);
+            langBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            langBox.Location = new Point(78, 13);
+            langBox.Width = 160;
+            foreach (LangInfo l in LangInfo.All) langBox.Items.Add(l);
+            langBox.SelectedIndex = 0;
+            langBox.SelectedIndexChanged += delegate { FillActors(); FillCatalogList(); };
+            page.Controls.Add(langBox);
+            Lbl(page, "Choose the voice and the usual speed of each actor, for the language selected above. The mission picks the actor with a tag, " +
+                "for example  <actor3> Hello  (the voice, the speed and the volume can also be forced by the mission). Changes work at once; press Save settings to keep them.",
+                10, 46, 706, 50);
+            for (int i = 0; i < Actors.Count; i++)
+            {
+                int index = i;
+                int y = 102 + i * 38;
+                actorLabel[i] = Lbl(page, (i + 1) + "  " + Actors.Names[i], 10, y + 5, 140, 20);
+
+                voiceBox[i] = new ComboBox();
+                voiceBox[i].DropDownStyle = ComboBoxStyle.DropDownList;
+                voiceBox[i].Location = new Point(155, y + 2);
+                voiceBox[i].Size = new Size(310, 24);
+                voiceBox[i].SelectedIndexChanged += delegate { OnVoiceChanged(index); };
+                page.Controls.Add(voiceBox[i]);
+
+                speedBar[i] = new TrackBar();
+                speedBar[i].Minimum = 5;
+                speedBar[i].Maximum = 25;
+                speedBar[i].Value = 10;
+                speedBar[i].TickFrequency = 5;
+                speedBar[i].LargeChange = 5;
+                speedBar[i].Location = new Point(472, y - 3);
+                speedBar[i].Size = new Size(150, 36);
+                speedBar[i].ValueChanged += delegate { OnSpeedChanged(index); };
+                page.Controls.Add(speedBar[i]);
+
+                speedLabel[i] = Lbl(page, "1.0", 626, y + 5, 34, 20);
+
+                testButton[i] = Btn(page, "Test", 662, y + 1, 56, 26);
+                testButton[i].Click += delegate { TestActor(index); };
+            }
+            Lbl(page, "To install additional voice packs, choose the Piper voices tab.", 10, 102 + Actors.Count * 38 + 10, 0, 0).ForeColor = SystemColors.GrayText;
+        }
+
+        LangInfo CurrentLang() { return (LangInfo)langBox.SelectedItem; }
+
+        void FillActors()
+        {
+            LangInfo li = CurrentLang();
+            if (li == null) return;
+            List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
+            suppress = true;
+            for (int i = 0; i < Actors.Count; i++)
+            {
+                ActorSetting a = Ctx.Settings.Get(li.Code, i + 1);
+                voiceBox[i].Items.Clear();
+                foreach (VoiceInfo v in fam) voiceBox[i].Items.Add(v);
+                VoiceInfo sel = VoiceLibrary.ById(fam, a.Voice);
+                if (sel == null && fam.Count > 0) sel = fam[i % fam.Count];
+                voiceBox[i].SelectedItem = sel;
+                voiceBox[i].Enabled = fam.Count > 0;
+                int sv = (int)Math.Round(a.Speed * 10);
+                speedBar[i].Value = Math.Max(speedBar[i].Minimum, Math.Min(speedBar[i].Maximum, sv));
+                speedLabel[i].Text = (speedBar[i].Value / 10.0).ToString("0.0", CultureInfo.InvariantCulture);
+            }
+            suppress = false;
+            if (fam.Count == 0) saveLabel.Text = "No " + li.Name + " voice is installed: add one in the Piper voices tab or in Windows (Settings > Time & language > Speech).";
+            else if (!dirty && saveLabel.Text.StartsWith("No ")) saveLabel.Text = "";
+        }
+
+        void OnVoiceChanged(int i)
+        {
+            if (suppress) return;
+            VoiceInfo v = voiceBox[i].SelectedItem as VoiceInfo;
+            if (v == null) return;
+            Ctx.Settings.Get(CurrentLang().Code, i + 1).Voice = v.Id;
+            MarkDirty();
+        }
+
+        void OnSpeedChanged(int i)
+        {
+            speedLabel[i].Text = (speedBar[i].Value / 10.0).ToString("0.0", CultureInfo.InvariantCulture);
+            if (suppress) return;
+            Ctx.Settings.Get(CurrentLang().Code, i + 1).Speed = speedBar[i].Value / 10.0;
+            MarkDirty();
+        }
+
+        void TestActor(int i)
+        {
+            LangInfo li = CurrentLang();
+            string who = Actors.Names[i];
+            int p = who.IndexOf(" (");
+            if (p > 0) who = who.Substring(0, p);
+            Ctx.Player.EnqueueText("<actor" + (i + 1) + "><" + li.Code + ">" + string.Format(li.Sample, who), true);
+        }
+
+        // ---- piper tab ---------------------------------------------------------------------------
+        void BuildPiperTab()
+        {
+            TabPage page = new TabPage("Piper voices");
+            tabs.TabPages.Add(page);
+            engineLabel.Location = new Point(10, 14);
+            engineLabel.Size = new Size(470, 40);
+            page.Controls.Add(engineLabel);
+            engineButton.Location = new Point(490, 10);
+            engineButton.Size = new Size(228, 32);
+            engineButton.Click += delegate { InstallEngine(); };
+            page.Controls.Add(engineButton);
+
+            piperHint = Lbl(page, "Select a voice and press Install (60 to 140 MB each, downloaded from the Piper voices repository).", 10, 60, 708, 34);
+
+            catalogList.View = View.Details;
+            catalogList.FullRowSelect = true;
+            catalogList.MultiSelect = false;
+            catalogList.HideSelection = false;
+            catalogList.Location = new Point(10, 98);
+            catalogList.Size = new Size(708, 330);
+            catalogList.Columns.Add("Voice", 190);
+            catalogList.Columns.Add("Region", 70);
+            catalogList.Columns.Add("Quality", 80);
+            catalogList.Columns.Add("Size", 70);
+            catalogList.Columns.Add("Voice type", 90);
+            catalogList.Columns.Add("Status", 190);
+            catalogList.SelectedIndexChanged += delegate { UpdateEngineState(); };
+            page.Controls.Add(catalogList);
+
+            installButton.Text = "Install voice";
+            installButton.Location = new Point(10, 438);
+            installButton.Size = new Size(120, 30);
+            installButton.Click += delegate { InstallSelectedVoice(); };
+            page.Controls.Add(installButton);
+            removeButton.Text = "Remove voice";
+            removeButton.Location = new Point(138, 438);
+            removeButton.Size = new Size(120, 30);
+            removeButton.Click += delegate { RemoveSelectedVoice(); };
+            page.Controls.Add(removeButton);
+            testVoiceButton.Text = "Listen";
+            testVoiceButton.Location = new Point(266, 438);
+            testVoiceButton.Size = new Size(100, 30);
+            testVoiceButton.Click += delegate { TestSelectedVoice(); };
+            page.Controls.Add(testVoiceButton);
+            refreshButton.Text = "Refresh list";
+            refreshButton.Location = new Point(598, 438);
+            refreshButton.Size = new Size(120, 30);
+            refreshButton.Click += delegate { FetchCatalog(); };
+            page.Controls.Add(refreshButton);
+
+            progress.Location = new Point(10, 482);
+            progress.Size = new Size(708, 20);
+            page.Controls.Add(progress);
+            progressLabel.Location = new Point(10, 508);
+            progressLabel.Size = new Size(708, 40);
+            page.Controls.Add(progressLabel);
+        }
+
+        void UpdateEngineState()
+        {
+            if (Ctx.PiperInstalled)
+            {
+                engineLabel.Text = "Piper engine: installed.";
+                engineButton.Text = "Reinstall the Piper engine";
+            }
+            else
+            {
+                engineLabel.Text = "Piper engine: not installed. It is needed to use the Piper voices (22 MB download).";
+                engineButton.Text = "Install the Piper engine (22 MB)";
+            }
+            engineButton.Enabled = !busy;
+            CatalogVoice sel = SelectedCatalog();
+            bool installed = sel != null && PiperInstaller.IsInstalled(sel);
+            installButton.Enabled = !busy && sel != null && !installed;
+            removeButton.Enabled = !busy && installed;
+            testVoiceButton.Enabled = !busy && installed && Ctx.PiperInstalled;
+            refreshButton.Enabled = !busy;
+        }
+
+        CatalogVoice SelectedCatalog()
+        {
+            return catalogList.SelectedItems.Count > 0 ? catalogList.SelectedItems[0].Tag as CatalogVoice : null;
+        }
+
+        void LoadCatalogFromCache()
+        {
+            try
+            {
+                if (File.Exists(Ctx.CatalogPath)) catalog = PiperInstaller.LoadCatalog(File.ReadAllText(Ctx.CatalogPath, Encoding.UTF8));
+            }
+            catch (Exception) { }
+        }
+
+        void EnsureCatalog()
+        {
+            if (catalogRequested || catalog.Count > 0) return;
+            FetchCatalog();
+        }
+
+        void FetchCatalog()
+        {
+            if (busy) return;
+            catalogRequested = true;
+            busy = true;
+            UpdateEngineState();
+            progressLabel.Text = "Getting the list of voices...";
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                string error = null;
+                List<CatalogVoice> list = null;
+                try
+                {
+                    string json = Net.GetString(PiperInstaller.CatalogUrl);
+                    list = PiperInstaller.LoadCatalog(json);
+                    Directory.CreateDirectory(Path.GetDirectoryName(Ctx.CatalogPath));
+                    File.WriteAllText(Ctx.CatalogPath, json, new UTF8Encoding(false));
+                }
+                catch (Exception ex) { error = ex.Message; }
+                Ui(delegate
+                {
+                    busy = false;
+                    if (error != null) progressLabel.Text = "Cannot get the list of voices (" + error + "). Check the internet connection and press Refresh list.";
+                    else { catalog = list; progressLabel.Text = list.Count + " voices in the list."; }
+                    FillCatalogList();
+                    UpdateEngineState();
+                });
+            });
+        }
+
+        void FillCatalogList()
+        {
+            LangInfo li = CurrentLang();
+            if (li == null) return;
+            catalogList.Items.Clear();
+            if (piperHint != null) piperHint.Text = "Voices for " + li.Name + " (change the language in the Actors and voices tab). Select one and press Install (60 to 140 MB each, from the Piper voices repository).";
+            List<CatalogVoice> rows = new List<CatalogVoice>();
+            foreach (CatalogVoice c in catalog) if (c.Family == li.Family) rows.Add(c);
+            rows.Sort(delegate (CatalogVoice a, CatalogVoice b)
+            {
+                int r = string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
+                if (r != 0) return r;
+                return VoiceLibrary.QualityRank(b.Quality) - VoiceLibrary.QualityRank(a.Quality);
+            });
+            foreach (CatalogVoice c in rows)
+            {
+                string gender = VoiceLibrary.GenderHint(c.Name);
+                ListViewItem item = new ListViewItem(c.Speakers > 1 ? c.Name + " (" + c.Speakers + " speakers)" : c.Name);
+                item.SubItems.Add(c.LangCode);
+                item.SubItems.Add(c.Quality);
+                item.SubItems.Add((c.OnnxSize / 1048576) + " MB");
+                item.SubItems.Add(c.Speakers > 1 ? "mixed" : gender);
+                item.SubItems.Add(PiperInstaller.IsInstalled(c) ? "Installed" : "");
+                item.Tag = c;
+                catalogList.Items.Add(item);
+            }
+            if (rows.Count == 0 && catalog.Count == 0) progressLabel.Text = "The list of voices is not loaded yet.";
+        }
+
+        void InstallEngine()
+        {
+            if (busy) return;
+            busy = true;
+            UpdateEngineState();
+            progress.Value = 0;
+            progressLabel.Text = "Downloading the Piper engine...";
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                string error = null;
+                try { PiperInstaller.InstallEngine(ProgressReporter("Downloading the Piper engine")); }
+                catch (Exception ex) { error = ex.Message; }
+                Ui(delegate
+                {
+                    busy = false;
+                    progress.Value = error == null ? 100 : 0;
+                    progressLabel.Text = error == null ? "Piper engine installed." : "Cannot install the Piper engine: " + error;
+                    VoiceLibrary.Refresh();
+                    FillActors();
+                    UpdateEngineState();
+                });
+            });
+        }
+
+        void InstallSelectedVoice()
+        {
+            CatalogVoice c = SelectedCatalog();
+            if (c == null || busy) return;
+            if (!Ctx.PiperInstalled)
+            {
+                MessageBox.Show("Install the Piper engine first (button at the top of this page).", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            busy = true;
+            UpdateEngineState();
+            progress.Value = 0;
+            string label = "Downloading the voice " + c.Name + " (" + c.Quality + ")";
+            progressLabel.Text = label + "...";
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                string error = null;
+                try { PiperInstaller.InstallVoice(c, ProgressReporter(label)); }
+                catch (Exception ex) { error = ex.Message; }
+                Ui(delegate
+                {
+                    busy = false;
+                    progress.Value = error == null ? 100 : 0;
+                    progressLabel.Text = error == null
+                        ? "Voice " + c.Name + " installed. Its licence is in voices\\piper\\" + c.Key + ".MODEL_CARD.txt"
+                        : "Cannot install the voice: " + error;
+                    VoiceLibrary.Refresh();
+                    FillActors();
+                    FillCatalogList();
+                    UpdateEngineState();
+                });
+            });
+        }
+
+        void RemoveSelectedVoice()
+        {
+            CatalogVoice c = SelectedCatalog();
+            if (c == null || busy) return;
+            if (MessageBox.Show("Remove the voice " + c.Name + " (" + c.Quality + ") from this PC?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            PiperInstaller.RemoveVoice(c);
+            VoiceLibrary.Refresh();
+            FillActors();
+            FillCatalogList();
+            UpdateEngineState();
+            progressLabel.Text = "Voice " + c.Name + " removed.";
+        }
+
+        void TestSelectedVoice()
+        {
+            CatalogVoice c = SelectedCatalog();
+            LangInfo li = CurrentLang();
+            if (c == null || li == null) return;
+            Ctx.Player.EnqueueText("<" + c.Key + "><" + li.Code + ">" + string.Format(li.Sample, c.Name), true);
+        }
+
+        Action<long, long> ProgressReporter(string label)
+        {
+            int last = -1;
+            return delegate (long done, long total)
+            {
+                int pct = total > 0 ? (int)Math.Min(100, done * 100 / total) : 0;
+                if (pct == last) return;
+                last = pct;
+                Ui(delegate
+                {
+                    progress.Value = pct;
+                    progressLabel.Text = label + "... " + pct + "% (" + (done / 1048576) + " of " + (total / 1048576) + " MB)";
+                });
+            };
+        }
+
+        void Ui(Action a)
+        {
+            if (IsDisposed) return;
+            try
+            {
+                if (IsHandleCreated) BeginInvoke(a);
+                else a();
+            }
+            catch (Exception) { }
+        }
+
+        // ---- radio tab ---------------------------------------------------------------------------
+        void BuildRadioTab()
+        {
+            TabPage page = new TabPage("Radio effect");
+            tabs.TabPages.Add(page);
+            RadioSettings rs = Ctx.Settings.Radio;
+            Lbl(page, "A text with the tag <radio> is played like a radio call: a beep at the start, hiss under the voice, a band filter like a radio speaker and a short squelch burst at the end. " +
+                "<radio:off> ends the effect. Without the tag the voice is clean. These values are the same for every voice.", 10, 12, 706, 50);
+
+            Lbl(page, "Hiss under the voice:", 10, 82, 0, 0);
+            noiseBar.Minimum = 0; noiseBar.Maximum = 100; noiseBar.TickFrequency = 10; noiseBar.LargeChange = 10;
+            noiseBar.Value = rs.NoiseLevel;
+            noiseBar.Location = new Point(190, 74);
+            noiseBar.Size = new Size(300, 36);
+            noiseBar.ValueChanged += delegate { noiseLabel.Text = noiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.NoiseLevel = noiseBar.Value; MarkDirty(); } };
+            page.Controls.Add(noiseBar);
+            noiseLabel.Text = rs.NoiseLevel + "%";
+            noiseLabel.AutoSize = true;
+            noiseLabel.Location = new Point(496, 82);
+            page.Controls.Add(noiseLabel);
+
+            Lbl(page, "Start beep:", 10, 130, 0, 0);
+            beepBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            beepBox.Location = new Point(190, 126);
+            beepBox.Width = 160;
+            foreach (string b in AudioFx.BeepTypes) beepBox.Items.Add(b);
+            beepBox.SelectedItem = rs.Beep;
+            if (beepBox.SelectedIndex < 0) beepBox.SelectedItem = "Beep";
+            beepBox.SelectedIndexChanged += delegate { if (!suppress && beepBox.SelectedItem != null) { Ctx.Settings.Radio.Beep = (string)beepBox.SelectedItem; MarkDirty(); } };
+            page.Controls.Add(beepBox);
+
+            Lbl(page, "Beep volume:", 10, 174, 0, 0);
+            beepBar.Minimum = 0; beepBar.Maximum = 100; beepBar.TickFrequency = 10; beepBar.LargeChange = 10;
+            beepBar.Value = rs.BeepLevel;
+            beepBar.Location = new Point(190, 166);
+            beepBar.Size = new Size(300, 36);
+            beepBar.ValueChanged += delegate { beepLabel.Text = beepBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.BeepLevel = beepBar.Value; MarkDirty(); } };
+            page.Controls.Add(beepBar);
+            beepLabel.Text = rs.BeepLevel + "%";
+            beepLabel.AutoSize = true;
+            beepLabel.Location = new Point(496, 174);
+            page.Controls.Add(beepLabel);
+
+            tailCheck.Text = "Squelch burst when the transmission ends";
+            tailCheck.AutoSize = true;
+            tailCheck.Checked = rs.Tail;
+            tailCheck.Location = new Point(10, 218);
+            tailCheck.CheckedChanged += delegate { if (!suppress) { Ctx.Settings.Radio.Tail = tailCheck.Checked; MarkDirty(); } };
+            page.Controls.Add(tailCheck);
+
+            Lbl(page, "Radio sound:", 10, 254, 0, 0);
+            qualityBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            qualityBox.Location = new Point(190, 250);
+            qualityBox.Width = 160;
+            foreach (string q in AudioFx.Qualities) qualityBox.Items.Add(q);
+            qualityBox.SelectedItem = rs.Quality;
+            if (qualityBox.SelectedIndex < 0) qualityBox.SelectedItem = "Aviation";
+            qualityBox.SelectedIndexChanged += delegate { if (!suppress && qualityBox.SelectedItem != null) { Ctx.Settings.Radio.Quality = (string)qualityBox.SelectedItem; MarkDirty(); } };
+            page.Controls.Add(qualityBox);
+            Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 282, 0, 0).ForeColor = SystemColors.GrayText;
+
+            Button withRadio = Btn(page, "Listen with the radio effect", 10, 316, 210, 32);
+            withRadio.Click += delegate { TestRadio(true); };
+            Button without = Btn(page, "Listen without it", 230, 316, 150, 32);
+            without.Click += delegate { TestRadio(false); };
+
+            Lbl(page, "In the mission text:", 10, 370, 0, 0);
+            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 392, 0, 0);
+            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 414, 0, 0);
+            Lbl(page, "<radio:off>Back to the clean voice.", 30, 436, 0, 0);
+            Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Service tab.", 10, 470, 706, 40).ForeColor = SystemColors.GrayText;
+        }
+
+        void TestRadio(bool radio)
+        {
+            LangInfo li = CurrentLang();
+            Ctx.Player.EnqueueText("<actor1><" + li.Code + ">" + (radio ? "<radio>" : "<radio:off>") + string.Format(li.Sample, Actors.Names[0]), true);
+        }
+
+        // ---- tools tab ---------------------------------------------------------------------------
+        void BuildToolsTab()
+        {
+            TabPage page = new TabPage("Tools");
+            tabs.TabPages.Add(page);
+
+            Lbl(page, "Mission work folder: the tables, saved games and snapshots the mission writes. Close the simulator before cleaning it.", 10, 12, 706, 36);
+            workCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+            workCombo.Location = new Point(10, 50);
+            workCombo.Size = new Size(540, 24);
+            workCombo.SelectedIndexChanged += delegate { UpdateWorkInfo(); };
+            page.Controls.Add(workCombo);
+            Button browseWork = Btn(page, "Browse...", 558, 48, 76, 27);
+            browseWork.Click += delegate
+            {
+                using (FolderBrowserDialog d = new FolderBrowserDialog())
+                {
+                    d.Description = "Choose the work folder of the mission (hpg-airbus-h145-ap\\work)";
+                    if (d.ShowDialog(this) == DialogResult.OK) { Ctx.Settings.WorkFolder = d.SelectedPath; MarkDirty(); RefreshTools(); }
+                }
+            };
+            Button rescan = Btn(page, "Rescan", 642, 48, 76, 27);
+            rescan.Click += delegate { RefreshTools(); };
+
+            Button openWork = Btn(page, "Open folder", 10, 84, 140, 30);
+            openWork.Click += delegate { OpenWork(); };
+            Button clean = Btn(page, "Clean up...", 160, 84, 140, 30);
+            clean.Click += delegate { CleanWork(); };
+            workInfo.Size = new Size(708, 18);
+            workInfo.Location = new Point(10, 120);
+            workInfo.ForeColor = SystemColors.GrayText;
+            page.Controls.Add(workInfo);
+
+            Lbl(page, "Mission index: the HPG tool Update Mission Index, to run after a mission file is added or changed in the Community folder.", 10, 150, 706, 36);
+            indexCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+            indexCombo.Location = new Point(10, 188);
+            indexCombo.Size = new Size(624, 24);
+            page.Controls.Add(indexCombo);
+            Button browseIdx = Btn(page, "Browse...", 642, 186, 76, 27);
+            browseIdx.Click += delegate
+            {
+                using (OpenFileDialog d = new OpenFileDialog())
+                {
+                    d.Title = "Choose Update Mission Index.cmd";
+                    d.Filter = "Update Mission Index.cmd|*.cmd|All files|*.*";
+                    if (d.ShowDialog(this) == DialogResult.OK) { Ctx.Settings.IndexTool = d.FileName; MarkDirty(); RefreshTools(); }
+                }
+            };
+            indexButton.Text = "Update mission index";
+            indexButton.Location = new Point(10, 222);
+            indexButton.Size = new Size(180, 30);
+            indexButton.Click += delegate { UpdateIndex(); };
+            page.Controls.Add(indexButton);
+
+            toolsOut.Multiline = true;
+            toolsOut.ReadOnly = true;
+            toolsOut.ScrollBars = ScrollBars.Vertical;
+            toolsOut.Font = new Font("Consolas", 9F);
+            toolsOut.Location = new Point(10, 266);
+            toolsOut.Size = new Size(708, 276);
+            page.Controls.Add(toolsOut);
+        }
+
+        void ToolsLog(string line)
+        {
+            toolsOut.AppendText(line + Environment.NewLine);
+        }
+
+        void RefreshTools()
+        {
+            string keepWork = (workCombo.SelectedItem as WorkFolderInfo) != null ? ((WorkFolderInfo)workCombo.SelectedItem).Path : Ctx.Settings.WorkFolder;
+            workCombo.Items.Clear();
+            List<WorkFolderInfo> works = Tools.FindWorkFolders(Ctx.Settings.WorkFolder);
+            foreach (WorkFolderInfo w in works) workCombo.Items.Add(w);
+            for (int i = 0; i < workCombo.Items.Count; i++)
+                if (string.Equals(((WorkFolderInfo)workCombo.Items[i]).Path, keepWork, StringComparison.OrdinalIgnoreCase)) { workCombo.SelectedIndex = i; break; }
+            if (workCombo.SelectedIndex < 0 && workCombo.Items.Count > 0) workCombo.SelectedIndex = 0;
+            UpdateWorkInfo();
+
+            indexCombo.Items.Clear();
+            foreach (string t in Tools.FindIndexTools(Ctx.Settings.IndexTool)) indexCombo.Items.Add(t);
+            if (indexCombo.Items.Count > 0)
+            {
+                int pick = 0;
+                for (int i = 0; i < indexCombo.Items.Count; i++)
+                    if (((string)indexCombo.Items[i]).IndexOf("hpg-airbus-h145\\", StringComparison.OrdinalIgnoreCase) >= 0) { pick = i; break; }
+                indexCombo.SelectedIndex = pick;
+            }
+            indexButton.Enabled = indexCombo.Items.Count > 0;
+        }
+
+        void UpdateWorkInfo()
+        {
+            WorkFolderInfo w = workCombo.SelectedItem as WorkFolderInfo;
+            workInfo.Text = w == null ? "No work folder found: use Browse." : w.Path;
+        }
+
+        void OpenWork()
+        {
+            WorkFolderInfo w = workCombo.SelectedItem as WorkFolderInfo;
+            if (w == null) { MessageBox.Show("No work folder found: use Browse.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            try { Process.Start("explorer.exe", "\"" + w.Path + "\""); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        }
+
+        void CleanWork()
+        {
+            WorkFolderInfo w = workCombo.SelectedItem as WorkFolderInfo;
+            if (w == null) { MessageBox.Show("No work folder found: use Browse.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            if (Tools.SimulatorRunning() &&
+                MessageBox.Show("Microsoft Flight Simulator is running. Files in use cannot be deleted and the mission can write them again.\n\nContinue anyway?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes) return;
+            List<CleanGroup> groups = Tools.Scan(w.Path);
+            if (groups.Count == 0) { MessageBox.Show("There is nothing to clean in this folder.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            List<string> files = new List<string>();
+            bool backup;
+            using (CleanDialog d = new CleanDialog(groups))
+            {
+                if (d.ShowDialog(this) != DialogResult.OK) return;
+                backup = d.BackupFirst;
+                foreach (CleanGroup g in d.Selected) files.AddRange(g.Files);
+            }
+            ToolsLog("--- Clean up " + DateTime.Now.ToString("HH:mm:ss") + " " + w.Path);
+            if (backup)
+            {
+                try
+                {
+                    string zip = Tools.Backup(w.Path, files, Path.Combine(Ctx.BaseDir, "backups"));
+                    ToolsLog("Backup: " + zip);
+                }
+                catch (Exception ex)
+                {
+                    ToolsLog("[ERROR] the backup failed, nothing was deleted: " + ex.Message);
+                    return;
+                }
+            }
+            List<string> failed = new List<string>();
+            int n = Tools.Delete(files, failed);
+            ToolsLog("Deleted " + n + " of " + files.Count + " files.");
+            foreach (string f in failed) ToolsLog("[not deleted] " + f);
+            RefreshTools();
+        }
+
+        void UpdateIndex()
+        {
+            string cmd = indexCombo.SelectedItem as string;
+            if (cmd == null || busy) return;
+            indexButton.Enabled = false;
+            ToolsLog("--- Update mission index " + DateTime.Now.ToString("HH:mm:ss") + " " + cmd);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                int rc = -1;
+                string error = null;
+                try { rc = Tools.RunIndex(cmd, delegate (string line) { Ui(delegate { ToolsLog(line); }); }); }
+                catch (Exception ex) { error = ex.Message; }
+                string file = Tools.IndexFileOf(cmd);
+                string fileInfo = "";
+                if (file != null)
+                {
+                    FileInfo fi = new FileInfo(file);
+                    fileInfo = "Index file: " + file + " (" + (fi.Length / 1024) + " KB, written " + fi.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss") + ")";
+                }
+                Ui(delegate
+                {
+                    if (error != null) ToolsLog("[ERROR] " + error);
+                    else ToolsLog("Finished, exit code " + rc + ".");
+                    if (fileInfo.Length > 0) ToolsLog(fileInfo);
+                    ToolsLog("In the simulator press Refresh in the mission app to pick up the new index.");
+                    indexButton.Enabled = true;
+                });
+            });
+        }
+
+        // ---- about tab ---------------------------------------------------------------------------
+        void BuildAboutTab()
+        {
+            TabPage page = new TabPage("About");
+            tabs.TabPages.Add(page);
+            PictureBox pic = new PictureBox();
+            try { pic.Image = new Icon(appIcon, 64, 64).ToBitmap(); } catch (Exception) { }
+            pic.SizeMode = PictureBoxSizeMode.Zoom;
+            pic.Location = new Point(14, 14);
+            pic.Size = new Size(64, 64);
+            page.Controls.Add(pic);
+            Label title = Lbl(page, AppInfo.Name, 96, 18, 0, 0);
+            title.Font = new Font(Font.FontFamily, 16F, FontStyle.Bold);
+            Lbl(page, "Version " + AppInfo.Version, 98, 56, 0, 0);
+
+            string built = "";
+            try { built = File.GetLastWriteTime(Application.ExecutablePath).ToString("yyyy-MM-dd HH:mm"); } catch (Exception) { }
+            Lbl(page, "Build date:   " + built, 14, 104, 0, 0);
+            Lbl(page, "Author:   " + AppInfo.Author, 14, 128, 0, 0);
+            Lbl(page, "Links:   " + AppInfo.Links, 14, 152, 0, 0);
+
+            Lbl(page, "A companion program for the HPG H145 missions: voices for the mission actors (Windows and Piper voices, volume, radio effect), " +
+                "the mission work folder and the mission index.", 14, 196, 700, 40);
+            Lbl(page, "Credits and licences", 14, 252, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "Text to speech: the voices installed in Windows, and Piper (github.com/rhasspy/piper, MIT licence) with the voices of the rhasspy/piper-voices " +
+                "repository. Every Piper voice has its own licence: read voices\\piper\\<voice>.MODEL_CARD.txt before using a voice outside your own PC. " +
+                "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program.",
+                14, 276, 700, 100);
+        }
+
+        // ---- closing -----------------------------------------------------------------------------
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (!reallyExit && e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
+                allowShow = false;
+                tray.ShowBalloonTip(2000, AppInfo.Name, "Still running here. Right-click the icon to exit.", ToolTipIcon.Info);
+                return;
+            }
+            base.OnFormClosing(e);
+        }
+
+        void ExitApp(bool ask)
+        {
+            if (ask && dirty)
+            {
+                DialogResult r = MessageBox.Show("Save the changed settings before leaving?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (r == DialogResult.Cancel) return;
+                if (r == DialogResult.Yes) SaveSettings();
+            }
+            reallyExit = true;
+            tick.Stop();
+            StopServer();
+            PiperEngine.StopAll();
+            tray.Visible = false;
+            tray.Dispose();
+            Application.Exit();
+        }
+    }
+}

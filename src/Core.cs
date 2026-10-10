@@ -1,0 +1,515 @@
+// HPG Mission Companion - core: languages, actors, settings, tags, voice library, voice resolution.
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
+
+namespace HPGMissionCompanion
+{
+    internal static class AppInfo
+    {
+        public const string Name = "HPG Mission Companion";
+        public const string Version = "0.2";            // 0.1, 0.2, ... one step per delivered build
+        public const string Author = "(to be added)";
+        public const string Links = "(to be added)";
+        public static string Title { get { return Name + " " + Version; } }
+    }
+
+    internal sealed class RadioSettings
+    {
+        public int NoiseLevel = 20;        // 0-100, hiss under the speech
+        public string Beep = "Beep";       // None, Click, Beep, Double beep, Chirp
+        public int BeepLevel = 50;         // 0-100
+        public bool Tail = true;           // squelch burst when the transmission ends
+        public string Quality = "Aviation"; // Clean, Aviation, Rough
+    }
+
+    internal sealed class LangInfo
+    {
+        public string Code;
+        public string Name;
+        public string Family;
+        public string Sample;
+
+        public LangInfo(string code, string name, string family, string sample)
+        {
+            Code = code; Name = name; Family = family; Sample = sample;
+        }
+
+        public override string ToString() { return Name; }
+
+        public static readonly LangInfo[] All = new LangInfo[]
+        {
+            new LangInfo("EN", "English", "en", "Hello, this is {0}. Ready for the mission."),
+            new LangInfo("FR", "Francais", "fr", "Bonjour, ici {0}. Pret pour la mission."),
+            new LangInfo("IT", "Italiano", "it", "Ciao, sono {0}. Pronto per la missione."),
+            new LangInfo("DE", "Deutsch", "de", "Hallo, hier ist {0}. Bereit fuer die Mission.")
+        };
+
+        public static LangInfo ByCode(string code)
+        {
+            if (code == null) return null;
+            foreach (LangInfo l in All) if (string.Equals(l.Code, code, StringComparison.OrdinalIgnoreCase)) return l;
+            return null;
+        }
+
+        // "en-US", "en_GB", "EN" -> "en"
+        public static string FamilyOf(string tag)
+        {
+            if (string.IsNullOrEmpty(tag)) return "";
+            int i = 0;
+            while (i < tag.Length && char.IsLetter(tag[i])) i++;
+            return tag.Substring(0, i).ToLowerInvariant();
+        }
+
+        // language tag of a mission text ("EN", "us", "gb") -> language code, or the upper-case text when it is not supported
+        public static string Normalize(string tag)
+        {
+            if (string.IsNullOrEmpty(tag)) return null;
+            string t = tag.Trim().ToUpperInvariant();
+            if (t == "US" || t == "GB" || t == "UK" || t == "EN" || t == "AU") return "EN";
+            return t;
+        }
+    }
+
+    internal static class Actors
+    {
+        public const int Count = 10;
+        public static readonly string[] Names = new string[]
+        {
+            "Pilota", "Copilota", "Doctor", "HEMS1", "HEMS2",
+            "Frank (technician)", "Sarah (technician)", "Dispatcher", "Ground unit", "Patient / extra"
+        };
+    }
+
+    internal sealed class ActorSetting
+    {
+        public string Voice;
+        public double Speed = 1.0;
+    }
+
+    internal sealed class LangSetting
+    {
+        public List<ActorSetting> Actors = new List<ActorSetting>();
+    }
+
+    internal sealed class Settings
+    {
+        public string DefaultLanguage = "EN";
+        public int Port = 5997;
+        public string AudioFolder = "";
+        public bool StartWithSim = false;
+        public bool ExitWithSim = true;
+        public bool StartMinimized = true;      // with the simulator: hidden in the notification area
+        public int MasterVolume = 100;          // 0-100, applies to every spoken text
+        public RadioSettings Radio = new RadioSettings();
+        public string WorkFolder = "";
+        public string IndexTool = "";
+        public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
+
+        public static Settings Load(string path)
+        {
+            Settings s = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    js.MaxJsonLength = int.MaxValue;
+                    s = js.Deserialize<Settings>(File.ReadAllText(path, Encoding.UTF8));
+                }
+            }
+            catch (Exception) { s = null; }
+            if (s == null) s = new Settings();
+            s.Normalize();
+            return s;
+        }
+
+        public void Save(string path)
+        {
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            File.WriteAllText(path, js.Serialize(this), new UTF8Encoding(false));
+        }
+
+        public void Normalize()
+        {
+            if (Languages == null) Languages = new Dictionary<string, LangSetting>();
+            if (LangInfo.ByCode(DefaultLanguage) == null) DefaultLanguage = "EN";
+            if (Port < 1 || Port > 65535) Port = 5997;
+            if (AudioFolder == null) AudioFolder = "";
+            if (WorkFolder == null) WorkFolder = "";
+            if (IndexTool == null) IndexTool = "";
+            MasterVolume = Math.Max(0, Math.Min(100, MasterVolume));
+            if (Radio == null) Radio = new RadioSettings();
+            Radio.NoiseLevel = Math.Max(0, Math.Min(100, Radio.NoiseLevel));
+            Radio.BeepLevel = Math.Max(0, Math.Min(100, Radio.BeepLevel));
+            if (string.IsNullOrEmpty(Radio.Beep)) Radio.Beep = "Beep";
+            if (string.IsNullOrEmpty(Radio.Quality)) Radio.Quality = "Aviation";
+            foreach (LangInfo l in LangInfo.All)
+            {
+                LangSetting ls;
+                if (!Languages.TryGetValue(l.Code, out ls) || ls == null) { ls = new LangSetting(); Languages[l.Code] = ls; }
+                if (ls.Actors == null) ls.Actors = new List<ActorSetting>();
+                while (ls.Actors.Count < Actors.Count) ls.Actors.Add(new ActorSetting());
+                foreach (ActorSetting a in ls.Actors)
+                    if (a.Speed < 0.5 || a.Speed > 3.0) a.Speed = 1.0;
+            }
+        }
+
+        // actor is 1..10
+        public ActorSetting Get(string lang, int actor)
+        {
+            LangSetting ls;
+            if (!Languages.TryGetValue(lang, out ls)) { Normalize(); ls = Languages[lang]; }
+            return ls.Actors[Math.Max(1, Math.Min(Actors.Count, actor)) - 1];
+        }
+    }
+
+    // ---- tags in the mission text -------------------------------------------------------------
+    // <actor3>  actor 1..10         <Microsoft David> / <ryan>  voice by name        <speed:1.2>  speed
+    // <vol:70>  volume 0-100 of this text (the mission volume_crew can be passed with the speak params)   <radio>  radio effect (<radio:off> ends it)
+    // <EN> <FR> <IT> <DE>  language (also <language:us>). Square brackets work like the angle brackets: [actor3] [speed:1.2].
+    // The tags apply to the text that follows them, until the next tag of the same kind.
+    internal sealed class Segment
+    {
+        public string Text;
+        public int Actor;          // 0 = none
+        public string Voice;       // null = none
+        public string Lang;        // null = none
+        public double Speed;       // 0 = none
+        public double Volume = -1;  // 0-100, -1 = none
+        public int Radio = -1;      // 1 on, 0 off, -1 none
+    }
+
+    internal static class TagParser
+    {
+        static readonly Regex TagRx = new Regex("[<\\[]([^<>\\[\\]]{1,60})[>\\]]", RegexOptions.Compiled);
+        static readonly Regex ActorRx = new Regex("^actor\\s*(\\d{1,2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex SpeedRx = new Regex("^(?:speed|rate)\\s*[:=]\\s*([0-9]+(?:[.,][0-9]+)?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex LangRx = new Regex("^(?:lang|language)\\s*[:=]\\s*([A-Za-z]{2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex VolRx = new Regex("^(?:vol|volume)\\s*[:=]\\s*([0-9]+(?:[.,][0-9]+)?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex RadioRx = new Regex("^radio(?:\\s*[:=]\\s*(on|off|0|1))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex VoiceRx = new Regex("^voice\\s*[:=]\\s*(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex TwoLettersRx = new Regex("^[A-Za-z]{2}$", RegexOptions.Compiled);
+        static readonly Regex HtmlRx = new Regex("^/?(?:br|b|i|u|p|em|strong|span|font)\\b.*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        public static List<Segment> Parse(string input, List<string> notes)
+        {
+            List<Segment> result = new List<Segment>();
+            if (input == null) return result;
+            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1;
+            int pos = 0;
+            foreach (Match m in TagRx.Matches(input))
+            {
+                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio);
+                pos = m.Index + m.Length;
+                string tag = m.Groups[1].Value.Trim();
+                Match g;
+                if (HtmlRx.IsMatch(tag)) continue;
+                if ((g = ActorRx.Match(tag)).Success)
+                {
+                    int n = int.Parse(g.Groups[1].Value, CultureInfo.InvariantCulture);
+                    if (n >= 1 && n <= Actors.Count) actor = n;
+                    else if (notes != null) notes.Add("actor " + n + " does not exist (1-" + Actors.Count + ")");
+                }
+                else if ((g = SpeedRx.Match(tag)).Success)
+                {
+                    double v;
+                    if (double.TryParse(g.Groups[1].Value.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                        speed = Math.Max(0.5, Math.Min(3.0, v));
+                }
+                else if ((g = VolRx.Match(tag)).Success)
+                {
+                    double v;
+                    if (double.TryParse(g.Groups[1].Value.Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                        vol = Math.Max(0, Math.Min(100, v));
+                }
+                else if ((g = RadioRx.Match(tag)).Success)
+                {
+                    string r = g.Groups[1].Success ? g.Groups[1].Value.ToLowerInvariant() : "on";
+                    radio = (r == "off" || r == "0") ? 0 : 1;
+                }
+                else if ((g = LangRx.Match(tag)).Success) lang = LangInfo.Normalize(g.Groups[1].Value);
+                else if (TwoLettersRx.IsMatch(tag)) lang = LangInfo.Normalize(tag);
+                else if ((g = VoiceRx.Match(tag)).Success) voice = g.Groups[1].Value.Trim();
+                else voice = tag;
+            }
+            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio);
+            return result;
+        }
+
+        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio)
+        {
+            string t = Regex.Replace(text, "\\s+", " ").Trim();
+            if (t.Length == 0) return;
+            Segment s = new Segment();
+            s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio;
+            list.Add(s);
+        }
+    }
+
+    // ---- voices ----------------------------------------------------------------------------------
+    internal sealed class VoiceInfo
+    {
+        public string Id;           // "win:<id>" or "piper:<key>[:<speaker>]"
+        public string Display;      // text shown in the lists
+        public string Engine;       // "windows" or "piper"
+        public string Family;       // "en", "fr", "it", "de", ...
+        public string[] Keys;       // names a mission tag can use
+        public int Rank;            // quality, higher is better
+        public string WinId;
+        public string ModelPath;
+        public string ConfigPath;
+        public int Speaker = -1;
+        public double LengthScale = 1.0;
+        public override string ToString() { return Display; }
+    }
+
+    internal static class Ctx
+    {
+        public static string BaseDir = AppDomain.CurrentDomain.BaseDirectory;
+        public static string AudioDir;
+        public static Settings Settings = new Settings();
+        public static volatile List<VoiceInfo> Voices = new List<VoiceInfo>();
+        public static Action<string> Log = delegate (string s) { };
+        public static bool Silent;
+        public static Player Player;
+
+        public static string SettingsPath { get { return Path.Combine(BaseDir, "HPGMissionCompanion.json"); } }
+        public static string PiperDir { get { return Path.Combine(BaseDir, "piper"); } }
+        public static string PiperExe { get { return Path.Combine(PiperDir, "piper.exe"); } }
+        public static string PiperVoicesDir { get { return Path.Combine(Path.Combine(BaseDir, "voices"), "piper"); } }
+        public static string CatalogPath { get { return Path.Combine(Path.Combine(BaseDir, "voices"), "piper-catalog.json"); } }
+        public static bool PiperInstalled { get { return File.Exists(PiperExe); } }
+    }
+
+    internal static class VoiceLibrary
+    {
+        // Rebuilds Ctx.Voices: the Windows voices and the installed Piper voices (if the Piper engine is there).
+        public static void Refresh()
+        {
+            List<VoiceInfo> list = new List<VoiceInfo>();
+            try
+            {
+                foreach (dynamic v in WinRt.AllVoices())
+                {
+                    VoiceInfo e = new VoiceInfo();
+                    string name = (string)v.DisplayName;
+                    string lang = (string)v.Language;
+                    string id = (string)v.Id;
+                    string gender = v.Gender.ToString();
+                    e.WinId = id;
+                    e.Id = "win:" + id;
+                    e.Engine = "windows";
+                    e.Family = LangInfo.FamilyOf(lang);
+                    e.Display = name + " - " + gender.ToLowerInvariant() + " (Windows, " + lang + ")";
+                    e.Keys = new string[] { name, id.Substring(id.LastIndexOf('\\') + 1) };
+                    e.Rank = 5;
+                    list.Add(e);
+                }
+            }
+            catch (Exception ex) { Ctx.Log("[ERROR] Windows voices: " + ex.Message); }
+            if (Ctx.PiperInstalled) ScanPiper(list);
+            list.Sort(delegate (VoiceInfo a, VoiceInfo b)
+            {
+                int c = string.Compare(a.Family, b.Family, StringComparison.Ordinal);
+                if (c != 0) return c;
+                c = string.Compare(a.Engine, b.Engine, StringComparison.Ordinal);
+                if (c != 0) return c;
+                return string.Compare(a.Display, b.Display, StringComparison.OrdinalIgnoreCase);
+            });
+            Ctx.Voices = list;
+        }
+
+        static void ScanPiper(List<VoiceInfo> list)
+        {
+            string dir = Ctx.PiperVoicesDir;
+            if (!Directory.Exists(dir)) return;
+            foreach (string model in Directory.GetFiles(dir, "*.onnx"))
+            {
+                string config = model + ".json";
+                if (!File.Exists(config)) continue;
+                try
+                {
+                    string key = Path.GetFileNameWithoutExtension(model);   // en_US-ryan-medium
+                    string[] parts = key.Split('-');
+                    string langCode = parts[0];
+                    string name = parts.Length > 1 ? parts[1] : key;
+                    string quality = parts.Length > 2 ? parts[2] : "medium";
+                    double length = 1.0;
+                    Dictionary<string, object> speakers = null;
+                    int numSpeakers = 1;
+                    Dictionary<string, object> cfg = new JavaScriptSerializer().DeserializeObject(File.ReadAllText(config, Encoding.UTF8)) as Dictionary<string, object>;
+                    if (cfg != null)
+                    {
+                        object inf;
+                        if (cfg.TryGetValue("inference", out inf))
+                        {
+                            Dictionary<string, object> im = inf as Dictionary<string, object>;
+                            object ls;
+                            if (im != null && im.TryGetValue("length_scale", out ls)) length = Convert.ToDouble(ls, CultureInfo.InvariantCulture);
+                        }
+                        object ns;
+                        if (cfg.TryGetValue("num_speakers", out ns)) numSpeakers = Convert.ToInt32(ns, CultureInfo.InvariantCulture);
+                        object sm;
+                        if (cfg.TryGetValue("speaker_id_map", out sm)) speakers = sm as Dictionary<string, object>;
+                    }
+                    int rank = QualityRank(quality);
+                    string family = LangInfo.FamilyOf(langCode);
+                    string hint = GenderHint(name);
+                    if (numSpeakers > 1 && speakers != null && speakers.Count > 0 && speakers.Count <= 40)
+                    {
+                        foreach (KeyValuePair<string, object> kv in speakers)
+                        {
+                            VoiceInfo e = NewPiper(key, model, config, length, family, rank);
+                            e.Id = "piper:" + key + ":" + kv.Key;
+                            e.Speaker = Convert.ToInt32(kv.Value, CultureInfo.InvariantCulture);
+                            e.Display = name + " " + kv.Key + " - " + quality + " (Piper, " + langCode + ")";
+                            e.Keys = new string[] { key + ":" + kv.Key, name + ":" + kv.Key, name + " " + kv.Key };
+                            list.Add(e);
+                        }
+                    }
+                    else if (numSpeakers <= 1)
+                    {
+                        VoiceInfo e = NewPiper(key, model, config, length, family, rank);
+                        e.Id = "piper:" + key;
+                        e.Display = name + " - " + quality + (hint.Length > 0 ? " - " + hint : "") + " (Piper, " + langCode + ")";
+                        e.Keys = new string[] { key, name + "-" + quality, name };
+                        list.Add(e);
+                    }
+                }
+                catch (Exception ex) { Ctx.Log("[ERROR] Piper voice " + Path.GetFileName(model) + ": " + ex.Message); }
+            }
+        }
+
+        static VoiceInfo NewPiper(string key, string model, string config, double length, string family, int rank)
+        {
+            VoiceInfo e = new VoiceInfo();
+            e.Engine = "piper"; e.Family = family; e.ModelPath = model; e.ConfigPath = config;
+            e.LengthScale = length <= 0 ? 1.0 : length; e.Rank = rank;
+            return e;
+        }
+
+        public static int QualityRank(string q)
+        {
+            switch ((q ?? "").ToLowerInvariant())
+            {
+                case "high": return 4;
+                case "medium": return 3;
+                case "low": return 2;
+                case "x_low": return 1;
+            }
+            return 3;
+        }
+
+        // Only names whose gender is certain; the Piper catalog does not say.
+        static readonly string[] Male = { "ryan", "joe", "john", "danny", "bryce", "kusal", "norman", "mike", "reza_ibrahim", "hfc_male", "alan", "northern_english_male", "tom", "gilles", "riccardo", "thorsten", "karlsson", "pavoque" };
+        static readonly string[] Female = { "amy", "kathleen", "kristin", "lessac", "ljspeech", "hfc_female", "alba", "cori", "jenny_dioco", "southern_english_female", "siwis", "paola", "serena", "eva_k", "kerstin", "ramona" };
+
+        public static string GenderHint(string name)
+        {
+            foreach (string m in Male) if (m == name) return "male";
+            foreach (string f in Female) if (f == name) return "female";
+            return "";
+        }
+
+        public static VoiceInfo ById(List<VoiceInfo> voices, string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            foreach (VoiceInfo v in voices) if (v.Id == id) return v;
+            return null;
+        }
+
+        // A name from a mission tag: exact name first, then part of a name; the language of the text wins, then the best quality.
+        public static VoiceInfo Find(List<VoiceInfo> voices, string key, string family)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            VoiceInfo best = null;
+            for (int pass = 0; pass < 2 && best == null; pass++)
+            {
+                foreach (VoiceInfo v in voices)
+                {
+                    bool hit = false;
+                    foreach (string k in v.Keys)
+                    {
+                        if (pass == 0 ? string.Equals(k, key, StringComparison.OrdinalIgnoreCase) : k.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0) { hit = true; break; }
+                    }
+                    if (!hit) continue;
+                    if (best == null || Better(v, best, family)) best = v;
+                }
+            }
+            return best;
+        }
+
+        static bool Better(VoiceInfo a, VoiceInfo b, string family)
+        {
+            bool fa = a.Family == family, fb = b.Family == family;
+            if (fa != fb) return fa;
+            return a.Rank > b.Rank;
+        }
+
+        public static List<VoiceInfo> OfFamily(List<VoiceInfo> voices, string family)
+        {
+            List<VoiceInfo> r = new List<VoiceInfo>();
+            foreach (VoiceInfo v in voices) if (v.Family == family) r.Add(v);
+            return r;
+        }
+    }
+
+    internal sealed class Plan
+    {
+        public VoiceInfo Voice;
+        public double Speed;
+        public string Lang;
+        public int Actor;
+        public double Volume = 100;
+        public bool Radio;
+        public string Note;
+    }
+
+    internal static class Resolver
+    {
+        public static Plan Resolve(Segment seg, Settings s, List<VoiceInfo> voices)
+        {
+            Plan p = new Plan();
+            LangInfo li = LangInfo.ByCode(seg.Lang);
+            string note = "";
+            if (li == null)
+            {
+                if (seg.Lang != null) note += "language " + seg.Lang + " not supported, using " + s.DefaultLanguage + "; ";
+                li = LangInfo.ByCode(s.DefaultLanguage) ?? LangInfo.All[0];
+            }
+            p.Lang = li.Code;
+            p.Actor = seg.Actor > 0 ? seg.Actor : 1;
+            ActorSetting a = s.Get(li.Code, p.Actor);
+
+            VoiceInfo v = null;
+            if (!string.IsNullOrEmpty(seg.Voice))
+            {
+                v = VoiceLibrary.Find(voices, seg.Voice, li.Family);
+                if (v == null) note += "voice '" + seg.Voice + "' not installed, using the actor voice; ";
+            }
+            bool forced = v != null;
+            if (v == null)
+            {
+                v = VoiceLibrary.ById(voices, a.Voice);
+                if (v != null && v.Family != li.Family && !string.IsNullOrEmpty(a.Voice)) { /* kept: the user chose it */ }
+                if (v == null)
+                {
+                    List<VoiceInfo> fam = VoiceLibrary.OfFamily(voices, li.Family);
+                    if (fam.Count > 0) v = fam[(p.Actor - 1) % fam.Count];
+                    else if (voices.Count > 0) { v = voices[0]; note += "no " + li.Name + " voice installed; "; }
+                }
+            }
+            p.Voice = v;
+            p.Speed = seg.Speed > 0 ? seg.Speed : ((forced && seg.Actor == 0) ? 1.0 : a.Speed);
+            p.Volume = seg.Volume >= 0 ? seg.Volume : 100;
+            p.Radio = seg.Radio == 1;
+            p.Note = note;
+            return p;
+        }
+    }
+}

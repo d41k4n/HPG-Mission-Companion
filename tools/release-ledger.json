@@ -1,0 +1,7 @@
+{
+  "lastDeliveredVersion": "0.2",
+  "artifact": "HPGMissionCompanion.exe",
+  "sha256": "AA7036703DD76A812314F4657206D99802B00D728C34CB8E966AFEC606C10EDE",
+  "deliveredOn": "2026-10-10",
+  "note": "Local delivery to the runtime folder on the user's Desktop. The hash identifies the delivered file; the csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+}

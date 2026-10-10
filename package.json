@@ -1,0 +1,11 @@
+{
+  "name": "hpg-mission-companion",
+  "private": true,
+  "scripts": {
+    "guard:branch": "node tools/assert-main-branch.js",
+    "hooks:install": "git config core.hooksPath .githooks",
+    "check": "node tools/check.js",
+    "build": "tools\\build.cmd",
+    "test": "node tools/check.js"
+  }
+}

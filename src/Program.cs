@@ -1,0 +1,241 @@
+// HPG Mission Companion
+// A voice service for the HPG missions: text to speech with the Windows voices and with Piper, one voice per mission actor.
+//
+// Command line:
+//   (none)                   show the window and start the service
+//   --minimized              start hidden (notification area); used when the simulator starts the program
+//   --exit-with-sim          leave when Microsoft Flight Simulator closes
+//   --silent                 do everything but the sound (for checks)
+//   --log-file <path>        also write the log to a file
+//   --port <n>  --audio <dir>
+//   --list-file <path>       write the voices to a file and exit
+//   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
+//   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
+//   --sim-root <dir>         (test) use this folder instead of the simulator folders for the start with the simulator
+//   --test-autostart <on|off> (with --sim-root) add or remove the entry and exit
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+// keep in step with AppInfo.Version in Core.cs
+[assembly: AssemblyTitle("HPG Mission Companion")]
+[assembly: AssemblyProduct("HPG Mission Companion")]
+[assembly: AssemblyVersion("0.2.0.0")]
+[assembly: AssemblyFileVersion("0.2.0.0")]
+
+namespace HPGMissionCompanion
+{
+    internal static class Program
+    {
+        [STAThread]
+        static int Main(string[] args)
+        {
+            string logFile = Option(args, "--log-file");
+            string listFile = Option(args, "--list-file");
+            string selftest = Option(args, "--selftest");
+            string simRoot = Option(args, "--sim-root");
+            string autostartTest = Option(args, "--test-autostart");
+            Ctx.Silent = Has(args, "--silent");
+            Ctx.Settings = Settings.Load(Ctx.SettingsPath);
+            string portArg = Option(args, "--port");
+            int port;
+            if (portArg != null && int.TryParse(portArg, out port)) Ctx.Settings.Port = port;
+            string audioArg = Option(args, "--audio");
+            Ctx.AudioDir = audioArg != null ? audioArg : (string.IsNullOrEmpty(Ctx.Settings.AudioFolder) ? Path.Combine(Ctx.BaseDir, "audio") : Ctx.Settings.AudioFolder);
+
+            if (autostartTest != null && simRoot != null)
+            {
+                foreach (SimTarget t in SimAutostart.Detect(simRoot))
+                {
+                    if (autostartTest == "on") SimAutostart.Enable(t, Application.ExecutablePath, "--minimized --exit-with-sim");
+                    else SimAutostart.Disable(t);
+                }
+                return 0;
+            }
+
+            if (Has(args, "--install-engine") || Option(args, "--install-voice") != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                string reportPath = Option(args, "--report") ?? Path.Combine(Ctx.BaseDir, "install-report.txt");
+                int rc = 0;
+                try
+                {
+                    long lastShown = -1;
+                    Action<long, long> prog = delegate (long done, long total)
+                    {
+                        long mb = done / (4 * 1048576);
+                        if (mb != lastShown) { lastShown = mb; rep.AppendLine("  " + (done / 1048576) + " of " + (total / 1048576) + " MB"); }
+                    };
+                    if (Has(args, "--install-engine"))
+                    {
+                        rep.AppendLine("installing the engine");
+                        PiperInstaller.InstallEngine(prog);
+                        rep.AppendLine("engine installed: " + Ctx.PiperExe + " exists=" + Ctx.PiperInstalled);
+                    }
+                    string vkey = Option(args, "--install-voice");
+                    if (vkey != null)
+                    {
+                        string json = File.Exists(Ctx.CatalogPath) ? File.ReadAllText(Ctx.CatalogPath, Encoding.UTF8) : Net.GetString(PiperInstaller.CatalogUrl);
+                        Directory.CreateDirectory(Path.GetDirectoryName(Ctx.CatalogPath));
+                        File.WriteAllText(Ctx.CatalogPath, json, new UTF8Encoding(false));
+                        CatalogVoice found = null;
+                        foreach (CatalogVoice c in PiperInstaller.LoadCatalog(json)) if (c.Key == vkey) found = c;
+                        if (found == null) throw new InvalidOperationException("voice " + vkey + " not in the catalog");
+                        rep.AppendLine("installing the voice " + vkey);
+                        PiperInstaller.InstallVoice(found, prog);
+                        rep.AppendLine("voice installed: " + PiperInstaller.IsInstalled(found));
+                    }
+                }
+                catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
+                File.WriteAllText(reportPath, rep.ToString());
+                return rc;
+            }
+
+            // --autostart on|off: adds or removes this program in the EXE.xml of the simulators found (same as the Service tab checkbox)
+            string autostart = Option(args, "--autostart");
+            if (autostart != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                string reportPath = Option(args, "--report") ?? Path.Combine(Ctx.BaseDir, "autostart-report.txt");
+                List<string> a = new List<string>();
+                if (Ctx.Settings.StartMinimized) a.Add("--minimized");
+                if (Ctx.Settings.ExitWithSim) a.Add("--exit-with-sim");
+                string cmdline = string.Join(" ", a.ToArray());
+                foreach (SimTarget t in SimAutostart.Detect(simRoot))
+                {
+                    try
+                    {
+                        if (autostart == "on") SimAutostart.Enable(t, Application.ExecutablePath, cmdline); else SimAutostart.Disable(t);
+                        rep.AppendLine(autostart + ": " + t.ExeXml + " (" + cmdline + ")");
+                    }
+                    catch (Exception ex) { rep.AppendLine("ERROR " + t.ExeXml + ": " + ex.Message); }
+                }
+                if (autostart == "on") { Ctx.Settings.StartWithSim = true; Ctx.Settings.Save(Ctx.SettingsPath); }
+                File.WriteAllText(reportPath, rep.ToString());
+                return 0;
+            }
+            // tools, for checks: --scan-work <dir> | --clean-work <dir> --groups debug,test [--no-backup] | --run-index <cmd>   (all with --report <path>)
+            string scanWork = Option(args, "--scan-work");
+            string cleanWork = Option(args, "--clean-work");
+            string runIndex = Option(args, "--run-index");
+            if (scanWork != null || cleanWork != null || runIndex != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                string reportPath = Option(args, "--report") ?? Path.Combine(Ctx.BaseDir, "tools-report.txt");
+                int rc = 0;
+                try
+                {
+                    if (scanWork != null || cleanWork != null)
+                    {
+                        string dir = scanWork ?? cleanWork;
+                        List<CleanGroup> groups = Tools.Scan(dir);
+                        foreach (CleanGroup g in groups) rep.AppendLine("group " + g.Key + " default=" + g.Default + " | " + g.ToString());
+                        if (cleanWork != null)
+                        {
+                            string want = "," + (Option(args, "--groups") ?? "") + ",";
+                            List<string> files = new List<string>();
+                            foreach (CleanGroup g in groups) if (want.IndexOf("," + g.Key + ",", StringComparison.Ordinal) >= 0) files.AddRange(g.Files);
+                            if (!Has(args, "--no-backup")) rep.AppendLine("backup: " + Tools.Backup(dir, files, Path.Combine(dir, "..\\backup-test")));
+                            List<string> failed = new List<string>();
+                            int n = Tools.Delete(files, failed);
+                            rep.AppendLine("deleted " + n + " of " + files.Count + "; failed " + failed.Count);
+                        }
+                    }
+                    if (runIndex != null)
+                    {
+                        int exit = Tools.RunIndex(runIndex, delegate (string line) { rep.AppendLine("> " + line); });
+                        rep.AppendLine("exit code " + exit);
+                        rep.AppendLine("index file: " + Tools.IndexFileOf(runIndex));
+                    }
+                }
+                catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
+                File.WriteAllText(reportPath, rep.ToString());
+                return rc;
+            }
+
+            if (listFile != null)
+            {
+                VoiceLibrary.Refresh();
+                List<string> lines = new List<string>();
+                foreach (VoiceInfo v in Ctx.Voices) lines.Add(v.Family + " | " + v.Engine + " | " + v.Display + " | " + v.Id);
+                File.WriteAllLines(listFile, lines.ToArray());
+                return 0;
+            }
+
+            if (selftest != null)
+            {
+                string text = Option(args, "--text") ?? "Selftest of the voice hub.";
+                StringBuilder report = new StringBuilder();
+                try
+                {
+                    VoiceLibrary.Refresh();
+                    List<string> notes = new List<string>();
+                    List<Segment> segs = TagParser.Parse(text, notes);
+                    foreach (string n in notes) report.AppendLine("note: " + n);
+                    foreach (Segment s in segs)
+                    {
+                        Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
+                        report.AppendLine("segment: actor=" + s.Actor + " voice=" + s.Voice + " lang=" + s.Lang + " speed=" + s.Speed + " vol=" + s.Volume + " radio=" + s.Radio + " text=" + s.Text);
+                        report.AppendLine("  plan: " + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " lang=" + p.Lang + " " + p.Note);
+                    }
+                    int code = 1;
+                    if (segs.Count > 0)
+                    {
+                        Plan p = Resolver.Resolve(segs[0], Ctx.Settings, Ctx.Voices);
+                        if (p.Voice != null)
+                        {
+                            DateTime t0 = DateTime.UtcNow;
+                            byte[] raw = Synth.Render(p.Voice, p.Speed, segs[0].Text);
+                            report.AppendLine("rendered " + raw.Length + " bytes in " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms: " + AudioFx.Describe(raw));
+                            byte[] wav = AudioFx.Apply(raw, p.Volume, Ctx.Settings.MasterVolume, p.Radio, Ctx.Settings.Radio);
+                            report.AppendLine("after effects (vol " + p.Volume + ", radio " + p.Radio + "): " + AudioFx.Describe(wav));
+                            File.WriteAllBytes(selftest, wav);
+                            code = wav.Length > 1000 ? 0 : 1;
+                        }
+                    }
+                    File.WriteAllText(selftest + ".txt", report.ToString());
+                    PiperEngine.StopAll();
+                    return code;
+                }
+                catch (Exception ex)
+                {
+                    report.AppendLine("ERROR: " + ex);
+                    File.WriteAllText(selftest + ".txt", report.ToString());
+                    PiperEngine.StopAll();
+                    return 1;
+                }
+            }
+
+            bool createdNew;
+            Mutex mutex = new Mutex(true, "Local\\HPGMissionCompanion", out createdNew);
+            if (!createdNew) return 0;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Ctx.Player = new Player();
+            MainForm form = new MainForm(Has(args, "--minimized"), Has(args, "--exit-with-sim"), logFile, simRoot);
+            string shot = Option(args, "--screenshot");
+            if (shot != null) { form.Snapshot(shot); return 0; }
+            Application.Run(form);
+            GC.KeepAlive(mutex);
+            return 0;
+        }
+
+        static bool Has(string[] args, string name)
+        {
+            foreach (string a in args) if (string.Equals(a, name, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
+
+        static string Option(string[] args, string name)
+        {
+            for (int i = 0; i < args.Length - 1; i++)
+                if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase)) return args[i + 1];
+            return null;
+        }
+    }
+}
