@@ -29,42 +29,42 @@ namespace HPGMissionCompanion
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
-            ClientSize = new Size(560, 330);
+            ClientSize = new Size(560, 372);
 
             Label info = new Label();
-            info.Text = "Tick what to delete. global.json (the global variables) is never touched.";
+            info.Text = "Tick what to delete. Only the first group is ticked for you.";
             info.Location = new Point(12, 12);
             info.Size = new Size(536, 20);
             Controls.Add(info);
 
             list.Location = new Point(12, 36);
-            list.Size = new Size(536, 150);
+            list.Size = new Size(536, 148);
             list.CheckOnClick = true;
             foreach (CleanGroup g in groups) list.Items.Add(g, g.Default);
             list.SelectedIndexChanged += delegate { ShowNote(); };
             Controls.Add(list);
 
             note.Location = new Point(12, 192);
-            note.Size = new Size(536, 50);
+            note.Size = new Size(536, 84);
             note.ForeColor = SystemColors.GrayText;
             Controls.Add(note);
 
             backup.Text = "Back up the files to a zip first (folder backups next to the program)";
             backup.Checked = true;
             backup.AutoSize = true;
-            backup.Location = new Point(12, 250);
+            backup.Location = new Point(12, 288);
             Controls.Add(backup);
 
             Button ok = new Button();
             ok.Text = "Delete";
-            ok.Location = new Point(368, 286);
+            ok.Location = new Point(368, 328);
             ok.Size = new Size(85, 30);
             ok.Click += delegate { Confirm(); };
             Controls.Add(ok);
             Button cancel = new Button();
             cancel.Text = "Cancel";
             cancel.DialogResult = DialogResult.Cancel;
-            cancel.Location = new Point(463, 286);
+            cancel.Location = new Point(463, 328);
             cancel.Size = new Size(85, 30);
             Controls.Add(cancel);
             CancelButton = cancel;
@@ -95,10 +95,13 @@ namespace HPGMissionCompanion
             int n = 0;
             foreach (CleanGroup g in sel) n += g.Files.Count;
             if (n == 0) { MessageBox.Show("Nothing is ticked.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-            bool saved = false;
-            foreach (CleanGroup g in sel) if (g.Key == "saved") saved = true;
-            string warn = "Delete " + n + " file" + (n == 1 ? "" : "s") + "?" + (saved ? "\n\nThis includes your saved games, profiles and settings." : "") + (backup.Checked ? "\n\nA zip backup is made first." : "\n\nNo backup will be made.");
-            if (MessageBox.Show(warn, Text, MessageBoxButtons.YesNo, saved ? MessageBoxIcon.Warning : MessageBoxIcon.Question) != DialogResult.Yes) return;
+            bool config = false, settings = false;
+            foreach (CleanGroup g in sel) { if (g.Key == "config") config = true; if (g.Key == "settings") settings = true; }
+            string warn = "Delete " + n + " file" + (n == 1 ? "" : "s") + "?"
+                + (config ? "\n\nThis includes your saved games and profiles." : "")
+                + (settings ? "\n\nThis includes global.json: every setting of every HPG mission goes back to its default." : "")
+                + (backup.Checked ? "\n\nA zip backup is made first." : "\n\nNo backup will be made.");
+            if (MessageBox.Show(warn, Text, MessageBoxButtons.YesNo, config || settings ? MessageBoxIcon.Warning : MessageBoxIcon.Question) != DialogResult.Yes) return;
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -114,6 +117,7 @@ namespace HPGMissionCompanion
 
         readonly TabControl tabs = new TabControl();
         readonly Button saveButton = new Button();
+        readonly CheckBox listenAllBox = new CheckBox();
         readonly Label saveLabel = new Label();
         bool suppress;
         bool dirty;
@@ -533,6 +537,17 @@ namespace HPGMissionCompanion
             serviceLabel.Location = new Point(290, 17);
             serviceLabel.Text = "Service: stopped";
             page.Controls.Add(serviceLabel);
+            listenAllBox.Text = "Accept connections from other computers (Windows Firewall may ask to open the port)";
+            listenAllBox.AutoSize = true;
+            listenAllBox.Location = new Point(160, 34);
+            listenAllBox.Checked = Ctx.Settings.ListenAll;
+            listenAllBox.CheckedChanged += delegate
+            {
+                Ctx.Settings.ListenAll = listenAllBox.Checked;
+                MarkDirty();
+                if (server != null) { StopServer(); StartServer(false); }      // the new address takes effect at once
+            };
+            page.Controls.Add(listenAllBox);
 
             Lbl(page, "Audio folder (wav files of the mission):", 10, 56, 0, 0);
             audioBox.Location = new Point(10, 76);
@@ -692,7 +707,7 @@ namespace HPGMissionCompanion
             int port = Ctx.Settings.Port;
             try
             {
-                s.Start(port);
+                s.Start(port, Ctx.Settings.ListenAll);
             }
             catch (SocketException)
             {
@@ -704,7 +719,7 @@ namespace HPGMissionCompanion
                     : MessageBox.Show("Port " + port + " is busy: another program uses it.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 if (answer != DialogResult.Yes) { SetServiceState(false); return; }
                 foreach (Process p in old) { try { p.Kill(); p.WaitForExit(3000); } catch (Exception) { } }
-                try { s.Start(port); }
+                try { s.Start(port, Ctx.Settings.ListenAll); }
                 catch (Exception ex) { AppendLog("[ERROR] " + ex.Message); SetServiceState(false); return; }
             }
             server = s;

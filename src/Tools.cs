@@ -143,21 +143,20 @@ namespace HPGMissionCompanion
         public static List<CleanGroup> Scan(string work)
         {
             Dictionary<string, CleanGroup> groups = new Dictionary<string, CleanGroup>();
-            string[] order = new string[] { "debug", "test", "saved", "mission", "other-tables", "flight", "other" };
-            Add(groups, "debug", "Debug snapshots of the mission", "table_R&E_debug_*: automatic, manual, dispatch and previous-mission snapshots.", true);
-            Add(groups, "test", "Test tables", "table_R&E_osm_* and other tables written by the test missions.", true);
-            Add(groups, "saved", "Saved games, profiles and settings", "Your saved mission settings, custom profiles and saved games: they are lost for good.", false);
-            Add(groups, "mission", "Other tables of the mission", "Other table_R&E_* files, for example custom hospitals and DF stations.", false);
-            Add(groups, "other-tables", "Tables of other missions", "table_* files that do not belong to this mission.", false);
-            Add(groups, "flight", "Flight records", "Flight_* files and PersistedAircraftState written by the aircraft.", false);
-            Add(groups, "other", "Other files", "Files that are not recognised.", false);
+            string[] order = new string[] { "safe", "config", "settings", "other" };
+            Add(groups, "safe", "Safe to delete (debug)", "The debug snapshots of the mission (table_R&E_debug_*: automatic, manual, dispatch and previous-mission) and the tables written by the test missions (table_R&E_osm_*, table_R&E_*_test*). Nothing of yours is in them.", true);
+            Add(groups, "config", "R&E configuration files (resets saved games and profiles)", "Your saved games, custom settings profiles, enabled accidents, aircraft profile links, custom missions and the other table_R&E_* files (custom hospitals, DF stations). They are lost for good: leave the backup ticked.", false);
+            Add(groups, "settings", "User settings: global.json (use it to reset to default, or if the mission does not start)", "global.json holds the global variables of ALL the HPG missions, that is your settings and their state. It sometimes gets corrupted and then the mission does not start. Deleting it resets every setting to its default and the mission writes a new one at the next start. Close the simulator first.", false);
+            Add(groups, "other", "Other files (not of this mission)", "table_* files of other missions, Flight_* records, PersistedAircraftState and files that are not recognised. Normally leave them.", false);
             if (Directory.Exists(work))
             {
+                string root = work.TrimEnd('\\', '/');
                 foreach (string file in Directory.GetFiles(work, "*", SearchOption.AllDirectories))
                 {
                     string name = Path.GetFileName(file);
-                    if (string.Equals(name, "global.json", StringComparison.OrdinalIgnoreCase)) continue;   // the global variables: never touched
                     string key = Classify(name);
+                    // global.json counts only in the work folder itself: one in a subfolder belongs to something else
+                    if (key == "settings" && !string.Equals(Path.GetDirectoryName(file).TrimEnd('\\', '/'), root, StringComparison.OrdinalIgnoreCase)) key = "other";
                     CleanGroup g = groups[key];
                     g.Files.Add(file);
                     try { g.Bytes += new FileInfo(file).Length; } catch (Exception) { }
@@ -178,16 +177,10 @@ namespace HPGMissionCompanion
         public static string Classify(string name)
         {
             string n = name.ToLowerInvariant();
-            if (n.StartsWith("table_r&e_debug_")) return "debug";
-            if (n.StartsWith("table_r&e_osm_") || (n.StartsWith("table_r&e_") && n.Contains("_test"))) return "test";
-            if (n.StartsWith("table_r&e_"))
-            {
-                if (n.Contains("saved_game") || n.Contains("saved_custom_settings") || n.Contains("custom_settings") || n.Contains("custom_mission")
-                    || n.Contains("enabled_accidents") || n.Contains("aircraft_profile_links")) return "saved";
-                return "mission";
-            }
-            if (n.StartsWith("table_")) return "other-tables";
-            if (n.StartsWith("flight_") || n == "persistedaircraftstate") return "flight";
+            if (n == "global.json") return "settings";
+            if (n.StartsWith("table_r&e_debug_")) return "safe";
+            if (n.StartsWith("table_r&e_osm_") || (n.StartsWith("table_r&e_") && n.Contains("_test"))) return "safe";
+            if (n.StartsWith("table_r&e_")) return "config";      // saved games, custom settings and profiles, enabled accidents, aircraft profile links, custom missions, hospitals, DF stations
             return "other";
         }
 

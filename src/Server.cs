@@ -20,12 +20,14 @@ namespace HPGMissionCompanion
         TcpListener listener;
         volatile bool stopping;
 
-        public void Start(int port)
+        // listenAll false: 127.0.0.1 only. The mission connects to localhost, and a program that listens on the loopback address only does not make
+        // Windows Firewall ask to open the port (the question that came at every start with 0.0.0.0, even though the mission works without the answer)
+        public void Start(int port, bool listenAll)
         {
             stopping = false;
-            listener = new TcpListener(IPAddress.Any, port);
+            listener = new TcpListener(listenAll ? IPAddress.Any : IPAddress.Loopback, port);
             listener.Start();
-            Ctx.Log("[SERVER] Started on 0.0.0.0:" + port);
+            Ctx.Log("[SERVER] Started on " + (listenAll ? "0.0.0.0" : "127.0.0.1") + ":" + port);
             Thread accept = new Thread(AcceptLoop);
             accept.IsBackground = true;
             accept.Start();

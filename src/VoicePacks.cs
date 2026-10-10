@@ -22,6 +22,7 @@ namespace HPGMissionCompanion
         public double Sleep = -1;               // seconds the mission waits after the message (information)
         public string Trigger = "";             // when the message happens (information)
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
+        public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
         public List<string> Options = new List<string>();
         public List<string> OptionSex = new List<string>();     // for each option: "" (any technician), "m" or "f" (only when the technician of the scene is male or female); the voice follows: actor 6 or 7
 
@@ -149,17 +150,20 @@ namespace HPGMissionCompanion
                 double sl;
                 if (double.TryParse(e.GetAttribute("sleep"), NumberStyles.Float, CultureInfo.InvariantCulture, out sl)) m.Sleep = sl;
                 m.Sfx = e.GetAttribute("sfx") == "1";
+                m.Futile = e.GetAttribute("futile") == "1";
                 foreach (XmlNode o in e.SelectNodes("o"))
                 {
                     string t = Regex.Replace(o.InnerText, "\\s+", " ").Trim();
-                    if (t.Length == 0) continue;
+                    bool silent = ((XmlElement)o).GetAttribute("silent") == "1";       // an empty option on purpose: nothing is said (keeps the option numbers)
+                    if (t.Length == 0 && !silent) continue;
+                    if (silent) t = "";
                     string sx = ((XmlElement)o).GetAttribute("sex").Trim().ToLowerInvariant();
                     if (sx == "male") sx = "m"; else if (sx == "female") sx = "f";
                     if (sx.Length > 0 && sx != "m" && sx != "f") { p.Problems.Add("message " + m.Key + ": sex must be m or f"); sx = ""; }
                     m.Options.Add(t);
                     m.OptionSex.Add(sx);
                 }
-                if (m.Options.Count == 0 && !(m.Sfx && m.Wav.Length > 0)) { p.Problems.Add("message " + m.Key + " has no <o> text"); continue; }
+                if (!m.Options.Exists(delegate (string s) { return s.Length > 0; }) && !(m.Sfx && m.Wav.Length > 0)) { p.Problems.Add("message " + m.Key + " has no <o> text"); continue; }
                 p.Messages[m.Key] = m;
             }
             return p;
@@ -235,6 +239,8 @@ namespace HPGMissionCompanion
         static bool ctxValid;                               // the mission publishes its context (L:HMC_CTX_VALID)
         static bool heliOff;                                // L:HMC_HELI_OFF
         static int crewMask;                                // L:HMC_CREW_PRESENT: bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2 are aboard
+        static int chatMax = 6;                               // L:HMC_CHAT_MAX: the highest option number the mission lets a message use (the setting CREW CHATTER: 6 full, 3 reduced, 1 minimal)
+        static int muteMask;                                // L:HMC_CREW_MUTE: the same bits, crew members who cannot speak
         static readonly Dictionary<string, PackMessage> watchMap = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
         static VoicePack watchPack;
         static string lastBridgeText = "";
@@ -480,7 +486,7 @@ namespace HPGMissionCompanion
                 list.Add(Mixer.VarCrew); list.Add(Mixer.VarChk); list.Add(Mixer.VarCamera);
                 watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
                 if (watchPack == null) return list;
-                list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew); list.Add(SimLink.CtxTechSex);
+                list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew); list.Add(SimLink.CtxTechSex); list.Add(SimLink.CtxMute); list.Add(SimLink.CtxChat);
                 foreach (PackMessage m in watchPack.Messages.Values)
                 {
                     string l = m.LvarFor(watchPack.Vcp);
@@ -512,6 +518,8 @@ namespace HPGMissionCompanion
                 if (name == SimLink.CtxValid) { ctxValid = value > 0.5; return; }
                 if (name == SimLink.CtxHeliOff) { heliOff = value > 0.5; return; }
                 if (name == SimLink.CtxCrew) { crewMask = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxMute) { muteMask = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxChat) { int c = (int)Math.Round(value); chatMax = c >= 1 && c <= 6 ? c : 6; return; }
                 if (name == SimLink.CtxTechSex) { techSex = value > 0.5 ? 1 : 0; return; }
                 if (baseline || value <= oldValue) return;     // only a rise of the counter speaks; a reset to 0 is not a message
                 if (!watchMap.TryGetValue(name, out m)) return;
@@ -586,12 +594,22 @@ namespace HPGMissionCompanion
             int index = forced >= 1 && forced <= msg.Options.Count ? forced - 1 : Pick(msg);
             string[] parts = args.Length > 0 ? args.Split(new string[] { "//" }, StringSplitOptions.None) : new string[0];
             string body = Fill(msg.Options[index], parts, pack, notes);
+            if (msg.Options[index].Length == 0)
+            {
+                Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " is silent (" + pack.Name + " v" + pack.Version + ")");
+                return "";
+            }
             int actor = msg.Actor;
             if (msg.OptionSex.Count == msg.Options.Count && msg.OptionSex.Exists(delegate (string s) { return s.Length > 0; }))
             {
                 string sx = msg.OptionSex[index];
                 if (sx.Length == 0) sx = TechSexOf(msg);
                 actor = sx == "f" ? 7 : 6;      // a message with options for the two technicians is spoken by the technician of the scene: Technician male (6) or female (7)
+            }
+            if (actor >= 1 && actor <= 5 && (muteMask & (1 << (actor - 1))) != 0)       // the dead and the badly hurt do not speak
+            {
+                Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " cannot speak (L:HMC_CREW_MUTE)");
+                return "";
             }
             StringBuilder tags = new StringBuilder();
             if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(actor).Append('>');
@@ -638,7 +656,9 @@ namespace HPGMissionCompanion
                 for (int i = 0; i < m.Options.Count; i++) if (m.OptionSex[i].Length == 0 || m.OptionSex[i] == want) eligible.Add(i);
                 if (eligible.Count == 0) eligible = null;
             }
-            int pos = PickPosition(m, eligible != null ? eligible.Count : m.Options.Count);
+            int count = eligible != null ? eligible.Count : m.Options.Count;
+            if (chatMax < count) count = chatMax;      // the highest option number the setting CREW CHATTER lets through: the professional options have the low numbers, a futile message starts with two silent ones
+            int pos = PickPosition(m, count);
             return eligible != null ? eligible[pos] : pos;
         }
 
@@ -646,7 +666,7 @@ namespace HPGMissionCompanion
         {
             if (n == 1) return 0;
             int k;
-            if (coherent && m.Group.Length > 0)
+            if ((coherent || m.Futile) && m.Group.Length > 0)
             {
                 if (string.Equals(m.Group, lastGroup, StringComparison.OrdinalIgnoreCase) && (DateTime.UtcNow - lastGroupTime).TotalSeconds < 180)
                     k = Math.Min(lastGroupOption, n - 1);

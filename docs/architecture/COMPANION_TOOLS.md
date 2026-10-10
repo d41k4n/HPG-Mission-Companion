@@ -14,15 +14,12 @@ and accepts a folder chosen by the user.
 
 | Group | Files | Ticked by default |
 | --- | --- | --- |
-| debug | `table_R&E_debug_*` | yes |
-| test | `table_R&E_osm_*` and `table_R&E_*_test*` | yes |
-| saved | saved games, custom settings and profiles, enabled accidents, aircraft profile links, custom mission | no |
-| mission | other `table_R&E_*` (custom hospitals, DF stations, ...) | no |
-| other-tables | other `table_*` | no |
-| flight | `Flight_*`, `PersistedAircraftState` | no |
-| other | unrecognised files | no |
+| safe (Safe to delete, debug) | `table_R&E_debug_*`, `table_R&E_osm_*` and `table_R&E_*_test*` | yes |
+| config (R&E configuration files: resets saved games and profiles) | every other `table_R&E_*`: saved games, custom settings and profiles, enabled accidents, aircraft profile links, custom missions, custom hospitals, DF stations | no |
+| settings (User settings: reset to default, or if the mission does not start) | `global.json` in the work folder itself | no |
+| other (not of this mission) | other `table_*`, `Flight_*`, `PersistedAircraftState`, unrecognised files, a `global.json` in a subfolder | no |
 
-`global.json` is excluded from every group and never touched. Deleting asks for confirmation (with a warning when the saved group is ticked), makes a zip backup first by default (`backups\work-backup-<time>.zip`, relative names kept) and aborts without deleting when the backup fails. A warning appears when the simulator is running.
+`global.json` holds the global variables of all the HPG missions and sometimes gets corrupted, which stops the mission: deleting it resets every setting to its default and the mission writes a new one. Deleting asks for confirmation (with a warning when the config or settings group is ticked), makes a zip backup first by default (`backups\work-backup-<time>.zip`, relative names kept) and aborts without deleting when the backup fails. A warning appears when the simulator is running.
 
 ## Mission index
 

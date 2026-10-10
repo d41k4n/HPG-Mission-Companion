@@ -1,6 +1,6 @@
 # Voice protocol and text tags
 
-The HPG mission system speaks through an external voice server on `localhost:5997` (WebSocket); see https://davux.com/docs/missionsys/TOPIC-SOUND.html. The protocol is one way, from the mission to the server: the mission cannot receive data back through it.
+The HPG mission system speaks through an external voice server on `localhost:5997` (WebSocket); see https://davux.com/docs/missionsys/TOPIC-SOUND.html. The protocol is one way, from the mission to the server: the mission cannot receive data back through it. The program listens on `127.0.0.1` only, which is enough for `localhost` and keeps Windows Firewall from asking to open the port; the setting `ListenAll` (tick "Accept connections from other computers" in the Service tab) listens on every interface instead.
 
 ## Messages
 

@@ -245,7 +245,7 @@ for (const [lvar, rows] of byLvar) {
 // messages that have no row in the spreadsheet (texts written from the wav file names: draft)
 for (const extrasPath of extrasPaths) {
   const dialogs = /dialogs/i.test(extrasPath);       // dialogs file: new messages with a group, not drafts of existing wavs
-  if (/techs/i.test(extrasPath)) continue;            // technician file: changes existing messages, applied below
+  if (/techs|replace/i.test(extrasPath)) continue;    // technician and replace files: change existing messages, applied below
   const extras = JSON.parse(fs.readFileSync(extrasPath, 'utf8')).messages;
   for (const x of extras) {
     const k = x.lvar ? keyOf(x.lvar.replace('{VCP}', 'AND')) : { key: x.key, role: x.key.split('.')[0] };
@@ -258,7 +258,7 @@ for (const extrasPath of extrasPaths) {
 // technicians (the technician of a scene is male or female, picked by the mission): messages with options for each sex (m, f), and messages whose options are replaced
 //   {"messages":[{"key":"FRA.1","m":["..."],"f":["..."]}],"replace":[{"key":"CPL.23","o":["..."]}]}
 for (const extrasPath of extrasPaths) {
-  if (!/techs/i.test(extrasPath)) continue;
+  if (!/techs|replace/i.test(extrasPath)) continue;
   const tj = JSON.parse(fs.readFileSync(extrasPath, 'utf8'));
   for (const x of tj.messages || []) {
     const msg = messages.find((m) => m.key === x.key);
@@ -274,6 +274,29 @@ for (const extrasPath of extrasPaths) {
     msg.draft = false;
   }
 }
+
+// Warning prefixes: the spreadsheet alternatives of many messages start with "Be advised:", "Attention:", "For information:" and the like, which made the crew and the
+// dispatcher say them far too often. They are dropped; a message that is a real alert keeps ONE prefixed option (so it is heard about one time in three or four), and a
+// message that would be left with nothing keeps its first option without the prefix.
+const PREFIX = /^(be advised|be aware|attention|caution|warning|for information|for your information|can you confirm|please confirm|message update)\s*[:,-]\s*/i;
+const ALERT = /warning|alert|danger|fire|low fuel|fuel level is low|fail|emergency|mayday|terrain|obstacle|wire|overspeed|exceed|limit|damage|fault|lost|loss|pressure/i;
+let prefixDropped = 0;
+for (const m of messages) {
+  if (m.sexes || m.sfx || !m.options.length) continue;
+  const plain = m.options.filter((o) => !PREFIX.test(o));
+  const prefixed = m.options.filter((o) => PREFIX.test(o));
+  if (!prefixed.length) continue;
+  const norm2 = new Set(plain.map(norm));
+  let kept = plain.slice();
+  if (!kept.length) { const s = prefixed[0].replace(PREFIX, ''); kept.push(s.charAt(0).toUpperCase() + s.slice(1)); }
+  else if (kept.length >= 2 && ALERT.test(kept.join(' '))) {
+    const cand = prefixed.find((o) => !norm2.has(norm(o.replace(PREFIX, ''))));
+    if (cand) kept.push(cand);
+  }
+  prefixDropped += m.options.length - kept.length;
+  m.options = kept;
+}
+console.log('warning prefixes: ' + prefixDropped + ' options dropped');
 
 // ---- write the XML ------------------------------------------------------------------------------------
 const L = [];

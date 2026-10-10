@@ -27,6 +27,8 @@ namespace HPGMissionCompanion
         public const string CtxValid = "L:HMC_CTX_VALID";                 // 1 when the mission publishes the two variables below
         public const string CtxHeliOff = "L:HMC_HELI_OFF";                // 1 helicopter completely off
         public const string CtxTechSex = "L:HMC_TECH_SEX";                 // the technician of the scene: 0 male, 1 female (the mission picks one at random in app mode)
+        public const string CtxChat = "L:HMC_CHAT_MAX";                    // the highest option number a message may use (the mission setting CREW CHATTER: FULL 6, REDUCED 3, MINIMAL 1); not published or 0 = 6
+        public const string CtxMute = "L:HMC_CREW_MUTE";                   // same bits as the line below: crew members who cannot speak (dead, or hurt so badly that they are out of the conversation)
         public const string CtxCrew = "L:HMC_CREW_PRESENT";               // bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard
 
         const uint WatchDefineBase = 300;

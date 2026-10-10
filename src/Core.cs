@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.8";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.9";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -101,6 +101,7 @@ namespace HPGMissionCompanion
     {
         public string DefaultLanguage = "EN";
         public int Port = 5997;
+        public bool ListenAll = false;          // false: the service listens on 127.0.0.1 only (the mission connects to localhost, and Windows Firewall never asks); true: on every network interface
         public string AudioFolder = "";
         public bool StartWithSim = false;
         public bool ExitWithSim = true;

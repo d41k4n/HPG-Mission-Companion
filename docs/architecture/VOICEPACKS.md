@@ -19,7 +19,8 @@ A voice pack is an XML file in `voicepacks\` next to the program (`Ctx.BaseDir`)
 <voicepack name="EN" language="EN" version="1" vcp="APP" title="...">   name optional (file name), language EN FR IT DE, version whole number >= 1, vcp = voice code of the mission in app mode (default APP)
   <names><name role="PLT">Pilot</name> ... <pool role="PLT">Mark, John, ...</pool></names>   job words of {PLT} {CPL} {PAX1} {PAX2} {PAX3} {TECHM} {TECHF}; the optional pools replace the static name lists for random names
   <message key="CPL.5" actor="2" radio="auto" group="" seq="0" sfx="0" lvar="L:CPL{VCP}5" wav="" sleep="" tight="" trigger="" draft="">
-    <o>option text with {0} {PLT} {@PLT} and the normal tags</o>        any number of options; <o sex="m"> / <o sex="f"> only for the male / female technician
+    <o>option text with {0} {PLT} {@PLT} and the normal tags</o>        six options (pack EN 6); <o sex="m"> / <o sex="f"> only for the male / female technician; <o silent="1"/> says nothing
+  <message ... futile="1">                                          small talk nobody needs: options 1 and 2 silent, 3 the default, the group is always coherent
   </message>
 </voicepack>
 ```
@@ -80,3 +81,13 @@ The variables are written at every connection, every 5 s and when they change. A
 ## Installing
 
 Drag the XML onto the Voice packs tab, Browse, or `--install-pack file.xml`; the copy is saved as `<pack name>.xml`. When the file has no `name` attribute the file name (letters, digits, `_`, `-`) is the pack name.
+
+## Six options, small talk and who can speak
+
+Pack EN 6 has six options for every message. Option 1 is the default (the wav text, corrected) and stays so; 2 and 3 are professional variants; 4 to 6 are more and more colloquial where the sentence allows it, so that a filter on the option number can later cut the small talk. A futile message (`futile="1"`: greetings, jokes, small talk nobody needs) starts at 3: options 1 and 2 are silent (`<o silent="1"/>`), 3 is the default, 4 to 6 the others, and the lines of a group of futile messages are always coherent, so a silent option silences the whole conversation. Callouts (numbers, clock positions, Vy, Vtoss, VNE) repeat the same word on purpose. A message with options for the technicians has six for each sex (a futile one has two silent options shared by both and four for each sex).
+
+The dead and the badly hurt do not speak: the mission publishes `L:HMC_CREW_MUTE` (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2, as `L:HMC_CREW_PRESENT`) for the crew members that are dead or have a life score under 15, and `Say` keeps the lines of that actor silent (log: `not said`). The mission decides the small talk too (macro voice calm): never with a dying patient, an injured crew member, after a death or in an emergency.
+
+The chatter level: the mission publishes `L:HMC_CHAT_MAX` (its setting CREW CHATTER: FULL 6, REDUCED 3, MINIMAL 1; not published or 0 means 6) and the program never picks an option number above it (`Pick`: the number of options of the message, or of the technician, is cut to that value before the choice; a coherent group keeps its number, cut to the same limit). Because the professional wording has the low numbers and a futile message starts with two silent options, REDUCED lets a futile line through only at its default and MINIMAL says the default wording everywhere and keeps the futile lines silent. The variable is part of the context the mission publishes only when it changes (`voice context publish`).
+
+The pack is edited from `tools/variants-EN/*.json` with `tools/build-variants.js`; `tools/export-xlsx.js` writes the voice messages spreadsheet from it.

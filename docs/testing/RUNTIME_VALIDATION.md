@@ -50,6 +50,6 @@ The same file holds a CARLS keypad hold test that belongs to the mission reposit
 
 ## Tools
 
-1. Clean up: close the simulator, open Tools, Clean up, check the groups, tick only debug and test, keep the backup. The files of the other groups, `global.json` and the saved profiles must still be there, and `backups\` must hold the zip.
+1. Clean up: close the simulator, open Tools, Clean up, check the four groups (Safe to delete, R&E configuration files, User settings with global.json, Other files), tick only the first, keep the backup. The files of the other groups, `global.json` and the saved profiles must still be there, and `backups\` must hold the zip. Then tick only User settings: `global.json` is gone and the mission writes a new one at the next start with every setting at its default (the zip holds the old one).
 2. Update mission index: press the button with the Community folder of the simulator; the output ends with SUCCESS, the index file time changes; in the simulator press Refresh in the mission app and a newly added mission file appears.
-3. Start with the simulator: tick the option, start the simulator: the app appears in the notification area (not in the taskbar), serves port 5997, and exits about 15 s after the simulator closes.
+3. Start with the simulator: tick the option, start the simulator: the app appears in the notification area (not in the taskbar), serves port 5997 on 127.0.0.1, and exits about 15 s after the simulator closes. Windows Firewall must not ask to open the port, and the mission still connects (the log of the program shows the connection); with "Accept connections from other computers" ticked it listens on 0.0.0.0 and the question may come back.

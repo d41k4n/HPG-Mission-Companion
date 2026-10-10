@@ -16,6 +16,7 @@
 | `src/Program.cs` | entry point, command line, assembly attributes |
 | `assets/` | `app.ico` and `make-icon.ps1`, the script that draws it |
 | `setup/Setup.cs` | installer and uninstaller (per user: files, voice packs through `--install-pack`, shortcuts, Apps and features entry); built by `tools/build.cmd` as `HPGMissionCompanionSetup.exe` |
+| `tools/variants-EN/`, `tools/build-variants.js`, `tools/export-xlsx.js` | the six options of every message of the pack EN (source), the script that writes them into `voicepacks/EN.xml`, and the one that writes the voice messages spreadsheet from the pack |
 | `tools/` | `build.cmd`, `check.js`, `import-pack.js`, `pack-extras-EN.json`, `assert-main-branch.js`, `release-ledger.json` |
 | `voicepacks/` | the voice packs shipped with the program (`EN.xml`); the XML is the source after the import |
 | `docs/` | `DEVELOPER_GUIDE.md` (for mission authors, compiled into the program) |

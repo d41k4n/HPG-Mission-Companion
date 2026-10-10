@@ -1,0 +1,10 @@
+{
+  "_comment": "Messages of the spreadsheet whose options are replaced. CPL.43 and CPL.44 are the speed callouts Vtoss and Vy: only the word, with the pronunciation a voice reads well. CPL.40 is the copilot after a hard touchdown: it was too relaxed for a hard landing.",
+  "messages": [],
+  "replace": [
+    {"key":"CPL.43","o":["V toss."]},
+    {"key":"CPL.44","o":["V Y."]},
+    {"key":"CPL.39","o":["That was a hard landing! Crew, report!","Hard landing! Is everybody okay?","That was a hard one. Doc, check the patient!","That was a hard landing. We must inspect the helicopter."]},
+    {"key":"CPL.40","o":["That was a hard touchdown! Is everybody okay?","Whoa, hard touchdown! Everyone all right?","That was a very hard touch. Crew, report!","Hard touchdown! Check yourselves, everybody."]}
+  ]
+}
