@@ -130,8 +130,14 @@ namespace HPGMissionCompanion
         readonly CheckBox minimizedCheck = new CheckBox();
         readonly CheckBox exitCheck = new CheckBox();
         readonly Label simInfo = new Label();
+        readonly CheckBox inhibitCheck = new CheckBox();
+        readonly Label inhibitInfo = new Label();
         readonly TextBox testBox = new TextBox();
-        readonly TextBox logBox = new TextBox();
+        readonly RichTextBox logBox = new RichTextBox();
+        readonly Button exitButton = new Button();
+        readonly CheckBox autoIndexCheck = new CheckBox();
+        readonly SynchronizationContext uiContext;
+        bool indexRunning;
         List<SimTarget> sims = new List<SimTarget>();
 
         // actors tab
@@ -203,6 +209,7 @@ namespace HPGMissionCompanion
             MaximizeBox = false;
             Icon = appIcon;
 
+            uiContext = SynchronizationContext.Current;
             Ctx.Log = AppendLog;
 
             tabs.Location = new Point(12, 12);
@@ -224,6 +231,11 @@ namespace HPGMissionCompanion
             saveLabel.AutoSize = true;
             saveLabel.Location = new Point(144, 614);
             Controls.Add(saveLabel);
+            exitButton.Text = "Exit program";
+            exitButton.Location = new Point(628, 606);
+            exitButton.Size = new Size(120, 32);
+            exitButton.Click += delegate { ExitApp(true); };
+            Controls.Add(exitButton);
 
             tray.Icon = appIcon;
             tray.Text = AppInfo.Name;
@@ -244,28 +256,55 @@ namespace HPGMissionCompanion
             base.SetVisibleCore(allowShow ? value : false);
         }
 
-        // test helper: saves a picture of every tab (--screenshot <base path>)
+        // test helper: saves a picture of every tab (--screenshot <base path>), taken from the screen so that every control is drawn
         public void Snapshot(string basePath)
         {
             allowShow = true;
             Show();
+            Activate();
             for (int i = 0; i < 20; i++) { Application.DoEvents(); Thread.Sleep(100); }
+            AppendLog("[SERVER] Started on 0.0.0.0:5997 (sample line)");
+            AppendLog("[ACCEPT] client 127.0.0.1:50000 (sample line)");
+            AppendLog("[RAW] {\"Text\":\"<actor1><vol:40><radio>Pilot to dispatch.\"} (sample line)");
+            AppendLog("[VOICE] actor 1, EN, ryan - high - male (Piper, en_US), speed 1.0, vol 40, radio: Pilot to dispatch. (sample line)");
+            AppendLog("[RENDER] 120 ms, 118 KB (sample line)");
+            AppendLog("[WARN] voice 'xyz' not installed, using the actor voice (sample line)");
+            AppendLog("[ERROR] File does not exist: missing.wav (sample line)");
+            AppendLog("[INFO] Start with the simulator ON (--minimized --exit-with-sim) (sample line)");
+            AppendLog("[INTERRUPT] (sample line)");
+            for (int i = 0; i < 8; i++) { Application.DoEvents(); Thread.Sleep(100); }
             for (int t = 0; t < tabs.TabPages.Count; t++)
             {
                 tabs.SelectedIndex = t;
-                for (int i = 0; i < 5; i++) { Application.DoEvents(); Thread.Sleep(60); }
-                using (Bitmap bmp = new Bitmap(Width, Height))
-                {
-                    DrawToBitmap(bmp, new Rectangle(0, 0, Width, Height));
-                    bmp.Save(basePath + "-" + t + ".png", System.Drawing.Imaging.ImageFormat.Png);
-                }
+                for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+                SaveShot(basePath + "-" + t + ".png");
             }
+            tabs.SelectedIndex = 0;
+            MarkDirty();
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            SaveShot(basePath + "-dirty.png");
             reallyExit = true;
             StopServer();
             PiperEngine.StopAll();
             tray.Visible = false;
         }
 
+        void SaveShot(string path)
+        {
+            Rectangle r = Bounds;
+            using (Bitmap bmp = new Bitmap(r.Width, r.Height))
+            {
+                try
+                {
+                    using (Graphics g = Graphics.FromImage(bmp)) g.CopyFromScreen(r.Location, Point.Empty, r.Size);
+                }
+                catch (Exception)
+                {
+                    DrawToBitmap(bmp, new Rectangle(0, 0, r.Width, r.Height));
+                }
+                bmp.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
         void ShowWindow()
         {
             allowShow = true;
@@ -304,17 +343,23 @@ namespace HPGMissionCompanion
                 Startup();
             }
             string line;
-            StringBuilder sb = null;
+            bool any = false;
             while (logQueue.TryDequeue(out line))
             {
-                if (sb == null) sb = new StringBuilder();
-                sb.Append(line).Append(Environment.NewLine);
+                AppendColored(line);
+                any = true;
             }
-            if (sb != null)
+            if (any)
             {
-                if (logBox.TextLength > 60000) logBox.Text = logBox.Text.Substring(logBox.TextLength - 30000);
-                logBox.AppendText(sb.ToString());
+                if (logBox.TextLength > 60000)
+                {
+                    int cut = logBox.GetFirstCharIndexFromLine(logBox.Lines.Length / 2);
+                    if (cut > 0) { logBox.Select(0, cut); logBox.SelectedText = ""; }
+                }
+                logBox.SelectionStart = logBox.TextLength;
+                logBox.ScrollToCaret();
             }
+            if (inhibitInfo.Text != SimLink.Status) inhibitInfo.Text = SimLink.Status;
             if (exitWithSimArg && DateTime.UtcNow >= nextSimCheck)
             {
                 nextSimCheck = DateTime.UtcNow.AddSeconds(5);
@@ -325,6 +370,29 @@ namespace HPGMissionCompanion
                     ExitApp(false);
                 }
             }
+        }
+
+        // the log is dark green; each kind of message has its own colour, voices in yellow
+        static Color LogColor(string line)
+        {
+            if (line.IndexOf("[ERROR]", StringComparison.Ordinal) >= 0) return Color.FromArgb(255, 110, 110);
+            if (line.IndexOf("[WARN]", StringComparison.Ordinal) >= 0) return Color.FromArgb(255, 180, 70);
+            if (line.IndexOf("[VOICE]", StringComparison.Ordinal) >= 0) return Color.FromArgb(255, 232, 110);
+            if (line.IndexOf("[RAW]", StringComparison.Ordinal) >= 0) return Color.FromArgb(160, 210, 170);
+            if (line.IndexOf("[SERVER]", StringComparison.Ordinal) >= 0 || line.IndexOf("[ACCEPT]", StringComparison.Ordinal) >= 0
+                || line.IndexOf("[DISCONNECT]", StringComparison.Ordinal) >= 0) return Color.FromArgb(110, 225, 255);
+            if (line.IndexOf("[INTERRUPT]", StringComparison.Ordinal) >= 0 || line.IndexOf("[PLAY]", StringComparison.Ordinal) >= 0
+                || line.IndexOf("[RENDER]", StringComparison.Ordinal) >= 0 || line.IndexOf("[SILENT]", StringComparison.Ordinal) >= 0) return Color.FromArgb(175, 190, 255);
+            if (line.IndexOf("[INFO]", StringComparison.Ordinal) >= 0) return Color.FromArgb(235, 255, 235);
+            return Color.FromArgb(205, 240, 205);
+        }
+
+        void AppendColored(string line)
+        {
+            logBox.SelectionStart = logBox.TextLength;
+            logBox.SelectionLength = 0;
+            logBox.SelectionColor = LogColor(line);
+            logBox.AppendText(line + "\n");
         }
 
         void AppendLog(string line)
@@ -347,12 +415,12 @@ namespace HPGMissionCompanion
             if (sims.Count == 0)
             {
                 simCheck.Enabled = false;
-                simInfo.Text = "No Microsoft Flight Simulator installation found on this PC.";
+                simInfo.Text = "No Microsoft Flight Simulator installation found on this PC (the simulator writes UserCfg.opt in its folder once it has run).";
             }
             else
             {
                 bool any = false;
-                StringBuilder sb = new StringBuilder("Found: ");
+                StringBuilder sb = new StringBuilder("Simulators found: ");
                 for (int i = 0; i < sims.Count; i++)
                 {
                     if (i > 0) sb.Append("; ");
@@ -368,14 +436,23 @@ namespace HPGMissionCompanion
             FillCatalogList();
             UpdateEngineState();
             RefreshTools();
+            if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
             StartServer(true);
+            SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
         }
 
         void MarkDirty()
         {
             dirty = true;
-            saveLabel.Text = "Not saved yet.";
+            saveLabel.ForeColor = Color.Red;
+            saveLabel.Text = "Modified settings, please save";
+        }
+
+        void SetSaveInfo(string text)
+        {
+            saveLabel.ForeColor = SystemColors.ControlText;
+            saveLabel.Text = text;
         }
 
         void SaveSettings()
@@ -393,7 +470,7 @@ namespace HPGMissionCompanion
             {
                 Ctx.Settings.Save(Ctx.SettingsPath);
                 dirty = false;
-                saveLabel.Text = "Saved.";
+                SetSaveInfo("Settings saved.");
             }
             catch (Exception ex)
             {
@@ -474,13 +551,25 @@ namespace HPGMissionCompanion
 
             simCheck.Text = "Start this program when Microsoft Flight Simulator starts (2020 and 2024)";
             simCheck.AutoSize = true;
-            simCheck.Location = new Point(10, 192);
+            inhibitCheck.Text = "Auto set default audio inhibit L:AUDIOINHIBIT";
+            inhibitCheck.AutoSize = true;
+            inhibitCheck.Checked = Ctx.Settings.AutoAudioInhibit;
+            inhibitCheck.Location = new Point(10, 182);
+            inhibitCheck.CheckedChanged += delegate { Ctx.Settings.AutoAudioInhibit = inhibitCheck.Checked; MarkDirty(); };
+            page.Controls.Add(inhibitCheck);
+            inhibitInfo.AutoSize = true;
+            inhibitInfo.Location = new Point(360, 184);
+            inhibitInfo.ForeColor = SystemColors.GrayText;
+            inhibitInfo.Text = SimLink.Status;
+            page.Controls.Add(inhibitInfo);
+
+            simCheck.Location = new Point(10, 204);
             simCheck.CheckedChanged += delegate { UpdateSimOptions(); if (!suppress) ApplyAutostart(); };
             page.Controls.Add(simCheck);
             minimizedCheck.Text = "Start minimized, in the notification area next to the clock";
             minimizedCheck.AutoSize = true;
             minimizedCheck.Checked = Ctx.Settings.StartMinimized;
-            minimizedCheck.Location = new Point(30, 214);
+            minimizedCheck.Location = new Point(30, 226);
             minimizedCheck.CheckedChanged += delegate
             {
                 Ctx.Settings.StartMinimized = minimizedCheck.Checked;
@@ -490,39 +579,44 @@ namespace HPGMissionCompanion
             exitCheck.Text = "Close it when the simulator closes";
             exitCheck.AutoSize = true;
             exitCheck.Checked = Ctx.Settings.ExitWithSim;
-            exitCheck.Location = new Point(30, 236);
+            exitCheck.Location = new Point(30, 248);
             exitCheck.CheckedChanged += delegate
             {
                 Ctx.Settings.ExitWithSim = exitCheck.Checked;
                 if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
             };
             page.Controls.Add(exitCheck);
-            simInfo.Location = new Point(30, 258);
-            simInfo.Size = new Size(690, 34);
+            simInfo.Location = new Point(30, 270);
+            simInfo.Size = new Size(690, 32);
             simInfo.ForeColor = SystemColors.GrayText;
             page.Controls.Add(simInfo);
 
-            Lbl(page, "Try a mission text (tags: <actor3> <Microsoft David> <ryan> <speed:1.2> <vol:60> <radio> <EN> <IT> <FR> <DE>):", 10, 298, 0, 0);
-            testBox.Location = new Point(10, 320);
-            testBox.Size = new Size(610, 22);
+            GroupBox box = new GroupBox();
+            box.Text = "Mission text test and log";
+            box.Location = new Point(10, 304);
+            box.Size = new Size(708, 222);
+            page.Controls.Add(box);
+            Lbl(box, "Try a mission text (tags: <actor3> <Microsoft David> <ryan> <speed:1.2> <vol:60> <radio> <EN> <IT> <FR> <DE>):", 10, 22, 0, 0);
+            testBox.Location = new Point(10, 44);
+            testBox.Size = new Size(590, 22);
             testBox.Text = "<actor3><speed:1.1>Crew three, ready for the next step.";
-            page.Controls.Add(testBox);
-            Button speak = Btn(page, "Speak", 628, 318, 90, 26);
+            box.Controls.Add(testBox);
+            Button speak = Btn(box, "Speak", 608, 42, 88, 26);
             speak.Click += delegate { Ctx.Player.EnqueueText(testBox.Text, true); };
 
-            logBox.Multiline = true;
             logBox.ReadOnly = true;
-            logBox.ScrollBars = ScrollBars.Vertical;
+            logBox.BackColor = Color.FromArgb(10, 42, 24);
+            logBox.ForeColor = Color.FromArgb(205, 240, 205);
+            logBox.BorderStyle = BorderStyle.FixedSingle;
+            logBox.ScrollBars = RichTextBoxScrollBars.Vertical;
+            logBox.WordWrap = true;
             logBox.Font = new Font("Consolas", 9F);
-            logBox.Location = new Point(10, 352);
-            logBox.Size = new Size(708, 150);
-            page.Controls.Add(logBox);
+            logBox.Location = new Point(10, 76);
+            logBox.Size = new Size(686, 136);
+            box.Controls.Add(logBox);
 
-            Button exit = Btn(page, "Exit program", 10, 512, 120, 28);
-            exit.Click += delegate { ExitApp(true); };
-            Lbl(page, "Closing the window keeps the program running in the notification area.", 140, 519, 0, 0);
+            Lbl(page, "Closing the window keeps the program running in the notification area.", 10, 532, 0, 0).ForeColor = SystemColors.GrayText;
         }
-
         // the two sub-options only make sense with the simulator option
         void UpdateSimOptions()
         {
@@ -670,8 +764,8 @@ namespace HPGMissionCompanion
                 speedLabel[i].Text = (speedBar[i].Value / 10.0).ToString("0.0", CultureInfo.InvariantCulture);
             }
             suppress = false;
-            if (fam.Count == 0) saveLabel.Text = "No " + li.Name + " voice is installed: add one in the Piper voices tab or in Windows (Settings > Time & language > Speech).";
-            else if (!dirty && saveLabel.Text.StartsWith("No ")) saveLabel.Text = "";
+            if (fam.Count == 0 && !dirty) SetSaveInfo("No " + li.Name + " voice is installed: add one in the Piper voices tab or in Windows (Settings).");
+            else if (!dirty && saveLabel.Text.StartsWith("No ")) SetSaveInfo("");
         }
 
         void OnVoiceChanged(int i)
@@ -959,7 +1053,7 @@ namespace HPGMissionCompanion
             if (IsDisposed) return;
             try
             {
-                if (IsHandleCreated) BeginInvoke(a);
+                if (uiContext != null) uiContext.Post(delegate { if (!IsDisposed) a(); }, null);
                 else a();
             }
             catch (Exception) { }
@@ -1095,8 +1189,14 @@ namespace HPGMissionCompanion
             indexButton.Text = "Update mission index";
             indexButton.Location = new Point(10, 222);
             indexButton.Size = new Size(180, 30);
-            indexButton.Click += delegate { UpdateIndex(); };
+            indexButton.Click += delegate { UpdateIndex(false); };
             page.Controls.Add(indexButton);
+            autoIndexCheck.Text = "Update the index automatically when the app starts";
+            autoIndexCheck.AutoSize = true;
+            autoIndexCheck.Checked = Ctx.Settings.AutoIndex;
+            autoIndexCheck.Location = new Point(204, 228);
+            autoIndexCheck.CheckedChanged += delegate { Ctx.Settings.AutoIndex = autoIndexCheck.Checked; MarkDirty(); };
+            page.Controls.Add(autoIndexCheck);
 
             toolsOut.Multiline = true;
             toolsOut.ReadOnly = true;
@@ -1133,6 +1233,7 @@ namespace HPGMissionCompanion
                 indexCombo.SelectedIndex = pick;
             }
             indexButton.Enabled = indexCombo.Items.Count > 0;
+            AppendLog("[INFO] Tools: " + works.Count + " work folder(s), " + indexCombo.Items.Count + " index tool(s) found");
         }
 
         void UpdateWorkInfo()
@@ -1186,12 +1287,13 @@ namespace HPGMissionCompanion
             RefreshTools();
         }
 
-        void UpdateIndex()
+        void UpdateIndex(bool automatic)
         {
             string cmd = indexCombo.SelectedItem as string;
-            if (cmd == null || busy) return;
+            if (cmd == null || indexRunning) return;
+            indexRunning = true;
             indexButton.Enabled = false;
-            ToolsLog("--- Update mission index " + DateTime.Now.ToString("HH:mm:ss") + " " + cmd);
+            ToolsLog("--- Update mission index " + DateTime.Now.ToString("HH:mm:ss") + (automatic ? " (automatic, at start) " : " ") + cmd);
             ThreadPool.QueueUserWorkItem(delegate
             {
                 int rc = -1;
@@ -1211,7 +1313,8 @@ namespace HPGMissionCompanion
                     else ToolsLog("Finished, exit code " + rc + ".");
                     if (fileInfo.Length > 0) ToolsLog(fileInfo);
                     ToolsLog("In the simulator press Refresh in the mission app to pick up the new index.");
-                    indexButton.Enabled = true;
+                    indexRunning = false;
+                    indexButton.Enabled = indexCombo.Items.Count > 0;
                 });
             });
         }
@@ -1264,12 +1367,13 @@ namespace HPGMissionCompanion
         {
             if (ask && dirty)
             {
-                DialogResult r = MessageBox.Show("Save the changed settings before leaving?", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult r = MessageBox.Show("The settings were modified.\n\nSave them before leaving?\n\nYes = save and exit, No = exit without saving, Cancel = stay.", Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (r == DialogResult.Cancel) return;
                 if (r == DialogResult.Yes) SaveSettings();
             }
             reallyExit = true;
             tick.Stop();
+            SimLink.Stop();
             StopServer();
             PiperEngine.StopAll();
             tray.Visible = false;

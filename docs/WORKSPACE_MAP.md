@@ -8,6 +8,7 @@
 | `src/Server.cs` | WebSocket voice server and message handling |
 | `src/Install.cs` | downloads, Piper catalog, voice install and removal, `EXE.xml` start with the simulator |
 | `src/Tools.cs` | work folder finding, grouping, backup and deletion, mission index runner |
+| `src/SimLink.cs` | SimConnect link: keeps `L:AUDIOINHIBIT` at 1 (read every 5 s, write when different) |
 | `src/MainForm.cs` | the window (Service, Actors and voices, Piper voices, Radio effect, Tools, About) and the clean-up dialog |
 | `src/Program.cs` | entry point, command line, assembly attributes |
 | `assets/` | `app.ico` and `make-icon.ps1`, the script that draws it |

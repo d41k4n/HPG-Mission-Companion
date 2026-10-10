@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.2";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.3";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "(to be added)";
         public const string Links = "(to be added)";
         public static string Title { get { return Name + " " + Version; } }
@@ -108,6 +108,8 @@ namespace HPGMissionCompanion
         public RadioSettings Radio = new RadioSettings();
         public string WorkFolder = "";
         public string IndexTool = "";
+        public bool AutoIndex = true;           // run the mission index update when the app starts
+        public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
 
         public static Settings Load(string path)

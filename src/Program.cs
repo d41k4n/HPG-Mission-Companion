@@ -11,7 +11,8 @@
 //   --list-file <path>       write the voices to a file and exit
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
-//   --sim-root <dir>         (test) use this folder instead of the simulator folders for the start with the simulator
+//   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
+//   --sim-root <dir>       (test) use this folder instead of the simulator folders for the start with the simulator
 //   --test-autostart <on|off> (with --sim-root) add or remove the entry and exit
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.0.0")]
+[assembly: AssemblyVersion("0.3.0.0")]
+[assembly: AssemblyFileVersion("0.3.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -155,6 +156,25 @@ namespace HPGMissionCompanion
                 catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
                 File.WriteAllText(reportPath, rep.ToString());
                 return rc;
+            }
+
+            // --simlink-check <report>: finds SimConnect.dll and tries to connect once (without a simulator it must report "waiting")
+            string simlinkCheck = Option(args, "--simlink-check");
+            if (simlinkCheck != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                string dll = SimLink.FindDll();
+                rep.AppendLine("SimConnect.dll: " + (dll ?? "not found"));
+                if (dll != null)
+                {
+                    Ctx.Log = delegate (string s) { rep.AppendLine(s); };
+                    SimLink.Start(delegate { return true; });
+                    Thread.Sleep(3500);
+                    SimLink.Stop();
+                    rep.AppendLine("status: " + SimLink.Status);
+                }
+                File.WriteAllText(simlinkCheck, rep.ToString());
+                return dll != null ? 0 : 1;
             }
 
             if (listFile != null)

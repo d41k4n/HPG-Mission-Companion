@@ -1,13 +1,14 @@
 # HPG Mission Companion
 
-Version 0.2
+Version 0.3
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
 - **Voice service**: the WebSocket voice server the HPG mission system expects (`localhost:5997`), speaking with the voices installed in Windows and with [Piper](https://github.com/rhasspy/piper) voices that the app downloads on request. The text of a `speak` command carries tags that choose the actor, the voice, the speed, the volume, the language and a radio effect. See `docs/architecture/TAGS_AND_PROTOCOL.md`.
 - **Actors**: ten actors (Pilota, Copilota, Doctor, HEMS1, HEMS2, Frank, Sarah, Dispatcher, Ground unit, Patient), a voice and a speed for each, per language (English, French, Italian, German).
 - **Radio effect**: beep, hiss, band filter and squelch tail, adjustable.
-- **Tools**: open and clean the mission work folder (grouped, with a zip backup), run the HPG `Update Mission Index` tool.
+- **Tools**: open and clean the mission work folder (grouped, with a zip backup), run the HPG `Update Mission Index` tool (also at start, option on by default).
+- **Simulator link**: keeps `L:AUDIOINHIBIT` at 1 through SimConnect while the simulator runs (option on by default; needs `SimConnect.dll` from the MSFS SDK next to the program).
 - **Start with the simulator**: optional, minimized in the notification area, closing with the simulator.
 
 The program is a single Windows executable built with the compiler that ships with Windows (.NET Framework 4, no SDK). The Piper engine and the voices are not part of this repository.

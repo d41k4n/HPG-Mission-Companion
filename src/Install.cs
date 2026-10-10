@@ -224,7 +224,9 @@ namespace HPGMissionCompanion
             List<SimTarget> list = new List<SimTarget>();
             if (overrideRoot != null)
             {
-                Add(list, "Test", overrideRoot);
+                SimTarget test = new SimTarget();
+                test.Name = "Test"; test.Folder = overrideRoot;
+                if (Directory.Exists(overrideRoot)) list.Add(test);
                 return list;
             }
             string local = Environment.GetEnvironmentVariable("LOCALAPPDATA") ?? "";
@@ -236,9 +238,11 @@ namespace HPGMissionCompanion
             return list;
         }
 
+        // A folder alone is not an installation (it can be left over): the simulator writes UserCfg.opt there when it runs.
         static void Add(List<SimTarget> list, string name, string folder)
         {
             if (!Directory.Exists(folder)) return;
+            if (!File.Exists(Path.Combine(folder, "UserCfg.opt"))) return;
             SimTarget t = new SimTarget();
             t.Name = name; t.Folder = folder;
             list.Add(t);

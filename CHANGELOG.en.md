@@ -1,3 +1,10 @@
+## Release 0.3
+
+- New: the program keeps the simulator variable `L:AUDIOINHIBIT` at 1 through SimConnect. While the simulator is connected it reads the variable every 5 seconds and writes 1 when the value is different; without the simulator it retries every 5 seconds. Option "Auto set default audio inhibit L:AUDIOINHIBIT" in the Service tab, on by default; the Service tab shows the SimConnect state. `SimConnect.dll` comes from the MSFS SDK: `tools\build.cmd` copies it next to the program, the program also looks in the SDK folders.
+- Service tab: the mission text test and the log are in one box; the log is dark green with a colour per kind of message (voices in yellow); `Exit program` sits bottom right, outside the tabs; next to `Save settings` the red notice "Modified settings, please save" appears when something changed, and leaving with unsaved settings asks Yes / No / Cancel.
+- Tools tab: option "Update the index automatically when the app starts" (on by default) next to `Update mission index`.
+- Simulator detection: a simulator folder counts only when it holds `UserCfg.opt` (leftover folders of uninstalled simulators are no longer listed or written to).
+- Log line "Tools: N work folder(s), M index tool(s) found".
 ## Release 0.2
 
 - Renamed to HPG Mission Companion: executable `HPGMissionCompanion.exe`, settings `HPGMissionCompanion.json`. Existing start-with-simulator entries named "HPG Voice Hub" are recognised and rewritten when the option is applied again (new command `--autostart on|off`).

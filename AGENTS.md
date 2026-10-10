@@ -14,7 +14,8 @@
 - The repository is under a custom licence (`LICENSE`): use is free for everyone; modification, copying, redistribution, derivative works and sale need the author's explicit written consent. Never add an open-source licence, copy in code or assets whose licence does not allow it, or change the licence without the user's explicit decision.
 - The text tags and the WebSocket protocol are a contract with the HPG missions (`docs/architecture/TAGS_AND_PROTOCOL.md`): keep them backwards compatible and change the document, the tests and the changelog in the same change.
 - Destructive or external actions of the app stay behind the user: cleaning the HPG work folder always shows the groups, asks for confirmation and backs up first by default; `global.json` is never touched; the `EXE.xml` of the simulators is edited only by the app's own code, keeping the `.bak` copy; downloads happen only on a user click, from the documented sources, with md5 checks where the source gives them. Test every destructive path on a dummy copy, never on the user's real folders.
-- The index update runs only on the user's click; never add an automatic or start-up update unless the user asks for that option.
+- The mission index update runs on the user's click, and at start only while the option "Update the index automatically when the app starts" is ticked (on by default, the user's request of 2026-10-10); never add another automatic trigger without the user's request.
+- The only simulator variable the app writes (SimConnect, `src/SimLink.cs`) is `L:AUDIOINHIBIT`, kept at 1 while the option "Auto set default audio inhibit L:AUDIOINHIBIT" is ticked (on by default, the user's request of 2026-10-10); never write other variables, and keep `SimConnect.dll` out of the repository (it is copied from the MSFS SDK at build time).
 - Network, process and file code must not leave processes behind: `piper.exe` children are stopped on exit.
 
 ## Build, release, and publication gates

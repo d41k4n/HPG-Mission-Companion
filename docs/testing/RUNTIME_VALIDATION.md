@@ -2,7 +2,7 @@
 
 Static checks (`tools/check.js`) and the self-tests of the executable never prove simulator behaviour. The simulator tests are standalone HPG test missions in `tests/`; the user also keeps them in `Desktop\claude\tests`.
 
-## Status (2026-10-10, version 0.2)
+## Status (2026-10-10, version 0.3)
 
 | Area | Status |
 | --- | --- |
@@ -11,6 +11,9 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 | `<vol:N>`, volume from a mission variable, `<radio>` effect | pending (done by ear in the app only) |
 | Start with the simulator (rewritten entries, minimized, closing with the simulator) | pending |
 | Clean up on the real work folder, Update mission index on the real package | pending (tested only on dummy copies) |
+| Automatic index update at start (option on by default) | tested on a temporary Community folder, pending on the real package |
+| `L:AUDIOINHIBIT` kept at 1 through SimConnect (every 5 s, option on by default) | pending: only the "no simulator" path is tested (status "waiting for the simulator"); connection, read and write need the simulator (see Simulator link below) |
+| Simulator detection (only folders with `UserCfg.opt`) | tested on temporary folders; the real machine must list only the installed simulator |
 
 ## Voice test mission
 
@@ -21,6 +24,13 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 3. STOP VOICE must stop the speech and the rest of the test; the status line then says STOPPED. Without a voice server the status line says FAILED.
 
 The same file holds a CARLS keypad hold test that belongs to the mission repository, not to this app.
+
+## Simulator link
+
+1. Start the app before the simulator: the Service tab says "SimConnect: waiting for the simulator"; start the simulator (2024 and, separately, 2020): within about 5 s of a loaded flight the state becomes "connected, L:AUDIOINHIBIT set to 1" (or "= 1") and the log has a `SimConnect` line.
+2. In the simulator or the mission, change `L:AUDIOINHIBIT` to 0: within 5 s the app writes 1 again and logs "was 0, set to 1".
+3. Untick the option: no more writes; the state says "off". Close the simulator: the state goes back to waiting.
+4. If `SimConnect.dll` of the 2024 SDK does not connect to the 2020 simulator, say so: the build can take the 2020 one instead.
 
 ## Tools
 
