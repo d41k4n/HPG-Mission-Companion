@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.7";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.8";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -81,8 +81,8 @@ namespace HPGMissionCompanion
         public const int Count = 11;
         public static readonly string[] Names = new string[]
         {
-            "Pilota", "Copilota", "Doctor", "HEMS1", "HEMS2",
-            "Frank (technician)", "Sarah (technician)", "Dispatcher", "Ground unit", "Patient / extra", "Checklist"
+            "Pilot", "Copilot", "Doctor", "HEMS1", "HEMS2",
+            "Technician male", "Technician female", "Dispatcher", "Ground unit", "Patient / extra", "Checklist"
         };
     }
 
@@ -113,7 +113,8 @@ namespace HPGMissionCompanion
         public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
         public string BridgePack = "";          // voice pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP); "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
-        public string Names = "functions";      // functions | random: names of the crew in the texts
+        public string Names = "functions";      // functions | random: names of the crew in the texts (functions: the job roles, or the names typed in the Actors tab)
+        public Dictionary<string, string> CrewNames = new Dictionary<string, string>();   // role (PLT, CPL, PAX3, PAX1, PAX2, TECHM, TECHF) -> name typed by the user; used when Names is "functions"
         public bool UseMissionVolumes = true;   // follow L:VOLUME_CREW and L:VOLUME_CHK of the mission
         public int AttenCamInside = 9;          // dB less for a voice from outside heard while the view is inside the helicopter (0 = off)
         public int AttenCamOutside = 12;        // dB less for a voice from inside heard while the view is outside (0 = off)
@@ -160,6 +161,7 @@ namespace HPGMissionCompanion
             if (BridgePack == null) BridgePack = "";
             if (Variety != "coherent") Variety = "random";
             if (Names != "random") Names = "functions";
+            if (CrewNames == null) CrewNames = new Dictionary<string, string>();
             AttenCamInside = Math.Max(0, Math.Min(30, AttenCamInside));
             AttenCamOutside = Math.Max(0, Math.Min(30, AttenCamOutside));
             foreach (LangInfo l in LangInfo.All)

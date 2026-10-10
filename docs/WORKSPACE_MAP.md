@@ -10,6 +10,7 @@
 | `src/Tools.cs` | work folder finding, grouping, backup and deletion, mission index runner |
 | `src/VoicePacks.cs` | voice pack XML model and loader, install with archiving, the `say` / `plain` / `pack` / `names` / `variety` tags |
 | `src/Mixer.cs` | volume: mission volumes (`L:VOLUME_CREW`, `L:VOLUME_CHK`) and the inside / outside level of the voices (`CAMERA STATE`) |
+| `src/Names.cs` | static lists of first names (male, female) for the random crew and technician names |
 | `src/SimLink.cs` | SimConnect link: keeps `L:AUDIOINHIBIT` at 1 (read every 5 s, write when different) |
 | `src/MainForm.cs` | the window (Service, Actors and voices, Piper voices, Radio effect, Tools, About) and the clean-up dialog |
 | `src/Program.cs` | entry point, command line, assembly attributes |

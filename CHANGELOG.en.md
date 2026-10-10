@@ -1,3 +1,10 @@
+## Release 0.8
+
+- Local delivery of the program only: the installer of 0.7 is not rebuilt for this release (set NOSETUP=1 for tools\build.cmd to skip it).
+- Piper voices list: click a column header (Voice, Region, Quality, Size, Voice type, Status) to sort by it, click again to reverse; the arrow in the header shows the order and the selected voice stays selected. Installed voices come first when sorted by Status.
+- Technicians: actors 6 and 7 are now Technician male and Technician female (and the actors 1 and 2 Pilot and Copilot). The technician of a scene is random, picked by the mission (`L:HMC_TECH_SEX`); the pack messages FRA.* and SARA.* have options for both (`<o sex="m">`, `<o sex="f">`) and are spoken by the technician of the scene; the crew lines that greet the technician use `{@TECH}`. Pack EN 4.
+- Names: `{PLT}` is always the job word (Pilot, Copilot, Chief, Paramedic, Doc, Technician), `{@PLT}` the name of the shift or the job word. A name box next to each voice (actors 1-7) in the Actors tab; with "Random names for each shift" each role (and each technician, by sex) takes a first name from the static lists of the program (the first names of the patients of the mission, `src/Names.cs`).
+
 ## Release 0.7
 
 - Installer `HPGMissionCompanionSetup.exe` (built by `tools\build.cmd`, source `setup/Setup.cs`): per-user install in `%LOCALAPPDATA%\Programs\HPG Mission Companion` (or a folder of your choice), no administrator rights, Start menu and desktop shortcuts, entry in Apps and features, `Uninstall.exe`. It embeds the program, the pack EN (installed with the program's own `--install-pack`, which archives an older version) and `SimConnect.dll` when the build machine has the MSFS SDK. An update keeps the settings, Piper, the voices, the audio folder and the backups; the uninstaller asks before removing that data (default no) and removes the program from the EXE.xml of the simulators through the program itself. Switches: `/S`, `/dir=PATH`, `/nodesktop`, `/nostartmenu`, `/nolaunch`, `/uninstall`, `/removedata`.

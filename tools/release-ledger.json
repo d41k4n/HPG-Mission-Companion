@@ -1,7 +1,7 @@
 {
-    "sha256":  "67E8116D1670A84723D7743B64D7915471DAAAF15F035168731C58ADF397A4D1",
+    "sha256":  "DCF8ECCF5B8D1E6C9656DF0C6C8B72E93752F7938E6A07FFF6F183F31EA94D56",
     "deliveredOn":  "2026-10-10",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.7",
-    "note":  "Local delivery to the runtime folder on the user\u0027s Desktop (with SimConnect.dll from the MSFS SDK and the pack EN version 3) and the installer HPGMissionCompanionSetup.exe (sha256 21794B1EA682042115B2A99F3247266D45B1A59D07492C080878594566C015B5) built by the same tools\\build.cmd. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has different hashes."
+    "lastDeliveredVersion":  "0.8",
+    "note":  "Local delivery to the runtime folder on the user\u0027s Desktop (no installer in this release; SimConnect.dll from the MSFS SDK and the pack EN version 4 installed beside it). The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

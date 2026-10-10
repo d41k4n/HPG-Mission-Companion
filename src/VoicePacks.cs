@@ -23,6 +23,7 @@ namespace HPGMissionCompanion
         public string Trigger = "";             // when the message happens (information)
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
         public List<string> Options = new List<string>();
+        public List<string> OptionSex = new List<string>();     // for each option: "" (any technician), "m" or "f" (only when the technician of the scene is male or female); the voice follows: actor 6 or 7
 
         // the LVAR the mission increments for this message when its voice code is vcp: "L:CPL{VCP}5" -> "L:CPLAPP5"; "" when the message has none
         public string LvarFor(string vcp)
@@ -151,7 +152,12 @@ namespace HPGMissionCompanion
                 foreach (XmlNode o in e.SelectNodes("o"))
                 {
                     string t = Regex.Replace(o.InnerText, "\\s+", " ").Trim();
-                    if (t.Length > 0) m.Options.Add(t);
+                    if (t.Length == 0) continue;
+                    string sx = ((XmlElement)o).GetAttribute("sex").Trim().ToLowerInvariant();
+                    if (sx == "male") sx = "m"; else if (sx == "female") sx = "f";
+                    if (sx.Length > 0 && sx != "m" && sx != "f") { p.Problems.Add("message " + m.Key + ": sex must be m or f"); sx = ""; }
+                    m.Options.Add(t);
+                    m.OptionSex.Add(sx);
                 }
                 if (m.Options.Count == 0 && !(m.Sfx && m.Wav.Length > 0)) { p.Problems.Add("message " + m.Key + " has no <o> text"); continue; }
                 p.Messages[m.Key] = m;
@@ -207,10 +213,12 @@ namespace HPGMissionCompanion
         static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        static readonly Regex HolderRx = new Regex("\\{([A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
+        static readonly Regex HolderRx = new Regex("\\{(@?[A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
 
-        static readonly string[] Roles = { "PLT", "CPL", "PAX1", "PAX2", "PAX3" };
-        static readonly string[] RoleDefaults = { "Captain", "Copilot", "Chief", "Paramedic", "Doc" };
+        // crew roles and technicians; {PLT} is the job word, {@PLT} the name of the shift (random or typed by the user) or the job word when there is none
+        static readonly string[] Roles = { "PLT", "CPL", "PAX1", "PAX2", "PAX3", "TECHM", "TECHF" };
+        static readonly string[] RoleDefaults = { "Pilot", "Copilot", "Chief", "Paramedic", "Doc", "Technician", "Technician" };
+        static int techSex = -1;                            // L:HMC_TECH_SEX: 0 male, 1 female, -1 not known
 
         static readonly object sync = new object();
         static Random rng = new Random();
@@ -253,7 +261,27 @@ namespace HPGMissionCompanion
             SetBridgePack(p != null ? p.Name : "");
             SimLink.OnWatch = OnWatch;
             SimLink.SetWatch(WatchNames());
-            if (Ctx.Settings.Names == "random") RandomizeNames(); else lock (sync) { missionNames.Clear(); }
+            if (Ctx.Settings.Names == "random") RandomizeNames(); else lock (sync) { ApplyUserNames(); }
+        }
+
+        // the names typed in the Actors tab (the option "functions"): {@PLT} says them; a role without a name keeps its job word
+        public static void ApplyUserNamesNow()
+        {
+            lock (sync) { if (Ctx.Settings.Names != "random") ApplyUserNames(); }
+        }
+
+        static void ApplyUserNames()
+        {
+            missionNames.Clear();
+            foreach (string role in Roles)
+            {
+                string n;
+                if (Ctx.Settings.CrewNames != null && Ctx.Settings.CrewNames.TryGetValue(role, out n) && n != null)
+                {
+                    n = Literal(n.Trim());
+                    if (n.Length > 0) missionNames[role] = n;
+                }
+            }
         }
 
         // ---- main entry: the text of a speak message in, the text for the tag parser out ----
@@ -368,7 +396,7 @@ namespace HPGMissionCompanion
         {
             missionNames.Clear();
             if (arg.Length == 0 || string.Equals(arg, "off", StringComparison.OrdinalIgnoreCase)) return;
-            if (string.Equals(arg, "random", StringComparison.OrdinalIgnoreCase)) { if (Ctx.Settings.Names == "random") DrawNames(); return; }     // the user chooses in the Voice packs tab; the mission only says "a new shift"
+            if (string.Equals(arg, "random", StringComparison.OrdinalIgnoreCase)) { if (Ctx.Settings.Names == "random") DrawNames(); else ApplyUserNames(); return; }     // the user chooses in the Voice packs tab; the mission only says "a new shift"
             foreach (string part in arg.Split(new char[] { ',', ';' }))
             {
                 int eq = part.IndexOf('=');
@@ -398,16 +426,8 @@ namespace HPGMissionCompanion
             lock (sync) { bridgePack = name ?? ""; }
         }
 
-        static readonly string[][] DefaultPools = new string[][]
-        {
-            new string[] { "Mark", "John", "Paul", "Peter", "Chris", "David", "Simon" },     // PLT
-            new string[] { "Anna", "Laura", "Emma", "Kate", "Julia", "Nina", "Clara" },      // CPL
-            new string[] { "Tom", "Ben", "Jack", "Luke", "Sam", "Ryan", "Ian" },             // PAX1
-            new string[] { "Eva", "Lisa", "Mia", "Zoe", "Ruth", "Beth", "Joan" },            // PAX2
-            new string[] { "Sue", "Alex", "Dan", "Jane", "Rob", "Matt", "Vera" }             // PAX3
-        };
-
-        // new names for the crew roles (the start of a shift): one name from the pool of each role, never the same name twice
+        // new names for the crew roles and the technicians (the start of a shift): one name from the static lists (src/Names.cs: the first names of the
+        // patients of the mission) or from the <pool> of the pack for that role; the male technician takes a male name, the female one a female name; never the same name twice
         public static void RandomizeNames()
         {
             lock (sync) { DrawNames(); }
@@ -424,13 +444,18 @@ namespace HPGMissionCompanion
             {
                 List<string> pool = null;
                 if (p != null) p.Pools.TryGetValue(Roles[r], out pool);
-                if (pool == null || pool.Count == 0) pool = new List<string>(DefaultPools[r]);
+                if (pool == null || pool.Count == 0)
+                {
+                    pool = new List<string>();
+                    if (Roles[r] != "TECHF") pool.AddRange(NameLists.Male);
+                    if (Roles[r] != "TECHM") pool.AddRange(NameLists.Female);
+                }
                 string pick = pool[rng.Next(pool.Count)];
                 for (int tries = 0; tries < 12 && used.Contains(pick); tries++) pick = pool[rng.Next(pool.Count)];
                 used.Add(pick);
                 missionNames[Roles[r]] = pick;
             }
-            Ctx.Log("[INFO] Crew names for this shift: " + string.Join(", ", new string[] { "pilot " + missionNames["PLT"], "copilot " + missionNames["CPL"], "chief " + missionNames["PAX1"], "paramedic " + missionNames["PAX2"], "doc " + missionNames["PAX3"] }));
+            Ctx.Log("[INFO] Names for this shift: " + string.Join(", ", new string[] { "pilot " + missionNames["PLT"], "copilot " + missionNames["CPL"], "chief " + missionNames["PAX1"], "paramedic " + missionNames["PAX2"], "doc " + missionNames["PAX3"], "technician (male) " + missionNames["TECHM"], "technician (female) " + missionNames["TECHF"] }));
         }
 
         // true: the speaker is aboard, false: outside, null: not known (no context from the mission, or the dispatcher)
@@ -455,7 +480,7 @@ namespace HPGMissionCompanion
                 list.Add(Mixer.VarCrew); list.Add(Mixer.VarChk); list.Add(Mixer.VarCamera);
                 watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
                 if (watchPack == null) return list;
-                list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew);
+                list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew); list.Add(SimLink.CtxTechSex);
                 foreach (PackMessage m in watchPack.Messages.Values)
                 {
                     string l = m.LvarFor(watchPack.Vcp);
@@ -487,6 +512,7 @@ namespace HPGMissionCompanion
                 if (name == SimLink.CtxValid) { ctxValid = value > 0.5; return; }
                 if (name == SimLink.CtxHeliOff) { heliOff = value > 0.5; return; }
                 if (name == SimLink.CtxCrew) { crewMask = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxTechSex) { techSex = value > 0.5 ? 1 : 0; return; }
                 if (baseline || value <= oldValue) return;     // only a rise of the counter speaks; a reset to 0 is not a message
                 if (!watchMap.TryGetValue(name, out m)) return;
                 p = watchPack;
@@ -560,11 +586,18 @@ namespace HPGMissionCompanion
             int index = forced >= 1 && forced <= msg.Options.Count ? forced - 1 : Pick(msg);
             string[] parts = args.Length > 0 ? args.Split(new string[] { "//" }, StringSplitOptions.None) : new string[0];
             string body = Fill(msg.Options[index], parts, pack, notes);
+            int actor = msg.Actor;
+            if (msg.OptionSex.Count == msg.Options.Count && msg.OptionSex.Exists(delegate (string s) { return s.Length > 0; }))
+            {
+                string sx = msg.OptionSex[index];
+                if (sx.Length == 0) sx = TechSexOf(msg);
+                actor = sx == "f" ? 7 : 6;      // a message with options for the two technicians is spoken by the technician of the scene: Technician male (6) or female (7)
+            }
             StringBuilder tags = new StringBuilder();
-            if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(msg.Actor).Append('>');
+            if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(actor).Append('>');
             if (!RadioTagRx.IsMatch(before))
             {
-                int radio = msg.Radio == "on" ? 1 : (msg.Radio == "off" ? 0 : AutoRadio(msg));
+                int radio = msg.Radio == "on" ? 1 : (msg.Radio == "off" ? 0 : AutoRadio(actor));
                 if (radio == 1) tags.Append("<radio>");
                 else if (radio == 0) tags.Append("<radio:off>");
             }
@@ -575,10 +608,9 @@ namespace HPGMissionCompanion
         // The radio rule of the HEMS mission, from the context the mission publishes (L:HMC_CTX_VALID, L:HMC_HELI_OFF, L:HMC_CREW_PRESENT):
         // helicopter completely off: voice; the dispatcher: radio; the speaker inside: radio (intercom, or to somebody outside);
         // the speaker outside: radio when somebody is inside, voice when everybody is outside. -1: no context, the text gets no radio tag.
-        static int AutoRadio(PackMessage msg)
+        static int AutoRadio(int a)
         {
             if (!ctxValid) return -1;
-            int a = msg.Actor;
             if (a == 8) return 1;
             if (heliOff) return 0;
             bool crewActor = a >= 1 && a <= 5;
@@ -587,9 +619,31 @@ namespace HPGMissionCompanion
             if (crewActor) others &= ~(1 << (a - 1));
             return others != 0 ? 1 : 0;
         }
+        // the technician of the scene (L:HMC_TECH_SEX); when the mission does not say, the one the message was written for (actor 7: female)
+        static string TechSexOf(PackMessage m)
+        {
+            if (techSex == 1) return "f";
+            if (techSex == 0) return "m";
+            return m.Actor == 7 ? "f" : "m";
+        }
+
+        // options with a sex are for that technician only; the options without one are for both
         static int Pick(PackMessage m)
         {
-            int n = m.Options.Count;
+            List<int> eligible = null;
+            if (m.OptionSex.Count == m.Options.Count && m.OptionSex.Exists(delegate (string s) { return s.Length > 0; }))
+            {
+                string want = TechSexOf(m);
+                eligible = new List<int>();
+                for (int i = 0; i < m.Options.Count; i++) if (m.OptionSex[i].Length == 0 || m.OptionSex[i] == want) eligible.Add(i);
+                if (eligible.Count == 0) eligible = null;
+            }
+            int pos = PickPosition(m, eligible != null ? eligible.Count : m.Options.Count);
+            return eligible != null ? eligible[pos] : pos;
+        }
+
+        static int PickPosition(PackMessage m, int n)
+        {
             if (n == 1) return 0;
             int k;
             if (coherent && m.Group.Length > 0)
@@ -642,12 +696,45 @@ namespace HPGMissionCompanion
             if (notes != null) notes.Add("unknown placeholder helper {" + kind + ":..}");
             return "";
         }
+        // PLT CPL PAX1 PAX2 PAX3 TECHM TECHF; TECH is the technician of the scene (male or female as the mission says); FRA and SARA are the old names of TECHM and TECHF
+        static string RoleOf(string name)
+        {
+            if (string.Equals(name, "TECH", StringComparison.OrdinalIgnoreCase)) return techSex == 1 ? "TECHF" : "TECHM";
+            if (string.Equals(name, "FRA", StringComparison.OrdinalIgnoreCase)) return "TECHM";
+            if (string.Equals(name, "SARA", StringComparison.OrdinalIgnoreCase)) return "TECHF";
+            foreach (string r in Roles) if (string.Equals(r, name, StringComparison.OrdinalIgnoreCase)) return r;
+            return null;
+        }
+
+        static string JobWord(string role, VoicePack pack)
+        {
+            string w;
+            if (pack != null && pack.Names.TryGetValue(role, out w) && w.Length > 0) return w;
+            return RoleDefaults[Array.IndexOf(Roles, role)];
+        }
+
+        static string PersonalName(string role, VoicePack pack)
+        {
+            string w;
+            if (missionNames.TryGetValue(role, out w) && w.Length > 0) return w;
+            return JobWord(role, pack);
+        }
+
         static string Fill(string option, string[] args, VoicePack pack, List<string> notes)
         {
             return HolderRx.Replace(option, delegate (Match m)
             {
                 string name = m.Groups[1].Value;
+                bool personal = name.StartsWith("@", StringComparison.Ordinal);
+                if (personal) name = name.Substring(1);
                 int i;
+                string roleKey = RoleOf(name);
+                if (roleKey != null) return personal ? PersonalName(roleKey, pack) : JobWord(roleKey, pack);     // {PLT} the job word, {@PLT} the name of the shift
+                if (personal)
+                {
+                    if (notes != null) notes.Add("unknown placeholder {@" + name + "}: only the roles PLT CPL PAX1 PAX2 PAX3 TECH TECHM TECHF have a name");
+                    return "";
+                }
                 int colon = name.IndexOf(':');
                 if (colon > 0)
                 {
@@ -667,11 +754,7 @@ namespace HPGMissionCompanion
                     return "";
                 }
                 string v;
-                if (missionNames.TryGetValue(name, out v)) return v;
                 if (pack != null && pack.Names.TryGetValue(name, out v)) return v;
-                for (int r = 0; r < Roles.Length; r++) if (string.Equals(Roles[r], name, StringComparison.OrdinalIgnoreCase)) return RoleDefaults[r];
-                if (string.Equals(name, "FRA", StringComparison.OrdinalIgnoreCase)) return "Frank";
-                if (string.Equals(name, "SARA", StringComparison.OrdinalIgnoreCase)) return "Sarah";
                 if (notes != null) notes.Add("unknown placeholder {" + name + "}");
                 return "";
             });

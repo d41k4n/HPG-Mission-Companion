@@ -26,6 +26,7 @@ namespace HPGMissionCompanion
         // the mission publishes its context for the radio rule (see docs/architecture/VOICEPACKS.md); the program only reads them
         public const string CtxValid = "L:HMC_CTX_VALID";                 // 1 when the mission publishes the two variables below
         public const string CtxHeliOff = "L:HMC_HELI_OFF";                // 1 helicopter completely off
+        public const string CtxTechSex = "L:HMC_TECH_SEX";                 // the technician of the scene: 0 male, 1 female (the mission picks one at random in app mode)
         public const string CtxCrew = "L:HMC_CREW_PRESENT";               // bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard
 
         const uint WatchDefineBase = 300;

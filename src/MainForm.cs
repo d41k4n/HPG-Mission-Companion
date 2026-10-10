@@ -147,11 +147,16 @@ namespace HPGMissionCompanion
         readonly TrackBar[] speedBar = new TrackBar[Actors.Count];
         readonly Label[] speedLabel = new Label[Actors.Count];
         readonly Button[] testButton = new Button[Actors.Count];
+        readonly TextBox[] nameBox = new TextBox[7];       // the names of the crew and the technicians (actors 1-7), used when the crew names are not random
+        static readonly string[] NameRoles = { "PLT", "CPL", "PAX3", "PAX1", "PAX2", "TECHM", "TECHF" };      // role of actor 1..7
 
         // piper tab
         readonly Label engineLabel = new Label();
         readonly Button engineButton = new Button();
         readonly ListView catalogList = new ListView();
+        static readonly string[] CatalogColumns = { "Voice", "Region", "Quality", "Size", "Voice type", "Status" };
+        int catalogSortColumn;                  // click a column header of the Piper voices list to sort by it; click again to reverse
+        bool catalogSortAscending = true;
         readonly Button installButton = new Button();
         readonly Button removeButton = new Button();
         readonly Button testVoiceButton = new Button();
@@ -736,7 +741,8 @@ namespace HPGMissionCompanion
             page.Controls.Add(langBox);
             Lbl(page, "Choose the voice and the usual speed of each actor, for the language selected above. The mission picks the actor with a tag, " +
                 "for example  <actor3> Hello  (the voice, the speed and the volume can also be forced by the mission). Changes work at once; press Save settings to keep them.",
-                10, 46, 706, 50);
+                10, 46, 706, 36);
+            Lbl(page, "Name (optional)", 376, 84, 0, 0).ForeColor = SystemColors.GrayText;
             for (int i = 0; i < Actors.Count; i++)
             {
                 int index = i;
@@ -746,7 +752,27 @@ namespace HPGMissionCompanion
                 voiceBox[i] = new ComboBox();
                 voiceBox[i].DropDownStyle = ComboBoxStyle.DropDownList;
                 voiceBox[i].Location = new Point(155, y + 2);
-                voiceBox[i].Size = new Size(310, 24);
+                voiceBox[i].Size = new Size(215, 24);
+                if (i < nameBox.Length)
+                {
+                    nameBox[i] = new TextBox();
+                    nameBox[i].Location = new Point(376, y + 2);
+                    nameBox[i].Size = new Size(90, 24);
+                    nameBox[i].MaxLength = 20;
+                    nameBox[i].Enabled = Ctx.Settings.Names != "random";
+                    string role = NameRoles[i];
+                    string cur;
+                    if (Ctx.Settings.CrewNames.TryGetValue(role, out cur)) nameBox[i].Text = cur;
+                    nameBox[i].TextChanged += delegate
+                    {
+                        if (suppress) return;
+                        string nm = nameBox[index].Text.Trim();
+                        if (nm.Length == 0) Ctx.Settings.CrewNames.Remove(NameRoles[index]); else Ctx.Settings.CrewNames[NameRoles[index]] = nm;
+                        MarkDirty();
+                        Say.ApplyUserNamesNow();
+                    };
+                    page.Controls.Add(nameBox[i]);
+                }
                 voiceBox[i].SelectedIndexChanged += delegate { OnVoiceChanged(index); };
                 page.Controls.Add(voiceBox[i]);
 
@@ -766,10 +792,16 @@ namespace HPGMissionCompanion
                 testButton[i] = Btn(page, "Test", 662, y + 1, 56, 26);
                 testButton[i].Click += delegate { TestActor(index); };
             }
-            Lbl(page, "To install additional voice packs, choose the Piper voices tab.", 10, 102 + Actors.Count * 38 + 10, 0, 0).ForeColor = SystemColors.GrayText;
+            Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role (Pilot, Copilot, Doc ...). Names are ignored while the crew names are random (Voice packs tab). To install additional voice packs, choose the Piper voices tab.", 10, 102 + Actors.Count * 38 + 10, 706, 34).ForeColor = SystemColors.GrayText;
         }
 
         LangInfo CurrentLang() { return (LangInfo)langBox.SelectedItem; }
+
+        // the name boxes of the Actors tab work only while the crew names are not random
+        void UpdateNameBoxes()
+        {
+            foreach (TextBox b in nameBox) if (b != null) b.Enabled = Ctx.Settings.Names != "random";
+        }
 
         void FillActors()
         {
@@ -849,6 +881,7 @@ namespace HPGMissionCompanion
             catalogList.Columns.Add("Voice type", 90);
             catalogList.Columns.Add("Status", 190);
             catalogList.SelectedIndexChanged += delegate { UpdateEngineState(); };
+            catalogList.ColumnClick += delegate (object s, ColumnClickEventArgs e) { OnCatalogColumnClick(e.Column); };
             page.Controls.Add(catalogList);
 
             installButton.Text = "Install voice";
@@ -951,20 +984,43 @@ namespace HPGMissionCompanion
             });
         }
 
+        // the sort of the Piper voices list: column 0 name, 1 region, 2 quality, 3 size, 4 voice type, 5 installed; ties by name, then best quality first
+        int CompareCatalog(CatalogVoice a, CatalogVoice b)
+        {
+            int r = 0;
+            switch (catalogSortColumn)
+            {
+                case 1: r = string.Compare(a.LangCode, b.LangCode, StringComparison.OrdinalIgnoreCase); break;
+                case 2: r = VoiceLibrary.QualityRank(a.Quality) - VoiceLibrary.QualityRank(b.Quality); break;
+                case 3: r = a.OnnxSize.CompareTo(b.OnnxSize); break;
+                case 4: r = string.Compare(a.Speakers > 1 ? "mixed" : VoiceLibrary.GenderHint(a.Name), b.Speakers > 1 ? "mixed" : VoiceLibrary.GenderHint(b.Name), StringComparison.OrdinalIgnoreCase); break;
+                case 5: r = (PiperInstaller.IsInstalled(a) ? 0 : 1) - (PiperInstaller.IsInstalled(b) ? 0 : 1); break;      // ascending: installed first
+            }
+            if (r != 0) return catalogSortAscending ? r : -r;
+            r = string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
+            if (r != 0) return catalogSortColumn == 0 && !catalogSortAscending ? -r : r;
+            return VoiceLibrary.QualityRank(b.Quality) - VoiceLibrary.QualityRank(a.Quality);
+        }
+
+        void OnCatalogColumnClick(int column)
+        {
+            if (column == catalogSortColumn) catalogSortAscending = !catalogSortAscending;
+            else { catalogSortColumn = column; catalogSortAscending = true; }
+            FillCatalogList();
+        }
+
         void FillCatalogList()
         {
             LangInfo li = CurrentLang();
             if (li == null) return;
+            CatalogVoice keep = SelectedCatalog();
+            for (int i = 0; i < CatalogColumns.Length && i < catalogList.Columns.Count; i++)
+                catalogList.Columns[i].Text = CatalogColumns[i] + (i == catalogSortColumn ? (catalogSortAscending ? "  ^" : "  v") : "");
             catalogList.Items.Clear();
             if (piperHint != null) piperHint.Text = "Voices for " + li.Name + " (change the language in the Actors and voices tab). Select one and press Install (60 to 140 MB each, from the Piper voices repository).";
             List<CatalogVoice> rows = new List<CatalogVoice>();
             foreach (CatalogVoice c in catalog) if (c.Family == li.Family) rows.Add(c);
-            rows.Sort(delegate (CatalogVoice a, CatalogVoice b)
-            {
-                int r = string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
-                if (r != 0) return r;
-                return VoiceLibrary.QualityRank(b.Quality) - VoiceLibrary.QualityRank(a.Quality);
-            });
+            rows.Sort(CompareCatalog);
             foreach (CatalogVoice c in rows)
             {
                 string gender = VoiceLibrary.GenderHint(c.Name);
@@ -976,6 +1032,7 @@ namespace HPGMissionCompanion
                 item.SubItems.Add(PiperInstaller.IsInstalled(c) ? "Installed" : "");
                 item.Tag = c;
                 catalogList.Items.Add(item);
+                if (keep != null && ReferenceEquals(keep, c)) { item.Selected = true; item.EnsureVisible(); }
             }
             if (rows.Count == 0 && catalog.Count == 0) progressLabel.Text = "The list of voices is not loaded yet.";
         }
@@ -1193,18 +1250,19 @@ namespace HPGMissionCompanion
             namesPanel.Location = new Point(86, 70);
             namesPanel.Size = new Size(500, 26);
             gb.Controls.Add(namesPanel);
-            namesFunc.Text = "Functions (Captain, Doc ...)";
+            namesFunc.Text = "Job roles, or the names typed in Actors";
             namesFunc.AutoSize = true;
             namesFunc.Location = new Point(4, 4);
             namesRandom.Text = "Random names for each shift";
             namesRandom.AutoSize = true;
-            namesRandom.Location = new Point(190, 4);
+            namesRandom.Location = new Point(270, 4);
             namesPanel.Controls.Add(namesFunc);
             namesPanel.Controls.Add(namesRandom);
             varRandom.Checked = Ctx.Settings.Variety != "coherent"; varCoherent.Checked = Ctx.Settings.Variety == "coherent";
             namesFunc.Checked = Ctx.Settings.Names != "random"; namesRandom.Checked = Ctx.Settings.Names == "random";
             varCoherent.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.Variety = varCoherent.Checked ? "coherent" : "random"; MarkDirty(); Say.ApplySettings(); };
-            namesRandom.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.Names = namesRandom.Checked ? "random" : "functions"; MarkDirty(); Say.ApplySettings(); };
+            namesRandom.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.Names = namesRandom.Checked ? "random" : "functions"; MarkDirty(); Say.ApplySettings(); UpdateNameBoxes(); };
+            UpdateNameBoxes();
             bridgeInfo.Location = new Point(10, 102);
             bridgeInfo.Size = new Size(686, 22);
             bridgeInfo.ForeColor = SystemColors.GrayText;

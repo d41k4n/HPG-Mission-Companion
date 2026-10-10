@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="3" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="4" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
-    <name role="PLT">Captain</name>
+    <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
     <name role="PAX1">Chief</name>
     <name role="PAX2">Paramedic</name>
     <name role="PAX3">Doc</name>
+    <name role="TECHM">Technician</name>
+    <name role="TECHF">Technician</name>
     <name role="VEH_A">ambulance</name>
     <name role="VEH_F">fire engine</name>
     <name role="VEH_P">police</name>
     <name role="AND">and</name>
     <name role="IS">is</name>
     <name role="ARE">are</name>
-    <pool role="PLT">Mark, John, Paul, Peter, Chris, David, Simon</pool>
-    <pool role="CPL">Anna, Laura, Emma, Kate, Julia, Nina, Clara</pool>
-    <pool role="PAX1">Tom, Ben, Jack, Luke, Sam, Ryan, Ian</pool>
-    <pool role="PAX2">Eva, Lisa, Mia, Zoe, Ruth, Beth, Joan</pool>
-    <pool role="PAX3">Sue, Alex, Dan, Jane, Rob, Matt, Vera</pool>
   </names>
     <message key="APR.CHF.G" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="ground operation expected">
       <o>Rear crew: stretcher and bag ready, I follow Doc on the ground.</o>
@@ -214,10 +211,10 @@
       <o>For information: crew, prepare for operations.</o>
     </message>
     <message key="CPL.23" actor="2" radio="auto" lvar="L:CPL{VCP}23" wav="AND.cpl.t.goodmorning.frank.wav" sleep="0">
-      <o>Good morning frank.</o>
-      <o>Be advised: good morning frank.</o>
-      <o>Attention: good morning frank.</o>
-      <o>For information: good morning frank.</o>
+      <o>Good morning, {@TECH}.</o>
+      <o>Good morning!</o>
+      <o>Morning, {@TECH}.</o>
+      <o>Hello there.</o>
     </message>
     <message key="CPL.24" actor="2" radio="auto" lvar="L:CPL{VCP}24" wav="AND.cpl.t.landing.spot.medical.crew.present.wav" sleep="0">
       <o>Landing site in sight. Medical crew is ready at the landing area.</o>
@@ -316,10 +313,10 @@
       <o>For information: ground operations will take time. We can leave the hover and find a safe landing spot; they will advise us when finished.</o>
     </message>
     <message key="CPL.39" actor="2" radio="auto" lvar="L:CPL{VCP}39" wav="AND.cpl.x.hard.ldg.sarah.wav" sleep="3" tight="1">
-      <o>That was a hard landing. Sarah will not be happy.</o>
-      <o>Be advised: that was a hard landing. Sarah will not be happy.</o>
-      <o>Attention: that was a hard landing. Sarah will not be happy.</o>
-      <o>For information: that was a hard landing. Sarah will not be happy.</o>
+      <o>That was a hard landing. {@TECH} will not be happy.</o>
+      <o>That was a hard landing. Maintenance will not be happy.</o>
+      <o>Hard landing. {@TECH} will not like this one.</o>
+      <o>That was a hard landing. Expect a long look from maintenance.</o>
     </message>
     <message key="CPL.40" actor="2" radio="auto" lvar="L:CPL{VCP}40" wav="AND.cpl.x.hard.ldg.wav" sleep="3">
       <o>Hey it was a hard touch.</o>
@@ -488,15 +485,15 @@
       <o>Understood. I set the route and monitor the traffic.</o>
     </message>
     <message key="CPL.67" actor="2" radio="auto" group="debriefok" seq="2" lvar="L:CPL{VCP}67" sleep="0.4" new="1">
-      <o>Smooth flight, captain. Nice work.</o>
+      <o>Smooth flight, {@PLT}. Nice work.</o>
       <o>Copilot: no issues from the cockpit.</o>
-      <o>Good flying, captain. The routes were clean.</o>
+      <o>Good flying, {@PLT}. The routes were clean.</o>
       <o>Everything on the instruments looked fine.</o>
     </message>
     <message key="CPL.68" actor="2" radio="auto" group="debriefbad" seq="2" lvar="L:CPL{VCP}68" sleep="0.4" new="1">
-      <o>We did what we could, captain.</o>
+      <o>We did what we could, {@PLT}.</o>
       <o>Nobody could have done more.</o>
-      <o>We followed every procedure, captain.</o>
+      <o>We followed every procedure, {@PLT}.</o>
       <o>It was out of our hands in the end.</o>
     </message>
     <message key="DSP.VEH.BOTH" actor="8" radio="on" new="1" trigger="some vehicles on scene (argument 1), others on the way (argument 0)">
@@ -524,60 +521,74 @@
       <o>For your information, {list:0} {be:0} on the way.</o>
     </message>
     <message key="FRA.1" actor="6" radio="auto" lvar="L:FRA{VCP}1" wav="AND.frank.doyou.need.fuel.wav" sleep="4.5">
-      <o>If you need refueling please ask.</o>
-      <o>Be advised: if you need refueling please ask.</o>
-      <o>Attention: if you need refueling please ask.</o>
-      <o>For information: if you need refueling please ask.</o>
+      <o sex="m">If you need refueling please ask.</o>
+      <o sex="m">Morning. If you want fuel, just say so.</o>
+      <o sex="m">Need any fuel today? Just ask.</o>
+      <o sex="f">Hi. Let me know if you need refueling.</o>
+      <o sex="f">Good morning. Do you need any fuel today?</o>
+      <o sex="f">Fuel is available whenever you want it, just ask.</o>
     </message>
     <message key="FRA.2" actor="6" radio="auto" lvar="L:FRA{VCP}2" wav="AND.frank.fuel.as.requested.wav" sleep="3">
-      <o>Fuel is as you requested.</o>
-      <o>Be advised: fuel is as you requested.</o>
-      <o>Attention: fuel is as you requested.</o>
-      <o>For information: fuel is as you requested.</o>
+      <o sex="m">Fuel is as you requested.</o>
+      <o sex="m">Fuel loaded as requested.</o>
+      <o sex="m">You have the fuel you asked for.</o>
+      <o sex="f">Fuel is as you requested.</o>
+      <o sex="f">All done: the fuel you asked for is on board.</o>
+      <o sex="f">Refueling complete, as requested.</o>
     </message>
     <message key="FRA.3" actor="6" radio="auto" lvar="L:FRA{VCP}3" wav="AND.frank.fuel.full.wav" sleep="3">
-      <o>Fuel tanks are almost full.</o>
-      <o>Be advised: fuel tanks are almost full.</o>
-      <o>Attention: fuel tanks are almost full.</o>
-      <o>For information: fuel tanks are almost full.</o>
+      <o sex="m">Fuel tanks are almost full.</o>
+      <o sex="m">The tanks are nearly full.</o>
+      <o sex="m">You are almost full on fuel.</o>
+      <o sex="f">Fuel tanks are almost full.</o>
+      <o sex="f">Tanks are nearly full, you are good to go.</o>
+      <o sex="f">You have a nearly full tank.</o>
     </message>
     <message key="FRA.4" actor="6" radio="auto" lvar="L:FRA{VCP}4" wav="AND.frank.fuel.low.wav" sleep="4">
-      <o>Refueling has not been performed and fuel level is low.</o>
-      <o>Be advised: refueling has not been performed and fuel level is low.</o>
-      <o>Attention: refueling has not been performed and fuel level is low.</o>
-      <o>For information: refueling has not been performed and fuel level is low.</o>
+      <o sex="m">Refueling has not been performed and fuel level is low.</o>
+      <o sex="m">No refueling was done, so the fuel level is low.</o>
+      <o sex="m">Careful, you did not refuel and the level is low.</o>
+      <o sex="f">Refueling has not been performed and fuel level is low.</o>
+      <o sex="f">Heads up: no fuel was added and the level is low.</o>
+      <o sex="f">The tanks are low, refueling was not performed.</o>
     </message>
     <message key="FRA.5" actor="6" radio="auto" lvar="L:FRA{VCP}5" wav="AND.frank.GPU.disco.wav" sleep="0">
-      <o>Gp you disconnected ready to go good day.</o>
-      <o>GPU disconnected. Ready to go. Good day.</o>
-      <o>Be advised: gPU disconnected. Ready to go. Good day.</o>
-      <o>Attention: gPU disconnected. Ready to go. Good day.</o>
-      <o>For information: gPU disconnected. Ready to go. Good day.</o>
+      <o sex="m">GPU disconnected. Ready to go. Good day.</o>
+      <o sex="m">Power unit disconnected, you are ready to go. Good day.</o>
+      <o sex="m">GPU is off, all set. Have a good flight.</o>
+      <o sex="f">GPU disconnected. You are ready to go. Have a good day.</o>
+      <o sex="f">External power removed. All set, good flight.</o>
+      <o sex="f">Power unit is clear, you can go. Good day.</o>
     </message>
     <message key="FRA.6" actor="6" radio="auto" lvar="L:FRA{VCP}6" wav="AND.frank.helicopter.clear.logbook.signed.wav" sleep="4.5">
-      <o>Captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
-      <o>Be advised: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
-      <o>Attention: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
-      <o>For information: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
+      <o sex="m">{@PLT}, the helicopter is ready for flight. The logbook is completed and signed.</o>
+      <o sex="m">The helicopter is ready, and the logbook is signed.</o>
+      <o sex="m">Logbook completed and signed, the helicopter is clear for flight.</o>
+      <o sex="f">{@PLT}, the helicopter is ready for flight. I have completed and signed the logbook.</o>
+      <o sex="f">Everything is checked and the logbook is signed, you are ready.</o>
+      <o sex="f">The aircraft is clear for flight. Logbook is signed.</o>
     </message>
     <message key="FRA.7" actor="6" radio="auto" lvar="L:FRA{VCP}7" wav="AND.frank.hi.all.wav" sleep="0">
-      <o>Good morning, everyone. Ready for the mission?</o>
-      <o>Can you confirm: good morning, everyone. Ready for the mission?</o>
-      <o>Please confirm: good morning, everyone. Ready for the mission?</o>
-      <o>Message update: good morning, everyone. Ready for the mission?</o>
+      <o sex="m">Good morning, everyone. Ready for the mission?</o>
+      <o sex="m">Hi all. Ready for today?</o>
+      <o sex="m">Morning, team. Everything ready for the mission?</o>
+      <o sex="f">Good morning, everyone. Ready for the mission?</o>
+      <o sex="f">Hello team. Are you ready for today?</o>
+      <o sex="f">Morning, all. Ready to go?</o>
     </message>
     <message key="FRA.8" actor="6" radio="auto" lvar="L:FRA{VCP}8" wav="AND.frank.ready.for.GPU.wav" sleep="0">
-      <o>Really to supply external power at your request.</o>
-      <o>Ready to provide external power at your request.</o>
-      <o>Be advised: ready to provide external power at your request.</o>
-      <o>Attention: ready to provide external power at your request.</o>
-      <o>For information: ready to provide external power at your request.</o>
+      <o sex="m">Ready to provide external power at your request.</o>
+      <o sex="m">I can supply external power whenever you want.</o>
+      <o sex="m">Power unit ready, just say when.</o>
+      <o sex="f">Ready to connect external power when you want.</o>
+      <o sex="f">Say the word and I give you external power.</o>
+      <o sex="f">External power is ready at your request.</o>
     </message>
     <message key="FRA.9" actor="6" radio="auto" lvar="L:FRA{VCP}9" wav="AND.technical.inspection.required.wav" trigger="A failure or hard landing requires inspection before the next release.">
-      <o>Aircraft requires inspection. Do not depart until maintenance releases it.</o>
-      <o>Be advised: aircraft requires inspection. Do not depart until maintenance releases it.</o>
-      <o>Attention: aircraft requires inspection. Do not depart until maintenance releases it.</o>
-      <o>For information: aircraft requires inspection. Do not depart until maintenance releases it.</o>
+      <o sex="m">Aircraft requires inspection. Do not depart until maintenance releases it.</o>
+      <o sex="m">The aircraft needs an inspection. Please wait for the maintenance release before departing.</o>
+      <o sex="f">The aircraft needs an inspection. Please do not depart until maintenance releases it.</o>
+      <o sex="f">Inspection required on this aircraft. Wait for the maintenance release before you go.</o>
     </message>
     <message key="HW.1" actor="1" radio="auto" lvar="L:{VCP}HW1" wav="AND.HW1.wav" sleep="0">
       <o>We have a problem with the safety straps. We cannot use the rescue hoist and must land.</o>
@@ -908,16 +919,16 @@
       <o>A bit forward.</o>
     </message>
     <message key="PAX1.37" actor="4" radio="auto" lvar="L:{VCP}37" wav="AND.pax1.t.hi.frank.wav" sleep="0">
-      <o>Hey frank good morning.</o>
-      <o>Be advised: hey frank good morning.</o>
-      <o>Attention: hey frank good morning.</o>
-      <o>For information: hey frank good morning.</o>
+      <o>Hey {@TECH}, good morning.</o>
+      <o>Good morning!</o>
+      <o>Morning, {@TECH}.</o>
+      <o>Hey, good morning.</o>
     </message>
     <message key="PAX1.38" actor="4" radio="auto" lvar="L:{VCP}38" wav="AND.pax1.t.hi.sarah.wav" sleep="0">
-      <o>Hi sarah how are you.</o>
-      <o>Be advised: hi sarah how are you.</o>
-      <o>Attention: hi sarah how are you.</o>
-      <o>For information: hi sarah how are you.</o>
+      <o>Hi {@TECH}, how are you?</o>
+      <o>Hi, how are you?</o>
+      <o>Hello {@TECH}, how is it going?</o>
+      <o>Hey, how are you doing?</o>
     </message>
     <message key="PAX1.39" actor="4" radio="auto" lvar="L:{VCP}39" wav="AND.pax1.t.left.wav" draft="1">
       <o>Left.</o>
@@ -1272,10 +1283,11 @@
       <o>Attention: copy, paramedic here. Communications check.</o>
       <o>For information: copy, paramedic here. Communications check.</o>
     </message>
-    <message key="PAX2.2" actor="5" radio="auto" lvar="L:PAX2{VCP}2" wav="AND.PAX2.hi.frank.wav" draft="1">
-      <o>Hi Frank.</o>
-      <o>Hello Frank.</o>
-      <o>Hey Frank, good to see you.</o>
+    <message key="PAX2.2" actor="5" radio="auto" lvar="L:PAX2{VCP}2" wav="AND.PAX2.hi.frank.wav">
+      <o>Hi {@TECH}.</o>
+      <o>Hello.</o>
+      <o>Hey {@TECH}, good to see you.</o>
+      <o>Hi there.</o>
     </message>
     <message key="PAX2.3" actor="5" radio="auto" lvar="L:PAX2{VCP}3" wav="AND.PAX2.hi.sarah.wav" sleep="4.5">
       <o>Hi Anna, nice to meet you again. Are you free for lunch tomorrow?</o>
@@ -1527,7 +1539,7 @@
       <o>For information: additional patients remain on scene. Await tasking before departure.</o>
     </message>
     <message key="PAX3.38" actor="3" radio="auto" group="board" seq="3" lvar="L:PAX3{VCP}38" sleep="0.4" new="1">
-      <o>Doc here. Medical kit secured and bags stowed.</o>
+      <o>{@PAX3} here. Medical kit secured and bags stowed.</o>
       <o>Medical bag is strapped down, Doc ready.</o>
       <o>Doc: the kit is on board and everything is stowed.</o>
       <o>I have the medical equipment secured, Doc is set.</o>
@@ -1574,10 +1586,10 @@
       <o>Roger.</o>
     </message>
     <message key="PLT.5" actor="1" radio="auto" lvar="L:PLT{VCP}5" wav="AND.plt.u.hi.sarah.wav" sleep="6">
-      <o>Hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
-      <o>Be advised: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
-      <o>Attention: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
-      <o>For information: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
+      <o>Hi {@TECH}, how are you? The helicopter is good, but it needs refuelling.</o>
+      <o>Hello! The helicopter is good, but it needs refuelling.</o>
+      <o>Hi {@TECH}. All good with the helicopter, but it needs fuel.</o>
+      <o>Hello, how are you? The helicopter is fine but needs refuelling.</o>
     </message>
     <message key="PLT.6" actor="1" radio="auto" lvar="L:PLT{VCP}6" wav="AND.plt.u.ill.chk.wav" sleep="0">
       <o>I'll check.</o>
@@ -1598,10 +1610,10 @@
       <o>For information: thank you.</o>
     </message>
     <message key="PLT.9" actor="1" radio="auto" lvar="L:PLT{VCP}9" wav="AND.plt.u.tks.frank.wav" sleep="1.5">
-      <o>Thank you, Frank.</o>
-      <o>Be advised: thank you, Frank.</o>
-      <o>Attention: thank you, Frank.</o>
-      <o>For information: thank you, Frank.</o>
+      <o>Thank you, {@TECH}.</o>
+      <o>Thanks a lot.</o>
+      <o>Thank you.</o>
+      <o>Thanks, {@TECH}.</o>
     </message>
     <message key="PLT.10" actor="1" radio="auto" lvar="L:PLT{VCP}10" wav="AND.plt.u.we.did.our.best.wav" sleep="0">
       <o>We did our best. Unfortunately, we could not save every patient.</o>
@@ -1670,10 +1682,10 @@
       <o>For information: we exceeded the torque limits.</o>
     </message>
     <message key="PLT.21" actor="1" radio="auto" lvar="L:PLT{VCP}21" wav="AND.plt.va.hi.sarah.bad.news.wav" sleep="4" tight="1">
-      <o>Hi sarah i'm sorry we have some bad news for you.</o>
-      <o>Be advised: hi sarah i'm sorry we have some bad news for you.</o>
-      <o>Attention: hi sarah i'm sorry we have some bad news for you.</o>
-      <o>For information: hi sarah i'm sorry we have some bad news for you.</o>
+      <o>Hi {@TECH}, I am sorry, we have some bad news for you.</o>
+      <o>Hi, I am sorry. We have some bad news for you.</o>
+      <o>Sorry {@TECH}, we have some bad news.</o>
+      <o>I am sorry, we have bad news about the helicopter.</o>
     </message>
     <message key="PLT.22" actor="1" radio="auto" lvar="L:PLT{VCP}22" wav="AND.plt.va.hope.u.can.fix.it.wav" draft="1">
       <o>I hope you can fix it.</o>
@@ -1830,54 +1842,66 @@
     <message key="PLT.54" actor="1" radio="auto" group="debriefbad" seq="4" lvar="L:PLT{VCP}54" sleep="0.4" new="1">
       <o>Thank you all. We talk about it later.</o>
       <o>Take a moment, then we debrief at base.</o>
-      <o>Thanks, crew. We will review it together.</o>
+      <o>Thanks, {@CPL}, thanks everyone. We will review it together.</o>
       <o>Rest a bit. We talk when you are ready.</o>
     </message>
     <message key="SARA.1" actor="7" radio="auto" lvar="L:SARA{VCP}1" wav="AND.Sarah.bye.wav" sleep="3.5">
-      <o>Bye see you tomorrow.</o>
-      <o>Be advised: bye see you tomorrow.</o>
-      <o>Attention: bye see you tomorrow.</o>
-      <o>For information: bye see you tomorrow.</o>
+      <o sex="m">Bye, see you tomorrow.</o>
+      <o sex="m">See you later. Have a good evening.</o>
+      <o sex="m">Take care, guys. See you tomorrow.</o>
+      <o sex="f">Bye, see you tomorrow.</o>
+      <o sex="f">See you tomorrow, take care.</o>
+      <o sex="f">Bye everyone, see you tomorrow.</o>
     </message>
     <message key="SARA.2" actor="7" radio="auto" lvar="L:SARA{VCP}2" wav="AND.Sarah.everything.good.wav" sleep="3.5" tight="1">
-      <o>How was the last mission was everything good with the helicopter.</o>
-      <o>How was the last mission? Was everything all right with the helicopter?</o>
+      <o sex="m">How was the mission? Everything good with the helicopter?</o>
+      <o sex="m">Good mission? Any problem with the helicopter?</o>
+      <o sex="f">How was the last mission? Was the helicopter all right?</o>
+      <o sex="f">How did the mission go? Any trouble with the helicopter?</o>
     </message>
-    <message key="SARA.3" actor="7" radio="auto" lvar="L:SARA{VCP}3" wav="AND.Sarah.fine.thanks.wav" draft="1">
-      <o>Fine, thanks.</o>
-      <o>I am fine, thank you.</o>
-      <o>All good, thanks.</o>
+    <message key="SARA.3" actor="7" radio="auto" lvar="L:SARA{VCP}3" wav="AND.Sarah.fine.thanks.wav">
+      <o sex="m">Fine, thanks.</o>
+      <o sex="m">All good, thanks.</o>
+      <o sex="m">I am fine, thank you.</o>
+      <o sex="f">Fine, thanks.</o>
+      <o sex="f">I am fine, thank you.</o>
+      <o sex="f">All good, thanks.</o>
     </message>
     <message key="SARA.4" actor="7" radio="auto" lvar="L:SARA{VCP}4" wav="AND.Sarah.helicopter.in.precious.hands.wav" sleep="5.5" tight="1">
-      <o>Do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
-      <o>Be advised: do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
-      <o>Attention: do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
-      <o>Please do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+      <o sex="m">Do not worry, the helicopter is in good hands. It will be ready for the next mission.</o>
+      <o sex="m">Leave it to me: the helicopter will be ready for the next mission.</o>
+      <o sex="m">Do not worry about the helicopter. I will have it ready for the next mission.</o>
+      <o sex="f">Do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+      <o sex="f">Relax, I take care of the helicopter. It will be ready for the next one.</o>
+      <o sex="f">Do not worry, I will get the helicopter ready for the next mission.</o>
     </message>
     <message key="SARA.5" actor="7" radio="auto" lvar="L:SARA{VCP}5" wav="AND.Sarah.hi.guys.wav" sleep="3.5">
-      <o>Hi, guys.</o>
-      <o>Be advised: hi, guys.</o>
-      <o>Attention: hi, guys.</o>
-      <o>For information: hi, guys.</o>
+      <o sex="m">Hey, guys.</o>
+      <o sex="m">Hi all, welcome back.</o>
+      <o sex="m">Hello, team.</o>
+      <o sex="f">Hi, guys.</o>
+      <o sex="f">Hello, everyone.</o>
+      <o sex="f">Hi team, welcome back.</o>
     </message>
     <message key="SARA.6" actor="7" radio="auto" lvar="L:SARA{VCP}6" wav="AND.Sarah.it.seems.i.have.to.work.wav" sleep="3.5">
-      <o>It looks like I have a lot of work to do.</o>
-      <o>Be advised: it looks like I have a lot of work to do.</o>
-      <o>Attention: it looks like I have a lot of work to do.</o>
-      <o>For information: it looks like I have a lot of work to do.</o>
+      <o sex="m">It looks like I have a lot of work to do.</o>
+      <o sex="m">Well, plenty of work for me today.</o>
+      <o sex="m">I will be busy with this one for a while.</o>
+      <o sex="f">It looks like I have a lot of work to do.</o>
+      <o sex="f">Looks like I have plenty of work ahead of me.</o>
+      <o sex="f">I see I will be busy with this helicopter.</o>
     </message>
     <message key="SARA.7" actor="7" radio="auto" lvar="L:SARA{VCP}7" wav="AND.Sarah.tomorrow.there.is.a.restaurant.wav" sleep="6">
-      <o>Tomorrow there is a good restaurant just outside. Would you like to go?</o>
-      <o>Can you confirm: tomorrow there is a good restaurant just outside. Would you like to go?</o>
-      <o>Please confirm: tomorrow there is a good restaurant just outside. Would you like to go?</o>
-      <o>Message update: tomorrow there is a good restaurant just outside. Would you like to go?</o>
+      <o sex="m">Tomorrow there is a barbecue at the base. Would you like to join us?</o>
+      <o sex="m">A few of us are going to the pub tomorrow. Do you want to come?</o>
+      <o sex="f">Tomorrow there is a good restaurant just outside. Would you like to go?</o>
+      <o sex="f">There is a nice restaurant just outside tomorrow. Do you want to join me?</o>
     </message>
     <message key="SARA.8" actor="7" radio="auto" lvar="L:SARA{VCP}8" wav="AND.Sarah.what.you.did.wav" sleep="3.5">
-      <o>Hey what you did to the helicopter.</o>
-      <o>What did you do to the helicopter?</o>
-      <o>Can you confirm: what did you do to the helicopter?</o>
-      <o>Please confirm: what did you do to the helicopter?</o>
-      <o>Message update: what did you do to the helicopter?</o>
+      <o sex="m">What did you do to my helicopter?</o>
+      <o sex="m">Hey, what have you done to the helicopter?</o>
+      <o sex="f">What did you do to the helicopter?</o>
+      <o sex="f">Hey, what happened to the helicopter?</o>
     </message>
     <message key="SYS.DEAD" actor="1" radio="auto" lvar="L:DEAD{VCP}" wav="AND.dead.wav" sleep="3" sfx="1">
     </message>

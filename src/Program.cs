@@ -28,8 +28,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.7.0.0")]
-[assembly: AssemblyFileVersion("0.7.0.0")]
+[assembly: AssemblyVersion("0.8.0.0")]
+[assembly: AssemblyFileVersion("0.8.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -234,7 +234,7 @@ namespace HPGMissionCompanion
                     string text = texts[r % texts.Count];
                     rep.AppendLine("input: " + text);
                     // test lines for the simulator-variable bridge: "@watch NAME VALUE" (a variable changes; the first value of a name is the baseline),
-                    // "@settings variety=coherent names=random bridge=EN"
+                    // "@settings variety=coherent names=random bridge=EN name.PLT=Mark"
                     if (text.StartsWith("@"))
                     {
                         string[] w = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -256,6 +256,7 @@ namespace HPGMissionCompanion
                                 if (kv[0] == "variety") Ctx.Settings.Variety = kv[1];
                                 else if (kv[0] == "names") Ctx.Settings.Names = kv[1];
                                 else if (kv[0] == "bridge") Ctx.Settings.BridgePack = kv[1];
+                                else if (kv[0].StartsWith("name.")) Ctx.Settings.CrewNames[kv[0].Substring(5).ToUpperInvariant()] = kv[1];
                             }
                             Ctx.Settings.Normalize();
                             Say.ApplySettings();

@@ -22,7 +22,7 @@ What interrupt does: with interrupt 1 the program first throws away every speech
 -------------------
 Tags are written in the text, in angle brackets or in square brackets (<actor3> and [actor3] are the same). A tag applies to the text that follows it, up to the next tag of the same kind, inside the same speak. Every speak starts clean: actor 1, the default language, no radio.
 
-  <actor1> ... <actor11>   the actor: 1 Pilota, 2 Copilota, 3 Doctor, 4 HEMS1, 5 HEMS2, 6 Frank, 7 Sarah, 8 Dispatcher, 9 Ground unit, 10 Patient / extra, 11 Checklist.
+  <actor1> ... <actor11>   the actor: 1 Pilot, 2 Copilot, 3 Doctor, 4 HEMS1, 5 HEMS2, 6 Technician male, 7 Technician female, 8 Dispatcher, 9 Ground unit, 10 Patient / extra, 11 Checklist.
                            The voice and the usual speed of each actor are chosen in the Actors and voices tab, per language.
   <Microsoft David>        a voice by name (also <voice:ryan>); it wins over the actor voice. A name that is not installed: the actor voice speaks and the log says so.
   <speed:1.2>              speed, 0.5 to 3 (1 = the speed set for the actor)
@@ -54,7 +54,7 @@ Arguments are plain text: the characters < > [ ] are removed, so a free text can
 
 A message that has no placeholder takes no arguments: {"speak":"<say:CPL.5>"}. A missing argument becomes empty and the log shows a warning. A key that is not in any pack speaks nothing and logs a warning.
 
-Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2} {PAX3} the names of the crew (below); {FRA} Frank; {SARA} Sarah.
+Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2} {PAX3} {TECH} the job word of the role (Pilot, Copilot, Chief, Paramedic, Doc, Technician); {@PLT} {@CPL} {@PAX1} {@PAX2} {@PAX3} {@TECH} the name of the shift (random, or typed by the user in the Actors tab) or the job word when there is none: use the name where the text sounds more colloquial and the job word elsewhere. {TECH} is the technician of the scene (male or female, see below).
 
 <plain>   speak the text after the tag as it is, without any tag: <actor8><radio><plain>{0} with the dispatch text in params. The characters < > [ ] are removed.
 
@@ -62,7 +62,9 @@ Lists of vehicles: {list:N} and {be:N} take argument N made of the letters A (am
 
 Volume: the program follows the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and lowers a voice (not a radio call) by 12 dB when the view is outside and the speaker is aboard, by 9 dB when the view is inside and the speaker is outside (Volume tab). The level is applied when a line starts, not while it plays.
 
-Names of the crew: by default the functions (Captain, Copilot, Chief, Paramedic, Doc; a pack can change them in its <names> list). At the start of a shift the mission can send <names:PLT=Mark,CPL=Anna,PAX3=Sue>; the names stay until <names:off> or the next <names:..>. A mission that wants functions only never sends the tag.
+Names of the crew: by default the job words (Pilot, Copilot, Chief, Paramedic, Doc, Technician; a pack can change them in its <names> list); {@PLT} gives a name only when there is one: the user typed it in the Actors tab (Name box next to the voice), or the option "Random names for each shift" draws one for each role from the static lists of first names of the program (the male technician takes a male name, the female one a female name). The mission only says <names:random> at a new shift; <names:PLT=Mark,CPL=Anna> forces names, <names:off> removes them.
+
+Technicians: the mission picks a male or a female technician for each scene (the start of a flight, the arrival at the base) and publishes it in L:HMC_TECH_SEX (0 male, 1 female). A pack message can have options for each: <o sex="m">..</o> and <o sex="f">..</o> (an option without sex is for both); the program uses the options of the technician of the scene and speaks them with actor 6 (Technician male) or 7 (Technician female). The crew lines that greet or answer the technician use {@TECH}.
 
 Variety: <variety:random> (default) picks an option at random for every message and never the same option twice in a row for the same message. <variety:coherent> makes the messages of one conversation (same group="" in the pack) use the same option number, so the alternatives of a dialogue read as one dialogue; a new conversation starts after 3 minutes or with another group. Send the tag when the mission starts (it stays until changed).
 
@@ -101,7 +103,7 @@ voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the
   <?xml version="1.0" encoding="utf-8"?>
   <voicepack name="EN" language="EN" version="1" title="English crew voices">
     <names>
-      <name role="PLT">Captain</name>   <name role="CPL">Copilot</name>   <name role="PAX1">Chief</name>
+      <name role="PLT">Pilot</name>   <name role="CPL">Copilot</name>   <name role="PAX1">Chief</name>
       <name role="PAX2">Paramedic</name> <name role="PAX3">Doc</name>
     </names>
     <message key="CPL.5" actor="2" radio="auto" group="" seq="0" lvar="L:CPLAND5" wav="AND.cpl.comm.chk.wav" sleep="2" tight="1" trigger="when ...">
@@ -112,10 +114,10 @@ voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the
 
 voicepack: name (optional: letters, digits, _ -, up to 24; when it is missing the name of the file is used, so any XML file can be dropped in), language (EN FR IT DE), version (whole number from 1), title.
 message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav. lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
-<o>: one text option (any number; 4-5 is good). Texts may contain {0}.. {PLT}.. and the normal tags (for example <speed:1.1>).
+<o>: one text option (any number; 4-5 is good; sex="m" or "f" for the technicians). Texts may contain {0}.. {PLT}.. {@PLT}.. and the normal tags (for example <speed:1.1>).
 
 Install a pack: drag the XML file onto the Voice packs tab (or Browse), or copy it into the voicepacks folder and press Reload. A pack of the same name and an older or equal version asks before replacing. Command line: HPGMissionCompanion.exe --install-pack file.xml.
-The key of the messages of the HEMS pack: ROLE.NUMBER, with ROLE = PLT pilot, CPL copilot, PAX1 crew chief, PAX2 hoist operator, PAX3 medical crew, FRA Frank, SARA Sarah, MAR marshal, HW emergency events, SYS system sounds. The number is the one of the wav pack LVAR (L:CPL<pack>5 -> CPL.5).
+The key of the messages of the HEMS pack: ROLE.NUMBER, with ROLE = PLT pilot, CPL copilot, PAX1 crew chief, PAX2 hoist operator, PAX3 medical crew, FRA the technician at the start of a flight, SARA the technician at the arrival (both with options for the male and the female technician), MAR marshal, HW emergency events, SYS system sounds. The number is the one of the wav pack LVAR (L:CPL<pack>5 -> CPL.5).
 
 8. TESTING
 ----------

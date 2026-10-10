@@ -245,6 +245,7 @@ for (const [lvar, rows] of byLvar) {
 // messages that have no row in the spreadsheet (texts written from the wav file names: draft)
 for (const extrasPath of extrasPaths) {
   const dialogs = /dialogs/i.test(extrasPath);       // dialogs file: new messages with a group, not drafts of existing wavs
+  if (/techs/i.test(extrasPath)) continue;            // technician file: changes existing messages, applied below
   const extras = JSON.parse(fs.readFileSync(extrasPath, 'utf8')).messages;
   for (const x of extras) {
     const k = x.lvar ? keyOf(x.lvar.replace('{VCP}', 'AND')) : { key: x.key, role: x.key.split('.')[0] };
@@ -254,28 +255,46 @@ for (const extrasPath of extrasPaths) {
   }
 }
 
+// technicians (the technician of a scene is male or female, picked by the mission): messages with options for each sex (m, f), and messages whose options are replaced
+//   {"messages":[{"key":"FRA.1","m":["..."],"f":["..."]}],"replace":[{"key":"CPL.23","o":["..."]}]}
+for (const extrasPath of extrasPaths) {
+  if (!/techs/i.test(extrasPath)) continue;
+  const tj = JSON.parse(fs.readFileSync(extrasPath, 'utf8'));
+  for (const x of tj.messages || []) {
+    const msg = messages.find((m) => m.key === x.key);
+    if (!msg) { console.log('techs: ' + x.key + ' not in the pack, skipped'); continue; }
+    msg.options = [...(x.m || []).map(ascii), ...(x.f || []).map(ascii)];
+    msg.sexes = [...(x.m || []).map(() => 'm'), ...(x.f || []).map(() => 'f')];
+    msg.draft = false;
+  }
+  for (const x of tj.replace || []) {
+    const msg = messages.find((m) => m.key === x.key);
+    if (!msg) { console.log('techs: ' + x.key + ' not in the pack, skipped'); continue; }
+    msg.options = x.o.map(ascii);
+    msg.draft = false;
+  }
+}
+
 // ---- write the XML ------------------------------------------------------------------------------------
 const L = [];
 L.push('<?xml version="1.0" encoding="utf-8"?>');
 L.push('<!-- HPG Mission Companion voice pack ' + packName + '. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->');
 L.push('<voicepack name="' + xmlEsc(packName) + '" language="' + xmlEsc(language) + '" version="' + version + '" vcp="APP" title="English crew voices of the HEMS missions">');
 L.push('  <names>');
-L.push('    <name role="PLT">Captain</name>');
+L.push('    <name role="PLT">Pilot</name>');
 L.push('    <name role="CPL">Copilot</name>');
 L.push('    <name role="PAX1">Chief</name>');
 L.push('    <name role="PAX2">Paramedic</name>');
 L.push('    <name role="PAX3">Doc</name>');
+L.push('    <name role="TECHM">Technician</name>');
+L.push('    <name role="TECHF">Technician</name>');
 L.push('    <name role="VEH_A">ambulance</name>');
 L.push('    <name role="VEH_F">fire engine</name>');
 L.push('    <name role="VEH_P">police</name>');
 L.push('    <name role="AND">and</name>');
 L.push('    <name role="IS">is</name>');
 L.push('    <name role="ARE">are</name>');
-L.push('    <pool role="PLT">Mark, John, Paul, Peter, Chris, David, Simon</pool>');
-L.push('    <pool role="CPL">Anna, Laura, Emma, Kate, Julia, Nina, Clara</pool>');
-L.push('    <pool role="PAX1">Tom, Ben, Jack, Luke, Sam, Ryan, Ian</pool>');
-L.push('    <pool role="PAX2">Eva, Lisa, Mia, Zoe, Ruth, Beth, Joan</pool>');
-L.push('    <pool role="PAX3">Sue, Alex, Dan, Jane, Rob, Matt, Vera</pool>');
+// no <pool>: the program draws the names of a shift from its static lists of first names (src/Names.cs)
 L.push('  </names>');
 for (let i = messages.length - 1; i >= 0; i--) if (excluded.includes(messages[i].key)) { console.log('excluded ' + messages[i].key); messages.splice(i, 1); }
 messages.sort((a, b) => a.key.localeCompare(b.key, 'en', { numeric: true }));
@@ -289,7 +308,7 @@ for (const m of messages) {
   if (m.isNew) a += ' new="1"';
   if (m.trigger) a += ' trigger="' + xmlEsc(m.trigger) + '"';
   L.push(a + '>');
-  for (const o of m.options) L.push('      <o>' + xmlEsc(o) + '</o>');
+  m.options.forEach((o, oi) => L.push('      <o' + (m.sexes && m.sexes[oi] ? ' sex="' + m.sexes[oi] + '"' : '') + '>' + xmlEsc(o) + '</o>'));
   L.push('    </message>');
 }
 L.push('</voicepack>');

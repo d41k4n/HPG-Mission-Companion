@@ -17,9 +17,9 @@ A voice pack is an XML file in `voicepacks\` next to the program (`Ctx.BaseDir`)
 
 ```xml
 <voicepack name="EN" language="EN" version="1" vcp="APP" title="...">   name optional (file name), language EN FR IT DE, version whole number >= 1, vcp = voice code of the mission in app mode (default APP)
-  <names><name role="PLT">Captain</name> ... <pool role="PLT">Mark, John, ...</pool></names>   default text of {PLT} {CPL} {PAX1} {PAX2} {PAX3}; pools for random names
+  <names><name role="PLT">Pilot</name> ... <pool role="PLT">Mark, John, ...</pool></names>   job words of {PLT} {CPL} {PAX1} {PAX2} {PAX3} {TECHM} {TECHF}; the optional pools replace the static name lists for random names
   <message key="CPL.5" actor="2" radio="auto" group="" seq="0" sfx="0" lvar="L:CPL{VCP}5" wav="" sleep="" tight="" trigger="" draft="">
-    <o>option text with {0} {PLT} and the normal tags</o>        any number of options
+    <o>option text with {0} {PLT} {@PLT} and the normal tags</o>        any number of options; <o sex="m"> / <o sex="f"> only for the male / female technician
   </message>
 </voicepack>
 ```
@@ -45,6 +45,7 @@ The counters carry no tags, so the program decides the radio itself from three v
 | `L:HMC_HELI_OFF` | 1: battery master off and rotor below 1 % |
 | `L:HMC_CREW_PRESENT` | bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard (seat tracker) |
 | `L:HMC_CTX_VALID` | 1: the two above are published; 0 or never written: no radio tag is added |
+| `L:HMC_TECH_SEX` | the technician of the scene: 0 male, 1 female (the mission picks one at random in app mode before the boarding and the arrival scenes); selects the options with `sex` and the voice (actor 6 or 7) |
 
 Rule (`Say.AutoRadio`, only for messages with `radio="auto"` and when the mission sent no radio tag): the dispatcher (actor 8) is always on the radio; helicopter off: voice; speaker aboard (a crew actor whose bit is set): radio; speaker outside (Frank, Sarah, ground unit, patient, a crew member outside): radio when somebody of the crew is aboard, voice when everybody is outside.
 
@@ -58,7 +59,7 @@ The level of a line is: the volume tag of the text, times the volume of the miss
 
 ## Crew names and variety
 
-`<names:random>` (the mission sends it at a new shift) draws one name for each of the roles PLT, CPL, PAX1, PAX2, PAX3 from the `<pool role="..">` lists of the pack (a built-in pool when the pack has none), never the same name twice, but only when the user chose "Random names for each shift" in the Voice packs tab; otherwise the functions (Captain, Copilot, Chief, Paramedic, Doc) stay. `Settings.Variety` (random or coherent) is the default of `<variety:..>` and works for the counters too, which carry no tags.
+`<names:random>` (the mission sends it at a new shift) draws one name for each of the roles PLT, CPL, PAX1, PAX2, PAX3, TECHM, TECHF from the static lists of first names of `src/Names.cs` (the first names of the patients of the mission; a `<pool role="..">` of the pack replaces the list for that role; the male technician takes a male name, the female one a female name), never the same name twice, but only when the user chose "Random names for each shift" in the Voice packs tab; otherwise the names typed in the Actors tab (Name boxes of actors 1-7) stay, and a role without a name keeps its job word (Pilot, Copilot, Chief, Paramedic, Doc, Technician). `{PLT}` is always the job word; `{@PLT}` is the name or, without one, the job word. `{TECH}` / `{@TECH}` is the technician of the scene (`L:HMC_TECH_SEX`). Options with `sex="m"` or `sex="f"` are used only for that technician, and a message that has them is spoken by actor 6 (Technician male) or 7 (Technician female); without the variable the sex the message was written for (actor 6: male, 7: female) is used. `Settings.Variety` (random or coherent) is the default of `<variety:..>` and works for the counters too, which carry no tags.
 
 ## Choosing the option
 

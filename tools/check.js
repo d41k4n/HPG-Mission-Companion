@@ -85,7 +85,8 @@ if (fs.existsSync(packDir)) {
       const actor = (m[1].match(/\bactor="(\d+)"/) || [])[1];
       if (actor && (parseInt(actor, 10) < 1 || parseInt(actor, 10) > 11)) errors.push(`${where}: ${key} actor ${actor} is not 1-11`);
       const sfx = /\bsfx="1"/.test(m[1]);
-      if (!sfx && !/<o>[^<]+<\/o>/.test(m[2])) errors.push(`${where}: ${key} has no <o> text`);
+      if (!sfx && !/<o(?:\s[^>]*)?>[^<]+<\/o>/.test(m[2])) errors.push(`${where}: ${key} has no <o> text`);
+      for (const o of m[2].matchAll(/<o\b([^>]*)>/g)) { const sx = (o[1].match(/\bsex="([^"]*)"/) || [])[1]; if (sx !== undefined && sx !== 'm' && sx !== 'f') errors.push(`${where}: ${key} has an option with sex="${sx}" (m or f)`); }
     }
     if (seen.size === 0) errors.push(`${where}: no message`);
   }
