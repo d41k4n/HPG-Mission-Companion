@@ -1,0 +1,131 @@
+HPG MISSION COMPANION - SCRIPT DEVELOPER GUIDE
+==============================================
+
+Everything a mission author needs to make an HPG mission talk through this program. The same text is in the About tab of the program.
+
+1. HOW A MISSION TALKS TO THE PROGRAM
+-------------------------------------
+The program is the "voice server" of the HPG mission system: a WebSocket server on localhost, port 5997 (Service tab). The traffic is one way, from the mission to the program. The mission connects once and then uses the speak command:
+
+  {"connect_voice_server":{"on_connected":[...],"on_disconnected":[...]}}
+  {"speak":"Hello"}                                          plain text
+  {"speak":{"text":"Hello {0}","params":[{"local":"NAME"}]}}  text with parameters ({0} {1} ...), filled by HPG before sending
+  {"speak":"Stop now","interrupt":1}                         cut the speech and play this
+  {"speak":"file.wav","is_audio_file":1}                     play file.wav from the audio folder (Service tab)
+  {"fn":"is_voice_server_connected"}                         query: 1 when connected
+
+On the wire every speak is {"Text":"...","FileName":"","Interrupt":false}. The program answers nothing: the mission cannot know when a speech ends. speak returns at once.
+
+What interrupt does: with interrupt 1 the program first throws away every speech still waiting in its queue and stops the sound that is playing at this moment, then speaks the new text. Without interrupt the new text goes at the end of the queue and is spoken when the earlier ones have finished, in order. A speak with an empty text and interrupt 1 only stops everything (the tag <stop> does the same). It cannot cut a text that has not arrived yet.
+
+2. TAGS IN THE TEXT
+-------------------
+Tags are written in the text, in angle brackets or in square brackets (<actor3> and [actor3] are the same). A tag applies to the text that follows it, up to the next tag of the same kind, inside the same speak. Every speak starts clean: actor 1, the default language, no radio.
+
+  <actor1> ... <actor11>   the actor: 1 Pilota, 2 Copilota, 3 Doctor, 4 HEMS1, 5 HEMS2, 6 Frank, 7 Sarah, 8 Dispatcher, 9 Ground unit, 10 Patient / extra, 11 Checklist.
+                           The voice and the usual speed of each actor are chosen in the Actors and voices tab, per language.
+  <Microsoft David>        a voice by name (also <voice:ryan>); it wins over the actor voice. A name that is not installed: the actor voice speaks and the log says so.
+  <speed:1.2>              speed, 0.5 to 3 (1 = the speed set for the actor)
+  <vol:70>                 volume 0-100 of this text, multiplied by the master volume of the Service tab. Pass the mission volume with params: "<vol:{0}>" and [VOLUME_CREW].
+  <radio> / <radio:off>    radio effect on / off: start beep, hiss, band filter, squelch tail (Radio effect tab)
+  <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
+  <radio:chirp>            shortcut: radio on with that beep type
+  <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language
+  <stop>                   with interrupt 1: stop everything
+  <br> <b> <i> ...         HTML-like tags are ignored
+
+An unknown word in brackets is taken as a voice name. A tag is at most 60 characters. Free texts that may contain brackets (a dispatch, a patient name) must go behind <plain> (section 4).
+
+3. VOICE PACKS AND THE say TAG
+------------------------------
+A voice pack is an XML file in the voicepacks folder of the program with the texts of the mission messages, several options for each, so the crew does not repeat itself and the texts can be changed or translated without touching the mission. The mission sends the key of the message, the program chooses the option, the actor, the radio and speaks.
+
+  <say:CPL.5>                              speak the message CPL.5 of the pack
+  <say:D.CAS>2 injured//conscious//collision//broken leg
+                                           the text after the tag is the argument list, separated by //: they fill {0} {1} {2} {3} in the option
+  <say:CPL.5:3>                            force option 3 (to test)
+  <radio><beep:chirp><say:PLT.30>          tags before say are kept: the mission decides the radio, the pack decides the actor
+  <actor3><say:PLT.30>                     an actor tag before say wins over the actor of the message
+
+Arguments are plain text: the characters < > [ ] are removed, so a free text cannot break the tags. Everything after <say> belongs to it, so use one say per speak. In JSON:
+
+  {"speak":{"text":"<radio><say:D.CAS>{0}//{1}//{2}//{3}","params":[{"local":"N_INJ"},{"local":"STATE"},{"local":"CAUSE"},{"local":"SYMPTOMS"}]}}
+
+A message that has no placeholder takes no arguments: {"speak":"<say:CPL.5>"}. A missing argument becomes empty and the log shows a warning. A key that is not in any pack speaks nothing and logs a warning.
+
+Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2} {PAX3} the names of the crew (below); {FRA} Frank; {SARA} Sarah.
+
+<plain>   speak the text after the tag as it is, without any tag: <actor8><radio><plain>{0} with the dispatch text in params. The characters < > [ ] are removed.
+
+Names of the crew: by default the functions (Captain, Copilot, Chief, Paramedic, Doc; a pack can change them in its <names> list). At the start of a shift the mission can send <names:PLT=Mark,CPL=Anna,PAX3=Sue>; the names stay until <names:off> or the next <names:..>. A mission that wants functions only never sends the tag.
+
+Variety: <variety:random> (default) picks an option at random for every message and never the same option twice in a row for the same message. <variety:coherent> makes the messages of one conversation (same group="" in the pack) use the same option number, so the alternatives of a dialogue read as one dialogue; a new conversation starts after 3 minutes or with another group. Send the tag when the mission starts (it stays until changed).
+
+Sound-only messages: a pack message with sfx="1" has no text, only a wav name; the program plays that file from the audio folder.
+
+4. VERSIONS
+-----------
+Every pack has a whole version number that rises at every change of its texts. The mission declares what it needs at the start (or when the voice option is chosen):
+
+  {"speak":"<pack:EN:1>"}          pack EN, at least version 1
+
+The program compares and tells the mission through simulator variables (SimConnect, it needs the MSFS SDK SimConnect.dll beside the program):
+
+  L:HMC_VOICE_STATUS       0 nothing declared yet, 1 pack found and not older than needed, 2 pack not installed, 3 pack older than the mission needs (obsolete)
+  L:HMC_VOICEPACK_VERSION  the version of the installed pack (0 = missing)
+  L:HMC_APP_VERSION        the version of this program (0.4 -> 0.4)
+
+  Example: {"wait_for":{"var":["L:HMC_VOICE_STATUS","number"]},"gt":0}  then {"if":{"var":["L:HMC_VOICE_STATUS","number"]},"ge":2, "then":[{"set_message":{"text":"Voice pack missing or obsolete: install it with the Mission Companion"}}]}
+
+The log of the program shows the same as a warning. A newer pack than the mission needs is fine. When a newer version of a pack is installed, the old file moves to voicepacks\obsolete.
+
+The program also keeps L:AUDIOINHIBIT at 1 (option in the Service tab) to silence the wav sounds of the aircraft.
+
+5. WHEN TO USE THE RADIO
+------------------------
+The pack does not know where the crew is, so the mission adds the tag. The rule of the HEMS mission: helicopter completely off, everybody talks by voice; between a person inside and one outside always <radio>; outside to outside by voice. Add <radio> or <radio:off> before <say>. A message with radio="on" or "off" in the pack applies it only when the mission sent no radio tag.
+
+6. TIMING
+---------
+speak returns at once and the speeches wait in a queue, one after the other. A line is 15-18 characters of text per second of speech at speed 1.0. The pack keeps the options of a message at about the same length where the mission waits only a short time after it (tight="1"). If the mission fires lines faster than they are spoken they pile up: space them with sleep, or use interrupt for what must not wait. <stop> with interrupt 1 clears everything (for example when the player aborts).
+
+7. THE PACK FILE
+----------------
+voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the file name when there is none; the installed copy is always saved as <pack name>.xml):
+
+  <?xml version="1.0" encoding="utf-8"?>
+  <voicepack name="EN" language="EN" version="1" title="English crew voices">
+    <names>
+      <name role="PLT">Captain</name>   <name role="CPL">Copilot</name>   <name role="PAX1">Chief</name>
+      <name role="PAX2">Paramedic</name> <name role="PAX3">Doc</name>
+    </names>
+    <message key="CPL.5" actor="2" radio="auto" group="" seq="0" lvar="L:CPLAND5" wav="AND.cpl.comm.chk.wav" sleep="2" tight="1" trigger="when ...">
+      <o>Copilot here, comm check.</o>
+      <o>This is the copilot, radio check.</o>
+    </message>
+  </voicepack>
+
+voicepack: name (optional: letters, digits, _ -, up to 24; when it is missing the name of the file is used, so any XML file can be dropped in), language (EN FR IT DE), version (whole number from 1), title.
+message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav. lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
+<o>: one text option (any number; 4-5 is good). Texts may contain {0}.. {PLT}.. and the normal tags (for example <speed:1.1>).
+
+Install a pack: drag the XML file onto the Voice packs tab (or Browse), or copy it into the voicepacks folder and press Reload. A pack of the same name and an older or equal version asks before replacing. Command line: HPGMissionCompanion.exe --install-pack file.xml.
+The key of the messages of the HEMS pack: ROLE.NUMBER, with ROLE = PLT pilot, CPL copilot, PAX1 crew chief, PAX2 hoist operator, PAX3 medical crew, FRA Frank, SARA Sarah, MAR marshal, HW emergency events, SYS system sounds. The number is the one of the wav pack LVAR (L:CPL<pack>5 -> CPL.5).
+
+8. TESTING
+----------
+  HPGMissionCompanion.exe --expand report.txt --text "<pack:EN:1><radio:chirp><say:PLT.30>"       what the text becomes, no sound
+  HPGMissionCompanion.exe --expand report.txt --lines lines.txt --repeat 5 --seed 3                 a list of texts in order (one per line)
+  HPGMissionCompanion.exe --packs-check report.txt                                                   packs found and their problems
+The Service tab has a box to try a text, and the log shows [RAW] (the text as it arrived), [SAY] (message and option chosen), [VOICE] (actor, voice, speed, volume, radio) and warnings. The standalone test mission tests\voicepack-say-test.json exercises every tag.
+
+9. A SMALL MISSION
+------------------
+  "start": [
+    {"connect_voice_server":{"on_connected":[{"speak":"<pack:EN:1><variety:coherent>"},{"speak":"<names:PLT=Mark,CPL=Anna,PAX3=Sue>"}],"on_disconnected":[]}},
+    {"sleep":2},
+    {"speak":"<radio><say:CPL.5>"},
+    {"sleep":3},
+    {"speak":{"text":"<actor8><radio><plain>{0}","params":[{"local":"DISPATCH_TEXT"}]}},
+    {"speak":"<actor11><plain>Checklist: interior check."}
+  ]

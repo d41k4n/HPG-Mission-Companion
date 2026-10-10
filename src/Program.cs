@@ -11,6 +11,9 @@
 //   --list-file <path>       write the voices to a file and exit
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
+//   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   what a mission text becomes (voice pack expansion and tags), no audio
+//   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
+//   --packs-check <report>   list the voice packs of the voicepacks folder and their problems
 //   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
 //   --sim-root <dir>       (test) use this folder instead of the simulator folders for the start with the simulator
 //   --test-autostart <on|off> (with --sim-root) add or remove the entry and exit
@@ -25,8 +28,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
+[assembly: AssemblyVersion("0.4.0.0")]
+[assembly: AssemblyFileVersion("0.4.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -175,6 +178,74 @@ namespace HPGMissionCompanion
                 }
                 File.WriteAllText(simlinkCheck, rep.ToString());
                 return dll != null ? 0 : 1;
+            }
+
+            // --install-pack <xml> [--report <file>]: install a voice pack into the voicepacks folder (the old version of the same pack goes to voicepacks\obsolete)
+            string installPack = Option(args, "--install-pack");
+            if (installPack != null)
+            {
+                string reportPath = Option(args, "--report") ?? Path.Combine(Ctx.BaseDir, "install-pack-report.txt");
+                string msg;
+                int rc = 0;
+                try { msg = VoicePacks.Install(installPack, delegate (string q) { return true; }); }
+                catch (Exception ex) { msg = "ERROR: " + ex.Message; rc = 1; }
+                File.WriteAllText(reportPath, msg + Environment.NewLine);
+                return rc;
+            }
+
+            // --packs-check <report>: lists the voice packs of the voicepacks folder with their problems
+            string packsCheck = Option(args, "--packs-check");
+            if (packsCheck != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                VoicePacks.Refresh();
+                rep.AppendLine("folder: " + VoicePacks.Dir);
+                foreach (VoicePack p in VoicePacks.Packs)
+                {
+                    rep.AppendLine("pack " + (p.Name.Length > 0 ? p.Name : "(no name)") + " version " + p.Version + " language " + p.Language + " messages " + p.Messages.Count + " file " + Path.GetFileName(p.File));
+                    foreach (string problem in p.Problems) rep.AppendLine("  problem: " + problem);
+                }
+                File.WriteAllText(packsCheck, rep.ToString());
+                return 0;
+            }
+
+            // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)
+            string expandReport = Option(args, "--expand");
+            if (expandReport != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                Ctx.Log = delegate (string s) { rep.AppendLine("log: " + s); };
+                string seedArg = Option(args, "--seed");
+                int seedValue;
+                if (seedArg != null && int.TryParse(seedArg, out seedValue)) Say.Seed(seedValue);
+                string repeatArg = Option(args, "--repeat");
+                int repeat;
+                if (repeatArg == null || !int.TryParse(repeatArg, out repeat) || repeat < 1) repeat = 1;
+                VoiceLibrary.Refresh();
+                VoicePacks.Refresh();
+                List<string> texts = new List<string>();
+                string linesFile = Option(args, "--lines");
+                if (linesFile != null) { foreach (string ln in File.ReadAllLines(linesFile, Encoding.UTF8)) if (ln.Trim().Length > 0) texts.Add(ln); }
+                else texts.Add(Option(args, "--text") ?? "");
+                for (int r = 0; r < repeat * texts.Count; r++)
+                {
+                    string text = texts[r % texts.Count];
+                    rep.AppendLine("input: " + text);
+                    List<string> notes = new List<string>();
+                    string wavFile;
+                    string expanded = Say.Process(text, notes, out wavFile);
+                    rep.AppendLine("expanded: " + expanded);
+                    if (wavFile != null) rep.AppendLine("sound file: " + wavFile);
+                    foreach (Segment s in TagParser.Parse(expanded, notes))
+                    {
+                        Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
+                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " radio=" + p.Radio + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
+                    }
+                    foreach (string n in notes) rep.AppendLine("note: " + n);
+                }
+                File.WriteAllText(expandReport, rep.ToString());
+                PiperEngine.StopAll();
+                return 0;
             }
 
             if (listFile != null)

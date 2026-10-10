@@ -1,3 +1,13 @@
+## Release 0.4
+
+- Voice packs: XML files in the `voicepacks` folder with the texts of the mission messages, several options each. A mission speaks a message with `<say:KEY>` and passes dynamic parts as arguments separated by `//` (`{0}`, `{1}` in the option text). `<plain>` speaks a free text without interpreting any tag in it. `<pack:NAME:VER>` declares the pack and the version the mission needs; `<names:..>` sets the names of the crew (`{PLT}`, `{CPL}`, `{PAX1}`, `{PAX2}`, `{PAX3}`); `<variety:random|coherent>` chooses how the options are picked (coherent keeps the same option number through the messages of a conversation).
+- Pack `EN` 1: 290 messages from the voice messages spreadsheet (244 LVARs of the wav pack) with up to five text options each, options of a similar length where the mission waits a short time after the message; 46 of them are drafts written from wav file names (`draft="1"`). `tools/import-pack.js` made it.
+- New tab Voice packs: list, drag and drop area, Browse, Open folder, Reload, Remove. Installing a newer version of a pack moves the old file to `voicepacks\obsolete`; `--install-pack` does the same from the command line. The pack name is the `name` attribute or, when missing, the file name.
+- Radio: optional beep type per text, `<beep:double>` or `<radio:chirp>` (none, click, beep, double, chirp).
+- Actor 11 "Checklist" (a voice for the checklists).
+- Simulator link: besides `L:AUDIOINHIBIT` the program publishes `L:HMC_VOICE_STATUS`, `L:HMC_VOICEPACK_VERSION` and `L:HMC_APP_VERSION`; the connection no longer depends on the audio inhibit option.
+- About tab: the script developer guide (also `docs/DEVELOPER_GUIDE.md`). New command line options `--expand`, `--packs-check`, `--install-pack`.
+- Standalone test mission `tests/voicepack-say-test.json` with the test pack `tests/voicepack-test-TST.xml`.
 ## Release 0.3
 
 - New: the program keeps the simulator variable `L:AUDIOINHIBIT` at 1 through SimConnect. While the simulator is connected it reads the variable every 5 seconds and writes 1 when the value is different; without the simulator it retries every 5 seconds. Option "Auto set default audio inhibit L:AUDIOINHIBIT" in the Service tab, on by default; the Service tab shows the SimConnect state. `SimConnect.dll` comes from the MSFS SDK: `tools\build.cmd` copies it next to the program, the program also looks in the SDK folders.

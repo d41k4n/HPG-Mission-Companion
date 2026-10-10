@@ -8,6 +8,22 @@ namespace HPGMissionCompanion
     internal static class AudioFx
     {
         public static readonly string[] BeepTypes = new string[] { "None", "Click", "Beep", "Double beep", "Chirp" };
+        // a beep type from a mission tag ("double", "Double beep", "3", "chirp", "off") -> the name in BeepTypes, or null when it is not one
+        public static string NormalizeBeep(string name)
+        {
+            if (name == null) return null;
+            string n = name.Trim().ToLowerInvariant().Replace(" ", "");
+            switch (n)
+            {
+                case "0": case "none": case "off": case "no": return BeepTypes[0];
+                case "1": case "click": return BeepTypes[1];
+                case "2": case "beep": case "single": return BeepTypes[2];
+                case "3": case "double": case "doublebeep": return BeepTypes[3];
+                case "4": case "chirp": return BeepTypes[4];
+            }
+            return null;
+        }
+
         public static readonly string[] Qualities = new string[] { "Clean", "Aviation", "Rough" };
 
         sealed class Pcm

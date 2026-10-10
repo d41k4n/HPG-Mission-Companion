@@ -1,7 +1,7 @@
 {
-  "lastDeliveredVersion": "0.3",
+  "lastDeliveredVersion": "0.4",
   "artifact": "HPGMissionCompanion.exe",
-  "sha256": "5B3C8B04A05CDCFFA1AEC5CB6A21A680235EB339433EAACDDB3073AC7574DB0D",
+  "sha256": "4B96A66A078A23ACF41A412EAF511DEA58A04F4901C92D854D9962514759E3D9",
   "deliveredOn": "2026-10-10",
-  "note": "Local delivery to the runtime folder on the user's Desktop, with SimConnect.dll copied from the MSFS SDK beside it. The hash identifies the delivered executable; the csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+  "note": "Local delivery to the runtime folder on the user's Desktop, with SimConnect.dll copied from the MSFS SDK and voicepacks\\EN.xml beside it. The hash identifies the delivered executable; the csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

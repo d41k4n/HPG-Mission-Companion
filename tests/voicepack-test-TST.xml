@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Test pack for tests\voicepack-say-test.json. No name="" here on purpose: the name comes from the file name (voicepack-test-TST.xml -> voicepack-test-TST). -->
+<voicepack language="EN" version="1" title="Test pack with placeholders and conversations">
+  <message key="D.CAS" actor="8" radio="on">
+    <o>Dispatch to {PLT}: {0} injured, {1}. Cause: {2}. Symptoms: {3}.</o>
+    <o>Attention {PLT}, {0} injured. They are {1}. {2}. Symptoms are {3}.</o>
+  </message>
+  <message key="D.NAMES" actor="2">
+    <o>{PLT}, this is {CPL}. Doc, {PAX3}, and {PAX2} are ready.</o>
+    <o>{CPL} to {PLT}: {PAX3} and {PAX2} are on board.</o>
+  </message>
+  <message key="C.1" actor="1" group="boarding" seq="1">
+    <o>Boarding A: crew, doors are closed.</o>
+    <o>Boarding B: all aboard, closing the doors.</o>
+    <o>Boarding C: doors closed and locked.</o>
+  </message>
+  <message key="C.2" actor="2" group="boarding" seq="2">
+    <o>Boarding A: copilot, checklist done.</o>
+    <o>Boarding B: copilot, ready for engine start.</o>
+    <o>Boarding C: copilot, systems are green.</o>
+  </message>
+  <message key="C.3" actor="3" group="boarding" seq="3">
+    <o>Boarding A: Doc, patient bag stowed.</o>
+    <o>Boarding B: Doc, medical kit secured.</o>
+    <o>Boarding C: Doc, ready for the flight.</o>
+  </message>
+</voicepack>

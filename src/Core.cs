@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.3";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.4";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "(to be added)";
         public const string Links = "(to be added)";
         public static string Title { get { return Name + " " + Version; } }
@@ -77,11 +77,11 @@ namespace HPGMissionCompanion
 
     internal static class Actors
     {
-        public const int Count = 10;
+        public const int Count = 11;
         public static readonly string[] Names = new string[]
         {
             "Pilota", "Copilota", "Doctor", "HEMS1", "HEMS2",
-            "Frank (technician)", "Sarah (technician)", "Dispatcher", "Ground unit", "Patient / extra"
+            "Frank (technician)", "Sarah (technician)", "Dispatcher", "Ground unit", "Patient / extra", "Checklist"
         };
     }
 
@@ -171,7 +171,7 @@ namespace HPGMissionCompanion
     }
 
     // ---- tags in the mission text -------------------------------------------------------------
-    // <actor3>  actor 1..10         <Microsoft David> / <ryan>  voice by name        <speed:1.2>  speed
+    // <actor3>  actor 1..11         <Microsoft David> / <ryan>  voice by name        <speed:1.2>  speed
     // <vol:70>  volume 0-100 of this text (the mission volume_crew can be passed with the speak params)   <radio>  radio effect (<radio:off> ends it)
     // <EN> <FR> <IT> <DE>  language (also <language:us>). Square brackets work like the angle brackets: [actor3] [speed:1.2].
     // The tags apply to the text that follows them, until the next tag of the same kind.
@@ -184,6 +184,7 @@ namespace HPGMissionCompanion
         public double Speed;       // 0 = none
         public double Volume = -1;  // 0-100, -1 = none
         public int Radio = -1;      // 1 on, 0 off, -1 none
+        public string Beep;        // beep type of the radio effect (None, Click, Beep, Double beep, Chirp), null = the type chosen in the program
     }
 
     internal static class TagParser
@@ -194,6 +195,8 @@ namespace HPGMissionCompanion
         static readonly Regex LangRx = new Regex("^(?:lang|language)\\s*[:=]\\s*([A-Za-z]{2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex VolRx = new Regex("^(?:vol|volume)\\s*[:=]\\s*([0-9]+(?:[.,][0-9]+)?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioRx = new Regex("^radio(?:\\s*[:=]\\s*(on|off|0|1))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex RadioBeepRx = new Regex("^radio\\s*[:=]\\s*([A-Za-z0-9 ]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex BeepRx = new Regex("^beep\\s*[:=]\\s*([A-Za-z0-9 ]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex VoiceRx = new Regex("^voice\\s*[:=]\\s*(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex TwoLettersRx = new Regex("^[A-Za-z]{2}$", RegexOptions.Compiled);
         static readonly Regex HtmlRx = new Regex("^/?(?:br|b|i|u|p|em|strong|span|font)\\b.*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -202,11 +205,11 @@ namespace HPGMissionCompanion
         {
             List<Segment> result = new List<Segment>();
             if (input == null) return result;
-            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1;
+            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1; string beep = null;
             int pos = 0;
             foreach (Match m in TagRx.Matches(input))
             {
-                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio);
+                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio, beep);
                 pos = m.Index + m.Length;
                 string tag = m.Groups[1].Value.Trim();
                 Match g;
@@ -234,21 +237,32 @@ namespace HPGMissionCompanion
                     string r = g.Groups[1].Success ? g.Groups[1].Value.ToLowerInvariant() : "on";
                     radio = (r == "off" || r == "0") ? 0 : 1;
                 }
+                else if ((g = RadioBeepRx.Match(tag)).Success && AudioFx.NormalizeBeep(g.Groups[1].Value) != null)
+                {
+                    radio = 1;                                   // <radio:chirp> = radio effect with that beep
+                    beep = AudioFx.NormalizeBeep(g.Groups[1].Value);
+                }
+                else if ((g = BeepRx.Match(tag)).Success)
+                {
+                    string b = AudioFx.NormalizeBeep(g.Groups[1].Value);
+                    if (b != null) beep = b;
+                    else if (notes != null) notes.Add("beep type " + g.Groups[1].Value.Trim() + " does not exist (none, click, beep, double, chirp)");
+                }
                 else if ((g = LangRx.Match(tag)).Success) lang = LangInfo.Normalize(g.Groups[1].Value);
                 else if (TwoLettersRx.IsMatch(tag)) lang = LangInfo.Normalize(tag);
                 else if ((g = VoiceRx.Match(tag)).Success) voice = g.Groups[1].Value.Trim();
                 else voice = tag;
             }
-            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio);
+            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio, beep);
             return result;
         }
 
-        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio)
+        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio, string beep)
         {
             string t = Regex.Replace(text, "\\s+", " ").Trim();
             if (t.Length == 0) return;
             Segment s = new Segment();
-            s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio;
+            s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio; s.Beep = beep;
             list.Add(s);
         }
     }
@@ -469,6 +483,7 @@ namespace HPGMissionCompanion
         public int Actor;
         public double Volume = 100;
         public bool Radio;
+        public string Beep;
         public string Note;
     }
 
@@ -510,6 +525,7 @@ namespace HPGMissionCompanion
             p.Speed = seg.Speed > 0 ? seg.Speed : ((forced && seg.Actor == 0) ? 1.0 : a.Speed);
             p.Volume = seg.Volume >= 0 ? seg.Volume : 100;
             p.Radio = seg.Radio == 1;
+            p.Beep = seg.Beep;
             p.Note = note;
             return p;
         }

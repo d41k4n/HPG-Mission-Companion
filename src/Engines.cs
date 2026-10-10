@@ -270,8 +270,16 @@ namespace HPGMissionCompanion
         {
             if (interrupt) CancelAll();
             List<string> notes = new List<string>();
+            string wavFile;
+            text = Say.Process(text, notes, out wavFile);       // <say:KEY>, <pack:..>, <names:..>, <variety:..>, <plain>
             List<Segment> segs = TagParser.Parse(text, notes);
             foreach (string n in notes) Ctx.Log("[WARN] " + n);
+            if (wavFile != null)
+            {
+                string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, wavFile.Replace("\\", "").Replace("..", "")));
+                if (File.Exists(path)) { Ctx.Log("[PLAY] " + wavFile); EnqueueFile(path, false); }
+                else Ctx.Log("[WARN] sound file " + wavFile + " is not in the audio folder");
+            }
             if (segs.Count == 0) return;
             Item item = new Item();
             item.Segs = segs;
@@ -331,12 +339,19 @@ namespace HPGMissionCompanion
         {
             Plan p = Resolver.Resolve(seg, Ctx.Settings, Ctx.Voices);
             if (p.Voice == null) { Ctx.Log("[ERROR] no voice available"); return; }
-            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + p.Volume.ToString("0.#", CultureInfo.InvariantCulture) + (p.Radio ? ", radio" : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
+            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + p.Volume.ToString("0.#", CultureInfo.InvariantCulture) + (p.Radio ? ", radio" + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
             DateTime t0 = DateTime.UtcNow;
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
             Ctx.Log("[RENDER] " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms, " + (wav.Length / 1024) + " KB");
             if (item.Generation != Thread.VolatileRead(ref generation)) return;
-            byte[] fx = AudioFx.Apply(wav, p.Volume, Ctx.Settings.MasterVolume, p.Radio, Ctx.Settings.Radio);
+            RadioSettings rs = Ctx.Settings.Radio;
+            if (p.Radio && p.Beep != null && p.Beep != rs.Beep)
+            {
+                rs = new RadioSettings();                  // the same settings with the beep type of the tag
+                rs.NoiseLevel = Ctx.Settings.Radio.NoiseLevel; rs.BeepLevel = Ctx.Settings.Radio.BeepLevel;
+                rs.Tail = Ctx.Settings.Radio.Tail; rs.Quality = Ctx.Settings.Radio.Quality; rs.Beep = p.Beep;
+            }
+            byte[] fx = AudioFx.Apply(wav, p.Volume, Ctx.Settings.MasterVolume, p.Radio, rs);
             PlayBytes(item, fx, null);
         }
 

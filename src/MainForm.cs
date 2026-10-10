@@ -163,6 +163,11 @@ namespace HPGMissionCompanion
         bool busy;
         bool catalogRequested;
 
+        // voice packs tab
+        readonly ListView packList = new ListView();
+        readonly Label packInfo = new Label();
+        readonly Panel dropZone = new Panel();
+
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
         readonly Label noiseLabel = new Label();
@@ -218,6 +223,7 @@ namespace HPGMissionCompanion
             BuildServiceTab();
             BuildActorsTab();
             BuildPiperTab();
+            BuildPacksTab();
             BuildRadioTab();
             BuildToolsTab();
             BuildAboutTab();
@@ -408,6 +414,7 @@ namespace HPGMissionCompanion
         void Startup()
         {
             VoiceLibrary.Refresh();
+            VoicePacks.Refresh();
             LoadCatalogFromCache();
             sims = SimAutostart.Detect(simRoot);
             suppress = true;
@@ -434,6 +441,7 @@ namespace HPGMissionCompanion
             UpdateSimOptions();
             FillActors();
             FillCatalogList();
+            FillPacks();
             UpdateEngineState();
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
@@ -1059,6 +1067,155 @@ namespace HPGMissionCompanion
             catch (Exception) { }
         }
 
+        // ---- voice packs tab ---------------------------------------------------------------------
+        void BuildPacksTab()
+        {
+            TabPage page = new TabPage("Voice packs");
+            tabs.TabPages.Add(page);
+            Lbl(page, "A voice pack is an XML file with the texts of the mission messages, several options for each. The mission speaks a message with the tag <say:KEY>. " +
+                "The packs are kept in the voicepacks folder next to this program; a new version of a pack moves the old one to voicepacks\\obsolete.", 10, 10, 706, 38);
+
+            packList.View = View.Details;
+            packList.FullRowSelect = true;
+            packList.GridLines = true;
+            packList.HideSelection = false;
+            packList.MultiSelect = false;
+            packList.Location = new Point(10, 54);
+            packList.Size = new Size(706, 200);
+            packList.Columns.Add("Pack", 110);
+            packList.Columns.Add("Language", 70);
+            packList.Columns.Add("Version", 62);
+            packList.Columns.Add("Messages", 72);
+            packList.Columns.Add("State", 370);
+            page.Controls.Add(packList);
+
+            dropZone.Location = new Point(10, 266);
+            dropZone.Size = new Size(706, 84);
+            dropZone.BorderStyle = BorderStyle.FixedSingle;
+            dropZone.BackColor = Color.FromArgb(236, 244, 255);
+            dropZone.AllowDrop = true;
+            dropZone.Paint += delegate (object sender, PaintEventArgs e)
+            {
+                using (Pen pen = new Pen(Color.FromArgb(90, 130, 190), 2))
+                {
+                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    e.Graphics.DrawRectangle(pen, 6, 6, dropZone.Width - 14, dropZone.Height - 14);
+                }
+                using (StringFormat sf = new StringFormat())
+                {
+                    sf.Alignment = StringAlignment.Center;
+                    sf.LineAlignment = StringAlignment.Center;
+                    e.Graphics.DrawString("Drop a voice pack here (.xml file), or press Browse", Font, Brushes.SteelBlue, new RectangleF(0, 0, dropZone.Width, dropZone.Height), sf);
+                }
+            };
+            dropZone.DragEnter += OnPackDrag;
+            dropZone.DragOver += OnPackDrag;
+            dropZone.DragDrop += delegate (object sender, DragEventArgs e)
+            {
+                string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (files != null) InstallPacks(files);
+            };
+            page.Controls.Add(dropZone);
+
+            Button browse = Btn(page, "Browse...", 10, 360, 100, 30);
+            browse.Click += delegate
+            {
+                using (OpenFileDialog d = new OpenFileDialog())
+                {
+                    d.Title = "Choose a voice pack";
+                    d.Filter = "Voice pack (*.xml)|*.xml|All files (*.*)|*.*";
+                    d.Multiselect = true;
+                    if (d.ShowDialog(this) == DialogResult.OK) InstallPacks(d.FileNames);
+                }
+            };
+            Button open = Btn(page, "Open folder", 120, 360, 110, 30);
+            open.Click += delegate
+            {
+                try { Directory.CreateDirectory(VoicePacks.Dir); System.Diagnostics.Process.Start(VoicePacks.Dir); }
+                catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            };
+            Button reload = Btn(page, "Reload", 240, 360, 90, 30);
+            reload.Click += delegate { VoicePacks.Refresh(); FillPacks(); packInfo.Text = "Packs read again from " + VoicePacks.Dir; };
+            Button remove = Btn(page, "Remove selected", 340, 360, 130, 30);
+            remove.Click += delegate { RemovePack(); };
+
+            packInfo.Location = new Point(10, 402);
+            packInfo.Size = new Size(706, 60);
+            packInfo.ForeColor = SystemColors.GrayText;
+            page.Controls.Add(packInfo);
+            Lbl(page, "In the mission:  {\"speak\":\"<pack:EN:1>\"}  declares the pack and the version it needs;  {\"speak\":\"<radio><say:CPL.5>\"}  speaks a message;  " +
+                "{\"speak\":{\"text\":\"<say:KEY>{0}//{1}\",\"params\":[...]}}  fills {0} and {1} in the text. All the tags and the pack format are in the guide of the About tab.",
+                10, 468, 706, 56);
+        }
+
+        static bool HasXml(DragEventArgs e)
+        {
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null) return false;
+            foreach (string f in files) if (f.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
+
+        void OnPackDrag(object sender, DragEventArgs e)
+        {
+            e.Effect = HasXml(e) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        void FillPacks()
+        {
+            packList.Items.Clear();
+            foreach (VoicePack p in VoicePacks.Packs)
+            {
+                ListViewItem it = new ListViewItem(p.Name.Length > 0 ? p.Name : "(" + Path.GetFileName(p.File) + ")");
+                it.SubItems.Add(p.Language);
+                it.SubItems.Add(p.Version > 0 ? p.Version.ToString() : "-");
+                it.SubItems.Add(p.Messages.Count.ToString());
+                string state = p.Problems.Count == 0 ? "OK" : (p.Usable ? p.Problems.Count + " problem(s): " : "NOT USABLE: ") + p.Problems[0];
+                it.SubItems.Add(state);
+                it.Tag = p;
+                if (!p.Usable) it.ForeColor = Color.Firebrick;
+                else if (p.Problems.Count > 0) it.ForeColor = Color.DarkOrange;
+                packList.Items.Add(it);
+            }
+            if (packList.Items.Count == 0) packInfo.Text = "No voice pack installed. Drop an XML file above.";
+        }
+
+        void InstallPacks(string[] files)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string f in files)
+            {
+                if (!f.EndsWith(".xml", StringComparison.OrdinalIgnoreCase)) { sb.AppendLine(Path.GetFileName(f) + ": not an XML file."); continue; }
+                try
+                {
+                    sb.AppendLine(VoicePacks.Install(f, delegate (string q) { return MessageBox.Show(this, q, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes; }));
+                }
+                catch (Exception ex) { sb.AppendLine("ERROR: " + ex.Message); }
+            }
+            FillPacks();
+            packInfo.ForeColor = sb.ToString().Contains("ERROR") ? Color.Firebrick : SystemColors.ControlText;
+            packInfo.Text = sb.ToString().Trim();
+            AppendLog("[INFO] Voice packs: " + sb.ToString().Trim().Replace("\r\n", " "));
+        }
+
+        void RemovePack()
+        {
+            if (packList.SelectedItems.Count == 0) { packInfo.Text = "Select a pack in the list first."; return; }
+            VoicePack p = packList.SelectedItems[0].Tag as VoicePack;
+            if (p == null) return;
+            if (MessageBox.Show(this, "Remove the pack " + (p.Name.Length > 0 ? p.Name : Path.GetFileName(p.File)) + "?\n\nThe file moves to voicepacks\\obsolete.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            try
+            {
+                Directory.CreateDirectory(VoicePacks.ObsoleteDir);
+                File.Move(p.File, Path.Combine(VoicePacks.ObsoleteDir, Path.GetFileNameWithoutExtension(p.File) + "-removed-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xml"));
+                VoicePacks.Refresh();
+                FillPacks();
+                packInfo.ForeColor = SystemColors.ControlText;
+                packInfo.Text = "Removed " + p.Name + ".";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        }
+
         // ---- radio tab ---------------------------------------------------------------------------
         void BuildRadioTab()
         {
@@ -1129,7 +1286,8 @@ namespace HPGMissionCompanion
             Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 392, 0, 0);
             Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 414, 0, 0);
             Lbl(page, "<radio:off>Back to the clean voice.", 30, 436, 0, 0);
-            Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Service tab.", 10, 470, 706, 40).ForeColor = SystemColors.GrayText;
+            Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 458, 0, 0);
+            Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Service tab.", 10, 488, 706, 40).ForeColor = SystemColors.GrayText;
         }
 
         void TestRadio(bool radio)
@@ -1340,13 +1498,41 @@ namespace HPGMissionCompanion
             Lbl(page, "Author:   " + AppInfo.Author, 14, 128, 0, 0);
             Lbl(page, "Links:   " + AppInfo.Links, 14, 152, 0, 0);
 
-            Lbl(page, "A companion program for the HPG H145 missions: voices for the mission actors (Windows and Piper voices, volume, radio effect), " +
-                "the mission work folder and the mission index.", 14, 196, 700, 40);
-            Lbl(page, "Credits and licences", 14, 252, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "A companion program for the HPG H145 missions: voices for the mission actors (Windows and Piper voices, volume, radio effect, voice packs), " +
+                "the mission work folder and the mission index.", 14, 188, 700, 36);
+            Lbl(page, "Credits and licences", 14, 228, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
             Lbl(page, "Text to speech: the voices installed in Windows, and Piper (github.com/rhasspy/piper, MIT licence) with the voices of the rhasspy/piper-voices " +
                 "repository. Every Piper voice has its own licence: read voices\\piper\\<voice>.MODEL_CARD.txt before using a voice outside your own PC. " +
                 "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program.",
-                14, 276, 700, 100);
+                14, 250, 700, 100);
+
+            Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 358, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            TextBox guide = new TextBox();
+            guide.Multiline = true;
+            guide.ReadOnly = true;
+            guide.ScrollBars = ScrollBars.Vertical;
+            guide.WordWrap = true;
+            guide.Font = new Font("Consolas", 8.5F);
+            guide.BackColor = Color.White;
+            guide.Location = new Point(14, 380);
+            guide.Size = new Size(700, 166);
+            guide.Text = LoadGuide();
+            guide.Select(0, 0);
+            page.Controls.Add(guide);
+        }
+
+        // the developer guide is compiled into the program (docs\DEVELOPER_GUIDE.md)
+        static string LoadGuide()
+        {
+            try
+            {
+                using (Stream s = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("DEVELOPER_GUIDE.md"))
+                {
+                    if (s == null) return "(the guide is not in this build; see docs\\DEVELOPER_GUIDE.md in the repository)";
+                    using (StreamReader r = new StreamReader(s, Encoding.UTF8)) return r.ReadToEnd().Replace("\r\n", "\n").Replace("\n", "\r\n");
+                }
+            }
+            catch (Exception ex) { return "(cannot read the guide: " + ex.Message + ")"; }
         }
 
         // ---- closing -----------------------------------------------------------------------------

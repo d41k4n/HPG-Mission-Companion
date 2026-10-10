@@ -1,0 +1,1703 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
+<voicepack name="EN" language="EN" version="1" title="English crew voices of the HEMS missions">
+  <names>
+    <name role="PLT">Captain</name>
+    <name role="CPL">Copilot</name>
+    <name role="PAX1">Chief</name>
+    <name role="PAX2">Paramedic</name>
+    <name role="PAX3">Doc</name>
+  </names>
+    <message key="CPL.1" actor="2" radio="auto" lvar="L:CPLAND1" wav="AND.cpl.all.engine.started.successfully.wav" sleep="0">
+      <o>All engines started successfully.</o>
+      <o>Both engines started successfully.</o>
+      <o>Be advised: both engines started successfully.</o>
+      <o>Attention: both engines started successfully.</o>
+      <o>For information: both engines started successfully.</o>
+    </message>
+    <message key="CPL.2" actor="2" radio="auto" lvar="L:CPLAND2" wav="AND.cpl.all.good.wav" sleep="0">
+      <o>Okay, all good.</o>
+      <o>Be advised: okay, all good.</o>
+      <o>Attention: okay, all good.</o>
+      <o>For information: okay, all good.</o>
+    </message>
+    <message key="CPL.3" actor="2" radio="auto" lvar="L:CPLAND3" wav="AND.cpl.area.clear.ready.to.engine.1.wav" sleep="0">
+      <o>Area clear. Ready to start engine one.</o>
+      <o>Be advised: area clear. Ready to start engine one.</o>
+      <o>Attention: area clear. Ready to start engine one.</o>
+      <o>For information: area clear. Ready to start engine one.</o>
+    </message>
+    <message key="CPL.4" actor="2" radio="auto" lvar="L:CPLAND4" wav="AND.cpl.area.clear.ready.to.engine.2.wav" sleep="0">
+      <o>Area clear. Ready to start engine two.</o>
+      <o>Be advised: area clear. Ready to start engine two.</o>
+      <o>Attention: area clear. Ready to start engine two.</o>
+      <o>For information: area clear. Ready to start engine two.</o>
+    </message>
+    <message key="CPL.5" actor="2" radio="auto" lvar="L:CPLAND5" wav="AND.cpl.comm.chk.wav" sleep="2" tight="1">
+      <o>Copilot here, communications check.</o>
+      <o>Be advised: copilot here, communications check.</o>
+      <o>Attention: copilot here, communications check.</o>
+    </message>
+    <message key="CPL.6" actor="2" radio="auto" lvar="L:CPLAND6" wav="AND.cpl.engine.clear.wav" sleep="0">
+      <o>Engine clear.</o>
+      <o>Engine area clear.</o>
+      <o>Be advised: engine area clear.</o>
+      <o>Attention: engine area clear.</o>
+      <o>For information: engine area clear.</o>
+    </message>
+    <message key="CPL.7" actor="2" radio="auto" lvar="L:CPLAND7" wav="AND.cpl.engine.fire.wav" sleep="0">
+      <o>Engine fire. Stop the engine.</o>
+      <o>Be advised: engine fire. Stop the engine.</o>
+      <o>Attention: engine fire. Stop the engine.</o>
+      <o>For information: engine fire. Stop the engine.</o>
+    </message>
+    <message key="CPL.8" actor="2" radio="auto" lvar="L:CPLAND8" wav="AND.cpl.engine.started.succ.moving.to.other.wav" sleep="0">
+      <o>Engine started successfully moving to other engine.</o>
+      <o>Engine started successfully. Moving to the other engine.</o>
+      <o>Be advised: engine started successfully. Moving to the other engine.</o>
+      <o>Attention: engine started successfully. Moving to the other engine.</o>
+      <o>For information: engine started successfully. Moving to the other engine.</o>
+    </message>
+    <message key="CPL.9" actor="2" radio="auto" lvar="L:CPLAND9" wav="AND.cpl.failure.wav" sleep="0">
+      <o>Damn we have a failure.</o>
+      <o>Be advised: damn we have a failure.</o>
+      <o>Attention: damn we have a failure.</o>
+      <o>For information: damn we have a failure.</o>
+    </message>
+    <message key="CPL.10" actor="2" radio="auto" lvar="L:CPLAND10" wav="AND.cpl.holdon.performing.leak.checks.wav" sleep="0">
+      <o>Hold on. Performing leak checks.</o>
+      <o>Be advised: hold on. Performing leak checks.</o>
+      <o>Attention: hold on. Performing leak checks.</o>
+      <o>Please hold on. Performing leak checks.</o>
+    </message>
+    <message key="CPL.11" actor="2" radio="auto" lvar="L:CPLAND11" wav="AND.cpl.prepare.for.gnd.op.wav" sleep="0">
+      <o>Rear crew prepare for ground operation.</o>
+      <o>Rear crew, prepare for ground operations.</o>
+      <o>Be advised: rear crew, prepare for ground operations.</o>
+      <o>Attention: rear crew, prepare for ground operations.</o>
+      <o>For information: rear crew, prepare for ground operations.</o>
+    </message>
+    <message key="CPL.12" actor="2" radio="auto" lvar="L:CPLAND12" wav="AND.cpl.prepare.for.hoist.op.wav" sleep="0">
+      <o>Rear crew prepare for hoist operation.</o>
+      <o>Rear crew, prepare for hoist operations.</o>
+      <o>Be advised: rear crew, prepare for hoist operations.</o>
+      <o>Attention: rear crew, prepare for hoist operations.</o>
+      <o>For information: rear crew, prepare for hoist operations.</o>
+    </message>
+    <message key="CPL.13" actor="2" radio="auto" lvar="L:CPLAND13" wav="AND.cpl.preparing.for.engine.1.2.wav" sleep="0">
+      <o>Preparing for engine-start sequence one, then two.</o>
+      <o>Be advised: preparing for engine-start sequence one, then two.</o>
+      <o>Attention: preparing for engine-start sequence one, then two.</o>
+      <o>For information: preparing for engine-start sequence one, then two.</o>
+    </message>
+    <message key="CPL.14" actor="2" radio="auto" lvar="L:CPLAND14" wav="AND.cpl.preparing.for.engine.2.1.wav" sleep="0">
+      <o>Preparing for engine-start sequence two, then one.</o>
+      <o>Be advised: preparing for engine-start sequence two, then one.</o>
+      <o>Attention: preparing for engine-start sequence two, then one.</o>
+      <o>For information: preparing for engine-start sequence two, then one.</o>
+    </message>
+    <message key="CPL.15" actor="2" radio="auto" lvar="L:CPLAND15" wav="AND.cpl.rearcrew.ready.to.start.op.wav" sleep="0">
+      <o>Helicopter in position rear crew clear to start operation.</o>
+      <o>Helicopter in position. Rear crew, clear to start operations.</o>
+      <o>Be advised: helicopter in position. Rear crew, clear to start operations.</o>
+      <o>Attention: helicopter in position. Rear crew, clear to start operations.</o>
+      <o>For information: helicopter in position. Rear crew, clear to start operations.</o>
+    </message>
+    <message key="CPL.16" actor="2" radio="auto" lvar="L:CPLAND16" wav="AND.cpl.rearcrew.we.are.appr.to.site.wav" sleep="0">
+      <o>Rear crew, we are approaching the landing site.</o>
+      <o>Be advised: rear crew, we are approaching the landing site.</o>
+      <o>Attention: rear crew, we are approaching the landing site.</o>
+      <o>For information: rear crew, we are approaching the landing site.</o>
+    </message>
+    <message key="CPL.17" actor="2" radio="auto" lvar="L:CPLAND17" wav="AND.cpl.site.is.not.safe.for.us.wav" sleep="0">
+      <o>Site is not safe for us waiting for clearance.</o>
+      <o>The site is not safe. Waiting for clearance.</o>
+      <o>Be advised: the site is not safe. Waiting for clearance.</o>
+      <o>Attention: the site is not safe. Waiting for clearance.</o>
+      <o>For information: the site is not safe. Waiting for clearance.</o>
+    </message>
+    <message key="CPL.18" actor="2" radio="auto" lvar="L:CPLAND18" wav="AND.cpl.site.is.safe.we.can.proceed.wav" sleep="0">
+      <o>The site is safe. Operations may proceed.</o>
+      <o>Be advised: the site is safe. Operations may proceed.</o>
+      <o>Attention: the site is safe. Operations may proceed.</o>
+      <o>For information: the site is safe. Operations may proceed.</o>
+    </message>
+    <message key="CPL.19" actor="2" radio="auto" lvar="L:CPLAND19" wav="AND.cpl.skid.ldg.wav" sleep="0">
+      <o>Rear crew prepare for skid lending operation.</o>
+      <o>Rear crew, prepare for skid landing operations.</o>
+      <o>Be advised: rear crew, prepare for skid landing operations.</o>
+      <o>Attention: rear crew, prepare for skid landing operations.</o>
+      <o>For information: rear crew, prepare for skid landing operations.</o>
+    </message>
+    <message key="CPL.20" actor="2" radio="auto" lvar="L:CPLAND20" wav="AND.cpl.t.ambulance.is.arriving.wav" sleep="3.5">
+      <o>Ambulance is arriving.</o>
+      <o>Be advised: ambulance is arriving.</o>
+      <o>Attention: ambulance is arriving.</o>
+      <o>For information: ambulance is arriving.</o>
+    </message>
+    <message key="CPL.21" actor="2" radio="auto" lvar="L:CPLAND21" wav="AND.cpl.t.ambulance.is.still.far.wav" sleep="60">
+      <o>Ambulance is still far away.</o>
+      <o>Be advised: ambulance is still far away.</o>
+      <o>Attention: ambulance is still far away.</o>
+      <o>For information: ambulance is still far away.</o>
+    </message>
+    <message key="CPL.22" actor="2" radio="auto" lvar="L:CPLAND22" wav="AND.cpl.t.crew.prepare.op.wav" sleep="0">
+      <o>Crew prepare for operation.</o>
+      <o>Crew, prepare for operations.</o>
+      <o>Be advised: crew, prepare for operations.</o>
+      <o>All crew, prepare for operations.</o>
+      <o>For information: crew, prepare for operations.</o>
+    </message>
+    <message key="CPL.23" actor="2" radio="auto" lvar="L:CPLAND23" wav="AND.cpl.t.goodmorning.frank.wav" sleep="0">
+      <o>Good morning frank.</o>
+      <o>Be advised: good morning frank.</o>
+      <o>Attention: good morning frank.</o>
+      <o>For information: good morning frank.</o>
+    </message>
+    <message key="CPL.24" actor="2" radio="auto" lvar="L:CPLAND24" wav="AND.cpl.t.landing.spot.medical.crew.present.wav" sleep="0">
+      <o>Landing site in sight. Medical crew is ready at the landing area.</o>
+      <o>Be advised: landing site in sight. Medical crew is ready at the landing area.</o>
+      <o>Attention: landing site in sight. Medical crew is ready at the landing area.</o>
+      <o>For information: landing site in sight. Medical crew is ready at the landing area.</o>
+    </message>
+    <message key="CPL.25" actor="2" radio="auto" lvar="L:CPLAND25" wav="AND.cpl.t.we.have.to.stop.eng.wav" sleep="0">
+      <o>We have to stop engines and switch off the helicopter.</o>
+      <o>We have to stop the engines and shut down the helicopter.</o>
+      <o>Be advised: we have to stop the engines and shut down the helicopter.</o>
+      <o>Attention: we have to stop the engines and shut down the helicopter.</o>
+      <o>For information: we have to stop the engines and shut down the helicopter.</o>
+    </message>
+    <message key="CPL.26" actor="2" radio="auto" lvar="L:CPLAND26" wav="AND.cpl.u.due.to.patient.wav" sleep="0">
+      <o>Crew, the doctor reports that the ambulance has been rerouted to an alternate hospital. Check the location on the map.</o>
+      <o>Be advised: crew, the doctor reports that the ambulance has been rerouted to an alternate hospital. Check the location on the map.</o>
+      <o>All crew, the doctor reports that the ambulance has been rerouted to an alternate hospital. Check the location on the map.</o>
+      <o>For information: crew, the doctor reports that the ambulance has been rerouted to an alternate hospital. Check the location on the map.</o>
+    </message>
+    <message key="CPL.27" actor="2" radio="auto" lvar="L:CPLAND27" wav="AND.cpl.v.above.max.hoist.wav" sleep="0">
+      <o>We are above maximum hoist-out speed.</o>
+      <o>We're above maximum hoist-out speed.</o>
+      <o>Attention: we are above maximum hoist-out speed.</o>
+      <o>For information: we are above maximum hoist-out speed.</o>
+    </message>
+    <message key="CPL.28" actor="2" radio="auto" lvar="L:CPLAND28" wav="AND.cpl.v.acceleration.above.limit.wav" sleep="0">
+      <o>Oh acceleration is over the hoist limit.</o>
+      <o>Acceleration is above the hoist limit.</o>
+      <o>Be advised: acceleration is above the hoist limit.</o>
+      <o>Attention: acceleration is above the hoist limit.</o>
+      <o>For information: acceleration is above the hoist limit.</o>
+    </message>
+    <message key="CPL.29" actor="2" radio="auto" lvar="L:CPLAND29" wav="AND.cpl.v.bank.angle.is.too.high.wav" sleep="0">
+      <o>Bank angle is too high. Continuing would endanger the patient and hoist operator.</o>
+      <o>Be advised: bank angle is too high. Continuing would endanger the patient and hoist operator.</o>
+      <o>Attention: bank angle is too high. Continuing would endanger the patient and hoist operator.</o>
+      <o>For information: bank angle is too high. Continuing would endanger the patient and hoist operator.</o>
+    </message>
+    <message key="CPL.30" actor="2" radio="auto" lvar="L:CPLAND30" wav="AND.cpl.v.keep.bank.angle.wav" sleep="0">
+      <o>Keep bank angled within limits.</o>
+      <o>Keep the bank angle within limits.</o>
+      <o>Be advised: keep the bank angle within limits.</o>
+      <o>Attention: keep the bank angle within limits.</o>
+      <o>Please keep the bank angle within limits.</o>
+    </message>
+    <message key="CPL.31" actor="2" radio="auto" lvar="L:CPLAND31" wav="AND.cpl.v.we.are.too.fast.wav" sleep="0">
+      <o>We are too fast sir we risk our patient and operator life moreover we are damaging the helicopter.</o>
+      <o>We are too fast. We risk the patient, the operator, and the helicopter.</o>
+      <o>We're too fast. We risk the patient, the operator, and the helicopter.</o>
+      <o>Attention: we are too fast. We risk the patient, the operator, and the helicopter.</o>
+      <o>For information: we are too fast. We risk the patient, the operator, and the helicopter.</o>
+    </message>
+    <message key="CPL.32" actor="2" radio="auto" lvar="L:CPLAND32" wav="AND.cpl.v.we.have.to.abort.wav" sleep="0">
+      <o>Fuck sir we have to abort mission now.</o>
+      <o>We have to abort the mission now.</o>
+      <o>Be advised: we have to abort the mission now.</o>
+      <o>Attention: we have to abort the mission now.</o>
+      <o>For information: we have to abort the mission now.</o>
+    </message>
+    <message key="CPL.33" actor="2" radio="auto" lvar="L:CPLAND33" wav="AND.cpl.v.we.lost.doc.and.patient.wav" sleep="0">
+      <o>What the fuck we lost patient and doc what are you doing.</o>
+      <o>We lost the doctor and patient. What are you doing?</o>
+      <o>Can you confirm: we lost the doctor and patient. What are you doing?</o>
+      <o>Please confirm: we lost the doctor and patient. What are you doing?</o>
+      <o>Message update: we lost the doctor and patient. What are you doing?</o>
+    </message>
+    <message key="CPL.34" actor="2" radio="auto" lvar="L:CPLAND34" wav="AND.cpl.v.we.lost.doc.wav" draft="1">
+      <o>We lost Doc.</o>
+      <o>We lost the doctor.</o>
+      <o>Doc is lost.</o>
+    </message>
+    <message key="CPL.35" actor="2" radio="auto" lvar="L:CPLAND35" wav="AND.cpl.v.we.need.to.decelerate.wav" draft="1">
+      <o>We need to decelerate.</o>
+      <o>Slow down, we need to decelerate.</o>
+      <o>We are too fast, decelerate.</o>
+    </message>
+    <message key="CPL.36" actor="2" radio="auto" lvar="L:CPLAND36" wav="AND.cpl.x.are.we.doing.aerobatic.wav" sleep="0">
+      <o>Ah are we doing acrobatic maneuvers with a patient on board are you serious.</o>
+      <o>Are we doing aerobatics with a patient on board?</o>
+      <o>Can you confirm: are we doing aerobatics with a patient on board?</o>
+      <o>Please confirm: are we doing aerobatics with a patient on board?</o>
+      <o>Message update: are we doing aerobatics with a patient on board?</o>
+    </message>
+    <message key="CPL.37" actor="2" radio="auto" lvar="L:CPLAND37" wav="AND.cpl.x.doc.refers.ground.ops.are.done.wav" sleep="0">
+      <o>The doctor says ground operations are almost complete. We can return to base or wait to proceed.</o>
+      <o>Be advised: the doctor says ground operations are almost complete. We can return to base or wait to proceed.</o>
+      <o>Attention: the doctor says ground operations are almost complete. We can return to base or wait to proceed.</o>
+      <o>For information: the doctor says ground operations are almost complete. We can return to base or wait to proceed.</o>
+    </message>
+    <message key="CPL.38" actor="2" radio="auto" lvar="L:CPLAND38" wav="AND.cpl.x.ground.ops.will.take.time.wav" sleep="0">
+      <o>Round operations will take time we can leave hover and find a safe landing spot we will be advised when operations are done.</o>
+      <o>Ground operations will take time. We can leave the hover and find a safe landing spot; they will advise us when finished.</o>
+      <o>Be advised: ground operations will take time. We can leave the hover and find a safe landing spot; they will advise us when finished.</o>
+      <o>Attention: ground operations will take time. We can leave the hover and find a safe landing spot; they will advise us when finished.</o>
+      <o>For information: ground operations will take time. We can leave the hover and find a safe landing spot; they will advise us when finished.</o>
+    </message>
+    <message key="CPL.39" actor="2" radio="auto" lvar="L:CPLAND39" wav="AND.cpl.x.hard.ldg.sarah.wav" sleep="3" tight="1">
+      <o>That was a hard landing. Sarah will not be happy.</o>
+      <o>Be advised: that was a hard landing. Sarah will not be happy.</o>
+      <o>Attention: that was a hard landing. Sarah will not be happy.</o>
+      <o>For information: that was a hard landing. Sarah will not be happy.</o>
+    </message>
+    <message key="CPL.40" actor="2" radio="auto" lvar="L:CPLAND40" wav="AND.cpl.x.hard.ldg.wav" sleep="3">
+      <o>Hey it was a hard touch.</o>
+      <o>That was a hard touch.</o>
+      <o>Be advised: that was a hard touch.</o>
+      <o>Attention: that was a hard touch.</o>
+      <o>For information: that was a hard touch.</o>
+    </message>
+    <message key="CPL.41" actor="2" radio="auto" lvar="L:CPLAND41" wav="AND.cpl.x.nice.touch.wav" sleep="3">
+      <o>Wow nice touch captain.</o>
+      <o>Be advised: wow nice touch captain.</o>
+      <o>Attention: wow nice touch captain.</o>
+      <o>For information: wow nice touch captain.</o>
+    </message>
+    <message key="CPL.42" actor="2" radio="auto" lvar="L:CPLAND42" wav="AND.cpl.x.VNE.wav" sleep="0">
+      <o>VNE.</o>
+      <o>Be advised: vNE.</o>
+      <o>Attention: vNE.</o>
+      <o>For information: vNE.</o>
+    </message>
+    <message key="CPL.43" actor="2" radio="auto" lvar="L:CPLAND43" wav="AND.cpl.x.VTOSS.wav" sleep="0">
+      <o>VTOSS.</o>
+      <o>Be advised: vTOSS.</o>
+      <o>Attention: vTOSS.</o>
+      <o>For information: vTOSS.</o>
+    </message>
+    <message key="CPL.44" actor="2" radio="auto" lvar="L:CPLAND44" wav="AND.cpl.x.Vy.wav" sleep="0">
+      <o>Vy.</o>
+      <o>Be advised: vy.</o>
+      <o>Attention: vy.</o>
+      <o>For information: vy.</o>
+    </message>
+    <message key="CPL.45" actor="2" radio="auto" lvar="L:CPLAND45" wav="AND.cpl.x.we.crashed.wav" sleep="0">
+      <o>We crashed. Is everyone okay?</o>
+      <o>Can you confirm: we crashed. Is everyone okay?</o>
+      <o>Please confirm: we crashed. Is everyone okay?</o>
+      <o>Message update: we crashed. Is everyone okay?</o>
+    </message>
+    <message key="CPL.46" actor="2" radio="auto" lvar="L:CPLAND46" wav="AND.cpl.x.wtoo.high.att.no.stretcher.wav" sleep="0">
+      <o>Captain, this is not an aerobatic helicopter. Please keep it calm.</o>
+      <o>Be advised: captain, this is not an aerobatic helicopter. Please keep it calm.</o>
+      <o>Attention: captain, this is not an aerobatic helicopter. Please keep it calm.</o>
+      <o>For information: captain, this is not an aerobatic helicopter. Please keep it calm.</o>
+    </message>
+    <message key="CPL.47" actor="2" radio="auto" lvar="L:CPLAND47" wav="AND.cpl.y.gnd.op.completed.set.engines.idle.or.wav" sleep="0">
+      <o>Ground crew was doing last operations before leaving the scene said engines to fly condition and take off as soon as possible for continuing with hoist operations if in your opinion the landing spot is good for ground loading we can stay here.</o>
+      <o>Be advised: ground crew was doing last operations before leaving the scene said engines to fly condition and take off as soon as possible for continuing with hoist operations if in your opinion the landing spot is good for ground loading we can stay here.</o>
+      <o>Attention: ground crew was doing last operations before leaving the scene said engines to fly condition and take off as soon as possible for continuing with hoist operations if in your opinion the landing spot is good for ground loading we can stay here.</o>
+      <o>For information: ground crew was doing last operations before leaving the scene said engines to fly condition and take off as soon as possible for continuing with hoist operations if in your opinion the landing spot is good for ground loading we can stay here.</o>
+    </message>
+    <message key="CPL.48" actor="2" radio="auto" lvar="L:CPLAND48" wav="AND.cpl.y.gnd.op.completed.start.engines.or.wav" sleep="0">
+      <o>Ground crew was doing last operations before leaving the scene start engines and take off as soon as possible for continuing with hoist operations if landing spot is good for ground loading we can stay here.</o>
+      <o>Be advised: ground crew was doing last operations before leaving the scene start engines and take off as soon as possible for continuing with hoist operations if landing spot is good for ground loading we can stay here.</o>
+      <o>Attention: ground crew was doing last operations before leaving the scene start engines and take off as soon as possible for continuing with hoist operations if landing spot is good for ground loading we can stay here.</o>
+      <o>For information: ground crew was doing last operations before leaving the scene start engines and take off as soon as possible for continuing with hoist operations if landing spot is good for ground loading we can stay here.</o>
+    </message>
+    <message key="CPL.49" actor="2" radio="auto" lvar="L:CPLAND49" wav="AND.cpl.y.landed.too.far.wav" draft="1">
+      <o>We landed too far.</o>
+      <o>We landed too far from the patient.</o>
+      <o>We are too far from the target.</o>
+    </message>
+    <message key="CPL.50" actor="2" radio="auto" lvar="L:CPLAND50" wav="AND.cpl.ya.doc.refers.ground.ops.are.done.wav" draft="1">
+      <o>Doc refers the ground operations are done.</o>
+      <o>Doc says the ground operations are complete.</o>
+      <o>The ground operations are done, says Doc.</o>
+    </message>
+    <message key="CPL.51" actor="2" radio="auto" lvar="L:CPLAND51" wav="AND.cpl.ya.reduce.collective.wav" sleep="0">
+      <o>Watch out. Reduce collective now.</o>
+      <o>Be advised: watch out. Reduce collective now.</o>
+      <o>Attention: watch out. Reduce collective now.</o>
+      <o>For information: watch out. Reduce collective now.</o>
+    </message>
+    <message key="CPL.52" actor="2" radio="auto" lvar="L:CPLAND52" wav="AND.cpl.ya.we.received.call.from.doc.modify.wav" sleep="10" tight="1">
+      <o>Crew, the doctor reports that the ambulance has been rerouted to another hospital. We must change our route to the new pickup point.</o>
+      <o>Be advised: crew, the doctor reports that the ambulance has been rerouted to another hospital. We must change our route to the new pickup point.</o>
+      <o>All crew, the doctor reports that the ambulance has been rerouted to another hospital. We must change our route to the new pickup point.</o>
+      <o>For information: crew, the doctor reports that the ambulance has been rerouted to another hospital. We must change our route to the new pickup point.</o>
+    </message>
+    <message key="CPL.53" actor="2" radio="auto" lvar="L:CPLAND53" wav="AND.cpl.yb.medical.crew.ready.ground.wav" sleep="0">
+      <o>Medical crew has started ground-loading procedures. We must wait here.</o>
+      <o>Be advised: medical crew has started ground-loading procedures. We must wait here.</o>
+      <o>Attention: medical crew has started ground-loading procedures. We must wait here.</o>
+      <o>For information: medical crew has started ground-loading procedures. We must wait here.</o>
+    </message>
+    <message key="CPL.54" actor="2" radio="auto" lvar="L:CPLAND54" wav="AND.cpl.yb.medical.crew.ready.hoist.forced.wav" sleep="0">
+      <o>Medical crew reports that distance requires a hoist operation. The crew is ready and waiting for us.</o>
+      <o>Be advised: medical crew reports that distance requires a hoist operation. The crew is ready and waiting for us.</o>
+      <o>Attention: medical crew reports that distance requires a hoist operation. The crew is ready and waiting for us.</o>
+      <o>For information: medical crew reports that distance requires a hoist operation. The crew is ready and waiting for us.</o>
+    </message>
+    <message key="CPL.55" actor="2" radio="auto" lvar="L:CPLAND55" wav="AND.cpl.yb.medical.crew.ready.hoist.wav" sleep="0">
+      <o>Medical crew was ready for hoist operation.</o>
+      <o>Medical crew is ready for hoist operations.</o>
+      <o>Be advised: medical crew is ready for hoist operations.</o>
+      <o>Attention: medical crew is ready for hoist operations.</o>
+      <o>For information: medical crew is ready for hoist operations.</o>
+    </message>
+    <message key="CPL.56" actor="2" radio="auto" lvar="L:CPLAND56" wav="AND.cpl.yb.patient.will.be.transported.by.ambudoc.wav" sleep="0">
+      <o>The patient and doctor will travel by ambulance. We will pick up the doctor at the hospital.</o>
+      <o>Be advised: the patient and doctor will travel by ambulance. We will pick up the doctor at the hospital.</o>
+      <o>Attention: the patient and doctor will travel by ambulance. We will pick up the doctor at the hospital.</o>
+      <o>For information: the patient and doctor will travel by ambulance. We will pick up the doctor at the hospital.</o>
+    </message>
+    <message key="CPL.57" actor="2" radio="auto" lvar="L:CPLAND57" wav="AND.cpl.yb.patient.will.be.transported.by.ambulance.wav" sleep="0">
+      <o>The patient will travel by ambulance. Our task is complete.</o>
+      <o>Be advised: the patient will travel by ambulance. Our task is complete.</o>
+      <o>Attention: the patient will travel by ambulance. Our task is complete.</o>
+      <o>For information: the patient will travel by ambulance. Our task is complete.</o>
+    </message>
+    <message key="CPL.58" actor="2" radio="auto" lvar="L:CPLAND58" wav="AND.cpl.yb.patient.will.be.transported.by.us.wav" sleep="0">
+      <o>Patient will be transported by us.</o>
+      <o>The patient will be transported by us.</o>
+      <o>Be advised: the patient will be transported by us.</o>
+      <o>Attention: the patient will be transported by us.</o>
+      <o>For information: the patient will be transported by us.</o>
+    </message>
+    <message key="CPL.59" actor="2" radio="auto" lvar="L:CPLAND59" wav="AND.cpl.yb.rescue.team.identified.landing.spot.wav" sleep="0">
+      <o>Rescue team identified a valid landing spot a marshal or is waiting us.</o>
+      <o>The rescue team identified a valid landing spot. A marshal is waiting for us.</o>
+      <o>Be advised: the rescue team identified a valid landing spot. A marshal is waiting for us.</o>
+      <o>Attention: the rescue team identified a valid landing spot. A marshal is waiting for us.</o>
+      <o>For information: the rescue team identified a valid landing spot. A marshal is waiting for us.</o>
+    </message>
+    <message key="CPL.60" actor="2" radio="auto" lvar="L:CPLAND60" wav="AND.cpl.yb.we.cannot.takeoff.fuel.hose.wav" sleep="10">
+      <o>Hey we cannot take off with fuel hose attached.</o>
+      <o>We cannot take off with the fuel hose attached.</o>
+      <o>We can't take off with the fuel hose attached.</o>
+      <o>Attention: we cannot take off with the fuel hose attached.</o>
+      <o>For information: we cannot take off with the fuel hose attached.</o>
+    </message>
+    <message key="CPL.61" actor="2" radio="auto" lvar="L:CPLAND61" wav="AND.cpl.yc.crew.ready.ldg.spot.we.can.proceed.wav" sleep="0">
+      <o>Crew is ready on landing spot we can proceed.</o>
+      <o>Crew is ready at the landing site. We can proceed.</o>
+      <o>Be advised: crew is ready at the landing site. We can proceed.</o>
+      <o>Attention: crew is ready at the landing site. We can proceed.</o>
+      <o>For information: crew is ready at the landing site. We can proceed.</o>
+    </message>
+    <message key="CPL.62" actor="2" radio="auto" lvar="L:CPLAND62" wav="AND.route.unavailable.check.tablet.wav" trigger="routeupdate records a missing or failed destination after its retry.">
+      <o>Route is unavailable. Select or confirm the destination on the tablet.</o>
+      <o>Be advised: route is unavailable. Select or confirm the destination on the tablet.</o>
+      <o>Attention: route is unavailable. Select or confirm the destination on the tablet.</o>
+      <o>For information: route is unavailable. Select or confirm the destination on the tablet.</o>
+    </message>
+    <message key="CPL.63" actor="2" radio="auto" lvar="L:CPLAND63" wav="AND.route.changed.check.tablet.wav" trigger="Hospital, pickup, or custom target changes and the route is recalculated.">
+      <o>Destination changed. Check the revised route on the tablet.</o>
+      <o>Be advised: destination changed. Check the revised route on the tablet.</o>
+      <o>Attention: destination changed. Check the revised route on the tablet.</o>
+      <o>For information: destination changed. Check the revised route on the tablet.</o>
+    </message>
+    <message key="CPL.64" actor="2" radio="auto" lvar="L:CPLAND64" wav="AND.cockpit.engine.start.hold.wav" trigger="marshall_ground_ops_active or pisteur3_guidance_active blocks a first-pump start request.">
+      <o>Hold engine start. Ground operations are still in progress.</o>
+      <o>Be advised: hold engine start. Ground operations are still in progress.</o>
+      <o>Attention: hold engine start. Ground operations are still in progress.</o>
+      <o>Please hold engine start. Ground operations are still in progress.</o>
+    </message>
+    <message key="FRA.1" actor="6" radio="auto" lvar="L:FRAAND1" wav="AND.frank.doyou.need.fuel.wav" sleep="4.5">
+      <o>If you need refueling please ask.</o>
+      <o>Be advised: if you need refueling please ask.</o>
+      <o>Attention: if you need refueling please ask.</o>
+      <o>For information: if you need refueling please ask.</o>
+    </message>
+    <message key="FRA.2" actor="6" radio="auto" lvar="L:FRAAND2" wav="AND.frank.fuel.as.requested.wav" sleep="3">
+      <o>Fuel is as you requested.</o>
+      <o>Be advised: fuel is as you requested.</o>
+      <o>Attention: fuel is as you requested.</o>
+      <o>For information: fuel is as you requested.</o>
+    </message>
+    <message key="FRA.3" actor="6" radio="auto" lvar="L:FRAAND3" wav="AND.frank.fuel.full.wav" sleep="3">
+      <o>Fuel tanks are almost full.</o>
+      <o>Be advised: fuel tanks are almost full.</o>
+      <o>Attention: fuel tanks are almost full.</o>
+      <o>For information: fuel tanks are almost full.</o>
+    </message>
+    <message key="FRA.4" actor="6" radio="auto" lvar="L:FRAAND4" wav="AND.frank.fuel.low.wav" sleep="4">
+      <o>Refueling has not been performed and fuel level is low.</o>
+      <o>Be advised: refueling has not been performed and fuel level is low.</o>
+      <o>Attention: refueling has not been performed and fuel level is low.</o>
+      <o>For information: refueling has not been performed and fuel level is low.</o>
+    </message>
+    <message key="FRA.5" actor="6" radio="auto" lvar="L:FRAAND5" wav="AND.frank.GPU.disco.wav" sleep="0">
+      <o>Gp you disconnected ready to go good day.</o>
+      <o>GPU disconnected. Ready to go. Good day.</o>
+      <o>Be advised: gPU disconnected. Ready to go. Good day.</o>
+      <o>Attention: gPU disconnected. Ready to go. Good day.</o>
+      <o>For information: gPU disconnected. Ready to go. Good day.</o>
+    </message>
+    <message key="FRA.6" actor="6" radio="auto" lvar="L:FRAAND6" wav="AND.frank.helicopter.clear.logbook.signed.wav" sleep="4.5">
+      <o>Captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
+      <o>Be advised: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
+      <o>Attention: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
+      <o>For information: captain, the helicopter is ready for flight. The logbook is completed and signed.</o>
+    </message>
+    <message key="FRA.7" actor="6" radio="auto" lvar="L:FRAAND7" wav="AND.frank.hi.all.wav" sleep="0">
+      <o>Good morning, everyone. Ready for the mission?</o>
+      <o>Can you confirm: good morning, everyone. Ready for the mission?</o>
+      <o>Please confirm: good morning, everyone. Ready for the mission?</o>
+      <o>Message update: good morning, everyone. Ready for the mission?</o>
+    </message>
+    <message key="FRA.8" actor="6" radio="auto" lvar="L:FRAAND8" wav="AND.frank.ready.for.GPU.wav" sleep="0">
+      <o>Really to supply external power at your request.</o>
+      <o>Ready to provide external power at your request.</o>
+      <o>Be advised: ready to provide external power at your request.</o>
+      <o>Attention: ready to provide external power at your request.</o>
+      <o>For information: ready to provide external power at your request.</o>
+    </message>
+    <message key="FRA.9" actor="6" radio="auto" lvar="L:FRAAND9" wav="AND.technical.inspection.required.wav" trigger="A failure or hard landing requires inspection before the next release.">
+      <o>Aircraft requires inspection. Do not depart until maintenance releases it.</o>
+      <o>Be advised: aircraft requires inspection. Do not depart until maintenance releases it.</o>
+      <o>Attention: aircraft requires inspection. Do not depart until maintenance releases it.</o>
+      <o>For information: aircraft requires inspection. Do not depart until maintenance releases it.</o>
+    </message>
+    <message key="HW.1" actor="1" radio="auto" lvar="L:ANDHW1" wav="AND.HW1.wav" sleep="0">
+      <o>We have a problem with the safety straps. We cannot use the rescue hoist and must land.</o>
+      <o>We have a problem with the safety straps. We can't use the rescue hoist and must land.</o>
+      <o>Attention: we have a problem with the safety straps. We cannot use the rescue hoist and must land.</o>
+      <o>For information: we have a problem with the safety straps. We cannot use the rescue hoist and must land.</o>
+    </message>
+    <message key="HW.2" actor="1" radio="auto" lvar="L:ANDHW2" wav="AND.HW2.wav" sleep="0">
+      <o>Crew, there is an emergency message from Dispatch. Please read it.</o>
+      <o>Be advised: crew, there is an emergency message from Dispatch. Please read it.</o>
+      <o>All crew, there is an emergency message from Dispatch. Please read it.</o>
+      <o>For information: crew, there is an emergency message from Dispatch. Please read it.</o>
+    </message>
+    <message key="HW.3" actor="1" radio="auto" lvar="L:ANDHW3" wav="AND.HW3.wav" sleep="2" tight="1">
+      <o>Smoke and fire everywhere it seems a war movie scene out there.</o>
+      <o>Smoke and fire everywhere. It looks like a war zone out there.</o>
+      <o>Be advised: smoke and fire everywhere. It looks like a war zone out there.</o>
+      <o>Attention: smoke and fire everywhere. It looks like a war zone out there.</o>
+      <o>For information: smoke and fire everywhere. It looks like a war zone out there.</o>
+    </message>
+    <message key="HW.4" actor="1" radio="auto" lvar="L:ANDHW4" wav="AND.HW4.wav" sleep="5">
+      <o>Damn engine fire crew we have an engine fire.</o>
+      <o>Crew, we have an engine fire.</o>
+      <o>Be advised: crew, we have an engine fire.</o>
+      <o>All crew, we have an engine fire.</o>
+      <o>For information: crew, we have an engine fire.</o>
+    </message>
+    <message key="HW.5" actor="2" radio="auto" lvar="L:ANDHW5" wav="AND.HW5.wav" sleep="0">
+      <o>Copilot confirmed engine two fire.</o>
+      <o>Copilot confirms an engine two fire.</o>
+      <o>Be advised: copilot confirms an engine two fire.</o>
+      <o>Attention: copilot confirms an engine two fire.</o>
+      <o>For information: copilot confirms an engine two fire.</o>
+    </message>
+    <message key="HW.6" actor="2" radio="auto" lvar="L:ANDHW6" wav="AND.HW6.wav" sleep="2">
+      <o>Engine two confirmed.</o>
+      <o>Engine two fire confirmed.</o>
+      <o>Be advised: engine two fire confirmed.</o>
+      <o>Attention: engine two fire confirmed.</o>
+      <o>For information: engine two fire confirmed.</o>
+    </message>
+    <message key="HW.7" actor="1" radio="auto" lvar="L:ANDHW7" wav="AND.HW7.wav" sleep="0">
+      <o>Engine two fire. Discharge bottle one; crew, prepare to evacuate.</o>
+      <o>Be advised: engine two fire. Discharge bottle one; crew, prepare to evacuate.</o>
+      <o>Attention: engine two fire. Discharge bottle one; crew, prepare to evacuate.</o>
+      <o>For information: engine two fire. Discharge bottle one; crew, prepare to evacuate.</o>
+    </message>
+    <message key="HW.8" actor="1" radio="auto" lvar="L:ANDHW8" wav="AND.HW8.wav" sleep="0">
+      <o>Fire is extinguished however we have multiple failures i'm not sure we can take off again in this condition.</o>
+      <o>The fire is out, but we have multiple failures. I am not sure we can take off again.</o>
+      <o>The fire is out, but we have multiple failures. I'm not sure we can take off again.</o>
+      <o>Attention: the fire is out, but we have multiple failures. I am not sure we can take off again.</o>
+      <o>For information: the fire is out, but we have multiple failures. I am not sure we can take off again.</o>
+    </message>
+    <message key="HW.9" actor="1" radio="auto" lvar="L:ANDHW9" wav="AND.HW9.wav" sleep="0">
+      <o>What the hell is happening here.</o>
+      <o>Be advised: what the hell is happening here.</o>
+      <o>Attention: what the hell is happening here.</o>
+      <o>For information: what the hell is happening here.</o>
+    </message>
+    <message key="HW.10" actor="1" radio="auto" lvar="L:ANDHW10" wav="AND.HW10.wav" sleep="0">
+      <o>Something is wrong in the area. Remain alert while completing the mission.</o>
+      <o>Be advised: something is wrong in the area. Remain alert while completing the mission.</o>
+      <o>Attention: something is wrong in the area. Remain alert while completing the mission.</o>
+      <o>For information: something is wrong in the area. Remain alert while completing the mission.</o>
+    </message>
+    <message key="HW.11" actor="1" radio="auto" lvar="L:ANDHW11" wav="AND.HW11.wav" sleep="8">
+      <o>Did you see that? Guys, are they coming toward us?</o>
+      <o>Can you confirm: did you see that? Guys, are they coming toward us?</o>
+      <o>Please confirm: did you see that? Guys, are they coming toward us?</o>
+      <o>Message update: did you see that? Guys, are they coming toward us?</o>
+    </message>
+    <message key="HW.12" actor="1" radio="auto" lvar="L:ANDHW12" wav="AND.HW12.wav" sleep="0">
+      <o>We need to abort, guys. Please check whether we are still good to proceed; if not, we need to abort ASAP.</o>
+      <o>Be advised: we need to abort, guys. Please check whether we are still good to proceed; if not, we need to abort ASAP.</o>
+      <o>Attention: we need to abort, guys. Please check whether we are still good to proceed; if not, we need to abort ASAP.</o>
+      <o>For information: we need to abort, guys. Please check whether we are still good to proceed; if not, we need to abort ASAP.</o>
+    </message>
+    <message key="HW.13" actor="1" radio="auto" lvar="L:ANDHW13" wav="AND.HW13.wav" sleep="0">
+      <o>Doc refers they have almost done we should wait for them to return.</o>
+      <o>Be advised: the doctor says they are almost finished. We should wait for their return.</o>
+      <o>Attention: the doctor says they are almost finished. We should wait for their return.</o>
+      <o>For information: the doctor says they are almost finished. We should wait for their return.</o>
+    </message>
+    <message key="HW.14" actor="1" radio="auto" lvar="L:ANDHW14" wav="AND.HW14.wav" sleep="3" tight="1">
+      <o>Okay finished go away now go go go.</o>
+      <o>Be advised: okay, finished. Move away now; go, go, go.</o>
+      <o>Attention: okay, finished. Move away now; go, go, go.</o>
+      <o>For information: okay, finished. Move away now; go, go, go.</o>
+    </message>
+    <message key="HW.15" actor="1" radio="auto" lvar="L:ANDHW15" wav="AND.HW15.wav" sleep="0">
+      <o>We are going to attempt takeoff. It may be difficult; prepare for an immediate evacuation if required.</o>
+      <o>We're going to attempt takeoff. It may be difficult; prepare for an immediate evacuation if required.</o>
+      <o>Attention: we are going to attempt takeoff. It may be difficult; prepare for an immediate evacuation if required.</o>
+      <o>For information: we are going to attempt takeoff. It may be difficult; prepare for an immediate evacuation if required.</o>
+    </message>
+    <message key="MAR.1" actor="9" radio="auto" lvar="L:MARAND1" wav="AND.marshal.move.left.wav" trigger="Shared marshall/pisteur3 controller selects the left correction.">
+      <o>Move left slowly.</o>
+      <o>Be advised: move left slowly.</o>
+      <o>Attention: move left slowly.</o>
+      <o>Please move left slowly.</o>
+    </message>
+    <message key="MAR.2" actor="9" radio="auto" lvar="L:MARAND2" wav="AND.marshal.move.right.wav" trigger="Shared marshall/pisteur3 controller selects the right correction.">
+      <o>Move right slowly.</o>
+      <o>Be advised: move right slowly.</o>
+      <o>Attention: move right slowly.</o>
+      <o>Please move right slowly.</o>
+    </message>
+    <message key="MAR.3" actor="9" radio="auto" lvar="L:MARAND3" wav="AND.marshal.come.forward.wav" trigger="Shared marshal controller commands the forward approach.">
+      <o>Come forward slowly.</o>
+      <o>Be advised: come forward slowly.</o>
+      <o>Attention: come forward slowly.</o>
+      <o>For information: come forward slowly.</o>
+    </message>
+    <message key="MAR.4" actor="9" radio="auto" lvar="L:MARAND4" wav="AND.marshal.hold.position.wav" trigger="Marshal controller enters the hold or safety-buffer state.">
+      <o>Hold position.</o>
+      <o>Maintain position.</o>
+      <o>Maintain your position.</o>
+      <o>Please hold position.</o>
+    </message>
+    <message key="MAR.5" actor="9" radio="auto" lvar="L:MARAND5" wav="AND.marshal.landing.area.clear.wav" trigger="A valid landing is committed inside the configured landing area.">
+      <o>Landing area clear. You are cleared to land.</o>
+      <o>Landing area clear. You're cleared to land.</o>
+      <o>Attention: landing area clear. You are cleared to land.</o>
+      <o>For information: landing area clear. You are cleared to land.</o>
+    </message>
+    <message key="PAX1.1" actor="4" radio="auto" lvar="L:AND1" wav="AND.pax1.cabin.preparation.completed.wav" sleep="0">
+      <o>Cabin preparation completed.</o>
+      <o>Be advised: cabin preparation completed.</o>
+      <o>Attention: cabin preparation completed.</o>
+      <o>For information: cabin preparation completed.</o>
+    </message>
+    <message key="PAX1.2" actor="4" radio="auto" lvar="L:AND2" wav="AND.pax1.cabin.preparation.please.wait.wav" sleep="0">
+      <o>Cabin preparation... Please wait.</o>
+      <o>Cabin preparation is in progress. Please wait.</o>
+      <o>Be advised: cabin preparation is in progress. Please wait.</o>
+      <o>Attention: cabin preparation is in progress. Please wait.</o>
+      <o>For information: cabin preparation is in progress. Please wait.</o>
+    </message>
+    <message key="PAX1.3" actor="4" radio="auto" lvar="L:AND3" wav="AND.pax1.cabin.secured.ready.to.fly.wav" sleep="0">
+      <o>Cabin secured; ready to fly.</o>
+      <o>Be advised: cabin secured and ready for flight.</o>
+      <o>Attention: cabin secured and ready for flight.</o>
+      <o>For information: cabin secured and ready for flight.</o>
+    </message>
+    <message key="PAX1.4" actor="4" radio="auto" lvar="L:AND4" wav="AND.pax1.helicopter.clear.free.to.leave.hover.wav" draft="1">
+      <o>Helicopter clear, you are free to leave hover.</o>
+      <o>The helicopter is clear, free to leave the hover.</o>
+      <o>Clear of the helicopter, free to leave hover.</o>
+    </message>
+    <message key="PAX1.5" actor="4" radio="auto" lvar="L:AND5" wav="AND.pax1.hoist.1.plus.stretcher.to.helicopter.wav" sleep="0">
+      <o>Hoist one plus stretcher to helicopter.</o>
+      <o>Be advised: bring hoist one and the stretcher to the helicopter.</o>
+      <o>Attention: bring hoist one and the stretcher to the helicopter.</o>
+      <o>For information: bring hoist one and the stretcher to the helicopter.</o>
+    </message>
+    <message key="PAX1.6" actor="4" radio="auto" lvar="L:AND6" wav="AND.pax1.hoist.1.to.helicopter.patient.wav" sleep="0">
+      <o>Hoist one to helicopter; patient and doctor will go with ambulance.</o>
+      <o>Hoist one to the helicopter. The patient and doctor will travel by ambulance.</o>
+      <o>Be advised: hoist one to the helicopter. The patient and doctor will travel by ambulance.</o>
+      <o>Attention: hoist one to the helicopter. The patient and doctor will travel by ambulance.</o>
+      <o>For information: hoist one to the helicopter. The patient and doctor will travel by ambulance.</o>
+    </message>
+    <message key="PAX1.7" actor="4" radio="auto" lvar="L:AND7" wav="AND.pax1.hoist.2.to.helicopter.wav" sleep="0">
+      <o>Hoist two to helicopter.</o>
+      <o>Be advised: hoist two to helicopter.</o>
+      <o>Attention: hoist two to helicopter.</o>
+      <o>For information: hoist two to helicopter.</o>
+    </message>
+    <message key="PAX1.8" actor="4" radio="auto" lvar="L:AND8" wav="AND.pax1.hoist.3.to.helicopter.wav" sleep="0">
+      <o>Hoist three to helicopter.</o>
+      <o>Be advised: hoist three to helicopter.</o>
+      <o>Attention: hoist three to helicopter.</o>
+      <o>For information: hoist three to helicopter.</o>
+    </message>
+    <message key="PAX1.9" actor="4" radio="auto" lvar="L:AND9" wav="AND.pax1.hoist.boom.extended.wav" sleep="0">
+      <o>Hoist boom extended.</o>
+      <o>Be advised: hoist boom extended.</o>
+      <o>Attention: hoist boom extended.</o>
+      <o>For information: hoist boom extended.</o>
+    </message>
+    <message key="PAX1.10" actor="4" radio="auto" lvar="L:AND10" wav="AND.pax1.hoist.is.clear.wav" sleep="0">
+      <o>Hoist is clear.</o>
+      <o>Be advised: hoist is clear.</o>
+      <o>Attention: hoist is clear.</o>
+      <o>For information: hoist is clear.</o>
+    </message>
+    <message key="PAX1.11" actor="4" radio="auto" lvar="L:AND11" wav="AND.pax1.hoist.is.running.down.wav" sleep="0">
+      <o>Hoist is running down.</o>
+      <o>Be advised: hoist is running down.</o>
+      <o>Attention: hoist is running down.</o>
+      <o>For information: hoist is running down.</o>
+    </message>
+    <message key="PAX1.12" actor="4" radio="auto" lvar="L:AND12" wav="AND.pax1.hoist.is.running.up.wav" sleep="0">
+      <o>Hoist is running up.</o>
+      <o>Be advised: hoist is running up.</o>
+      <o>Attention: hoist is running up.</o>
+      <o>For information: hoist is running up.</o>
+    </message>
+    <message key="PAX1.13" actor="4" radio="auto" lvar="L:AND13" wav="AND.pax1.hoist.is.up.boom.ext.patient.is.out.wav" sleep="0">
+      <o>Hoist his up, boom extended. patient and doctor are outside, hooked to the hoist.</o>
+      <o>Be advised: hoist is up and boom extended. The patient and doctor are clear and ready to hook on.</o>
+      <o>Attention: hoist is up and boom extended. The patient and doctor are clear and ready to hook on.</o>
+      <o>For information: hoist is up and boom extended. The patient and doctor are clear and ready to hook on.</o>
+    </message>
+    <message key="PAX1.14" actor="4" radio="auto" lvar="L:AND14" wav="AND.pax1.hoist.is.up.personnel.is.strapped.in.wav" sleep="0">
+      <o>Hoist is up personnel is strapped in.</o>
+      <o>Hoist is up; personnel are strapped in.</o>
+      <o>Be advised: hoist is up; personnel are strapped in.</o>
+      <o>Attention: hoist is up; personnel are strapped in.</o>
+      <o>For information: hoist is up; personnel are strapped in.</o>
+    </message>
+    <message key="PAX1.15" actor="4" radio="auto" lvar="L:AND15" wav="AND.pax1.hoist.on.ground.personnel.getting.hooked.wav" sleep="0">
+      <o>Hoist on the ground. Personnel are being hooked on.</o>
+      <o>Be advised: hoist is on the ground. Personnel are being hooked on.</o>
+      <o>Attention: hoist is on the ground. Personnel are being hooked on.</o>
+      <o>For information: hoist is on the ground. Personnel are being hooked on.</o>
+    </message>
+    <message key="PAX1.16" actor="4" radio="auto" lvar="L:AND16" wav="AND.pax1.hold.position.wav" sleep="0">
+      <o>Hold position.</o>
+      <o>Maintain position.</o>
+      <o>Maintain your position.</o>
+      <o>Please hold position.</o>
+    </message>
+    <message key="PAX1.17" actor="4" radio="auto" lvar="L:AND17" wav="AND.pax1.hook.is.coming.in.wav" draft="1">
+      <o>Hook is coming in.</o>
+      <o>The hook is coming in.</o>
+      <o>Hook coming in now.</o>
+    </message>
+    <message key="PAX1.18" actor="4" radio="auto" lvar="L:AND18" wav="AND.pax1.hook.is.in.boom.retracted.free.to.leave.hover.wav" sleep="0">
+      <o>Hook is in, hoist boom is retracted you're free to leave hover.</o>
+      <o>Hook is in and boom retracted. You are clear to leave the hover.</o>
+      <o>Hook is in and boom retracted. You're clear to leave the hover.</o>
+      <o>Attention: hook is in and boom retracted. You are clear to leave the hover.</o>
+      <o>For information: hook is in and boom retracted. You are clear to leave the hover.</o>
+    </message>
+    <message key="PAX1.19" actor="4" radio="auto" lvar="L:AND19" wav="AND.pax1.medic.on.ground.and.disconnected.wav" sleep="0">
+      <o>Medic on ground and disconnected.</o>
+      <o>Medic is on the ground and disconnected.</o>
+      <o>Be advised: medic is on the ground and disconnected.</o>
+      <o>Attention: medic is on the ground and disconnected.</o>
+      <o>For information: medic is on the ground and disconnected.</o>
+    </message>
+    <message key="PAX1.20" actor="4" radio="auto" lvar="L:AND20" wav="AND.pax1.patient.will.go.with.ambulance.wav" sleep="0">
+      <o>The patient will travel by ambulance.</o>
+      <o>Be advised: the patient will travel by ambulance.</o>
+      <o>Attention: the patient will travel by ambulance.</o>
+      <o>For information: the patient will travel by ambulance.</o>
+    </message>
+    <message key="PAX1.21" actor="4" radio="auto" lvar="L:AND21" wav="AND.pax1.personnel.is.on.ground.disconnected.wav" sleep="0">
+      <o>Personnel on ground and disconnected.</o>
+      <o>Personnel are on the ground and disconnected.</o>
+      <o>Be advised: personnel are on the ground and disconnected.</o>
+      <o>Attention: personnel are on the ground and disconnected.</o>
+      <o>For information: personnel are on the ground and disconnected.</o>
+    </message>
+    <message key="PAX1.22" actor="4" radio="auto" lvar="L:AND22" wav="AND.pax1.position.is.good.wav" sleep="0">
+      <o>Position is good.</o>
+      <o>Be advised: position is good.</o>
+      <o>Attention: position is good.</o>
+      <o>For information: position is good.</o>
+    </message>
+    <message key="PAX1.23" actor="4" radio="auto" lvar="L:AND23" wav="AND.pax1.ready.for.hoisting.ops.wav" sleep="0">
+      <o>Hold on, hoisting preparation is in progress and almost completed.</o>
+      <o>Be advised: hold on, hoisting preparation is in progress and almost completed.</o>
+      <o>Attention: hold on, hoisting preparation is in progress and almost completed.</o>
+      <o>Please hold on, hoisting preparation is in progress and almost completed.</o>
+    </message>
+    <message key="PAX1.24" actor="4" radio="auto" lvar="L:AND24" wav="AND.pax1.set.hover.conditions.wav" sleep="2">
+      <o>Set hover conditions.</o>
+      <o>Be advised: set hover conditions.</o>
+      <o>Attention: set hover conditions.</o>
+      <o>For information: set hover conditions.</o>
+    </message>
+    <message key="PAX1.25" actor="4" radio="auto" lvar="L:AND25" wav="AND.pax1.st.comm.chk.wav" sleep="2">
+      <o>That's one com check.</o>
+      <o>Be advised: this is a communications check.</o>
+      <o>Attention: this is a communications check.</o>
+      <o>For information: this is a communications check.</o>
+    </message>
+    <message key="PAX1.26" actor="4" radio="auto" lvar="L:AND26" wav="AND.pax1.st.hoist.1.to.helicopter.wav" sleep="0">
+      <o>Hoist one to helicopter.</o>
+      <o>Be advised: hoist one to the helicopter.</o>
+      <o>Attention: hoist one to the helicopter.</o>
+      <o>For information: hoist one to the helicopter.</o>
+    </message>
+    <message key="PAX1.27" actor="4" radio="auto" lvar="L:AND27" wav="AND.pax1.t.1.wav" draft="1">
+      <o>One.</o>
+    </message>
+    <message key="PAX1.28" actor="4" radio="auto" lvar="L:AND28" wav="AND.pax1.t.2.wav" draft="1">
+      <o>Two.</o>
+    </message>
+    <message key="PAX1.29" actor="4" radio="auto" lvar="L:AND29" wav="AND.pax1.t.3.wav" draft="1">
+      <o>Three.</o>
+    </message>
+    <message key="PAX1.30" actor="4" radio="auto" lvar="L:AND30" wav="AND.pax1.t.4.wav" draft="1">
+      <o>Four.</o>
+    </message>
+    <message key="PAX1.31" actor="4" radio="auto" lvar="L:AND31" wav="AND.pax1.t.5.wav" draft="1">
+      <o>Five.</o>
+    </message>
+    <message key="PAX1.32" actor="4" radio="auto" lvar="L:AND32" wav="AND.pax1.t.10.wav" sleep="0">
+      <o>Ten.</o>
+      <o>Be advised: ten.</o>
+      <o>Attention: ten.</o>
+      <o>For information: ten.</o>
+    </message>
+    <message key="PAX1.33" actor="4" radio="auto" lvar="L:AND33" wav="AND.pax1.t.20.wav" sleep="0">
+      <o>Twenty.</o>
+      <o>Be advised: twenty.</o>
+      <o>Attention: twenty.</o>
+      <o>For information: twenty.</o>
+    </message>
+    <message key="PAX1.34" actor="4" radio="auto" lvar="L:AND34" wav="AND.pax1.t.50m.wav" sleep="0">
+      <o>Fifty meters.</o>
+      <o>Be advised: fifty meters.</o>
+      <o>Attention: fifty meters.</o>
+      <o>For information: fifty meters.</o>
+    </message>
+    <message key="PAX1.35" actor="4" radio="auto" lvar="L:AND35" wav="AND.pax1.t.bckwd.wav" draft="1">
+      <o>Backward.</o>
+      <o>Move back.</o>
+      <o>A bit back.</o>
+    </message>
+    <message key="PAX1.36" actor="4" radio="auto" lvar="L:AND36" wav="AND.pax1.t.fwd.wav" draft="1">
+      <o>Forward.</o>
+      <o>Move forward.</o>
+      <o>A bit forward.</o>
+    </message>
+    <message key="PAX1.37" actor="4" radio="auto" lvar="L:AND37" wav="AND.pax1.t.hi.frank.wav" sleep="0">
+      <o>Hey frank good morning.</o>
+      <o>Be advised: hey frank good morning.</o>
+      <o>Attention: hey frank good morning.</o>
+      <o>For information: hey frank good morning.</o>
+    </message>
+    <message key="PAX1.38" actor="4" radio="auto" lvar="L:AND38" wav="AND.pax1.t.hi.sarah.wav" sleep="0">
+      <o>Hi sarah how are you.</o>
+      <o>Be advised: hi sarah how are you.</o>
+      <o>Attention: hi sarah how are you.</o>
+      <o>For information: hi sarah how are you.</o>
+    </message>
+    <message key="PAX1.39" actor="4" radio="auto" lvar="L:AND39" wav="AND.pax1.t.left.wav" draft="1">
+      <o>Left.</o>
+      <o>Move left.</o>
+      <o>A bit left.</o>
+    </message>
+    <message key="PAX1.40" actor="4" radio="auto" lvar="L:AND40" wav="AND.pax1.t.on.top.wav" draft="1">
+      <o>On top.</o>
+      <o>Right on top.</o>
+      <o>We are on top.</o>
+    </message>
+    <message key="PAX1.41" actor="4" radio="auto" lvar="L:AND41" wav="AND.pax1.t.right.wav" draft="1">
+      <o>Right.</o>
+      <o>Move right.</o>
+      <o>A bit right.</o>
+    </message>
+    <message key="PAX1.42" actor="4" radio="auto" lvar="L:AND42" wav="AND.pax1.t.stretcher.secured.wav" sleep="0">
+      <o>Stretcher is secure.</o>
+      <o>Be advised: stretcher is secure.</o>
+      <o>Attention: stretcher is secure.</o>
+      <o>For information: stretcher is secure.</o>
+    </message>
+    <message key="PAX1.43" actor="4" radio="auto" lvar="L:AND43" wav="AND.pax1.t.we.are.close.set.hover.wav" sleep="0">
+      <o>We are reasonably close, set hover as appropriate.</o>
+      <o>We're close enough; set hover conditions.</o>
+      <o>Attention: we are close enough; set hover conditions.</o>
+      <o>For information: we are close enough; set hover conditions.</o>
+    </message>
+    <message key="PAX1.44" actor="4" radio="auto" lvar="L:AND44" wav="AND.pax1.t.we.are.close.wav" sleep="0">
+      <o>We are reasonably close.</o>
+      <o>We're reasonably close.</o>
+      <o>Attention: we are reasonably close.</o>
+      <o>For information: we are reasonably close.</o>
+    </message>
+    <message key="PAX1.45" actor="4" radio="auto" lvar="L:AND45" wav="AND.pax1.t.we.are.too.far.wav" sleep="0">
+      <o>We are too far.</o>
+      <o>We're too far.</o>
+      <o>Attention: we are too far.</o>
+      <o>For information: we are too far.</o>
+    </message>
+    <message key="PAX1.46" actor="4" radio="auto" lvar="L:AND46" wav="AND.pax1.we.are.height.is.good.wav" sleep="9">
+      <o>Height is good.</o>
+      <o>Be advised: height is good.</o>
+      <o>Attention: height is good.</o>
+      <o>For information: height is good.</o>
+    </message>
+    <message key="PAX1.47" actor="4" radio="auto" lvar="L:AND47" wav="AND.pax1.we.are.too.high.wav" sleep="0">
+      <o>We are too high.</o>
+      <o>We're too high.</o>
+      <o>Attention: we are too high.</o>
+      <o>For information: we are too high.</o>
+    </message>
+    <message key="PAX1.48" actor="4" radio="auto" lvar="L:AND48" wav="AND.pax1.we.are.too.low.wav" sleep="0">
+      <o>We are too low.</o>
+      <o>We're too low.</o>
+      <o>Attention: we are too low.</o>
+      <o>For information: we are too low.</o>
+    </message>
+    <message key="PAX1.49" actor="4" radio="auto" lvar="L:AND49" wav="AND.pax1.wf.doc.and.strtc.have.been.disconnected.wav" sleep="0">
+      <o>Doc and stretcher have been disconnected.</o>
+      <o>Be advised: the doctor and stretcher are disconnected.</o>
+      <o>Attention: the doctor and stretcher are disconnected.</o>
+      <o>For information: the doctor and stretcher are disconnected.</o>
+    </message>
+    <message key="PAX1.50" actor="4" radio="auto" lvar="L:AND50" wav="AND.pax1.wf.doc.has.been.disconnected.wav" draft="1">
+      <o>Doc has been disconnected.</o>
+      <o>The doctor is disconnected.</o>
+      <o>Doc is off the hook.</o>
+    </message>
+    <message key="PAX1.51" actor="4" radio="auto" lvar="L:AND51" wav="AND.pax1.wf.doc.is.getting.hooked.wav" sleep="0">
+      <o>Doc is getting hooked.</o>
+      <o>Be advised: doc is getting hooked.</o>
+      <o>Attention: doc is getting hooked.</o>
+      <o>For information: doc is getting hooked.</o>
+    </message>
+    <message key="PAX1.52" actor="4" radio="auto" lvar="L:AND52" wav="AND.pax1.wf.hoist.boom.extended.wav" sleep="0">
+      <o>Hoist boom extended.</o>
+      <o>Be advised: hoist boom extended.</o>
+      <o>Attention: hoist boom extended.</o>
+      <o>For information: hoist boom extended.</o>
+    </message>
+    <message key="PAX1.53" actor="4" radio="auto" lvar="L:AND53" wav="AND.pax1.wf.hoist.boom.retracted.wav" draft="1">
+      <o>Hoist boom retracted.</o>
+      <o>The hoist boom is retracted.</o>
+      <o>Boom is in.</o>
+    </message>
+    <message key="PAX1.54" actor="4" radio="auto" lvar="L:AND54" wav="AND.pax1.wf.hoist.retracted.door.close.wav" sleep="0">
+      <o>Hoist boom retracted, door closed, cabin secured.</o>
+      <o>Be advised: hoist retracted, door closed, cabin secured.</o>
+      <o>Attention: hoist retracted, door closed, cabin secured.</o>
+      <o>For information: hoist retracted, door closed, cabin secured.</o>
+    </message>
+    <message key="PAX1.55" actor="4" radio="auto" lvar="L:AND55" wav="AND.pax1.wf.opening.door.hoist.op.wav" sleep="0">
+      <o>Opening door and preparing for hoist operation.</o>
+      <o>Be advised: opening door and preparing for hoist operation.</o>
+      <o>Attention: opening door and preparing for hoist operation.</o>
+      <o>For information: opening door and preparing for hoist operation.</o>
+    </message>
+    <message key="PAX1.56" actor="4" radio="auto" lvar="L:AND56" wav="AND.pax1.wf.operator.has.been.disconnected.wav" sleep="0">
+      <o>Operator has been disconnected.</o>
+      <o>Be advised: operator has been disconnected.</o>
+      <o>Attention: operator has been disconnected.</o>
+      <o>For information: operator has been disconnected.</o>
+    </message>
+    <message key="PAX1.57" actor="4" radio="auto" lvar="L:AND57" wav="AND.pax1.wf.operator.is.getting.hooked.wav" sleep="0">
+      <o>Operator is getting hooked.</o>
+      <o>Be advised: operator is getting hooked.</o>
+      <o>Attention: operator is getting hooked.</o>
+      <o>For information: operator is getting hooked.</o>
+    </message>
+    <message key="PAX1.58" actor="4" radio="auto" lvar="L:AND58" wav="AND.pax1.wg.area.secured.hoist.can.proceed.wav" draft="1">
+      <o>Area secured, hoist can proceed.</o>
+      <o>The area is secure, we can proceed with the hoist.</o>
+      <o>Area is safe, proceed with the hoist.</o>
+    </message>
+    <message key="PAX1.59" actor="4" radio="auto" lvar="L:AND59" wav="AND.pax1.wg.crew.boarded.ready.to.go.wav" sleep="0">
+      <o>Crew boarded cabin ready to go.</o>
+      <o>Be advised: crew boarded, cabin ready to go.</o>
+      <o>Attention: crew boarded, cabin ready to go.</o>
+      <o>For information: crew boarded, cabin ready to go.</o>
+    </message>
+    <message key="PAX1.60" actor="4" radio="auto" lvar="L:AND60" wav="AND.pax1.wg.helirescuer.pickup.wav" sleep="15">
+      <o>Due to impervious location of accident site we should evaluate to call and board expert heli-rescuers use the tablet to decide if we continue alone or if we have to pick kelly rescuers on board.</o>
+      <o>Be advised: the accident site is inaccessible. Use the tablet to decide whether to pick up a heli-rescuer or continue alone.</o>
+      <o>Attention: the accident site is inaccessible. Use the tablet to decide whether to pick up a heli-rescuer or continue alone.</o>
+      <o>The accident site is inaccessible. Use the tablet to decide whether to pick up a heli-rescuer or continue alone.</o>
+      <o>For information: the accident site is inaccessible. Use the tablet to decide whether to pick up a heli-rescuer or continue alone.</o>
+    </message>
+    <message key="PAX1.61" actor="4" radio="auto" lvar="L:AND61" wav="AND.pax1.wg.helirescuer.secured.area.wav" sleep="6" tight="1">
+      <o>The heli-rescuer has secured the area and the casualty. Prepare to hoist the remaining personnel down.</o>
+      <o>Be advised: the heli-rescuer has secured the area and the casualty. Prepare to hoist the remaining personnel down.</o>
+      <o>Attention: the heli-rescuer has secured the area and the casualty. Prepare to hoist the remaining personnel down.</o>
+      <o>For information: the heli-rescuer has secured the area and the casualty. Prepare to hoist the remaining personnel down.</o>
+    </message>
+    <message key="PAX1.62" actor="4" radio="auto" lvar="L:AND62" wav="AND.pax1.wg.proposed.meeting.pt.far.away.wav" sleep="0">
+      <o>The proposed meeting point is far from the accident site. We should arrange a more practical point.</o>
+      <o>Be advised: the proposed meeting point is far from the accident site. We should arrange a more practical point.</o>
+      <o>Attention: the proposed meeting point is far from the accident site. We should arrange a more practical point.</o>
+      <o>For information: the proposed meeting point is far from the accident site. We should arrange a more practical point.</o>
+    </message>
+    <message key="PAX1.63" actor="4" radio="auto" lvar="L:AND63" wav="AND.pax1.wg.we.have.to.hoist.3.to.gnd.wav" sleep="0">
+      <o>We have to hoist three to ground heli rescuer will be first to secure the area.</o>
+      <o>We need to hoist three people to the ground. The heli-rescuer will secure the area first.</o>
+      <o>Be advised: we need to hoist three people to the ground. The heli-rescuer will secure the area first.</o>
+      <o>Attention: we need to hoist three people to the ground. The heli-rescuer will secure the area first.</o>
+      <o>For information: we need to hoist three people to the ground. The heli-rescuer will secure the area first.</o>
+    </message>
+    <message key="PAX1.64" actor="4" radio="auto" lvar="L:AND64" wav="AND.pax1.wg.we.have.to.increase.height.speed.until.secured.wav" sleep="0">
+      <o>We have to increase distance and hide until the rescue area is secure.</o>
+      <o>Increase distance and altitude until the rescue area is secure.</o>
+      <o>Be advised: increase distance and altitude until the rescue area is secure.</o>
+      <o>Attention: increase distance and altitude until the rescue area is secure.</o>
+      <o>For information: increase distance and altitude until the rescue area is secure.</o>
+    </message>
+    <message key="PAX1.65" actor="4" radio="auto" lvar="L:AND65" wav="AND.pax1.wg.xdoc.and.patient.with.ambu.wav" sleep="0">
+      <o>The doctor and patient will travel by ambulance to the designated hospital. We will pick up the doctor there.</o>
+      <o>Be advised: the doctor and patient will travel by ambulance to the designated hospital. We will pick up the doctor there.</o>
+      <o>Attention: the doctor and patient will travel by ambulance to the designated hospital. We will pick up the doctor there.</o>
+      <o>For information: the doctor and patient will travel by ambulance to the designated hospital. We will pick up the doctor there.</o>
+    </message>
+    <message key="PAX1.66" actor="4" radio="auto" lvar="L:AND66" wav="AND.pax1.wgb.3oclock.wav" sleep="0">
+      <o>Three o'clock.</o>
+      <o>Be advised: three o'clock.</o>
+      <o>Attention: three o'clock.</o>
+      <o>For information: three o'clock.</o>
+    </message>
+    <message key="PAX1.67" actor="4" radio="auto" lvar="L:AND67" wav="AND.pax1.wgb.4oclock.wav" sleep="0">
+      <o>Four o'clock.</o>
+      <o>Be advised: four o'clock.</o>
+      <o>Attention: four o'clock.</o>
+      <o>For information: four o'clock.</o>
+    </message>
+    <message key="PAX1.68" actor="4" radio="auto" lvar="L:AND68" wav="AND.pax1.wgb.5oclock.wav" sleep="0">
+      <o>Five o'clock.</o>
+      <o>Be advised: five o'clock.</o>
+      <o>Attention: five o'clock.</o>
+      <o>For information: five o'clock.</o>
+    </message>
+    <message key="PAX1.69" actor="4" radio="auto" lvar="L:AND69" wav="AND.pax1.wgb.6oclock.wav" sleep="0">
+      <o>Six o'clock.</o>
+      <o>Be advised: six o'clock.</o>
+      <o>Attention: six o'clock.</o>
+      <o>For information: six o'clock.</o>
+    </message>
+    <message key="PAX1.70" actor="4" radio="auto" lvar="L:AND70" wav="AND.pax1.wgb.7oclock.wav" sleep="0">
+      <o>Seven o'clock.</o>
+      <o>Be advised: seven o'clock.</o>
+      <o>Attention: seven o'clock.</o>
+      <o>For information: seven o'clock.</o>
+    </message>
+    <message key="PAX1.71" actor="4" radio="auto" lvar="L:AND71" wav="AND.pax1.wgb.8oclock.wav" sleep="0">
+      <o>Eight o'clock.</o>
+      <o>Be advised: eight o'clock.</o>
+      <o>Attention: eight o'clock.</o>
+      <o>For information: eight o'clock.</o>
+    </message>
+    <message key="PAX1.72" actor="4" radio="auto" lvar="L:AND72" wav="AND.pax1.wgb.9oclock.wav" sleep="0">
+      <o>Nine o'clock.</o>
+      <o>Be advised: nine o'clock.</o>
+      <o>Attention: nine o'clock.</o>
+      <o>For information: nine o'clock.</o>
+    </message>
+    <message key="PAX1.73" actor="4" radio="auto" lvar="L:AND73" wav="AND.pax1.wgb.10oclock.wav" sleep="0">
+      <o>Ten o'clock.</o>
+      <o>Be advised: ten o'clock.</o>
+      <o>Attention: ten o'clock.</o>
+      <o>For information: ten o'clock.</o>
+    </message>
+    <message key="PAX1.74" actor="4" radio="auto" lvar="L:AND74" wav="AND.pax1.wgb.11oclock.wav" sleep="0">
+      <o>Eleven o'clock.</o>
+      <o>Be advised: eleven o'clock.</o>
+      <o>Attention: eleven o'clock.</o>
+      <o>For information: eleven o'clock.</o>
+    </message>
+    <message key="PAX1.75" actor="4" radio="auto" lvar="L:AND75" wav="AND.pax1.wgb.12oclock.wav" sleep="0">
+      <o>Twelve o'clock.</o>
+      <o>Be advised: twelve o'clock.</o>
+      <o>Attention: twelve o'clock.</o>
+      <o>For information: twelve o'clock.</o>
+    </message>
+    <message key="PAX1.76" actor="4" radio="auto" lvar="L:AND76" wav="AND.pax1.wgb.are.on.the.way.to.accident.wav" sleep="0">
+      <o>Or on the way to the accident site.</o>
+      <o>We are on the way to the accident site.</o>
+      <o>We're on the way to the accident site.</o>
+      <o>Attention: we are on the way to the accident site.</o>
+      <o>For information: we are on the way to the accident site.</o>
+    </message>
+    <message key="PAX1.77" actor="4" radio="auto" lvar="L:AND77" wav="AND.pax1.wgb.check.on.tablet.wav" sleep="2">
+      <o>Check the tablet.</o>
+      <o>Review the tablet.</o>
+      <o>Please review the tablet.</o>
+      <o>Please check the tablet.</o>
+    </message>
+    <message key="PAX1.78" actor="4" radio="auto" lvar="L:AND78" wav="AND.pax1.wgb.i.believe.we.found.wav" sleep="2" tight="1">
+      <o>I believe we found something.</o>
+      <o>Be advised: i believe we found something.</o>
+      <o>Attention: i believe we found something.</o>
+      <o>For information: i believe we found something.</o>
+    </message>
+    <message key="PAX1.79" actor="4" radio="auto" lvar="L:AND79" wav="AND.pax1.wgb.its.in.front.of.us.wav" sleep="0">
+      <o>It's in front of us.</o>
+      <o>Be advised: it's in front of us.</o>
+      <o>Attention: it's in front of us.</o>
+      <o>For information: it's in front of us.</o>
+    </message>
+    <message key="PAX1.80" actor="4" radio="auto" lvar="L:AND80" wav="AND.pax1.wgb.yes.confirmed.we.found.target.wav" sleep="0">
+      <o>Yes confirmed we found our target.</o>
+      <o>Confirmed. We found the target.</o>
+      <o>Be advised: confirmed. We found the target.</o>
+      <o>Attention: confirmed. We found the target.</o>
+      <o>For information: confirmed. We found the target.</o>
+    </message>
+    <message key="PAX1.81" actor="4" radio="auto" lvar="L:AND81" wav="AND.pax1.wgc.helicopter.clear.ready.to.fly.wav" sleep="0">
+      <o>Helicopter clear and ready for flight.</o>
+      <o>Be advised: helicopter clear and ready for flight.</o>
+      <o>Attention: helicopter clear and ready for flight.</o>
+      <o>For information: helicopter clear and ready for flight.</o>
+    </message>
+    <message key="PAX1.82" actor="4" radio="auto" lvar="L:AND82" wav="AND.crew.returning.to.aircraft.wav" trigger="Post-visit, post-load, or post-hoist crew-return flow begins.">
+      <o>Ground crew is returning to the aircraft. Keep the landing area clear.</o>
+      <o>Be advised: ground crew is returning to the aircraft. Keep the landing area clear.</o>
+      <o>Attention: ground crew is returning to the aircraft. Keep the landing area clear.</o>
+      <o>For information: ground crew is returning to the aircraft. Keep the landing area clear.</o>
+    </message>
+    <message key="PAX1.86" actor="4" radio="auto" lvar="L:AND86" wav="AND.pax1.wgc.pls.set.hoist.sw.on1.wav" sleep="0" draft="1">
+      <o>Please set the hoist switch on.</o>
+      <o>The hoist switch is still off, please set it on.</o>
+      <o>We need the hoist switch on, please.</o>
+    </message>
+    <message key="PAX1.87" actor="4" radio="auto" lvar="L:AND87" wav="AND.pax1.wgc.we.have.to.hoist.2.to.gnd.wav" draft="1">
+      <o>We have to hoist two to ground.</o>
+      <o>Hoist two to ground.</o>
+      <o>We need to send hoist two to ground.</o>
+    </message>
+    <message key="PAX1.T1" actor="1" radio="auto" lvar="L:PAX1ANDT1" wav="AND.pax1.t.on.top.wav" draft="1">
+      <o>On top.</o>
+      <o>Right on top.</o>
+      <o>We are on top.</o>
+    </message>
+    <message key="PAX1.T2" actor="1" radio="auto" lvar="L:PAX1ANDT2" wav="AND.pax1.t.fwd.wav" draft="1">
+      <o>Forward.</o>
+      <o>Move forward.</o>
+      <o>A bit forward.</o>
+    </message>
+    <message key="PAX1.T3" actor="1" radio="auto" lvar="L:PAX1ANDT3" wav="AND.pax1.t.bckwd.wav" draft="1">
+      <o>Backward.</o>
+      <o>Move back.</o>
+      <o>A bit back.</o>
+    </message>
+    <message key="PAX1.T4" actor="1" radio="auto" lvar="L:PAX1ANDT4" wav="AND.pax1.t.left.wav" draft="1">
+      <o>Left.</o>
+      <o>Move left.</o>
+      <o>A bit left.</o>
+    </message>
+    <message key="PAX1.T5" actor="1" radio="auto" lvar="L:PAX1ANDT5" wav="AND.pax1.t.right.wav" draft="1">
+      <o>Right.</o>
+      <o>Move right.</o>
+      <o>A bit right.</o>
+    </message>
+    <message key="PAX1.T6" actor="1" radio="auto" lvar="L:PAX1ANDT6" wav="AND.pax1.t.1.wav" draft="1">
+      <o>One.</o>
+    </message>
+    <message key="PAX1.T7" actor="1" radio="auto" lvar="L:PAX1ANDT7" wav="AND.pax1.t.2.wav" draft="1">
+      <o>Two.</o>
+    </message>
+    <message key="PAX1.T8" actor="1" radio="auto" lvar="L:PAX1ANDT8" wav="AND.pax1.t.3.wav" draft="1">
+      <o>Three.</o>
+    </message>
+    <message key="PAX1.T9" actor="1" radio="auto" lvar="L:PAX1ANDT9" wav="AND.pax1.t.4.wav" draft="1">
+      <o>Four.</o>
+    </message>
+    <message key="PAX1.T10" actor="1" radio="auto" lvar="L:PAX1ANDT10" wav="AND.pax1.t.5.wav" draft="1">
+      <o>Five.</o>
+    </message>
+    <message key="PAX1.T11" actor="1" radio="auto" lvar="L:PAX1ANDT11" wav="AND.pax1.wga.6.wav" draft="1">
+      <o>Six.</o>
+    </message>
+    <message key="PAX1.T12" actor="1" radio="auto" lvar="L:PAX1ANDT12" wav="AND.pax1.wga.7.wav" draft="1">
+      <o>Seven.</o>
+    </message>
+    <message key="PAX1.T13" actor="1" radio="auto" lvar="L:PAX1ANDT13" wav="AND.pax1.wga.8.wav" draft="1">
+      <o>Eight.</o>
+    </message>
+    <message key="PAX1.T14" actor="1" radio="auto" lvar="L:PAX1ANDT14" wav="AND.pax1.wga.9.wav" draft="1">
+      <o>Nine.</o>
+    </message>
+    <message key="PAX1.T15" actor="1" radio="auto" lvar="L:PAX1ANDT15" wav="AND.pax1.t.10.wav" draft="1">
+      <o>Ten.</o>
+    </message>
+    <message key="PAX2.1" actor="5" radio="auto" lvar="L:PAX2AND1" wav="AND.PAX2.comm.check.wav" sleep="2.5">
+      <o>Copy paramedic here comm check.</o>
+      <o>Copy, paramedic here. Communications check.</o>
+      <o>Be advised: copy, paramedic here. Communications check.</o>
+      <o>Attention: copy, paramedic here. Communications check.</o>
+      <o>For information: copy, paramedic here. Communications check.</o>
+    </message>
+    <message key="PAX2.2" actor="5" radio="auto" lvar="L:PAX2AND2" wav="AND.PAX2.hi.frank.wav" draft="1">
+      <o>Hi Frank.</o>
+      <o>Hello Frank.</o>
+      <o>Hey Frank, good to see you.</o>
+    </message>
+    <message key="PAX2.3" actor="5" radio="auto" lvar="L:PAX2AND3" wav="AND.PAX2.hi.sarah.wav" sleep="4.5">
+      <o>Hi Anna, nice to meet you again. Are you free for lunch tomorrow?</o>
+      <o>Can you confirm: hi Anna, nice to meet you again. Are you free for lunch tomorrow?</o>
+      <o>Please confirm: hi Anna, nice to meet you again. Are you free for lunch tomorrow?</o>
+      <o>Message update: hi Anna, nice to meet you again. Are you free for lunch tomorrow?</o>
+    </message>
+    <message key="PAX2.4" actor="5" radio="auto" lvar="L:PAX2AND4" wav="AND.PAX2.stretcher.secured.wav" sleep="0">
+      <o>Stretcher secured.</o>
+      <o>Be advised: stretcher secured.</o>
+      <o>Attention: stretcher secured.</o>
+      <o>For information: stretcher secured.</o>
+    </message>
+    <message key="PAX2.5" actor="5" radio="auto" lvar="L:PAX2AND5" wav="AND.hoist.operation.paused.wav" trigger="A speed, acceleration, or bank-angle limit requires a temporary hoist pause.">
+      <o>Hold position. Hoist operation is paused until the aircraft is stable.</o>
+      <o>Maintain position. Hoist operation is paused until the aircraft is stable.</o>
+      <o>Maintain your position. Hoist operation is paused until the aircraft is stable.</o>
+      <o>Please hold position. Hoist operation is paused until the aircraft is stable.</o>
+    </message>
+    <message key="PAX2.6" actor="5" radio="auto" lvar="L:PAX2AND6" wav="AND.hoist.operation.abort.wav" trigger="An unsafe hoist state requires abort and recovery rather than continuation.">
+      <o>Abort the hoist operation. Recover the crew only when conditions are safe.</o>
+      <o>Be advised: abort the hoist operation. Recover the crew only when conditions are safe.</o>
+      <o>Attention: abort the hoist operation. Recover the crew only when conditions are safe.</o>
+      <o>Please abort the hoist operation. Recover the crew only when conditions are safe.</o>
+    </message>
+    <message key="PAX3.1" actor="3" radio="auto" lvar="L:PAX3AND1" wav="AND.pax3.ambulance.wav" sleep="0">
+      <o>An ambulance is on scene, but no paramedic is present.</o>
+      <o>Be advised: an ambulance is on scene, but no paramedic is present.</o>
+      <o>Attention: an ambulance is on scene, but no paramedic is present.</o>
+      <o>For information: an ambulance is on scene, but no paramedic is present.</o>
+    </message>
+    <message key="PAX3.2" actor="3" radio="auto" lvar="L:PAX3AND2" wav="AND.pax3.comm.chk.wav" sleep="2.5">
+      <o>Medic here. Communications check.</o>
+      <o>Be advised: medic here. Communications check.</o>
+      <o>Attention: medic here. Communications check.</o>
+      <o>For information: medic here. Communications check.</o>
+    </message>
+    <message key="PAX3.3" actor="3" radio="auto" lvar="L:PAX3AND3" wav="AND.pax3.confirmed.onscene.wav" sleep="0">
+      <o>Confirmed on scene.</o>
+      <o>Be advised: confirmed on scene.</o>
+      <o>Attention: confirmed on scene.</o>
+      <o>For information: confirmed on scene.</o>
+    </message>
+    <message key="PAX3.4" actor="3" radio="auto" lvar="L:PAX3AND4" wav="AND.pax3.fire.engine.wav" sleep="0">
+      <o>Fire engine.</o>
+      <o>Be advised: fire engine.</o>
+      <o>Attention: fire engine.</o>
+      <o>For information: fire engine.</o>
+    </message>
+    <message key="PAX3.5" actor="3" radio="auto" lvar="L:PAX3AND5" wav="AND.pax3.gnd.ops.pls.standby.wav" sleep="0">
+      <o>We need time for ground operations. Please stand by.</o>
+      <o>Be advised: we need time for ground operations. Please stand by.</o>
+      <o>Attention: we need time for ground operations. Please stand by.</o>
+      <o>For information: we need time for ground operations. Please stand by.</o>
+    </message>
+    <message key="PAX3.6" actor="3" radio="auto" lvar="L:PAX3AND6" wav="AND.pax3.hosppital.proposal.wav" sleep="0">
+      <o>A possible hospital destination is available on the tablet. We can confirm or change it later.</o>
+      <o>Be advised: a possible hospital destination is available on the tablet. We can confirm or change it later.</o>
+      <o>Attention: a possible hospital destination is available on the tablet. We can confirm or change it later.</o>
+      <o>For information: a possible hospital destination is available on the tablet. We can confirm or change it later.</o>
+    </message>
+    <message key="PAX3.7" actor="3" radio="auto" lvar="L:PAX3AND7" wav="AND.pax3.patient.has.died.wav" sleep="0">
+      <o>Patient has died.</o>
+      <o>Be advised: patient has died.</o>
+      <o>Attention: patient has died.</o>
+      <o>For information: patient has died.</o>
+    </message>
+    <message key="PAX3.8" actor="3" radio="auto" lvar="L:PAX3AND8" wav="AND.pax3.patient.life.signs.fading.wav" sleep="0">
+      <o>The patient's vital signs are fading.</o>
+      <o>Be advised: the patient's vital signs are fading.</o>
+      <o>Attention: the patient's vital signs are fading.</o>
+      <o>For information: the patient's vital signs are fading.</o>
+    </message>
+    <message key="PAX3.9" actor="3" radio="auto" lvar="L:PAX3AND9" wav="AND.pax3.patient.midway.wav" sleep="0">
+      <o>Patient location is far away ambulance crew on seen may transport patient to the meeting point proposed on tablet please confirm if we want to meet midway.</o>
+      <o>The patient is far away. The ambulance crew may transport the patient to the meeting point shown on the tablet. Confirm whether we should meet midway.</o>
+      <o>Be advised: the patient is far away. The ambulance crew may transport the patient to the meeting point shown on the tablet. Confirm whether we should meet midway.</o>
+      <o>Attention: the patient is far away. The ambulance crew may transport the patient to the meeting point shown on the tablet. Confirm whether we should meet midway.</o>
+      <o>For information: the patient is far away. The ambulance crew may transport the patient to the meeting point shown on the tablet. Confirm whether we should meet midway.</o>
+    </message>
+    <message key="PAX3.10" actor="3" radio="auto" lvar="L:PAX3AND10" wav="AND.pax3.patient.onboard.wav" sleep="0">
+      <o>Patient on board. Take care.</o>
+      <o>Be advised: patient on board. Take care.</o>
+      <o>The patient is on board. Take care.</o>
+      <o>For information: patient on board. Take care.</o>
+    </message>
+    <message key="PAX3.11" actor="3" radio="auto" lvar="L:PAX3AND11" wav="AND.pax3.patient.safe.wav" sleep="0">
+      <o>Patient has been the board to the hospital key is safe.</o>
+      <o>The patient has been delivered to the hospital and is safe.</o>
+      <o>Be advised: the patient has been delivered to the hospital and is safe.</o>
+      <o>Attention: the patient has been delivered to the hospital and is safe.</o>
+      <o>For information: the patient has been delivered to the hospital and is safe.</o>
+    </message>
+    <message key="PAX3.12" actor="3" radio="auto" lvar="L:PAX3AND12" wav="AND.pax3.police.wav" sleep="0">
+      <o>Police.</o>
+      <o>Be advised: police.</o>
+      <o>Attention: police.</o>
+      <o>For information: police.</o>
+    </message>
+    <message key="PAX3.13" actor="3" radio="auto" lvar="L:PAX3AND13" wav="AND.pax3.qpatient.safe.wav" sleep="0">
+      <o>Patients has been deboarded to the hospital.</o>
+      <o>The patient has been deboarded at the hospital.</o>
+      <o>Be advised: the patient has been deboarded at the hospital.</o>
+      <o>Attention: the patient has been deboarded at the hospital.</o>
+      <o>For information: the patient has been deboarded at the hospital.</o>
+    </message>
+    <message key="PAX3.14" actor="3" radio="auto" lvar="L:PAX3AND14" wav="AND.pax3.rescue.teams.are.on.the.way.wav" draft="1">
+      <o>Rescue teams are on the way.</o>
+      <o>The rescue teams are on their way.</o>
+      <o>Help is on the way.</o>
+    </message>
+    <message key="PAX3.15" actor="3" radio="auto" lvar="L:PAX3AND15" wav="AND.pax3.we.will.be.first.on.scene.wav" sleep="0">
+      <o>We will be first on scene.</o>
+      <o>Be advised: we will be first on scene.</o>
+      <o>Attention: we will be first on scene.</o>
+      <o>For information: we will be first on scene.</o>
+    </message>
+    <message key="PAX3.16" actor="3" radio="auto" lvar="L:PAX3AND16" wav="AND.pax3.we.will.find.ambulance.not.far.away.wav" sleep="0">
+      <o>We will find an ambulance near the accident site; it cannot reach the scene.</o>
+      <o>We will find an ambulance near the accident site; it can't reach the scene.</o>
+      <o>Attention: we will find an ambulance near the accident site; it cannot reach the scene.</o>
+      <o>For information: we will find an ambulance near the accident site; it cannot reach the scene.</o>
+    </message>
+    <message key="PAX3.17" actor="3" radio="auto" lvar="L:PAX3AND17" wav="AND.PAX3.wea.CPR.in.progress.wav" sleep="0">
+      <o>CPR in progress. Please stand by; it may take time.</o>
+      <o>Be advised: cPR in progress. Please stand by; it may take time.</o>
+      <o>Attention: cPR in progress. Please stand by; it may take time.</o>
+      <o>For information: cPR in progress. Please stand by; it may take time.</o>
+    </message>
+    <message key="PAX3.18" actor="3" radio="auto" lvar="L:PAX3AND18" wav="AND.PAX3.wea.land.for.CPR.wav" draft="1">
+      <o>We need to land for CPR.</o>
+      <o>Land now, we need to perform CPR.</o>
+      <o>Land as soon as possible, CPR is required.</o>
+    </message>
+    <message key="PAX3.19" actor="3" radio="auto" lvar="L:PAX3AND19" wav="AND.PAX3.wea.lost.patient.wav" sleep="0">
+      <o>We lost the patient we have to record the time of the death please stand by until we secure the cabin.</o>
+      <o>We lost the patient. Record the time of death and stand by while we secure the cabin.</o>
+      <o>Be advised: we lost the patient. Record the time of death and stand by while we secure the cabin.</o>
+      <o>Attention: we lost the patient. Record the time of death and stand by while we secure the cabin.</o>
+      <o>For information: we lost the patient. Record the time of death and stand by while we secure the cabin.</o>
+    </message>
+    <message key="PAX3.20" actor="3" radio="auto" lvar="L:PAX3AND20" wav="AND.PAX3.wea.patient.CPR.successful.wav" sleep="0">
+      <o>CPR was successful. The patient has been resuscitated; we are securing them for flight.</o>
+      <o>Be advised: cPR was successful. The patient has been resuscitated; we are securing them for flight.</o>
+      <o>Attention: cPR was successful. The patient has been resuscitated; we are securing them for flight.</o>
+      <o>For information: cPR was successful. The patient has been resuscitated; we are securing them for flight.</o>
+    </message>
+    <message key="PAX3.21" actor="3" radio="auto" lvar="L:PAX3AND21" wav="AND.PAX3.wea.patient.not.responding.to.CPR.wav" draft="1">
+      <o>The patient is not responding to CPR.</o>
+      <o>No response to CPR.</o>
+      <o>CPR is not working.</o>
+    </message>
+    <message key="PAX3.22" actor="3" radio="auto" lvar="L:PAX3AND22" wav="AND.pax3.weneed.extra.time.for.transport.wav" sleep="0">
+      <o>Patient conditions are critical we need extra time to stabilize for transport please wait.</o>
+      <o>The patient is critical. We need extra time to stabilize them for transport.</o>
+      <o>Be advised: the patient is critical. We need extra time to stabilize them for transport.</o>
+      <o>Attention: the patient is critical. We need extra time to stabilize them for transport.</o>
+      <o>For information: the patient is critical. We need extra time to stabilize them for transport.</o>
+    </message>
+    <message key="PAX3.23" actor="3" radio="auto" lvar="L:PAX3AND23" wav="AND.pax3.weo.lost.organ.wav" sleep="0">
+      <o>I believe we lost the organ it's too degraded.</o>
+      <o>We lost the organ; it is too degraded.</o>
+      <o>Be advised: we lost the organ; it is too degraded.</o>
+      <o>Attention: we lost the organ; it is too degraded.</o>
+      <o>For information: we lost the organ; it is too degraded.</o>
+    </message>
+    <message key="PAX3.24" actor="3" radio="auto" lvar="L:PAX3AND24" wav="AND.pax3.weo.organ.degraded.wav" sleep="0">
+      <o>The organ's condition is deteriorating.</o>
+      <o>Be advised: the organ's condition is deteriorating.</o>
+      <o>Attention: the organ's condition is deteriorating.</o>
+      <o>For information: the organ's condition is deteriorating.</o>
+    </message>
+    <message key="PAX3.25" actor="3" radio="auto" lvar="L:PAX3AND25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
+      <o>Briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; the heli-rescuer boards first if hoist extraction is required.</o>
+      <o>Be advised: briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; the heli-rescuer boards first if hoist extraction is required.</o>
+      <o>Attention: briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; the heli-rescuer boards first if hoist extraction is required.</o>
+      <o>For information: briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; the heli-rescuer boards first if hoist extraction is required.</o>
+    </message>
+    <message key="PAX3.26" actor="3" radio="auto" lvar="L:PAX3AND26" wav="AND.pax3.weo.welcome.wav" sleep="0">
+      <o>Welcome on board, heli-rescuer.</o>
+      <o>Be advised: welcome on board, heli-rescuer.</o>
+      <o>Attention: welcome on board, heli-rescuer.</o>
+      <o>For information: welcome on board, heli-rescuer.</o>
+    </message>
+    <message key="PAX3.27" actor="3" radio="auto" lvar="L:PAX3AND27" wav="AND.medical.assessment.in.progress.wav" sleep="0" trigger="Crew visit begins and the tablet starts revealing clinical data.">
+      <o>Patient assessment in progress. Stand by for the treatment decision.</o>
+      <o>Be advised: patient assessment in progress. Stand by for the treatment decision.</o>
+      <o>Attention: patient assessment in progress. Stand by for the treatment decision.</o>
+      <o>For information: patient assessment in progress. Stand by for the treatment decision.</o>
+    </message>
+    <message key="PAX3.28" actor="3" radio="auto" lvar="L:PAX3AND28" wav="AND.medical.critical.vital.signs.wav" trigger="Critical-vitals indicators turn red, patient deterioration requires an urgent transport decision.">
+      <o>Critical vital signs. Prepare for immediate transport.</o>
+      <o>Be advised: critical vital signs. Prepare for immediate transport.</o>
+      <o>Attention: critical vital signs. Prepare for immediate transport.</o>
+      <o>For information: critical vital signs. Prepare for immediate transport.</o>
+    </message>
+    <message key="PAX3.29" actor="3" radio="auto" lvar="L:PAX3AND29" wav="AND.medical.patient.ready.for.transport.wav" trigger="Treatment result allows the loading or transport branch to start.">
+      <o>Patient stabilized for transport. Prepare the cabin for loading.</o>
+      <o>Be advised: patient stabilized for transport. Prepare the cabin for loading.</o>
+      <o>Attention: patient stabilized for transport. Prepare the cabin for loading.</o>
+      <o>For information: patient stabilized for transport. Prepare the cabin for loading.</o>
+    </message>
+    <message key="PAX3.30" actor="3" radio="auto" lvar="L:PAX3AND30" wav="AND.medical.cpr.awaiting.landing.wav" trigger="L:CPR becomes 1 while airborne and MCPR_ONBOARD is disabled.">
+      <o>CPR is required. Land as soon as safely possible before treatment can start.</o>
+      <o>Be advised: cPR is required. Land as soon as safely possible before treatment can start.</o>
+      <o>Attention: cPR is required. Land as soon as safely possible before treatment can start.</o>
+      <o>For information: cPR is required. Land as soon as safely possible before treatment can start.</o>
+    </message>
+    <message key="PAX3.31" actor="3" radio="auto" lvar="L:PAX3AND31" wav="AND.medical.cpr.stopped.wav" trigger="The tablet STOP CPR action sets L:CPR to 5.">
+      <o>CPR has been stopped. Continue monitoring and follow the clinical plan.</o>
+      <o>Be advised: cPR has been stopped. Continue monitoring and follow the clinical plan.</o>
+      <o>Attention: cPR has been stopped. Continue monitoring and follow the clinical plan.</o>
+      <o>For information: cPR has been stopped. Continue monitoring and follow the clinical plan.</o>
+    </message>
+    <message key="PAX3.32" actor="3" radio="auto" lvar="L:PAX3AND32" wav="AND.ground.ambulance.handover.ready.wav" trigger="Ambulance arrival completes, before the patient-transfer branch begins.">
+      <o>Ambulance is on scene. Prepare for patient handover.</o>
+      <o>Be advised: ambulance is on scene. Prepare for patient handover.</o>
+      <o>Attention: ambulance is on scene. Prepare for patient handover.</o>
+      <o>For information: ambulance is on scene. Prepare for patient handover.</o>
+    </message>
+    <message key="PAX3.33" actor="3" radio="auto" lvar="L:PAX3AND33" wav="AND.ground.second.ambulance.assigned.wav" trigger="Secondary-rescue flow assigns ambulance 2 to patient 2 or patient 3.">
+      <o>A second ambulance is managing another patient. Keep the landing area clear.</o>
+      <o>Be advised: a second ambulance is managing another patient. Keep the landing area clear.</o>
+      <o>Attention: a second ambulance is managing another patient. Keep the landing area clear.</o>
+      <o>For information: a second ambulance is managing another patient. Keep the landing area clear.</o>
+    </message>
+    <message key="PAX3.34" actor="3" radio="auto" lvar="L:PAX3AND34" wav="AND.ground.police.securing.scene.wav" trigger="Police arrival and the scene-security/privacy-screen path begin.">
+      <o>Police are securing the scene. Stay clear until the area is released.</o>
+      <o>Be advised: police are securing the scene. Stay clear until the area is released.</o>
+      <o>Attention: police are securing the scene. Stay clear until the area is released.</o>
+      <o>For information: police are securing the scene. Stay clear until the area is released.</o>
+    </message>
+    <message key="PAX3.35" actor="3" radio="auto" lvar="L:PAX3AND35" wav="AND.ground.fire.service.hazard.wav" trigger="Fire-engine or fire-hazard branch is active.">
+      <o>Fire service is controlling a hazard. Do not land until cleared.</o>
+      <o>Be advised: fire service is controlling a hazard. Do not land until cleared.</o>
+      <o>Attention: fire service is controlling a hazard. Do not land until cleared.</o>
+      <o>For information: fire service is controlling a hazard. Do not land until cleared.</o>
+    </message>
+    <message key="PAX3.36" actor="3" radio="auto" lvar="L:PAX3AND36" wav="AND.ops.ground.operations.delayed.wav" trigger="ops_progress_warning becomes 1 after 120 seconds without progress; tablet shows the orange Dispatch warning.">
+      <o>Ground operations are delayed. Check the Dispatch page for the current status.</o>
+      <o>Be advised: ground operations are delayed. Check the Dispatch page for the current status.</o>
+      <o>Attention: ground operations are delayed. Check the Dispatch page for the current status.</o>
+      <o>For information: ground operations are delayed. Check the Dispatch page for the current status.</o>
+    </message>
+    <message key="PAX3.37" actor="3" radio="auto" lvar="L:PAX3AND37" wav="AND.medical.additional.patients.on.scene.wav" trigger="Patient 2 or 3 remains active, or secondary rescue begins.">
+      <o>Additional patients remain on scene. Await tasking before departure.</o>
+      <o>Be advised: additional patients remain on scene. Await tasking before departure.</o>
+      <o>Attention: additional patients remain on scene. Await tasking before departure.</o>
+      <o>For information: additional patients remain on scene. Await tasking before departure.</o>
+    </message>
+    <message key="PLT.1" actor="1" radio="auto" lvar="L:PLTAND1" wav="AND.plt.comm.check.wav" sleep="2.5">
+      <o>Pilot, communications check.</o>
+      <o>Be advised: pilot, communications check.</o>
+      <o>Attention: pilot, communications check.</o>
+      <o>For information: pilot, communications check.</o>
+    </message>
+    <message key="PLT.2" actor="1" radio="auto" lvar="L:PLTAND2" wav="AND.plt.deboard.authorized.wav" sleep="0">
+      <o>Landed. Crew, board when authorized.</o>
+      <o>Be advised: landed. Crew, board when authorized.</o>
+      <o>Attention: landed. Crew, board when authorized.</o>
+      <o>For information: landed. Crew, board when authorized.</o>
+    </message>
+    <message key="PLT.3" actor="1" radio="auto" lvar="L:PLTAND3" wav="AND.plt.evacuate.wav" sleep="0">
+      <o>Evacuate helicopter now.</o>
+      <o>Be advised: evacuate helicopter now.</o>
+      <o>Attention: evacuate helicopter now.</o>
+      <o>For information: evacuate helicopter now.</o>
+    </message>
+    <message key="PLT.4" actor="1" radio="auto" lvar="L:PLTAND4" wav="AND.plt.u.copy.wav" draft="1">
+      <o>Copy.</o>
+      <o>Copy that.</o>
+      <o>Roger.</o>
+    </message>
+    <message key="PLT.5" actor="1" radio="auto" lvar="L:PLTAND5" wav="AND.plt.u.hi.sarah.wav" sleep="6">
+      <o>Hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
+      <o>Be advised: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
+      <o>Attention: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
+      <o>For information: hi Sarah, how are you? The helicopter is good, but it needs refuelling.</o>
+    </message>
+    <message key="PLT.6" actor="1" radio="auto" lvar="L:PLTAND6" wav="AND.plt.u.ill.chk.wav" sleep="0">
+      <o>I'll check.</o>
+      <o>Be advised: i'll check.</o>
+      <o>Attention: i'll check.</o>
+      <o>For information: i'll check.</o>
+    </message>
+    <message key="PLT.7" actor="1" radio="auto" lvar="L:PLTAND7" wav="AND.plt.u.mission.accomplished.wav" sleep="2">
+      <o>Mission accomplished.</o>
+      <o>Be advised: mission accomplished.</o>
+      <o>Attention: mission accomplished.</o>
+      <o>For information: mission accomplished.</o>
+    </message>
+    <message key="PLT.8" actor="1" radio="auto" lvar="L:PLTAND8" wav="AND.plt.u.thank.u.wav" sleep="0">
+      <o>Thank you.</o>
+      <o>Be advised: thank you.</o>
+      <o>Attention: thank you.</o>
+      <o>For information: thank you.</o>
+    </message>
+    <message key="PLT.9" actor="1" radio="auto" lvar="L:PLTAND9" wav="AND.plt.u.tks.frank.wav" sleep="1.5">
+      <o>Thank you, Frank.</o>
+      <o>Be advised: thank you, Frank.</o>
+      <o>Attention: thank you, Frank.</o>
+      <o>For information: thank you, Frank.</o>
+    </message>
+    <message key="PLT.10" actor="1" radio="auto" lvar="L:PLTAND10" wav="AND.plt.u.we.did.our.best.wav" sleep="0">
+      <o>We did our best. Unfortunately, we could not save every patient.</o>
+      <o>Be advised: we did our best. Unfortunately, we could not save every patient.</o>
+      <o>Attention: we did our best. Unfortunately, we could not save every patient.</o>
+      <o>For information: we did our best. Unfortunately, we could not save every patient.</o>
+    </message>
+    <message key="PLT.11" actor="1" radio="auto" lvar="L:PLTAND11" wav="AND.plt.u.well.done.wav" sleep="0">
+      <o>Well done.</o>
+      <o>Be advised: well done.</o>
+      <o>Attention: well done.</o>
+      <o>For information: well done.</o>
+    </message>
+    <message key="PLT.12" actor="1" radio="auto" lvar="L:PLTAND12" wav="AND.plt.v.have.a.nice.day.wav" draft="1">
+      <o>Have a nice day.</o>
+      <o>Have a good day.</o>
+      <o>Take care.</o>
+    </message>
+    <message key="PLT.13" actor="1" radio="auto" lvar="L:PLTAND13" wav="AND.plt.v.TWO.NM.accident.wav" sleep="5">
+      <o>Two nautical miles from accident area.</o>
+      <o>Two nautical miles from the accident area.</o>
+      <o>Be advised: two nautical miles from the accident area.</o>
+      <o>Attention: two nautical miles from the accident area.</o>
+      <o>For information: two nautical miles from the accident area.</o>
+    </message>
+    <message key="PLT.14" actor="1" radio="auto" lvar="L:PLTAND14" wav="AND.plt.v.TWO.NM.base.wav" sleep="0">
+      <o>Two nautical miles from our base.</o>
+      <o>Be advised: two nautical miles from our base.</o>
+      <o>Attention: two nautical miles from our base.</o>
+      <o>For information: two nautical miles from our base.</o>
+    </message>
+    <message key="PLT.15" actor="1" radio="auto" lvar="L:PLTAND15" wav="AND.plt.v.TWO.NM.hospital.wav" sleep="0">
+      <o>Two nautical miles from hospital.</o>
+      <o>Be advised: two nautical miles from hospital.</o>
+      <o>Attention: two nautical miles from hospital.</o>
+      <o>For information: two nautical miles from hospital.</o>
+    </message>
+    <message key="PLT.16" actor="1" radio="auto" lvar="L:PLTAND16" wav="AND.plt.v.TWO.NM.loading.wav" sleep="0">
+      <o>Two nautical miles from loading area.</o>
+      <o>Two nautical miles from the loading area.</o>
+      <o>Be advised: two nautical miles from the loading area.</o>
+      <o>Attention: two nautical miles from the loading area.</o>
+      <o>For information: two nautical miles from the loading area.</o>
+    </message>
+    <message key="PLT.17" actor="1" radio="auto" lvar="L:PLTAND17" wav="AND.plt.va.engine.parameters.wav" sleep="1.8" tight="1">
+      <o>Engine parameters when not good.</o>
+      <o>Engine parameters are not good.</o>
+      <o>Be advised: engine parameters are not good.</o>
+      <o>Attention: engine parameters are not good.</o>
+    </message>
+    <message key="PLT.18" actor="1" radio="auto" lvar="L:PLTAND18" wav="AND.plt.va.exceeded TQ.wav" draft="1">
+      <o>We exceeded the torque limit.</o>
+      <o>Torque limit exceeded.</o>
+      <o>We went over the torque limit.</o>
+    </message>
+    <message key="PLT.19" actor="1" radio="auto" lvar="L:PLTAND19" wav="AND.plt.va.exceeded VNE.wav" sleep="1.5" tight="1">
+      <o>We exceeded VNE.</o>
+      <o>Be advised: we exceeded VNE.</o>
+      <o>Attention: we exceeded VNE.</o>
+      <o>For information: we exceeded VNE.</o>
+    </message>
+    <message key="PLT.20" actor="1" radio="auto" lvar="L:PLTAND20" wav="AND.plt.va.FLI.wav" sleep="2">
+      <o>We exceeded the torque limits.</o>
+      <o>Be advised: we exceeded the torque limits.</o>
+      <o>Attention: we exceeded the torque limits.</o>
+      <o>For information: we exceeded the torque limits.</o>
+    </message>
+    <message key="PLT.21" actor="1" radio="auto" lvar="L:PLTAND21" wav="AND.plt.va.hi.sarah.bad.news.wav" sleep="4" tight="1">
+      <o>Hi sarah i'm sorry we have some bad news for you.</o>
+      <o>Be advised: hi sarah i'm sorry we have some bad news for you.</o>
+      <o>Attention: hi sarah i'm sorry we have some bad news for you.</o>
+      <o>For information: hi sarah i'm sorry we have some bad news for you.</o>
+    </message>
+    <message key="PLT.22" actor="1" radio="auto" lvar="L:PLTAND22" wav="AND.plt.va.hope.u.can.fix.it.wav" draft="1">
+      <o>I hope you can fix it.</o>
+      <o>I hope you can repair it.</o>
+      <o>Let's hope you can fix it.</o>
+    </message>
+    <message key="PLT.23" actor="1" radio="auto" lvar="L:PLTAND23" wav="AND.plt.va.mast.moment.wav" draft="1">
+      <o>We exceeded the mast moment limit.</o>
+      <o>Mast moment limit exceeded.</o>
+      <o>We had a mast moment exceedance.</o>
+    </message>
+    <message key="PLT.24" actor="1" radio="auto" lvar="L:PLTAND24" wav="AND.plt.va.MGB.parameters.wav" sleep="3.5" tight="1">
+      <o>Main gearbox parameters were high and we felt hi vibrations.</o>
+      <o>Main gearbox parameters were high, and we felt strong vibrations.</o>
+      <o>Be advised: main gearbox parameters were high, and we felt strong vibrations.</o>
+      <o>Attention: main gearbox parameters were high, and we felt strong vibrations.</o>
+    </message>
+    <message key="PLT.25" actor="1" radio="auto" lvar="L:PLTAND25" wav="AND.plt.va.TGB.parameters.wav" sleep="2.8" tight="1">
+      <o>Tail-rotor gearbox parameters fluctuated.</o>
+      <o>Be advised: tail-rotor gearbox parameters fluctuated.</o>
+      <o>Attention: tail-rotor gearbox parameters fluctuated.</o>
+      <o>For information: tail-rotor gearbox parameters fluctuated.</o>
+    </message>
+    <message key="PLT.26" actor="1" radio="auto" lvar="L:PLTAND26" wav="AND.plt.va.we.had.failures.wav" sleep="3.5" tight="1">
+      <o>We had failures they are reported in the technical log book.</o>
+      <o>We had failures. They are recorded in the technical logbook.</o>
+      <o>Be advised: we had failures. They are recorded in the technical logbook.</o>
+      <o>Attention: we had failures. They are recorded in the technical logbook.</o>
+      <o>For information: we had failures. They are recorded in the technical logbook.</o>
+    </message>
+    <message key="PLT.27" actor="1" radio="auto" lvar="L:PLTAND27" wav="AND.plt.va.we.had.hard.landing.wav" sleep="1.5" tight="1">
+      <o>We had a hard landing.</o>
+      <o>Be advised: we had a hard landing.</o>
+      <o>Attention: we had a hard landing.</o>
+    </message>
+    <message key="PLT.28" actor="1" radio="auto" lvar="L:PLTAND28" wav="AND.plt.vaa.2NM.pickup.location.wav" sleep="0">
+      <o>Two nautical miles from pick up location.</o>
+      <o>Two nautical miles from the pickup location.</o>
+      <o>Be advised: two nautical miles from the pickup location.</o>
+      <o>Attention: two nautical miles from the pickup location.</o>
+      <o>For information: two nautical miles from the pickup location.</o>
+    </message>
+    <message key="PLT.29" actor="1" radio="auto" lvar="L:PLTAND29" wav="AND.plt.vaa.approaching.HR.Drop.wav" sleep="4" tight="1">
+      <o>Hr we are now approaching to drop point thanks for the help and see you next time.</o>
+      <o>Heli-rescuer, we are approaching the drop point. Thanks for the help; see you next time.</o>
+      <o>Be advised: heli-rescuer, we are approaching the drop point. Thanks for the help; see you next time.</o>
+      <o>Attention: heli-rescuer, we are approaching the drop point. Thanks for the help; see you next time.</o>
+      <o>For information: heli-rescuer, we are approaching the drop point. Thanks for the help; see you next time.</o>
+    </message>
+    <message key="PLT.30" actor="1" radio="auto" lvar="L:PLTAND30" wav="AND.PLT.vaa.we.are.entering.sar.area.1.wav" sleep="0">
+      <o>We are entering into designated SAR area it's time to start our search for the casualties.</o>
+      <o>The SAR area starts here. Stay alert and search for casualties.</o>
+      <o>Crew please stop searching for the survivor now we are entering in the assigned area.</o>
+      <o>Confirmed. The clock is ticking; start the search now.</o>
+      <o>The boundary crossed let's execute the search plan and locate the survivors.</o>
+      <o>We have reached the search and rescue zone initiate the search pattern for survivors.</o>
+      <o>We are entering the designated SAR area. Start the search for casualties.</o>
+      <o>Be advised: the SAR area starts here. Stay alert and search for casualties.</o>
+    </message>
+    <message key="PLT.36" actor="1" radio="auto" lvar="L:PLTAND36" wav="AND.plt.vab.crew.is.coming.back.wav" sleep="0">
+      <o>Crew is cutting back.</o>
+      <o>Crew is coming back.</o>
+      <o>Be advised: crew is coming back.</o>
+      <o>Attention: crew is coming back.</o>
+      <o>For information: crew is coming back.</o>
+    </message>
+    <message key="PLT.37" actor="1" radio="auto" lvar="L:PLTAND37" wav="AND.plt.vab.let.s.go.wav" sleep="0">
+      <o>Let's go.</o>
+      <o>Be advised: let's go.</o>
+      <o>Attention: let's go.</o>
+      <o>For information: let's go.</o>
+    </message>
+    <message key="PLT.38" actor="1" radio="auto" lvar="L:PLTAND38" wav="AND.plt.vab.new.dispatch.question1.wav" sleep="0">
+      <o>We're crew are we able to accept a new dispatch or do we need to come back to base.</o>
+      <o>I believe we should return to base before accepting another dispatch.</o>
+      <o>Crew, can we accept a new dispatch, or do we need to return to base?</o>
+      <o>Be advised: i believe we should return to base before accepting another dispatch.</o>
+      <o>Can you confirm: crew, can we accept a new dispatch, or do we need to return to base?</o>
+      <o>Attention: i believe we should return to base before accepting another dispatch.</o>
+      <o>All crew, can we accept a new dispatch, or do we need to return to base?</o>
+      <o>For information: i believe we should return to base before accepting another dispatch.</o>
+    </message>
+    <message key="PLT.40" actor="1" radio="auto" lvar="L:PLTAND40" wav="AND.plt.vab.new.dispatch1.wav" sleep="0">
+      <o>Hey we have a new dispatch.</o>
+      <o>How crew we have a new assignment.</o>
+      <o>How we have another dispatch.</o>
+      <o>Busy day we received a new dispatch.</o>
+      <o>We have a new dispatch.</o>
+      <o>Crew, we have a new assignment.</o>
+      <o>We have another dispatch.</o>
+      <o>Be advised: busy day we received a new dispatch.</o>
+    </message>
+    <message key="PLT.44" actor="1" radio="auto" lvar="L:PLTAND44" wav="AND.plt.vab.route.to.drop.pt.wav" sleep="0">
+      <o>Looks set to drop point.</o>
+      <o>Route set to the drop point.</o>
+      <o>Be advised: route set to the drop point.</o>
+      <o>Attention: route set to the drop point.</o>
+      <o>For information: route set to the drop point.</o>
+    </message>
+    <message key="PLT.45" actor="1" radio="auto" lvar="L:PLTAND45" wav="AND.plt.vab.route.to.pick.up.wav" sleep="0">
+      <o>Route set to the pickup point.</o>
+      <o>Be advised: route set to the pickup point.</o>
+      <o>Attention: route set to the pickup point.</o>
+      <o>For information: route set to the pickup point.</o>
+    </message>
+    <message key="PLT.46" actor="1" radio="auto" lvar="L:PLTAND46" wav="AND.dispatch.cancelled.await.tasking.wav" trigger="Cancellation criteria end the current dispatch; HEMS must not continue intervention.">
+      <o>Dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
+      <o>Be advised: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
+      <o>Attention: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
+      <o>For information: dispatch cancelled. Follow the instructions on the tablet and await reassignment.</o>
+    </message>
+    <message key="SARA.1" actor="7" radio="auto" lvar="L:SARAAND1" wav="AND.Sarah.bye.wav" sleep="3.5">
+      <o>Bye see you tomorrow.</o>
+      <o>Be advised: bye see you tomorrow.</o>
+      <o>Attention: bye see you tomorrow.</o>
+      <o>For information: bye see you tomorrow.</o>
+    </message>
+    <message key="SARA.2" actor="7" radio="auto" lvar="L:SARAAND2" wav="AND.Sarah.everything.good.wav" sleep="3.5" tight="1">
+      <o>How was the last mission was everything good with the helicopter.</o>
+      <o>How was the last mission? Was everything all right with the helicopter?</o>
+    </message>
+    <message key="SARA.3" actor="7" radio="auto" lvar="L:SARAAND3" wav="AND.Sarah.fine.thanks.wav" draft="1">
+      <o>Fine, thanks.</o>
+      <o>I am fine, thank you.</o>
+      <o>All good, thanks.</o>
+    </message>
+    <message key="SARA.4" actor="7" radio="auto" lvar="L:SARAAND4" wav="AND.Sarah.helicopter.in.precious.hands.wav" sleep="5.5" tight="1">
+      <o>Do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+      <o>Be advised: do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+      <o>Attention: do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+      <o>Please do not worry; the helicopter is in good hands and will be ready for the next mission.</o>
+    </message>
+    <message key="SARA.5" actor="7" radio="auto" lvar="L:SARAAND5" wav="AND.Sarah.hi.guys.wav" sleep="3.5">
+      <o>Hi, guys.</o>
+      <o>Be advised: hi, guys.</o>
+      <o>Attention: hi, guys.</o>
+      <o>For information: hi, guys.</o>
+    </message>
+    <message key="SARA.6" actor="7" radio="auto" lvar="L:SARAAND6" wav="AND.Sarah.it.seems.i.have.to.work.wav" sleep="3.5">
+      <o>It looks like I have a lot of work to do.</o>
+      <o>Be advised: it looks like I have a lot of work to do.</o>
+      <o>Attention: it looks like I have a lot of work to do.</o>
+      <o>For information: it looks like I have a lot of work to do.</o>
+    </message>
+    <message key="SARA.7" actor="7" radio="auto" lvar="L:SARAAND7" wav="AND.Sarah.tomorrow.there.is.a.restaurant.wav" sleep="6">
+      <o>Tomorrow there is a good restaurant just outside. Would you like to go?</o>
+      <o>Can you confirm: tomorrow there is a good restaurant just outside. Would you like to go?</o>
+      <o>Please confirm: tomorrow there is a good restaurant just outside. Would you like to go?</o>
+      <o>Message update: tomorrow there is a good restaurant just outside. Would you like to go?</o>
+    </message>
+    <message key="SARA.8" actor="7" radio="auto" lvar="L:SARAAND8" wav="AND.Sarah.what.you.did.wav" sleep="3.5">
+      <o>Hey what you did to the helicopter.</o>
+      <o>What did you do to the helicopter?</o>
+      <o>Can you confirm: what did you do to the helicopter?</o>
+      <o>Please confirm: what did you do to the helicopter?</o>
+      <o>Message update: what did you do to the helicopter?</o>
+    </message>
+    <message key="SYS.DEAD" actor="1" radio="auto" lvar="L:DEADAND" wav="AND.dead.wav" sleep="3" sfx="1">
+    </message>
+    <message key="SYS.DISPATCH2" actor="1" radio="auto" lvar="L:ANDDISPATCH2" wav="AND.Inside.TabletAlarm2.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.DISPATCHED" actor="1" radio="auto" lvar="L:ANDDISPATCHED" wav="AND.NEW.DISPATCH.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.DISPATCHED1" actor="1" radio="auto" lvar="L:ANDDISPATCHED1" wav="AND.NEW.DISPATCH1.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.DISPATCHED2" actor="1" radio="auto" lvar="L:ANDDISPATCHED2" wav="AND.NEW.DISPATCH2.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.DISPATCHED3" actor="1" radio="auto" lvar="L:ANDDISPATCHED3" wav="AND.NEW.DISPATCH3.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.DISPATCHED4" actor="1" radio="auto" lvar="L:ANDDISPATCHED4" wav="AND.NEW.DISPATCH4.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.FOOL" actor="1" radio="auto" lvar="L:ANDFOOL" wav="stayngalive.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.NEWMSG" actor="1" radio="auto" lvar="L:ANDNEWMSG" wav="AND.NEW.MSG.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.TEST1" actor="1" radio="auto" lvar="L:ANDTEST1" wav="AND.packtest.wav" sleep="0">
+      <o>This is the default hoist pack enjoy.</o>
+      <o>Be advised: this is the default hoist pack enjoy.</o>
+      <o>Attention: this is the default hoist pack enjoy.</o>
+      <o>For information: this is the default hoist pack enjoy.</o>
+    </message>
+</voicepack>

@@ -52,6 +52,34 @@ const present = fs.readdirSync(path.join(root, 'src')).filter((f) => f.endsWith(
 for (const f of present) if (!listed.includes(f)) errors.push(`src/${f} is not compiled by tools/build.cmd`);
 for (const f of listed) if (!present.includes(f)) errors.push(`tools/build.cmd compiles src/${f}, which does not exist`);
 
+// voice packs: well-formed enough for the loader (src/VoicePacks.cs), ASCII, unique keys, a version
+const packDir = path.join(root, 'voicepacks');
+if (fs.existsSync(packDir)) {
+  for (const f of fs.readdirSync(packDir).filter((n) => n.endsWith('.xml'))) {
+    const text = read(path.join('voicepacks', f));
+    const where = 'voicepacks/' + f;
+    if (/[^\x00-\x7F]/.test(text)) errors.push(`${where} has a non-ASCII character`);
+    const head = text.match(/<voicepack\b[^>]*>/);
+    if (!head) { errors.push(`${where}: no <voicepack> element`); continue; }
+    const ver = (head[0].match(/\bversion="(\d+)"/) || [])[1];
+    if (!ver || parseInt(ver, 10) < 1) errors.push(`${where}: version must be a whole number from 1`);
+    const seen = new Set();
+    for (const m of text.matchAll(/<message\b([^>]*)>([\s\S]*?)<\/message>/g)) {
+      const key = (m[1].match(/\bkey="([^"]+)"/) || [])[1];
+      if (!key) { errors.push(`${where}: a message has no key`); continue; }
+      if (seen.has(key)) errors.push(`${where}: key ${key} appears twice`);
+      seen.add(key);
+      const actor = (m[1].match(/\bactor="(\d+)"/) || [])[1];
+      if (actor && (parseInt(actor, 10) < 1 || parseInt(actor, 10) > 11)) errors.push(`${where}: ${key} actor ${actor} is not 1-11`);
+      const sfx = /\bsfx="1"/.test(m[1]);
+      if (!sfx && !/<o>[^<]+<\/o>/.test(m[2])) errors.push(`${where}: ${key} has no <o> text`);
+    }
+    if (seen.size === 0) errors.push(`${where}: no message`);
+  }
+}
+if (!fs.existsSync(path.join(root, 'docs/DEVELOPER_GUIDE.md'))) errors.push('docs/DEVELOPER_GUIDE.md is missing');
+else if (!read('tools/build.cmd').includes('DEVELOPER_GUIDE.md')) errors.push('tools/build.cmd must compile docs/DEVELOPER_GUIDE.md into the program');
+
 // licence file present
 if (!fs.existsSync(path.join(root, 'LICENSE'))) errors.push('LICENSE is missing');
 
@@ -65,7 +93,7 @@ for (const f of present) {
 // 4. tracked files
 try {
   const tracked = cp.execFileSync('git', ['-C', root, 'ls-files'], { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean);
-  const bad = tracked.filter((f) => /\.(exe|dll|wav|onnx|zip|pdb)$/i.test(f) || /^(piper|voices|backups|audio|bin|old)\//i.test(f) || /^HPGMissionCompanion\.json$/i.test(f));
+  const bad = tracked.filter((f) => /\.(exe|dll|wav|onnx|zip|pdb)$/i.test(f) || /^(piper|voices|backups|audio|bin|old|voicepacks\/obsolete)\//i.test(f) || /^HPGMissionCompanion\.json$/i.test(f));
   for (const f of bad) errors.push(`${f} must not be tracked (binary or user data)`);
 } catch (e) {
   // not a git checkout (for example a source archive): skip

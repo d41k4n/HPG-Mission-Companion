@@ -2,7 +2,7 @@
 
 Static checks (`tools/check.js`) and the self-tests of the executable never prove simulator behaviour. The simulator tests are standalone HPG test missions in `tests/`; the user also keeps them in `Desktop\claude\tests`.
 
-## Status (2026-10-10, version 0.3)
+## Status (2026-10-10, version 0.4)
 
 | Area | Status |
 | --- | --- |
@@ -13,6 +13,9 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 | Clean up on the real work folder, Update mission index on the real package | pending (tested only on dummy copies) |
 | Automatic index update at start (option on by default) | tested on a temporary Community folder, pending on the real package |
 | `L:AUDIOINHIBIT` kept at 1 through SimConnect (every 5 s, option on by default) | pending: only the "no simulator" path is tested (status "waiting for the simulator"); connection, read and write need the simulator (see Simulator link below) |
+| Voice packs: `<say>` expansion, arguments, names, plain text, beep types, variety, versions | tested offline (`--expand`, `--packs-check`, the Voice packs tab); pending with the mission (`tests/voicepack-say-test.json`) |
+| `L:HMC_VOICE_STATUS`, `L:HMC_VOICEPACK_VERSION`, `L:HMC_APP_VERSION` published through SimConnect | pending in the simulator |
+| Drag and drop of a pack onto the Voice packs tab | pending (not clickable from the checks; the code path is the same as Browse) |
 | Simulator detection (only folders with `UserCfg.opt`) | tested on temporary folders; the real machine must list only the installed simulator |
 
 ## Voice test mission
@@ -25,11 +28,17 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 
 The same file holds a CARLS keypad hold test that belongs to the mission repository, not to this app.
 
+## Voice pack test mission
+
+1. Start the program; in the Voice packs tab the pack EN is listed (version 1, 290 messages, OK). Drag `tests\voicepack-test-TST.xml` onto the tab (it also tests the install and the pack name taken from the file name).
+2. Load `tests\voicepack-say-test.json` in the simulator and press START VOICEPACK TEST (about 6 minutes). The briefing lists what to listen for. READ STATUS LVARS shows the three variables of the program.
+3. The log of the program must show `[RAW]` lines with the tags intact, `[SAY]` lines with the option chosen, and warnings only for the unknown key NOPE.1 and the pack EN version 99.
+
 ## Simulator link
 
 1. Start the app before the simulator: the Service tab says "SimConnect: waiting for the simulator"; start the simulator (2024 and, separately, 2020): within about 5 s of a loaded flight the state becomes "connected, L:AUDIOINHIBIT set to 1" (or "= 1") and the log has a `SimConnect` line.
 2. In the simulator or the mission, change `L:AUDIOINHIBIT` to 0: within 5 s the app writes 1 again and logs "was 0, set to 1".
-3. Untick the option: no more writes; the state says "off". Close the simulator: the state goes back to waiting.
+3. Untick the option: no more writes; the state says "connected (audio inhibit option off)". Close the simulator: the state goes back to waiting.
 4. If `SimConnect.dll` of the 2024 SDK does not connect to the 2020 simulator, say so: the build can take the 2020 one instead.
 
 ## Tools
