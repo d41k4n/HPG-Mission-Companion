@@ -241,7 +241,9 @@ namespace HPGMissionCompanion
                 }
                 outDirty = true;
             }
-            string[] names = watch;
+            List<string> allNames = new List<string>(watch);
+            if (!allNames.Contains(Variable)) allNames.Add(Variable);      // L:AUDIOINHIBIT is watched too: the simulator resets it to 0 at every flight or mission load and it must be 1 again at once
+            string[] names = allNames.ToArray();
             int version = watchVersion;
             int groups = (names.Length + WatchGroup - 1) / WatchGroup;
             double[][] last = new double[groups][];
@@ -325,6 +327,12 @@ namespace HPGMissionCompanion
                             if (have[g] && v == last[g][i]) continue;
                             double old = last[g][i];
                             last[g][i] = v;
+                            if (names[g * WatchGroup + i] == Variable && enabled() && Math.Abs(v - Wanted) > 0.001)
+                            {
+                                Write(h, DefineId, Wanted, Variable);
+                                Ctx.Log("[INFO] SimConnect: " + Variable + " was " + v.ToString("0.###", CultureInfo.InvariantCulture) + ", set to 1 at once");
+                                SetStatus("SimConnect: connected, " + Variable + " set to 1");
+                            }
                             Action<string, double, double, bool> cb = OnWatch;
                             if (cb != null) { try { cb(names[g * WatchGroup + i], old, v, !have[g]); } catch (Exception ex) { Ctx.Log("[ERROR] watch: " + ex.Message); } }
                         }

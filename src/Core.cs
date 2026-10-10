@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.5";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.6";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "(to be added)";
         public const string Links = "(to be added)";
         public static string Title { get { return Name + " " + Version; } }

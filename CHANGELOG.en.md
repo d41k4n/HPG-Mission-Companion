@@ -1,3 +1,7 @@
+## Release 0.6
+
+- `L:AUDIOINHIBIT` is watched with the changed flag as well: the simulator resets it to 0 at every flight or mission load and the program writes 1 again at the next simulator frame (the read every 5 s stays as a safety net). Without this the mission could start with the voice code of a wav pack while the program played the voices.
+
 ## Release 0.5
 
 - Voice app mode: the program reads the LVAR counters of the mission (voice code `APP`, `L:AUDIOINHIBIT` 1) through SimConnect and speaks the matching message of the pack; the mission calls stay as they are. Sounds without voice (ringtones, new message tone, tablet alarm) play as wav files of the audio folder at the master volume.
