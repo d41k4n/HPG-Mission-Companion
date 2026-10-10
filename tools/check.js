@@ -52,6 +52,9 @@ const present = fs.readdirSync(path.join(root, 'src')).filter((f) => f.endsWith(
 for (const f of present) if (!listed.includes(f)) errors.push(`src/${f} is not compiled by tools/build.cmd`);
 for (const f of listed) if (!present.includes(f)) errors.push(`tools/build.cmd compiles src/${f}, which does not exist`);
 
+// licence file present
+if (!fs.existsSync(path.join(root, 'LICENSE'))) errors.push('LICENSE is missing');
+
 // 3. ASCII
 for (const f of present) {
   const text = read(path.join('src', f));

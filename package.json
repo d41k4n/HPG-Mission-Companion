@@ -1,6 +1,7 @@
 {
   "name": "hpg-mission-companion",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "guard:branch": "node tools/assert-main-branch.js",
     "hooks:install": "git config core.hooksPath .githooks",
