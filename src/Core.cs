@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.4";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.5";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "(to be added)";
         public const string Links = "(to be added)";
         public static string Title { get { return Name + " " + Version; } }
@@ -110,6 +110,9 @@ namespace HPGMissionCompanion
         public string IndexTool = "";
         public bool AutoIndex = true;           // run the mission index update when the app starts
         public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
+        public string BridgePack = "";          // voice pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP); "" = the first pack
+        public string Variety = "random";       // random | coherent: how the text option of a message is chosen
+        public string Names = "functions";      // functions | random: names of the crew in the texts
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
 
         public static Settings Load(string path)
@@ -150,6 +153,9 @@ namespace HPGMissionCompanion
             Radio.BeepLevel = Math.Max(0, Math.Min(100, Radio.BeepLevel));
             if (string.IsNullOrEmpty(Radio.Beep)) Radio.Beep = "Beep";
             if (string.IsNullOrEmpty(Radio.Quality)) Radio.Quality = "Aviation";
+            if (BridgePack == null) BridgePack = "";
+            if (Variety != "coherent") Variety = "random";
+            if (Names != "random") Names = "functions";
             foreach (LangInfo l in LangInfo.All)
             {
                 LangSetting ls;

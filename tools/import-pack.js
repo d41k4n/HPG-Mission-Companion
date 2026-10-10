@@ -4,7 +4,7 @@
 
 // One-shot importer: builds a voice pack XML (see docs/architecture/VOICEPACKS.md) from the voice messages spreadsheet of the HEMS mission.
 //   node tools/import-pack.js --xlsx AND_voice_messages.xlsx --out voicepacks/EN.xml --version 1 [--name EN] [--language EN]
-//        [--mission-src <mission-src dir>] [--sound <dir with the wav files>] [--extras tools/pack-extras-EN.json] [--report <file>]
+//        [--mission-src <mission-src dir>] [--sound <dir with the wav files>] [--extras tools/pack-extras-EN.json,tools/pack-dialogs-EN.json] [--report <file>]
 // The spreadsheet columns: LVAR, file name, text of the message (the wav), role, trigger, proposed correction, 3 numbered alternatives.
 // Options of a message: the text of the wav (when it is close to the correction), the correction, the three alternatives (duplicates removed).
 // With --mission-src the call sites of each LVAR give the seconds the mission waits after the message; with --sound the wav lengths are read.
@@ -26,7 +26,7 @@ const language = arg('language', 'EN');
 const missionSrc = arg('mission-src');
 const soundDir = arg('sound');
 const reportPath = arg('report');
-const extrasPath = arg('extras');
+const extrasPaths = (arg('extras', '') || '').split(',').filter(Boolean);
 if (!xlsxPath) { console.error('usage: node tools/import-pack.js --xlsx <file> [--out voicepacks/EN.xml] [--version 1] [--mission-src dir] [--sound dir]'); process.exit(2); }
 
 // ---- minimal zip reader (the xlsx is a zip file) ----------------------------------------------------
@@ -242,13 +242,14 @@ for (const [lvar, rows] of byLvar) {
 }
 
 // messages that have no row in the spreadsheet (texts written from the wav file names: draft)
-if (extrasPath) {
+for (const extrasPath of extrasPaths) {
+  const dialogs = /dialogs/i.test(extrasPath);       // dialogs file: new messages with a group, not drafts of existing wavs
   const extras = JSON.parse(fs.readFileSync(extrasPath, 'utf8')).messages;
   for (const x of extras) {
-    const k = keyOf(x.lvar);
+    const k = keyOf(x.lvar.replace('{VCP}', 'AND'));
     if (messages.some((m) => m.key === x.key)) { console.log('extras: ' + x.key + ' already in the pack, skipped'); continue; }
-    const site = sites[x.lvar];
-    messages.push({ key: x.key, lvar: x.lvar, role: k.role, actor: x.actor || ACTOR[k.role] || 1, wav: x.wav, sfx: false, trigger: '', options: x.o.map(ascii), sleep: site ? site.sleep : -1, tight: false, draft: true });
+    const site = sites[x.lvar.replace('{VCP}', 'AND')];
+    messages.push({ key: x.key, lvar: x.lvar, role: k.role, actor: x.actor || ACTOR[k.role] || 1, wav: x.wav || '', sfx: false, trigger: ascii(x.trigger || ''), options: x.o.map(ascii), sleep: site ? site.sleep : -1, tight: false, draft: !dialogs, group: x.group || '', seq: x.seq || 0, isNew: dialogs });
   }
 }
 
@@ -256,21 +257,28 @@ if (extrasPath) {
 const L = [];
 L.push('<?xml version="1.0" encoding="utf-8"?>');
 L.push('<!-- HPG Mission Companion voice pack ' + packName + '. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->');
-L.push('<voicepack name="' + xmlEsc(packName) + '" language="' + xmlEsc(language) + '" version="' + version + '" title="English crew voices of the HEMS missions">');
+L.push('<voicepack name="' + xmlEsc(packName) + '" language="' + xmlEsc(language) + '" version="' + version + '" vcp="APP" title="English crew voices of the HEMS missions">');
 L.push('  <names>');
 L.push('    <name role="PLT">Captain</name>');
 L.push('    <name role="CPL">Copilot</name>');
 L.push('    <name role="PAX1">Chief</name>');
 L.push('    <name role="PAX2">Paramedic</name>');
 L.push('    <name role="PAX3">Doc</name>');
+L.push('    <pool role="PLT">Mark, John, Paul, Peter, Chris, David, Simon</pool>');
+L.push('    <pool role="CPL">Anna, Laura, Emma, Kate, Julia, Nina, Clara</pool>');
+L.push('    <pool role="PAX1">Tom, Ben, Jack, Luke, Sam, Ryan, Ian</pool>');
+L.push('    <pool role="PAX2">Eva, Lisa, Mia, Zoe, Ruth, Beth, Joan</pool>');
+L.push('    <pool role="PAX3">Sue, Alex, Dan, Jane, Rob, Matt, Vera</pool>');
 L.push('  </names>');
 messages.sort((a, b) => a.key.localeCompare(b.key, 'en', { numeric: true }));
 for (const m of messages) {
-  let a = '    <message key="' + xmlEsc(m.key) + '" actor="' + m.actor + '" radio="auto" lvar="' + xmlEsc(m.lvar) + '" wav="' + xmlEsc(m.wav) + '"';
+  const tpl = m.lvar.includes('{VCP}') ? m.lvar : m.lvar.replace('AND', '{VCP}');      // L:CPLAND5 -> L:CPL{VCP}5: the mission puts its voice code in {VCP}
+  let a = '    <message key="' + xmlEsc(m.key) + '" actor="' + m.actor + '" radio="auto"' + (m.group ? ' group="' + xmlEsc(m.group) + '" seq="' + m.seq + '"' : '') + ' lvar="' + xmlEsc(tpl) + '"' + (m.wav ? ' wav="' + xmlEsc(m.wav) + '"' : '');
   if (m.sleep >= 0) a += ' sleep="' + m.sleep + '"';
   if (m.tight) a += ' tight="1"';
   if (m.sfx) a += ' sfx="1"';
   if (m.draft) a += ' draft="1"';
+  if (m.isNew) a += ' new="1"';
   if (m.trigger) a += ' trigger="' + xmlEsc(m.trigger) + '"';
   L.push(a + '>');
   for (const o of m.options) L.push('      <o>' + xmlEsc(o) + '</o>');

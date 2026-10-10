@@ -14,6 +14,7 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 | Automatic index update at start (option on by default) | tested on a temporary Community folder, pending on the real package |
 | `L:AUDIOINHIBIT` kept at 1 through SimConnect (every 5 s, option on by default) | pending: only the "no simulator" path is tested (status "waiting for the simulator"); connection, read and write need the simulator (see Simulator link below) |
 | Voice packs: `<say>` expansion, arguments, names, plain text, beep types, variety, versions | tested offline (`--expand`, `--packs-check`, the Voice packs tab); pending with the mission (`tests/voicepack-say-test.json`) |
+| Voice app mode: counters read through SimConnect, messages spoken, radio rule from the context, sounds without voice, dispatcher reading, conversations, checklist voice 11 with the object form `speak` + `interrupt` | tested offline only (`@watch` lines of `--expand`); pending in the simulator (`tests/voicepack-bridge-test.json`, then the real mission) |
 | `L:HMC_VOICE_STATUS`, `L:HMC_VOICEPACK_VERSION`, `L:HMC_APP_VERSION` published through SimConnect | pending in the simulator |
 | Drag and drop of a pack onto the Voice packs tab | pending (not clickable from the checks; the code path is the same as Browse) |
 | Simulator detection (only folders with `UserCfg.opt`) | tested on temporary folders; the real machine must list only the installed simulator |
@@ -33,6 +34,12 @@ The same file holds a CARLS keypad hold test that belongs to the mission reposit
 1. Start the program; in the Voice packs tab the pack EN is listed (version 1, 290 messages, OK). Drag `tests\voicepack-test-TST.xml` onto the tab (it also tests the install and the pack name taken from the file name).
 2. Load `tests\voicepack-say-test.json` in the simulator and press START VOICEPACK TEST (about 6 minutes). The briefing lists what to listen for. READ STATUS LVARS shows the three variables of the program.
 3. The log of the program must show `[RAW]` lines with the tags intact, `[SAY]` lines with the option chosen, and warnings only for the unknown key NOPE.1 and the pack EN version 99.
+
+## Voice app mode test mission
+
+1. Start the program (it sets `L:AUDIOINHIBIT` to 1; the log says "SimConnect: watching 312 variables"), pack EN version 2 in the Voice packs tab. Optional: choose Coherent in the Voice packs tab.
+2. Load `tests\voicepack-bridge-test.json` and press START BRIDGE TEST (about 3 minutes). The briefing lists what to listen for.
+3. The bridge line of the Voice packs tab shows the context and the last message. If nothing is ever spoken, read the log for SimConnect exceptions: a variable that does not exist yet can make SimConnect refuse the definition.
 
 ## Simulator link
 

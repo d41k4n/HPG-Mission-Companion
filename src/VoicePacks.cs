@@ -23,6 +23,13 @@ namespace HPGMissionCompanion
         public string Trigger = "";             // when the message happens (information)
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
         public List<string> Options = new List<string>();
+
+        // the LVAR the mission increments for this message when its voice code is vcp: "L:CPL{VCP}5" -> "L:CPLAPP5"; "" when the message has none
+        public string LvarFor(string vcp)
+        {
+            if (Lvar.Length < 3 || !Lvar.StartsWith("L:", StringComparison.OrdinalIgnoreCase) || Lvar.IndexOf("{VCP}", StringComparison.Ordinal) < 0) return "";
+            return Lvar.Replace("{VCP}", vcp);
+        }
     }
 
     internal sealed class VoicePack
@@ -34,6 +41,8 @@ namespace HPGMissionCompanion
         public string File = "";
         public Dictionary<string, PackMessage> Messages = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, string> Names = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, List<string>> Pools = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);   // names to draw from for each crew role
+        public string Vcp = "APP";              // the voice code the mission uses when an external program plays the voices (L:AUDIOINHIBIT = 1)
         public List<string> Problems = new List<string>();
         public bool Usable { get { return Name.Length > 0 && Version > 0; } }
         public override string ToString() { return Name + " v" + Version; }
@@ -80,6 +89,11 @@ namespace HPGMissionCompanion
             p.Language = (root.GetAttribute("language") ?? "EN").Trim().ToUpperInvariant();
             if (p.Language.Length == 0) p.Language = "EN";
             p.Title = (root.GetAttribute("title") ?? "").Trim();
+            string vcp = (root.GetAttribute("vcp") ?? "").Trim().ToUpperInvariant();
+            if (vcp.Length > 0)
+            {
+                if (Regex.IsMatch(vcp, "^[A-Z0-9]{1,12}$")) p.Vcp = vcp; else p.Problems.Add("vcp may only have letters and digits (up to 12)");
+            }
             int v;
             if (!int.TryParse(root.GetAttribute("version"), NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || v < 1) { p.Problems.Add("version must be a whole number from 1"); v = 0; }
             p.Version = v;
@@ -93,6 +107,20 @@ namespace HPGMissionCompanion
                 if (e == null) continue;
                 string role = e.GetAttribute("role").Trim();
                 if (role.Length > 0) p.Names[role] = e.InnerText.Trim();
+            }
+            foreach (XmlNode n in root.SelectNodes("names/pool"))
+            {
+                XmlElement e = n as XmlElement;
+                if (e == null) continue;
+                string role = e.GetAttribute("role").Trim();
+                if (role.Length == 0) continue;
+                List<string> list = new List<string>();
+                foreach (string part in e.InnerText.Split(new char[] { ',', ';' }))
+                {
+                    string nm = Say.Literal(part.Trim());
+                    if (nm.Length > 0) list.Add(nm);
+                }
+                if (list.Count > 0) p.Pools[role] = list;
             }
             foreach (XmlNode n in root.SelectNodes("message"))
             {
@@ -172,10 +200,11 @@ namespace HPGMissionCompanion
     //   <pack:EN:2>        the pack the mission uses and the version it needs (status goes to L:HMC_VOICE_STATUS)
     //   <names:PLT=Mark,CPL=Anna>  names for {PLT} {CPL} {PAX1} {PAX2} {PAX3}; <names:off> goes back to the functions
     //   <variety:random> / <variety:coherent>  how the option of a message is chosen
+    //   <defaultactor:11>  actor 11 speaks every text that has no actor tag (the mission checklists); <defaultactor:off> ends it
     internal static class Say
     {
         const string Rest = "(?:\\s*[:=]\\s*([^<>\\[\\]]{0,400}))?";
-        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HolderRx = new Regex("\\{([A-Za-z0-9_]+)\\}", RegexOptions.Compiled);
@@ -194,8 +223,17 @@ namespace HPGMissionCompanion
         static DateTime lastGroupTime = DateTime.MinValue;
         static int lastGroupOption;
         static readonly HashSet<string> warned = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        static string bridgePack = "";                      // the pack read from the simulator LVARs (setting)
+        static bool ctxValid;                               // the mission publishes its context (L:HMC_CTX_VALID)
+        static bool heliOff;                                // L:HMC_HELI_OFF
+        static int crewMask;                                // L:HMC_CREW_PRESENT: bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2 are aboard
+        static readonly Dictionary<string, PackMessage> watchMap = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
+        static VoicePack watchPack;
+        static string lastBridgeText = "";
+        public static Action<string> Sink;                  // tests: gets the text that would be spoken instead of the player
 
         public static string Declared { get { return declared; } }
+        public static string BridgePackName { get { return bridgePack; } }
 
         public static void Seed(int seed) { lock (sync) { rng = new Random(seed); } }
 
@@ -203,6 +241,19 @@ namespace HPGMissionCompanion
         {
             lock (sync) { warned.Clear(); }
             if (declared.Length > 0) Declare(declared, required, false);
+            ApplySettings();
+        }
+
+        // the settings of the Voice packs tab: variety, the pack read from the simulator variables (the first pack when none is chosen), the crew names
+        public static void ApplySettings()
+        {
+            SetVariety(Ctx.Settings.Variety);
+            VoicePack p = Ctx.Settings.BridgePack.Length > 0 ? VoicePacks.Find(Ctx.Settings.BridgePack) : null;
+            if (p == null) foreach (VoicePack q in VoicePacks.Packs) if (q.Usable) { p = q; break; }
+            SetBridgePack(p != null ? p.Name : "");
+            SimLink.OnWatch = OnWatch;
+            SimLink.SetWatch(WatchNames());
+            if (Ctx.Settings.Names == "random") RandomizeNames(); else lock (sync) { missionNames.Clear(); }
         }
 
         // ---- main entry: the text of a speak message in, the text for the tag parser out ----
@@ -210,7 +261,7 @@ namespace HPGMissionCompanion
         {
             wavFile = null;
             if (string.IsNullOrEmpty(text)) return text;
-            if (!ControlRx.IsMatch(text)) return text;
+            if (!ControlRx.IsMatch(text)) { lock (sync) { return ApplyDefaultActor(text); } }
             lock (sync)
             {
                 StringBuilder outp = new StringBuilder();
@@ -223,6 +274,7 @@ namespace HPGMissionCompanion
                     string kind = m.Groups[1].Value.ToLowerInvariant();
                     string arg = m.Groups[2].Success ? m.Groups[2].Value.Trim() : "";
                     if (kind == "pack") ParsePack(arg, notes);
+                    else if (kind == "defaultactor") ParseDefaultActor(arg, notes);
                     else if (kind == "names") ParseNames(arg);
                     else if (kind == "variety") ParseVariety(arg, notes);
                     else if (kind == "plain")
@@ -240,7 +292,7 @@ namespace HPGMissionCompanion
                     m = m.NextMatch();
                 }
                 if (pos < text.Length) outp.Append(text, pos, text.Length - pos);
-                return outp.ToString();
+                return ApplyDefaultActor(outp.ToString());
             }
         }
 
@@ -248,7 +300,27 @@ namespace HPGMissionCompanion
         public static string Literal(string s)
         {
             if (s == null) return "";
+            s = Regex.Replace(s, "<[^<>]{0,80}>", " ");        // <br /> <b> and any other tag are dropped, not read
             return s.Replace('<', ' ').Replace('>', ' ').Replace('[', '(').Replace(']', ')');
+        }
+
+        // ---- default actor: <defaultactor:11> makes actor 11 the voice of every text that has no actor tag until <defaultactor:off> ----
+        static int defaultActor;
+        static readonly Regex TagOnlyRx = new Regex("<[^<>]*>|\\[[^\\[\\]]*\\]", RegexOptions.Compiled);
+
+        static void ParseDefaultActor(string arg, List<string> notes)
+        {
+            int n;
+            if (arg.Length == 0 || string.Equals(arg, "off", StringComparison.OrdinalIgnoreCase) || arg == "0") { defaultActor = 0; return; }
+            if (int.TryParse(arg, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n >= 1 && n <= Actors.Count) defaultActor = n;
+            else if (notes != null) notes.Add("defaultactor " + arg + " does not exist (1-" + Actors.Count + " or off)");
+        }
+
+        static string ApplyDefaultActor(string t)
+        {
+            if (defaultActor == 0 || string.IsNullOrEmpty(t) || ActorTagRx.IsMatch(t)) return t;
+            if (TagOnlyRx.Replace(t, "").Trim().Length == 0) return t;
+            return "<actor" + defaultActor + ">" + t;
         }
 
         // ---- state tags ----
@@ -296,6 +368,7 @@ namespace HPGMissionCompanion
         {
             missionNames.Clear();
             if (arg.Length == 0 || string.Equals(arg, "off", StringComparison.OrdinalIgnoreCase)) return;
+            if (string.Equals(arg, "random", StringComparison.OrdinalIgnoreCase)) { if (Ctx.Settings.Names == "random") DrawNames(); return; }     // the user chooses in the Voice packs tab; the mission only says "a new shift"
             foreach (string part in arg.Split(new char[] { ',', ';' }))
             {
                 int eq = part.IndexOf('=');
@@ -314,16 +387,127 @@ namespace HPGMissionCompanion
             else if (notes != null) notes.Add("variety " + arg + " does not exist (random, coherent)");
         }
 
+        // ---- settings, names, variety ----
+        public static void SetVariety(string v)
+        {
+            lock (sync) { coherent = string.Equals(v, "coherent", StringComparison.OrdinalIgnoreCase); lastGroup = ""; }
+        }
+
+        public static void SetBridgePack(string name)
+        {
+            lock (sync) { bridgePack = name ?? ""; }
+        }
+
+        static readonly string[][] DefaultPools = new string[][]
+        {
+            new string[] { "Mark", "John", "Paul", "Peter", "Chris", "David", "Simon" },     // PLT
+            new string[] { "Anna", "Laura", "Emma", "Kate", "Julia", "Nina", "Clara" },      // CPL
+            new string[] { "Tom", "Ben", "Jack", "Luke", "Sam", "Ryan", "Ian" },             // PAX1
+            new string[] { "Eva", "Lisa", "Mia", "Zoe", "Ruth", "Beth", "Joan" },            // PAX2
+            new string[] { "Sue", "Alex", "Dan", "Jane", "Rob", "Matt", "Vera" }             // PAX3
+        };
+
+        // new names for the crew roles (the start of a shift): one name from the pool of each role, never the same name twice
+        public static void RandomizeNames()
+        {
+            lock (sync) { DrawNames(); }
+        }
+
+        static void DrawNames()
+        {
+            missionNames.Clear();
+            VoicePack p = null;
+            if (declared.Length > 0) p = VoicePacks.Find(declared);
+            if (p == null && bridgePack.Length > 0) p = VoicePacks.Find(bridgePack);
+            HashSet<string> used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int r = 0; r < Roles.Length; r++)
+            {
+                List<string> pool = null;
+                if (p != null) p.Pools.TryGetValue(Roles[r], out pool);
+                if (pool == null || pool.Count == 0) pool = new List<string>(DefaultPools[r]);
+                string pick = pool[rng.Next(pool.Count)];
+                for (int tries = 0; tries < 12 && used.Contains(pick); tries++) pick = pool[rng.Next(pool.Count)];
+                used.Add(pick);
+                missionNames[Roles[r]] = pick;
+            }
+            Ctx.Log("[INFO] Crew names for this shift: " + string.Join(", ", new string[] { "pilot " + missionNames["PLT"], "copilot " + missionNames["CPL"], "chief " + missionNames["PAX1"], "paramedic " + missionNames["PAX2"], "doc " + missionNames["PAX3"] }));
+        }
+
+        // ---- the simulator LVARs: the program watches the counters of the bridge pack ----
+        // Names of the simulator variables to watch: the three context variables and the LVAR of every message of the bridge pack.
+        public static List<string> WatchNames()
+        {
+            List<string> list = new List<string>();
+            lock (sync)
+            {
+                watchMap.Clear();
+                watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
+                if (watchPack == null) return list;
+                list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew);
+                foreach (PackMessage m in watchPack.Messages.Values)
+                {
+                    string l = m.LvarFor(watchPack.Vcp);
+                    if (l.Length == 0 || watchMap.ContainsKey(l)) continue;
+                    watchMap[l] = m;
+                    list.Add(l);
+                }
+            }
+            return list;
+        }
+
+        public static string BridgeStatus()
+        {
+            lock (sync)
+            {
+                if (watchPack == null) return "Simulator LVARs: no pack chosen";
+                string c = !ctxValid ? "no context from the mission" : (heliOff ? "helicopter off" : "helicopter on") + ", crew aboard mask " + crewMask;
+                return "Reading " + watchMap.Count + " LVARs of " + watchPack.Name + " (code " + watchPack.Vcp + "); " + c + (lastBridgeText.Length > 0 ? "; last: " + lastBridgeText : "");
+            }
+        }
+
+        // a watched variable changed (SimLink calls this on its thread); baseline = the first value after the connection
+        public static void OnWatch(string name, double oldValue, double value, bool baseline)
+        {
+            PackMessage m; VoicePack p;
+            lock (sync)
+            {
+                if (name == SimLink.CtxValid) { ctxValid = value > 0.5; return; }
+                if (name == SimLink.CtxHeliOff) { heliOff = value > 0.5; return; }
+                if (name == SimLink.CtxCrew) { crewMask = (int)Math.Round(value); return; }
+                if (baseline || value <= oldValue) return;     // only a rise of the counter speaks; a reset to 0 is not a message
+                if (!watchMap.TryGetValue(name, out m)) return;
+                p = watchPack;
+                lastBridgeText = m.Key;
+            }
+            Speak(p, m, "", 30);
+        }
+
+        // speaks one message of a pack (the LVAR bridge); lines older than maxAgeSeconds when their turn comes are dropped
+        public static void Speak(VoicePack pack, PackMessage msg, string args, int maxAgeSeconds)
+        {
+            List<string> notes = new List<string>();
+            string wav;
+            string text;
+            lock (sync) { text = Compose(msg, pack, args ?? "", "", 0, notes, out wav); }
+            foreach (string n in notes) Ctx.Log("[WARN] " + n);
+            if (Sink != null) { Sink((text ?? "") + (wav != null ? "  [sound file " + wav + "]" : "")); return; }
+            if (Ctx.Player == null) return;
+            if (wav != null) Ctx.Player.PlayAudioFile(wav, maxAgeSeconds);
+            if (!string.IsNullOrEmpty(text)) Ctx.Player.EnqueueText(text, false, maxAgeSeconds);
+        }
+
         // ---- say ----
         static PackMessage FindMessage(string key, out VoicePack pack)
         {
             pack = null;
             VoicePack d = declared.Length > 0 ? VoicePacks.Find(declared) : null;
+            VoicePack b = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
             PackMessage m;
             if (d != null && d.Messages.TryGetValue(key, out m)) { pack = d; return m; }
+            if (b != null && b != d && b.Messages.TryGetValue(key, out m)) { pack = b; return m; }
             foreach (VoicePack p in VoicePacks.Packs)
             {
-                if (!p.Usable || p == d) continue;
+                if (!p.Usable || p == d || p == b) continue;
                 if (p.Messages.TryGetValue(key, out m)) { pack = p; return m; }
             }
             return null;
@@ -348,6 +532,13 @@ namespace HPGMissionCompanion
                 if (notes != null) notes.Add("voice pack message '" + key + "' not found" + (declared.Length > 0 ? " (pack " + declared + ")" : "") + ": nothing spoken");
                 return "";
             }
+            return Compose(msg, pack, args, before, forced, notes, out wavFile);
+        }
+
+        // the text for the tag parser of one message: actor, radio, the chosen option with its placeholders filled
+        static string Compose(PackMessage msg, VoicePack pack, string args, string before, int forced, List<string> notes, out string wavFile)
+        {
+            wavFile = null;
             if (msg.Options.Count == 0)
             {
                 if (msg.Wav.Length > 0) wavFile = msg.Wav;
@@ -360,13 +551,29 @@ namespace HPGMissionCompanion
             if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(msg.Actor).Append('>');
             if (!RadioTagRx.IsMatch(before))
             {
-                if (msg.Radio == "on") tags.Append("<radio>");
-                else if (msg.Radio == "off") tags.Append("<radio:off>");
+                int radio = msg.Radio == "on" ? 1 : (msg.Radio == "off" ? 0 : AutoRadio(msg));
+                if (radio == 1) tags.Append("<radio>");
+                else if (radio == 0) tags.Append("<radio:off>");
             }
             Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " (" + pack.Name + " v" + pack.Version + ")");
             return tags.ToString() + body;
         }
 
+        // The radio rule of the HEMS mission, from the context the mission publishes (L:HMC_CTX_VALID, L:HMC_HELI_OFF, L:HMC_CREW_PRESENT):
+        // helicopter completely off: voice; the dispatcher: radio; the speaker inside: radio (intercom, or to somebody outside);
+        // the speaker outside: radio when somebody is inside, voice when everybody is outside. -1: no context, the text gets no radio tag.
+        static int AutoRadio(PackMessage msg)
+        {
+            if (!ctxValid) return -1;
+            int a = msg.Actor;
+            if (a == 8) return 1;
+            if (heliOff) return 0;
+            bool crewActor = a >= 1 && a <= 5;
+            if (crewActor && (crewMask & (1 << (a - 1))) != 0) return 1;
+            int others = crewMask;
+            if (crewActor) others &= ~(1 << (a - 1));
+            return others != 0 ? 1 : 0;
+        }
         static int Pick(PackMessage m)
         {
             int n = m.Options.Count;

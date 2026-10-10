@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.4
+Version 0.5
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
@@ -9,6 +9,7 @@ A companion program for the HPG H145 missions in Microsoft Flight Simulator (202
 - **Radio effect**: beep, hiss, band filter and squelch tail, adjustable.
 - **Tools**: open and clean the mission work folder (grouped, with a zip backup), run the HPG `Update Mission Index` tool (also at start, option on by default).
 - **Voice packs**: XML files with the texts of the mission messages (several options each); a mission speaks one with `<say:KEY>` and passes dynamic parts as arguments separated by `//`. Drag and drop in the Voice packs tab. The guide for mission authors is `docs/DEVELOPER_GUIDE.md` and the About tab.
+- **Voice app mode**: with the mission in app mode (`L:AUDIOINHIBIT` 1, voice code APP) the program reads the LVAR counters of the mission through SimConnect and speaks the matching message of the pack; radio rule, sounds without voice, conversations. See `docs/architecture/VOICEPACKS.md`.
 - **Simulator link**: keeps `L:AUDIOINHIBIT` at 1 through SimConnect while the simulator runs (option on by default; needs `SimConnect.dll` from the MSFS SDK next to the program).
 - **Start with the simulator**: optional, minimized in the notification area, closing with the simulator.
 

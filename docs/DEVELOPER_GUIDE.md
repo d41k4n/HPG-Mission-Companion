@@ -31,6 +31,7 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
   <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
   <radio:chirp>            shortcut: radio on with that beep type
   <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language
+  <defaultactor:11>        from now on every text without an actor tag is spoken by actor 11 (the HEMS mission sends it once, for its checklists); <defaultactor:off> ends it
   <stop>                   with interrupt 1: stop everything
   <br> <b> <i> ...         HTML-like tags are ignored
 
@@ -129,3 +130,21 @@ The Service tab has a box to try a text, and the log shows [RAW] (the text as it
     {"speak":{"text":"<actor8><radio><plain>{0}","params":[{"local":"DISPATCH_TEXT"}]}},
     {"speak":"<actor11><plain>Checklist: interior check."}
   ]
+
+10. VOICE APP MODE: THE MISSION INCREMENTS LVARS
+------------------------------------------------
+The HEMS mission does not call speak for its crew lines. Each line is a counter: L:CPL{VCP}5 += 1, where {VCP} is the voice code of the mission. With a wav voice pack the code is the name of the pack and the aircraft sound.xml plays the wav. When L:AUDIOINHIBIT is not 0 (the program sets it to 1: option of the Service tab) the mission uses the code APP: no sound.xml knows L:CPLAPP5, so no wav plays, and the program, which watches those variables through SimConnect, speaks the message of the pack whose lvar template is L:CPL{VCP}5.
+
+  message lvar="L:CPL{VCP}5"   -> read as L:CPLAPP5 (the vcp="" attribute of the pack, APP when missing)
+  a counter that rises          -> the message is spoken (random option, or the coherent one)
+  first value after connecting  -> baseline: nothing is spoken; a reset to 0 is silent
+  sounds without voice          -> sfx messages: the wav of the audio folder is played (dispatch ringtones, new message tone, tablet alarm)
+  a line waiting more than 30 s -> dropped ([DROP] in the log)
+
+To add a message to the mission: choose a free number for the role (the pack lists the used ones), add the message to the pack (key ROLE.NUMBER, lvar="L:ROLE{VCP}NUMBER"), and in the mission increment L:ROLE{local:VCP}NUMBER where the line happens. Space the lines of a conversation by 0.4 s at least: the program sees the counters in order only if they change in different simulator frames.
+
+The radio is decided by the program from three variables the mission publishes: L:HMC_HELI_OFF (1 = battery master off and rotor stopped), L:HMC_CREW_PRESENT (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2 aboard), L:HMC_CTX_VALID (1 = the first two are published). Helicopter off: voice. Dispatcher: always radio. A speaker aboard: radio. A speaker outside: radio when somebody of the crew is aboard, voice when everybody is outside. Without L:HMC_CTX_VALID no radio tag is added. A message with radio="on" or "off" in the pack ignores the rule.
+
+The checklists of the mission are untagged speak texts: the mission sends {"speak":"<defaultactor:11>"} once (voice code APP only, the old audio service would read the tag aloud) and the program speaks every text without an actor tag with actor 11.
+
+Free texts do not go through counters: use speak with <plain> (the dispatcher reading the dispatch:  {"speak":{"text":"<actor8><radio><plain>{0}. {1}","params":[...]}} ) or <say:KEY>args. The crew names: the mission sends {"speak":"<names:random>"} at a new shift; the program draws names only when the user chose Random names in the Voice packs tab.

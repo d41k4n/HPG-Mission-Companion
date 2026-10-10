@@ -1,3 +1,11 @@
+## Release 0.5
+
+- Voice app mode: the program reads the LVAR counters of the mission (voice code `APP`, `L:AUDIOINHIBIT` 1) through SimConnect and speaks the matching message of the pack; the mission calls stay as they are. Sounds without voice (ringtones, new message tone, tablet alarm) play as wav files of the audio folder at the master volume.
+- Radio rule from the context the mission publishes (`L:HMC_HELI_OFF`, `L:HMC_CREW_PRESENT`, `L:HMC_CTX_VALID`): helicopter off voice, inside and outside radio, outside and outside voice; the dispatcher always on the radio.
+- Voice packs tab: pack played from the simulator variables, texts random or coherent, crew names as functions or random for each shift, state line of the bridge. Pack `vcp` attribute, `<pool>` name lists. `<names:random>` follows the choice of the user.
+- Pack EN 2: 309 messages, LVAR templates `L:CPL{VCP}5`, the four crew conversations of the missions (boarding, briefing, debriefing after a good or a bad mission, four options each, 19 new messages with reserved LVAR numbers for wav files to be recorded).
+- Tag `<defaultactor:N>`: every text without an actor tag is spoken by actor N from now on (the mission checklists use 11).
+- Lines that come from the simulator and wait more than 30 s are dropped. `<plain>` drops HTML-like tags from the text. New test mission `tests/voicepack-bridge-test.json`; `--expand` understands `@watch` and `@settings` lines.
 ## Release 0.4
 
 - Voice packs: XML files in the `voicepacks` folder with the texts of the mission messages, several options each. A mission speaks a message with `<say:KEY>` and passes dynamic parts as arguments separated by `//` (`{0}`, `{1}` in the option text). `<plain>` speaks a free text without interpreting any tag in it. `<pack:NAME:VER>` declares the pack and the version the mission needs; `<names:..>` sets the names of the crew (`{PLT}`, `{CPL}`, `{PAX1}`, `{PAX2}`, `{PAX3}`); `<variety:random|coherent>` chooses how the options are picked (coherent keeps the same option number through the messages of a conversation).

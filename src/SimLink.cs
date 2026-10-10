@@ -23,6 +23,17 @@ namespace HPGMissionCompanion
         public const string VarPackVersion = "L:HMC_VOICEPACK_VERSION";   // version of the declared pack, 0 when missing
         public const string VarAppVersion = "L:HMC_APP_VERSION";          // version of this program (0.4 -> 0.4)
 
+        // the mission publishes its context for the radio rule (see docs/architecture/VOICEPACKS.md); the program only reads them
+        public const string CtxValid = "L:HMC_CTX_VALID";                 // 1 when the mission publishes the two variables below
+        public const string CtxHeliOff = "L:HMC_HELI_OFF";                // 1 helicopter completely off
+        public const string CtxCrew = "L:HMC_CREW_PRESENT";               // bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard
+
+        const uint WatchDefineBase = 300;
+        const uint WatchRequestBase = 300;
+        const int WatchGroup = 90;
+        const uint PeriodSimFrame = 3;
+        const uint FlagChanged = 1;
+
         const uint DefineId = 1;
         const uint RequestId = 1;
         const uint OutputDefineBase = 100;
@@ -65,6 +76,23 @@ namespace HPGMissionCompanion
         static readonly object outLock = new object();
         static readonly Dictionary<string, double> outputs = new Dictionary<string, double>();
         static volatile bool outDirty;
+
+        // variables the program watches (the LVAR counters of the bridge pack and the context): name, old value, new value, first value after the connection
+        static string[] watch = new string[0];
+        static volatile int watchVersion;
+        public static Action<string, double, double, bool> OnWatch;
+        static int exceptionsLogged;
+
+        public static void SetWatch(List<string> names)
+        {
+            string[] fresh = names.ToArray();
+            string[] old = watch;
+            bool same = old.Length == fresh.Length;
+            for (int i = 0; same && i < fresh.Length; i++) if (old[i] != fresh[i]) same = false;
+            if (same) return;
+            watch = fresh;
+            watchVersion++;      // the open connection is closed and reopened with the new list
+        }
 
         public static string Status { get { return status; } }
 
@@ -213,6 +241,21 @@ namespace HPGMissionCompanion
                 }
                 outDirty = true;
             }
+            string[] names = watch;
+            int version = watchVersion;
+            int groups = (names.Length + WatchGroup - 1) / WatchGroup;
+            double[][] last = new double[groups][];
+            bool[] have = new bool[groups];
+            for (int g = 0; g < groups; g++)
+            {
+                int from = g * WatchGroup, count = Math.Min(WatchGroup, names.Length - from);
+                last[g] = new double[count];
+                for (int i = 0; i < count; i++)
+                    if (SimConnect_AddToDataDefinition(h, WatchDefineBase + (uint)g, names[from + i], "number", DatatypeFloat64, 0f, uint.MaxValue) != 0) Ctx.Log("[ERROR] SimConnect: cannot define " + names[from + i]);
+                if (SimConnect_RequestDataOnSimObject(h, WatchRequestBase + (uint)g, WatchDefineBase + (uint)g, ObjectUser, PeriodSimFrame, FlagChanged, 0, 0, 0) != 0)
+                    Ctx.Log("[ERROR] SimConnect: cannot watch the variables of group " + (g + 1));
+            }
+            if (names.Length > 0) Ctx.Log("[INFO] SimConnect: watching " + names.Length + " variables");
             Ctx.Log("[INFO] SimConnect: connected to the simulator");
             SetStatus("SimConnect: connected, " + Variable + " not read yet");
             DateTime nextPing = DateTime.UtcNow;
@@ -221,6 +264,7 @@ namespace HPGMissionCompanion
             while (!stop)
             {
                 DateTime now = DateTime.UtcNow;
+                if (watchVersion != version) { Ctx.Log("[INFO] SimConnect: the list of watched variables changed, reconnecting"); return; }
                 bool inhibit = enabled();
                 if (now >= nextPing)
                 {
@@ -269,7 +313,22 @@ namespace HPGMissionCompanion
                     }
                     if (id == RecvException)
                     {
-                        Ctx.Log("[WARN] SimConnect exception " + Marshal.ReadInt32(data, 12) + " (send id " + Marshal.ReadInt32(data, 16) + ")");
+                        if (exceptionsLogged++ < 8) Ctx.Log("[WARN] SimConnect exception " + Marshal.ReadInt32(data, 12) + " (send id " + Marshal.ReadInt32(data, 16) + ", index " + Marshal.ReadInt32(data, 20) + ")");
+                    }
+                    else if (id == RecvSimObjectData && Marshal.ReadInt32(data, 12) >= (int)WatchRequestBase && Marshal.ReadInt32(data, 12) < (int)WatchRequestBase + groups)
+                    {
+                        int g = Marshal.ReadInt32(data, 12) - (int)WatchRequestBase;
+                        int n = Math.Min(Marshal.ReadInt32(data, 36), last[g].Length);
+                        for (int i = 0; i < n; i++)
+                        {
+                            double v = BitConverter.Int64BitsToDouble(Marshal.ReadInt64(data, DataOffset + 8 * i));
+                            if (have[g] && v == last[g][i]) continue;
+                            double old = last[g][i];
+                            last[g][i] = v;
+                            Action<string, double, double, bool> cb = OnWatch;
+                            if (cb != null) { try { cb(names[g * WatchGroup + i], old, v, !have[g]); } catch (Exception ex) { Ctx.Log("[ERROR] watch: " + ex.Message); } }
+                        }
+                        have[g] = true;
                     }
                     else if (id == RecvSimObjectData && Marshal.ReadInt32(data, 12) == (int)RequestId)
                     {

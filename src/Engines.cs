@@ -252,7 +252,7 @@ namespace HPGMissionCompanion
     // Speech and wav playback, one item at a time, in order. Interrupt cancels the current item and the queue.
     internal sealed class Player
     {
-        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; }
+        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public DateTime Born = DateTime.UtcNow; public int MaxAge; }
 
         readonly BlockingCollection<Item> queue = new BlockingCollection<Item>();
         readonly object sync = new object();
@@ -266,7 +266,10 @@ namespace HPGMissionCompanion
             worker.Start();
         }
 
-        public void EnqueueText(string text, bool interrupt)
+        public void EnqueueText(string text, bool interrupt) { EnqueueText(text, interrupt, 0); }
+
+        // maxAgeSeconds > 0: the item is dropped when its turn comes later than that (lines from the simulator variables must not arrive late)
+        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds)
         {
             if (interrupt) CancelAll();
             List<string> notes = new List<string>();
@@ -283,6 +286,21 @@ namespace HPGMissionCompanion
             if (segs.Count == 0) return;
             Item item = new Item();
             item.Segs = segs;
+            item.MaxAge = maxAgeSeconds;
+            item.Generation = Thread.VolatileRead(ref generation);
+            queue.Add(item);
+        }
+
+        // a sound file of the audio folder by name (sound-only messages of a pack)
+        public void PlayAudioFile(string name, int maxAgeSeconds)
+        {
+            string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name.Replace("\\", "").Replace("..", "")));
+            if (!File.Exists(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder"); return; }
+            Ctx.Log("[PLAY] " + name);
+            Item item = new Item();
+            item.IsFile = true;
+            item.Value = path;
+            item.MaxAge = maxAgeSeconds;
             item.Generation = Thread.VolatileRead(ref generation);
             queue.Add(item);
         }
@@ -316,9 +334,14 @@ namespace HPGMissionCompanion
             foreach (Item item in queue.GetConsumingEnumerable())
             {
                 if (item.Generation != Thread.VolatileRead(ref generation)) continue;
+                if (item.MaxAge > 0 && (DateTime.UtcNow - item.Born).TotalSeconds > item.MaxAge)
+                {
+                    Ctx.Log("[DROP] a line from the simulator waited more than " + item.MaxAge + " s and was dropped");
+                    continue;
+                }
                 try
                 {
-                    if (item.IsFile) PlayBytes(item, null, item.Value);
+                    if (item.IsFile) PlayFile(item);
                     else
                     {
                         foreach (Segment seg in item.Segs)
@@ -353,6 +376,15 @@ namespace HPGMissionCompanion
             }
             byte[] fx = AudioFx.Apply(wav, p.Volume, Ctx.Settings.MasterVolume, p.Radio, rs);
             PlayBytes(item, fx, null);
+        }
+
+        // a wav file of the audio folder, at the master volume (PCM 16 bit); any other format plays as it is
+        void PlayFile(Item item)
+        {
+            byte[] fx = null;
+            try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), 100, Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
+            catch (Exception) { fx = null; }
+            if (fx != null) PlayBytes(item, fx, null); else PlayBytes(item, null, item.Value);
         }
 
         void PlayBytes(Item item, byte[] bytes, string path)

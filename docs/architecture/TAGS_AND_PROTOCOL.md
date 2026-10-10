@@ -28,6 +28,7 @@ Tags are written in angle brackets, or in square brackets with the same meaning.
 | `<radio>`, `<radio:on>`, `<radio:off>` | radio effect on or off; without the tag the voice is clean |
 | `<beep:double>` | optional beep type of the radio effect for the text: `none`, `click`, `beep`, `double`, `chirp` (or 0-4); without it the type chosen in the Radio effect tab |
 | `<radio:chirp>` | shortcut: radio on with that beep type |
+| `<defaultactor:11>` | state tag: from now on a text with no actor tag is spoken by that actor (the mission checklists use 11); `<defaultactor:off>` ends it; not reset by a new connection, only by the next tag or a restart |
 | `<say:KEY>args`, `<plain>text`, `<pack:NAME:VER>`, `<names:..>`, `<variety:..>` | voice pack tags, expanded before the tags above (see VOICEPACKS.md) |
 | `<EN>` `<FR>` `<IT>` `<DE>`, `<language:us>` | language of the user's voice set; without it the "language of the texts" of the Service tab |
 | `<stop>` | with `"interrupt":1`, stops what is playing and speaks nothing |

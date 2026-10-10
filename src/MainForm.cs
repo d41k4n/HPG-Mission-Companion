@@ -167,6 +167,12 @@ namespace HPGMissionCompanion
         readonly ListView packList = new ListView();
         readonly Label packInfo = new Label();
         readonly Panel dropZone = new Panel();
+        readonly ComboBox bridgeBox = new ComboBox();
+        readonly RadioButton varRandom = new RadioButton();
+        readonly RadioButton varCoherent = new RadioButton();
+        readonly RadioButton namesFunc = new RadioButton();
+        readonly RadioButton namesRandom = new RadioButton();
+        readonly Label bridgeInfo = new Label();
 
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
@@ -366,6 +372,8 @@ namespace HPGMissionCompanion
                 logBox.ScrollToCaret();
             }
             if (inhibitInfo.Text != SimLink.Status) inhibitInfo.Text = SimLink.Status;
+            string bridge = Say.BridgeStatus();
+            if (bridgeInfo.Text != bridge) bridgeInfo.Text = bridge;
             if (exitWithSimArg && DateTime.UtcNow >= nextSimCheck)
             {
                 nextSimCheck = DateTime.UtcNow.AddSeconds(5);
@@ -1081,7 +1089,7 @@ namespace HPGMissionCompanion
             packList.HideSelection = false;
             packList.MultiSelect = false;
             packList.Location = new Point(10, 54);
-            packList.Size = new Size(706, 200);
+            packList.Size = new Size(706, 150);
             packList.Columns.Add("Pack", 110);
             packList.Columns.Add("Language", 70);
             packList.Columns.Add("Version", 62);
@@ -1089,8 +1097,8 @@ namespace HPGMissionCompanion
             packList.Columns.Add("State", 370);
             page.Controls.Add(packList);
 
-            dropZone.Location = new Point(10, 266);
-            dropZone.Size = new Size(706, 84);
+            dropZone.Location = new Point(10, 214);
+            dropZone.Size = new Size(706, 70);
             dropZone.BorderStyle = BorderStyle.FixedSingle;
             dropZone.BackColor = Color.FromArgb(236, 244, 255);
             dropZone.AllowDrop = true;
@@ -1117,7 +1125,7 @@ namespace HPGMissionCompanion
             };
             page.Controls.Add(dropZone);
 
-            Button browse = Btn(page, "Browse...", 10, 360, 100, 30);
+            Button browse = Btn(page, "Browse...", 10, 292, 100, 30);
             browse.Click += delegate
             {
                 using (OpenFileDialog d = new OpenFileDialog())
@@ -1128,24 +1136,76 @@ namespace HPGMissionCompanion
                     if (d.ShowDialog(this) == DialogResult.OK) InstallPacks(d.FileNames);
                 }
             };
-            Button open = Btn(page, "Open folder", 120, 360, 110, 30);
+            Button open = Btn(page, "Open folder", 120, 292, 110, 30);
             open.Click += delegate
             {
                 try { Directory.CreateDirectory(VoicePacks.Dir); System.Diagnostics.Process.Start(VoicePacks.Dir); }
                 catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             };
-            Button reload = Btn(page, "Reload", 240, 360, 90, 30);
+            Button reload = Btn(page, "Reload", 240, 292, 90, 30);
             reload.Click += delegate { VoicePacks.Refresh(); FillPacks(); packInfo.Text = "Packs read again from " + VoicePacks.Dir; };
-            Button remove = Btn(page, "Remove selected", 340, 360, 130, 30);
+            Button remove = Btn(page, "Remove selected", 340, 292, 130, 30);
             remove.Click += delegate { RemovePack(); };
 
-            packInfo.Location = new Point(10, 402);
-            packInfo.Size = new Size(706, 60);
+            GroupBox gb = new GroupBox();
+            gb.Text = "Simulator link of the packs";
+            gb.Location = new Point(10, 330);
+            gb.Size = new Size(706, 128);
+            page.Controls.Add(gb);
+            Lbl(gb, "Pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP):", 10, 22, 0, 0);
+            bridgeBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            bridgeBox.Location = new Point(10, 42);
+            bridgeBox.Width = 200;
+            bridgeBox.SelectedIndexChanged += delegate
+            {
+                if (suppress || bridgeBox.SelectedItem == null) return;
+                Ctx.Settings.BridgePack = (string)bridgeBox.SelectedItem;
+                MarkDirty();
+                Say.ApplySettings();
+            };
+            gb.Controls.Add(bridgeBox);
+            Lbl(gb, "Texts:", 230, 46, 0, 0);
+            Panel varPanel = new Panel();            // radio buttons of the same container exclude each other: one panel for each pair
+            varPanel.Location = new Point(276, 38);
+            varPanel.Size = new Size(420, 26);
+            gb.Controls.Add(varPanel);
+            varRandom.Text = "Random each time";
+            varRandom.AutoSize = true;
+            varRandom.Location = new Point(4, 4);
+            varCoherent.Text = "Coherent in a conversation";
+            varCoherent.AutoSize = true;
+            varCoherent.Location = new Point(144, 4);
+            varPanel.Controls.Add(varRandom);
+            varPanel.Controls.Add(varCoherent);
+            Lbl(gb, "Crew names:", 10, 78, 0, 0);
+            Panel namesPanel = new Panel();
+            namesPanel.Location = new Point(86, 70);
+            namesPanel.Size = new Size(500, 26);
+            gb.Controls.Add(namesPanel);
+            namesFunc.Text = "Functions (Captain, Doc ...)";
+            namesFunc.AutoSize = true;
+            namesFunc.Location = new Point(4, 4);
+            namesRandom.Text = "Random names for each shift";
+            namesRandom.AutoSize = true;
+            namesRandom.Location = new Point(190, 4);
+            namesPanel.Controls.Add(namesFunc);
+            namesPanel.Controls.Add(namesRandom);
+            varRandom.Checked = Ctx.Settings.Variety != "coherent"; varCoherent.Checked = Ctx.Settings.Variety == "coherent";
+            namesFunc.Checked = Ctx.Settings.Names != "random"; namesRandom.Checked = Ctx.Settings.Names == "random";
+            varCoherent.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.Variety = varCoherent.Checked ? "coherent" : "random"; MarkDirty(); Say.ApplySettings(); };
+            namesRandom.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.Names = namesRandom.Checked ? "random" : "functions"; MarkDirty(); Say.ApplySettings(); };
+            bridgeInfo.Location = new Point(10, 102);
+            bridgeInfo.Size = new Size(686, 22);
+            bridgeInfo.ForeColor = SystemColors.GrayText;
+            gb.Controls.Add(bridgeInfo);
+
+            packInfo.Location = new Point(10, 464);
+            packInfo.Size = new Size(706, 34);
             packInfo.ForeColor = SystemColors.GrayText;
             page.Controls.Add(packInfo);
             Lbl(page, "In the mission:  {\"speak\":\"<pack:EN:1>\"}  declares the pack and the version it needs;  {\"speak\":\"<radio><say:CPL.5>\"}  speaks a message;  " +
                 "{\"speak\":{\"text\":\"<say:KEY>{0}//{1}\",\"params\":[...]}}  fills {0} and {1} in the text. All the tags and the pack format are in the guide of the About tab.",
-                10, 468, 706, 56);
+                10, 500, 706, 48);
         }
 
         static bool HasXml(DragEventArgs e)
@@ -1163,6 +1223,12 @@ namespace HPGMissionCompanion
 
         void FillPacks()
         {
+            suppress = true;
+            bridgeBox.Items.Clear();
+            foreach (VoicePack bp in VoicePacks.Packs) if (bp.Usable) bridgeBox.Items.Add(bp.Name);
+            string chosen = Say.BridgePackName;
+            if (bridgeBox.Items.Contains(chosen)) bridgeBox.SelectedItem = chosen; else if (bridgeBox.Items.Count > 0) bridgeBox.SelectedIndex = 0;
+            suppress = false;
             packList.Items.Clear();
             foreach (VoicePack p in VoicePacks.Packs)
             {

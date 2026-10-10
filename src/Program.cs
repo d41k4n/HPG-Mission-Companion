@@ -11,7 +11,7 @@
 //   --list-file <path>       write the voices to a file and exit
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
-//   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   what a mission text becomes (voice pack expansion and tags), no audio
+//   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   (lines: @watch NAME VALUE, @settings k=v) what a mission text becomes (voice pack expansion and tags), no audio
 //   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
 //   --packs-check <report>   list the voice packs of the voicepacks folder and their problems
 //   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
@@ -28,8 +28,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
+[assembly: AssemblyVersion("0.5.0.0")]
+[assembly: AssemblyFileVersion("0.5.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -223,6 +223,8 @@ namespace HPGMissionCompanion
                 if (repeatArg == null || !int.TryParse(repeatArg, out repeat) || repeat < 1) repeat = 1;
                 VoiceLibrary.Refresh();
                 VoicePacks.Refresh();
+                Dictionary<string, double> watchSeen = new Dictionary<string, double>();
+                Say.Sink = delegate (string s) { rep.AppendLine("bridge speaks: " + s); };
                 List<string> texts = new List<string>();
                 string linesFile = Option(args, "--lines");
                 if (linesFile != null) { foreach (string ln in File.ReadAllLines(linesFile, Encoding.UTF8)) if (ln.Trim().Length > 0) texts.Add(ln); }
@@ -231,6 +233,34 @@ namespace HPGMissionCompanion
                 {
                     string text = texts[r % texts.Count];
                     rep.AppendLine("input: " + text);
+                    // test lines for the simulator-variable bridge: "@watch NAME VALUE" (a variable changes; the first value of a name is the baseline),
+                    // "@settings variety=coherent names=random bridge=EN"
+                    if (text.StartsWith("@"))
+                    {
+                        string[] w = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (w[0] == "@watch" && w.Length >= 3)
+                        {
+                            double val; double prev;
+                            double.TryParse(w[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out val);
+                            bool first = !watchSeen.TryGetValue(w[1], out prev);
+                            Say.OnWatch(w[1], first ? 0 : prev, val, first);
+                            watchSeen[w[1]] = val;
+                        }
+                        else if (w[0] == "@settings")
+                        {
+                            for (int k = 1; k < w.Length; k++)
+                            {
+                                string[] kv = w[k].Split('=');
+                                if (kv.Length != 2) continue;
+                                if (kv[0] == "variety") Ctx.Settings.Variety = kv[1];
+                                else if (kv[0] == "names") Ctx.Settings.Names = kv[1];
+                                else if (kv[0] == "bridge") Ctx.Settings.BridgePack = kv[1];
+                            }
+                            Ctx.Settings.Normalize();
+                            Say.ApplySettings();
+                        }
+                        continue;
+                    }
                     List<string> notes = new List<string>();
                     string wavFile;
                     string expanded = Say.Process(text, notes, out wavFile);

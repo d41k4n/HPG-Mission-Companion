@@ -187,7 +187,7 @@
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"set_message":{"text":"SAY 8/12: free text behind <plain> (brackets and tags in it are only text)"}}]},
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"set":{"local":"vp_part"},"value":"dispatcher reads a dispatch"}]},
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"set_message":{"text":"dispatcher reads a dispatch"}}]},
-        {"if":{"local":"vp_stop"},"eq":0,"then":[{"speak":{"text":"<actor8><radio><plain>{0}","params":["Dispatch: two injured near the old bridge [urgent], tag <actor3> and <b>bold</b> stay text. Symptoms: broken leg."]}}]},
+        {"if":{"local":"vp_stop"},"eq":0,"then":[{"speak":{"text":"<actor8><radio><plain>{0}","params":["Dispatch: two injured near the old bridge [urgent], tag <actor3> and <b>bold</b> are dropped. Symptoms: broken leg."]}}]},
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"sleep":12}]},
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"set":{"local":"vp_part"},"value":"SAY 9/12: actor 11, the checklist voice"}]},
         {"if":{"local":"vp_stop"},"eq":0,"then":[{"set_message":{"text":"SAY 9/12: actor 11, the checklist voice"}}]},
