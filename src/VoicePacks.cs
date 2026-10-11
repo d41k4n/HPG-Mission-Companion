@@ -708,7 +708,7 @@ namespace HPGMissionCompanion
                 // every change of the context goes to the log: how a line is heard (intercom, radio, external radio, voice) follows these values
                 if (name == SimLink.CtxValid) { bool v = value > 0.5; CtxLog("mission context valid", ctxValid ? 1 : 0, v ? 1 : 0, baseline); ctxValid = v; return; }
                 if (name == SimLink.CtxHeliOff) { bool v = value > 0.5; CtxLog("helicopter off (battery master off and rotor stopped)", heliOff ? 1 : 0, v ? 1 : 0, baseline); heliOff = v; return; }
-                if (name == SimLink.CtxCrew) { int v = (int)Math.Round(value) | 1; CtxLog("crew aboard mask (1 pilot, 2 copilot, 4 doctor, 8 HEMS1, 16 HEMS2; the pilot, the user, counts as aboard)", crewMask, v, baseline); crewMask = v; return; }   // mission up to 169.48 never sets bit 1 (it reads the visible pilot model); to be dropped when the mission with PILOT_OUT (169.49) is the one in use
+                if (name == SimLink.CtxCrew) { int v = (int)Math.Round(value); CtxLog("crew aboard mask (1 pilot, 2 copilot, 4 doctor, 8 HEMS1, 16 HEMS2; the pilot is the user, the mission sets bit 1 from 169.49)", crewMask, v, baseline); crewMask = v; return; }
                 if (name == SimLink.CtxMute) { int v = (int)Math.Round(value); CtxLog("crew who cannot speak mask", muteMask, v, baseline); muteMask = v; return; }
                 if (name == SimLink.CtxRadio) { int v = value > 0.5 ? 1 : 0; CtxLog("battery master (" + SimLink.CtxRadio + ", the radio works with it on)", radioVar, v, baseline); radioVar = v; return; }
                 if (name == SimLink.CtxExist) { int v = (int)Math.Round(value); CtxLog("crew existing mask", crewExist, v, baseline); crewExist = v; return; }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="11" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="12" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -3327,6 +3327,94 @@
       <o>I am going to sleep all weekend.</o>
       <o>Okay, everybody knock on wood.</o>
       <o>Nobody touches them before the end of the shift.</o>
+    </message>
+    <message key="DSA.ASK" actor="2" radio="auto" group="dsa" seq="1" new="1" trigger="a dispatch arrived: the copilot asks the crew what to do">
+      <o>Okay crew, what do we do with this one? Can we take it?</o>
+      <o>Crew, let us do a quick check: are we in a position to take it?</o>
+      <o>Everybody, can we take this dispatch? Let us check.</o>
+      <o>So, crew, what do we think? Do we take it?</o>
+      <o>Let us see if we are good to take it. Quick check, everyone.</o>
+      <o>Crew, are we good to take this one? Quick check.</o>
+    </message>
+    <message key="DSA.FUEL.OK" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
+      <o>Copilot: fuel is above our minimum, no problem there.</o>
+      <o>Fuel checked, above our limit.</o>
+      <o>Fuel is fine, above the minimum we set.</o>
+      <o>Fuel is good, we are above our limit.</o>
+      <o>Fuel is okay, enough above our minimum.</o>
+      <o>Fuel looks fine, above the limit.</o>
+    </message>
+    <message key="DSA.FUEL.LOW" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is at or below the limit set in the mission options">
+      <o>Copilot: fuel is below our minimum. I would not take another one without refuelling.</o>
+      <o>Fuel is under our limit. We should go back and refuel first.</o>
+      <o>Fuel is below the minimum we set, better to refuel before the next one.</o>
+      <o>We are under our fuel limit, I would refuel first.</o>
+      <o>Fuel is low, below our limit. Refuel first, I think.</o>
+      <o>Fuel is below our limit. Better to refuel before another one.</o>
+    </message>
+    <message key="DSA.MIS" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: two or more missions already completed in the shift">
+      <o>Copilot: we have already flown two missions on this shift. We could go back to base first.</o>
+      <o>That would be another mission after two already done, we could go back to base first.</o>
+      <o>We have two missions behind us already. Going back to base first is an option.</o>
+      <o>Two missions done already, we could stop at the base before the next one.</o>
+      <o>We already flew a couple of missions, the base is an option before this one.</o>
+      <o>Two missions in the books already. Back to base first is on the table.</o>
+    </message>
+    <message key="DSA.EQP" actor="4" radio="auto" group="dsa" seq="3" new="1" trigger="second dispatch: equipment check (always fine)">
+      <o>Chief: equipment checked, everything is on board and ready.</o>
+      <o>Rear crew: the equipment is complete and in order.</o>
+      <o>Equipment check done, nothing missing.</o>
+      <o>Kit checked, everything is where it should be.</o>
+      <o>Equipment is complete, nothing missing from the bags.</o>
+      <o>Equipment is okay, all complete.</o>
+    </message>
+    <message key="DSA.HLT" actor="3" radio="auto" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
+      <o>Doc: crew health is good, everybody is fit for another one.</o>
+      <o>Everybody is fit and ready, no problems on my side.</o>
+      <o>Health check: all crew members are fine.</o>
+      <o>We are all fine here, nobody needs a break.</o>
+      <o>Crew is fit, no problems from my side.</o>
+      <o>All good on the crew health, I am fine to go.</o>
+    </message>
+    <message key="DSA.GO" actor="2" radio="auto" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
+      <o>Copilot: all checks are done, we are good to go.</o>
+      <o>Checks complete, we can take it.</o>
+      <o>Everything is in order, we are ready.</o>
+      <o>All set from our side, we can go.</o>
+      <o>All checked, we are ready to take it.</o>
+      <o>All good here, ready when you are.</o>
+    </message>
+    <message key="DSA.ASKP" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, checks fine: accept on the tablet">
+      <o>Captain, we are ready. What do you want to do?</o>
+      <o>Captain, your decision: do we take it?</o>
+      <o>Pilot, do we take the dispatch?</o>
+      <o>So, captain, are we taking it?</o>
+      <o>Captain, it is up to you. Do we accept?</o>
+      <o>Your call, captain. Do we take it?</o>
+    </message>
+    <message key="DSA.ASKP.B" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, with fuel below the limit or two missions done: take it or go back to base">
+      <o>Captain, we should think about going back to base first. What do you want to do?</o>
+      <o>Captain, your decision: take it anyway, or return to base first?</o>
+      <o>Pilot, do we take it or do we go back to base first?</o>
+      <o>Captain, take it or back to base first? Your call.</o>
+      <o>Captain, it is up to you: accept, or return to base first?</o>
+      <o>So, captain, do we go for it or back to base first?</o>
+    </message>
+    <message key="DSA.NUDGE" actor="8" radio="on" new="1" trigger="a minute after the question and the dispatch is still not accepted: the dispatcher asks for an answer">
+      <o>HEMS, dispatch. Are you taking the dispatch? Please confirm on the tablet.</o>
+      <o>Dispatch to HEMS. We are waiting for your answer on the tasking.</o>
+      <o>HEMS, dispatch. Do you copy the tasking? Please confirm if you take it.</o>
+      <o>Dispatch to HEMS. Still waiting for your confirmation on this call.</o>
+      <o>HEMS, dispatch. Can you take the call? We need an answer.</o>
+      <o>HEMS, this is dispatch. I need to know if you take this one.</o>
+    </message>
+    <message key="DSA.REASSIGN" actor="8" radio="on" new="1" trigger="a new dispatch arrives while the previous one was not accepted: the dispatcher says it was reassigned">
+      <o>HEMS, dispatch. The previous dispatch has been reassigned to another unit. I have a new one for you.</o>
+      <o>Dispatch to HEMS. I assigned the previous call to another unit. New tasking follows.</o>
+      <o>HEMS, dispatch. Disregard the previous dispatch, another unit took it. New call for you.</o>
+      <o>Dispatch to HEMS. The last one went to another unit. I have a new tasking.</o>
+      <o>HEMS, dispatch. Previous call reassigned, another unit is on it. Here is a new one.</o>
+      <o>HEMS, dispatch. Another unit took the previous call. This is a new one.</o>
     </message>
     <message key="DSP.RQ" actor="1" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
       <o>Dispatch, HEMS. Tasking received. Request any update on the patient and the ground units.</o>

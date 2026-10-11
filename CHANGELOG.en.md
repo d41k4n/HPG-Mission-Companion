@@ -1,6 +1,13 @@
+## Release 0.18
+
+- The program no longer forces the pilot aboard: L:HMC_CREW_PRESENT is read as the mission publishes it (bit 1 = the pilot, the user, from the local PILOT_OUT of the mission 169.49 and later: aboard from the end of the boarding to the deboarding, whether the pilot model is visible or not). The log [CTX] line "crew aboard mask" now shows the raw value; with a mission older than 169.49 the pilot is missing from it and the crew outside is heard with the clean voice, as before 0.16.
+- Pack EN 12 with the messages DSA.* of the decision on a new dispatch (see below) is part of the installer; the mission 169.50 uses it (`<pack:EN:12>`).
+
 ## Release 0.17
 
 - Audio output (Volume tab, shown with "Show advanced options"): the output device and the level of each kind of sound. Headset = intercom, radio calls, external radio calls and the notifications (ringtones, new message tone, tablet alarm, also with the helicopter off); external = voices heard in the air (technicians, ground unit, patient, the crew outside the helicopter). A device list for each of the two (Windows names, cut at 31 characters by the system, the first line is the Windows default device, the default) and a level slider (0-100, default 100) for the headset, for the external voices and, apart, for the notifications, which use the device of the headset. A level multiplies the master volume, the volume tag of the text, the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and the view. Test buttons for the three. A device that is not there when a sound plays is replaced by the default one and the log says so. Settings: AudioOut in HPGMissionCompanion.json. The playback of a PCM wav goes through the classic wave out of Windows (winmm.dll); any other format, or a device that does not open, plays on the default device as before. New command line option --audio-devices <report>: lists the output devices and tries each with 0.3 s of silence.
+
+- Pack EN 12 (pack only, no program change): the messages DSA.* of the decision on a new dispatch (the mission sources after 169.49): DSA.ASK (the copilot asks the crew), DSA.FUEL.OK / DSA.FUEL.LOW, DSA.MIS, DSA.EQP, DSA.HLT, DSA.GO, DSA.ASKP / DSA.ASKP.B (the copilot asks the pilot, the user), DSA.NUDGE (the dispatcher asks for an answer after a minute) and DSA.REASSIGN (the dispatcher says the previous dispatch was reassigned). Six options each; a new mission needs pack 12 (`<pack:EN:12>`).
 
 ## Release 0.16
 

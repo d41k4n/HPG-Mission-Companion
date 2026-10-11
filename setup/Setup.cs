@@ -16,14 +16,14 @@ using Microsoft.Win32;
 
 [assembly: AssemblyTitle("HPG Mission Companion Setup")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.17.0.0")]
+[assembly: AssemblyVersion("0.18.0.0")]
 [assembly: AssemblyFileVersion("0.12.0.0")]
 
 namespace HpgSetup
 {
     static class Info
     {
-        public const string Version = "0.17";
+        public const string Version = "0.18";
         public const string Name = "HPG Mission Companion";
         public const string Author = "Andrea Daviero";
         public const string ExeName = "HPGMissionCompanion.exe";
