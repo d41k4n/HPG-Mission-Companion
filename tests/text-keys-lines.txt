@@ -1,0 +1,15 @@
+@settings bridge=EN
+<actor11><text:CHK.interiorckl.02>Baggage, cargo and loose items: stowed and secured!
+<actor8><radio><text:DSC.1.1>Injured, collision of two cars. Situation unclear
+<actor8><radio><text:DSC.1.1>A text that is not the one of the key
+<actor8><radio><text:DSC.VEH>Vehicle: red Toyota.//red//Toyota
+@settings bridge=TXT
+<actor11><text:CHK.interiorckl.02>Baggage, cargo and loose items: stowed and secured!
+<actor11><text:CHK.interiorckl.03>Hand fire extinguisher: on board, check pressure!
+<actor11><text:CHK.interiorckl.03>Hand fire extinguisher: on board, check pressure!
+<actor8><radio><text:DSC.1.1>Injured, collision of two cars. Situation unclear
+<actor8><radio><text:DSC.1.2>Multiple vehicles are involved, the injured are reported.
+<actor8><radio><text:DSC.1.1>A text that is not the one of the key
+<actor8><radio><text:DSC.VEH>Vehicle: red Toyota.//red//Toyota
+<actor8><radio><text:DSC.VEH>Vehicle: Toyota.////Toyota
+<text:NOPE.1>A text with a key that no pack has

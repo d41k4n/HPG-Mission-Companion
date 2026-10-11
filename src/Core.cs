@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.11";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.13";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -26,6 +26,21 @@ namespace HPGMissionCompanion
         public int BeepLevel = 50;         // 0-100
         public bool Tail = true;           // squelch burst when the transmission ends
         public string Quality = "Aviation"; // Clean, Aviation, Rough
+    }
+
+    // The sound rules of the mission communications (the user's rules of 2026-10-11); every number is here and nowhere else.
+    // The intercom (ICS) has the hiss chosen by the user; a radio call has more, an external radio call (dispatcher, hospital) more again.
+    internal static class RadioRules
+    {
+        public const int RadioHissExtra = 10;           // radio call: the hiss of the user + 10
+        public const int ExternalHissExtra = 20;        // external radio call: the hiss of the user + 20
+        public const string IcsBeep = "Click";          // the intercom has a click, no beep
+        public const string ExternalBeep = "Double beep";
+        public const double FarVolume = 0.1;            // -20 dB: a voice heard from inside that comes from 30 to 100 m from the helicopter
+        public const int ZoneNear = 1;                  // L:HMC_ZONE_*: up to 5 m from the helicopter (next to it)
+        public const int ZoneVoice = 2;                 // up to 30 m: heard by voice at the normal level
+        public const int ZoneFar = 3;                   // up to 100 m: heard very low
+        public const int ZoneOut = 4;                   // beyond 100 m: not heard from inside
     }
 
     internal sealed class LangInfo
@@ -112,11 +127,13 @@ namespace HPGMissionCompanion
         public string IndexTool = "";
         public bool AutoIndex = true;           // run the mission index update when the app starts
         public string MissionUrl = Updates.DefaultMissionUrl;   // where the published R&E mission file is (Google Drive direct download); read only when the user presses Check for updates
+        public string UpdateWhat = "both";      // what the Updates tab installs: both | mission | app (the user's request of 2026-10-11)
         public bool AutoUpdateCheck = true;     // check for updates when the program starts (the user's request of 2026-10-11): only reads the published versions and tells; nothing is downloaded without the question
         public string LastUpdateCheck = "";     // UTC time of the last check (ISO); an automatic check is skipped within 6 hours of it
         public string MissionFile = "";         // the installed R&E mission file to update ("" = the one found first)
         public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
-        public string BridgePack = "";          // voice pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP); "" = the first pack
+        public bool ShowAdvanced = false;       // the "Show advanced options" box of the window: false hides the advanced groups (the user's request of 2026-10-11)
+        public string BridgePack = "";          // active pack used by the mission: the pack whose texts are spoken when the mission lines (the LVAR counters, voice code APP) rise; "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
         public string Names = "functions";      // functions | random: names of the crew in the texts (functions: the job roles, or the names typed in the Actors tab)
         public Dictionary<string, string> CrewNames = new Dictionary<string, string>();   // role (PLT, CPL, PAX3, PAX1, PAX2, TECHM, TECHF) -> name typed by the user; used when Names is "functions"
@@ -159,6 +176,7 @@ namespace HPGMissionCompanion
             if (IndexTool == null) IndexTool = "";
             if (string.IsNullOrEmpty(MissionUrl)) MissionUrl = Updates.DefaultMissionUrl;
             if (MissionFile == null) MissionFile = "";
+            if (UpdateWhat != "mission" && UpdateWhat != "app") UpdateWhat = "both";
             MasterVolume = Math.Max(0, Math.Min(100, MasterVolume));
             if (Radio == null) Radio = new RadioSettings();
             Radio.NoiseLevel = Math.Max(0, Math.Min(100, Radio.NoiseLevel));
@@ -206,6 +224,8 @@ namespace HPGMissionCompanion
         public double Volume = -1;  // 0-100, -1 = none
         public int Radio = -1;      // 1 on, 0 off, -1 none
         public string Beep;        // beep type of the radio effect (None, Click, Beep, Double beep, Chirp), null = the type chosen in the program
+        public string Fx;          // with Radio = 1: null = radio call, "ics" = intercom, "ext" = external radio call
+        public bool Far;           // <zone:far>: a voice heard from inside that comes from 30 to 100 m away (RadioRules.FarVolume)
     }
 
     internal static class TagParser
@@ -216,6 +236,9 @@ namespace HPGMissionCompanion
         static readonly Regex LangRx = new Regex("^(?:lang|language)\\s*[:=]\\s*([A-Za-z]{2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex VolRx = new Regex("^(?:vol|volume)\\s*[:=]\\s*([0-9]+(?:[.,][0-9]+)?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioRx = new Regex("^radio(?:\\s*[:=]\\s*(on|off|0|1))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex IcsRx = new Regex("^ics(?:\\s*[:=]\\s*(on|off|0|1))?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex RadioExtRx = new Regex("^radio\\s*[:=]\\s*ext$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ZoneRx = new Regex("^zone\\s*[:=]\\s*(far|near)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioBeepRx = new Regex("^radio\\s*[:=]\\s*([A-Za-z0-9 ]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex BeepRx = new Regex("^beep\\s*[:=]\\s*([A-Za-z0-9 ]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex VoiceRx = new Regex("^voice\\s*[:=]\\s*(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -226,11 +249,11 @@ namespace HPGMissionCompanion
         {
             List<Segment> result = new List<Segment>();
             if (input == null) return result;
-            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1; string beep = null;
+            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1; string beep = null; string fx = null; bool far = false;
             int pos = 0;
             foreach (Match m in TagRx.Matches(input))
             {
-                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio, beep);
+                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio, beep, fx, far);
                 pos = m.Index + m.Length;
                 string tag = m.Groups[1].Value.Trim();
                 Match g;
@@ -257,10 +280,24 @@ namespace HPGMissionCompanion
                 {
                     string r = g.Groups[1].Success ? g.Groups[1].Value.ToLowerInvariant() : "on";
                     radio = (r == "off" || r == "0") ? 0 : 1;
+                    fx = null;
                 }
+                else if ((g = IcsRx.Match(tag)).Success)
+                {
+                    string r = g.Groups[1].Success ? g.Groups[1].Value.ToLowerInvariant() : "on";     // <ics> = the intercom of the helicopter: a click, the hiss of the user
+                    radio = (r == "off" || r == "0") ? 0 : 1;
+                    fx = radio == 1 ? "ics" : null;
+                }
+                else if (RadioExtRx.IsMatch(tag))
+                {
+                    radio = 1;                                   // <radio:ext> = a call on an external radio: double beep, more hiss
+                    fx = "ext";
+                }
+                else if ((g = ZoneRx.Match(tag)).Success) far = g.Groups[1].Value.ToLowerInvariant() == "far";
                 else if ((g = RadioBeepRx.Match(tag)).Success && AudioFx.NormalizeBeep(g.Groups[1].Value) != null)
                 {
                     radio = 1;                                   // <radio:chirp> = radio effect with that beep
+                    fx = null;
                     beep = AudioFx.NormalizeBeep(g.Groups[1].Value);
                 }
                 else if ((g = BeepRx.Match(tag)).Success)
@@ -274,16 +311,16 @@ namespace HPGMissionCompanion
                 else if ((g = VoiceRx.Match(tag)).Success) voice = g.Groups[1].Value.Trim();
                 else voice = tag;
             }
-            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio, beep);
+            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio, beep, fx, far);
             return result;
         }
 
-        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio, string beep)
+        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio, string beep, string fx, bool far)
         {
             string t = Regex.Replace(text, "\\s+", " ").Trim();
             if (t.Length == 0) return;
             Segment s = new Segment();
-            s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio; s.Beep = beep;
+            s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio; s.Beep = beep; s.Fx = radio == 1 ? fx : null; s.Far = far;
             list.Add(s);
         }
     }
@@ -505,6 +542,8 @@ namespace HPGMissionCompanion
         public double Volume = 100;
         public bool Radio;
         public string Beep;
+        public string Fx;
+        public bool Far;
         public string Note;
     }
 
@@ -547,6 +586,8 @@ namespace HPGMissionCompanion
             p.Volume = seg.Volume >= 0 ? seg.Volume : 100;
             p.Radio = seg.Radio == 1;
             p.Beep = seg.Beep;
+            p.Fx = seg.Fx;
+            p.Far = seg.Far;
             p.Note = note;
             return p;
         }

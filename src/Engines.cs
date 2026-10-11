@@ -252,7 +252,7 @@ namespace HPGMissionCompanion
     // Speech and wav playback, one item at a time, in order. Interrupt cancels the current item and the queue.
     internal sealed class Player
     {
-        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public DateTime Born = DateTime.UtcNow; public int MaxAge; }
+        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public bool Test; public DateTime Born = DateTime.UtcNow; public int MaxAge; }
 
         readonly BlockingCollection<Item> queue = new BlockingCollection<Item>();
         readonly object sync = new object();
@@ -268,8 +268,14 @@ namespace HPGMissionCompanion
 
         public void EnqueueText(string text, bool interrupt) { EnqueueText(text, interrupt, 0); }
 
+        // a test of the program itself (the Test buttons, Try a text): it does not depend on the simulator, so the volume of the mission and the
+        // inside / outside level are not applied (as if L:VOLUME_CREW were 100): the program can be set up before the simulator and the mission run
+        public void EnqueueTest(string text) { EnqueueText(text, true, 0, true); }
+
         // maxAgeSeconds > 0: the item is dropped when its turn comes later than that (lines from the simulator variables must not arrive late)
-        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds)
+        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds) { EnqueueText(text, interrupt, maxAgeSeconds, false); }
+
+        void EnqueueText(string text, bool interrupt, int maxAgeSeconds, bool test)
         {
             if (interrupt) CancelAll();
             List<string> notes = new List<string>();
@@ -277,6 +283,7 @@ namespace HPGMissionCompanion
             text = Say.Process(text, notes, out wavFile);       // <say:KEY>, <pack:..>, <names:..>, <variety:..>, <plain>
             List<Segment> segs = TagParser.Parse(text, notes);
             foreach (string n in notes) Ctx.Log("[WARN] " + n);
+            if (!test) Say.ApplyDelivery(segs);              // the dispatcher: external radio call, or nothing with the radio off
             if (wavFile != null)
             {
                 string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, wavFile.Replace("\\", "").Replace("..", "")));
@@ -286,6 +293,7 @@ namespace HPGMissionCompanion
             if (segs.Count == 0) return;
             Item item = new Item();
             item.Segs = segs;
+            item.Test = test;
             item.MaxAge = maxAgeSeconds;
             item.Generation = Thread.VolatileRead(ref generation);
             queue.Add(item);
@@ -362,21 +370,33 @@ namespace HPGMissionCompanion
         {
             Plan p = Resolver.Resolve(seg, Ctx.Settings, Ctx.Voices);
             if (p.Voice == null) { Ctx.Log("[ERROR] no voice available"); return; }
-            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", CultureInfo.InvariantCulture) + (p.Radio ? ", radio" + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
+            double level = item.Test ? p.Volume : p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor));
+            if (p.Far) level *= RadioRules.FarVolume;
+            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + level.ToString("0.#", CultureInfo.InvariantCulture) + (item.Test ? " (test: the volume of the mission is not applied)" : "") + (p.Radio ? (p.Fx == "ics" ? ", intercom" : (p.Fx == "ext" ? ", external radio" : ", radio")) + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Far ? ", far (30 to 100 m)" : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
             DateTime t0 = DateTime.UtcNow;
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
             Ctx.Log("[RENDER] " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms, " + (wav.Length / 1024) + " KB");
             if (item.Generation != Thread.VolatileRead(ref generation)) return;
-            RadioSettings rs = Ctx.Settings.Radio;
-            if (p.Radio && p.Beep != null && p.Beep != rs.Beep)
-            {
-                rs = new RadioSettings();                  // the same settings with the beep type of the tag
-                rs.NoiseLevel = Ctx.Settings.Radio.NoiseLevel; rs.BeepLevel = Ctx.Settings.Radio.BeepLevel;
-                rs.Tail = Ctx.Settings.Radio.Tail; rs.Quality = Ctx.Settings.Radio.Quality; rs.Beep = p.Beep;
-            }
-            double level = p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor));
+            RadioSettings rs = FxSettings(p);
             byte[] fx = AudioFx.Apply(wav, level, Ctx.Settings.MasterVolume, p.Radio, rs);
             PlayBytes(item, fx, null);
+        }
+
+        // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the hiss + 10 and the beep of the user (or the one of
+        // the tag); an external radio call the hiss + 20 and a double beep (RadioRules)
+        static RadioSettings FxSettings(Plan p)
+        {
+            RadioSettings b = Ctx.Settings.Radio;
+            RadioSettings rs = new RadioSettings();
+            rs.NoiseLevel = b.NoiseLevel; rs.BeepLevel = b.BeepLevel; rs.Tail = b.Tail; rs.Quality = b.Quality; rs.Beep = b.Beep;
+            if (p.Fx == "ics") { rs.Beep = RadioRules.IcsBeep; rs.Tail = false; }
+            else if (p.Fx == "ext") { rs.Beep = RadioRules.ExternalBeep; rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.ExternalHissExtra); }
+            else
+            {
+                rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.RadioHissExtra);
+                if (p.Beep != null) rs.Beep = p.Beep;
+            }
+            return rs;
         }
 
         // a wav file of the audio folder, at the master volume (PCM 16 bit); any other format plays as it is

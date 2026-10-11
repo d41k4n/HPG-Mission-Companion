@@ -86,8 +86,12 @@ if (fs.existsSync(packDir)) {
       if (actor && (parseInt(actor, 10) < 1 || parseInt(actor, 10) > 11)) errors.push(`${where}: ${key} actor ${actor} is not 1-11`);
       const sfx = /\bsfx="1"/.test(m[1]);
       if (!sfx && !/<o(?:\s[^>]*)?>[^<]+<\/o>/.test(m[2])) errors.push(`${where}: ${key} has no <o> text`);
-      // six options for each message (for the technicians six for each sex); a futile message has two silent options first and the default third
-      if (!sfx) {
+      // a text of the mission (text="1": the words of <text:KEY>English) has exactly one option
+      if (/\btext="1"/.test(m[1])) {
+        const n = [...m[2].matchAll(/<o\b[^>]*>[^<]+<\/o>/g)].length;
+        if (n !== 1) errors.push(`${where}: ${key} is a text of the mission (text="1") and must have exactly one option (it has ${n})`);
+      } else if (!sfx) {
+        // six options for each message (for the technicians six for each sex); a futile message has two silent options first and the default third
         const opts = [...m[2].matchAll(/<o\b([^>]*?)(?:\/>|>([^<]*)<\/o>)/g)].map((x) => ({ sex: (x[1].match(/\bsex="([mf])"/) || [])[1] || '', silent: /\bsilent="1"/.test(x[1]) }));
         const sexed = opts.some((o) => o.sex);
         const count = (s) => opts.filter((o) => !o.sex || o.sex === s).length;
@@ -98,6 +102,16 @@ if (fs.existsSync(packDir)) {
       for (const o of m[2].matchAll(/<o\b([^>]*)>/g)) { const sx = (o[1].match(/\bsex="([^"]*)"/) || [])[1]; if (sx !== undefined && sx !== 'm' && sx !== 'f') errors.push(`${where}: ${key} has an option with sex="${sx}" (m or f)`); }
     }
     if (seen.size === 0) errors.push(`${where}: no message`);
+  }
+}
+
+// the base pack holds the texts that the mission speaks as free text (checklists, dispatch descriptions) under the keys of the mission
+// (tools/voice-texts.json of the mission repository, next to this one when both are cloned). Out of step: node tools/sync-pack-texts.js
+{
+  const missionTexts = path.join(root, '..', 'progetto hems', 'tools', 'voice-texts.json');
+  if (fs.existsSync(missionTexts) && fs.existsSync(path.join(packDir, 'EN.xml'))) {
+    const r = cp.spawnSync(process.execPath, [path.join(__dirname, 'sync-pack-texts.js'), '--check', '--mission', missionTexts], { encoding: 'utf8' });
+    if (r.status !== 0) errors.push('voicepacks/EN.xml is not in step with the texts of the mission: ' + ((r.stdout || '') + (r.stderr || '')).trim().split('\n')[0]);
   }
 }
 if (!fs.existsSync(path.join(root, 'docs/DEVELOPER_GUIDE.md'))) errors.push('docs/DEVELOPER_GUIDE.md is missing');

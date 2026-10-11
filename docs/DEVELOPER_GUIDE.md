@@ -26,10 +26,13 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
                            The voice and the usual speed of each actor are chosen in the Actors and voices tab, per language.
   <Microsoft David>        a voice by name (also <voice:ryan>); it wins over the actor voice. A name that is not installed: the actor voice speaks and the log says so.
   <speed:1.2>              speed, 0.5 to 3 (1 = the speed set for the actor)
-  <vol:70>                 volume 0-100 of this text, multiplied by the master volume of the Service tab. Pass the mission volume with params: "<vol:{0}>" and [VOLUME_CREW].
+  <vol:70>                 volume 0-100 of this text, multiplied by the master volume of the Volume tab. Pass the mission volume with params: "<vol:{0}>" and [VOLUME_CREW].
   <radio> / <radio:off>    radio effect on / off: start beep, hiss, band filter, squelch tail (Radio effect tab)
   <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
   <radio:chirp>            shortcut: radio on with that beep type
+  <ics> / <ics:off>        the wired intercom of the helicopter: a click, no beep, the hiss of the Radio effect tab, no squelch tail
+  <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, hiss + 20, squelch tail
+  <zone:far>               a voice that comes from 30 to 100 m away, heard very low (the program adds it from the zone variables)
   <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language
   <defaultactor:11>        from now on every text without an actor tag is spoken by actor 11 (the HEMS mission sends it once, for its checklists); <defaultactor:off> ends it
   <stop>                   with interrupt 1: stop everything
@@ -56,7 +59,9 @@ A message that has no placeholder takes no arguments: {"speak":"<say:CPL.5>"}. A
 
 Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2} {PAX3} {TECH} the job word of the role (Pilot, Copilot, Chief, Paramedic, Doc, Technician); {@PLT} {@CPL} {@PAX1} {@PAX2} {@PAX3} {@TECH} the name of the shift (random, or typed by the user in the Actors tab) or the job word when there is none: use the name where the text sounds more colloquial and the job word elsewhere. {TECH} is the technician of the scene (male or female, see below).
 
-<plain>   speak the text after the tag as it is, without any tag: <actor8><radio><plain>{0} with the dispatch text in params. The characters < > [ ] are removed.
+<plain>   speak the text after the tag as it is, without any tag: <actor8><radio><plain>{0} with the dispatch text in params. The characters < > [ ] are removed. A free text that a translated voice pack should be able to replace does not use <plain>: it uses a key (next paragraph).
+
+<text:KEY>English text//value//value   a free text of the mission with a key, for texts that exist in English in the mission (a checklist row, a dispatch description). The active voice pack may have a message KEY with the same words in its language and then speaks that; otherwise the English text is spoken as it is. {"speak":"<text:CHK.interiorckl.02>Baggage, cargo and loose items: stowed and secured!"}. The tags before it keep working: {"speak":{"text":"<actor8><radio><text:DSC.{0}.{1}>{2}","params":[...]}}. The values after the English (separated by //) fill {0} {1} of the pack text; the English must be the filled sentence. The key is never changed once used; a new text gets a new key. A pack of the Companion is checked against the base pack EN: the mission repository lists its texts and keys (tools/voice-texts.json) and the base pack holds the same ones.
 
 Lists of vehicles: {list:N} and {be:N} take argument N made of the letters A (ambulance), F (fire engine), P (police): "AFP" gives "ambulance, fire engine and police" and "are". Example: {"speak":{"text":"<say:DSP.VEH.BOTH>{0}//{1}","params":["A","FP"]}} says "fire engine and police are already on scene, ambulance is on the way" (argument 0 is the vehicles on the way, argument 1 the vehicles on scene, as the pack message uses them).
 
@@ -94,7 +99,7 @@ The program also keeps L:AUDIOINHIBIT at 1 (option in the Service tab) to silenc
 
 5. WHEN TO USE THE RADIO
 ------------------------
-The pack does not know where the crew is, so the mission adds the tag. The rule of the HEMS mission: helicopter completely off, everybody talks by voice; between a person inside and one outside always <radio>; outside to outside by voice. Add <radio> or <radio:off> before <say>. A message with radio="on" or "off" in the pack applies it only when the mission sent no radio tag.
+In voice app mode the program decides how a line is heard from the context the mission publishes (section 10), so the mission adds no tag. In short: the dispatcher is an external radio call (double beep, more hiss), heard only with the battery on or the helicopter at the base; the crew uses radios (a call between inside and outside, or among crew when somebody is outside), the intercom (a click) when everybody is aboard and the battery is on, the voice when the battery is off; a technician next to the helicopter with the pilot aboard uses the intercom; technician, ground unit and patient speak by voice, heard from inside up to 30 m, very low up to 100 m, not beyond. With a plain speak text the tags are yours: <radio>, <ics>, <radio:ext> or <radio:off> before the text; a message with radio="on", "off", "ics", "ext" or "ext-near" in the pack applies it only when the mission sent no radio tag.
 
 6. TIMING
 ---------
@@ -117,7 +122,7 @@ voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the
   </voicepack>
 
 voicepack: name (optional: letters, digits, _ -, up to 24; when it is missing the name of the file is used, so any XML file can be dropped in), language (EN FR IT DE), version (whole number from 1), title.
-message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav. lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
+message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off|ics|ext|ext-near, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav. lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
 <o>: one text option (any number; 4-5 is good; sex="m" or "f" for the technicians). Texts may contain {0}.. {PLT}.. {@PLT}.. and the normal tags (for example <speed:1.1>).
 
 Install a pack: drag the XML file onto the Voice packs tab (or Browse), or copy it into the voicepacks folder and press Reload. A pack of the same name and an older or equal version asks before replacing. Command line: HPGMissionCompanion.exe --install-pack file.xml.
@@ -153,7 +158,7 @@ The HEMS mission does not call speak for its crew lines. Each line is a counter:
 
 To add a message to the mission: choose a free number for the role (the pack lists the used ones), add the message to the pack (key ROLE.NUMBER, lvar="L:ROLE{VCP}NUMBER"), and in the mission increment L:ROLE{local:VCP}NUMBER where the line happens. Space the lines of a conversation by 0.4 s at least: the program sees the counters in order only if they change in different simulator frames.
 
-The radio is decided by the program from three variables the mission publishes: L:HMC_HELI_OFF (1 = battery master off and rotor stopped), L:HMC_CREW_PRESENT (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2 aboard), L:HMC_CTX_VALID (1 = the first two are published). Helicopter off: voice. Dispatcher: always radio. A speaker aboard: radio. A speaker outside: radio when somebody of the crew is aboard, voice when everybody is outside. Without L:HMC_CTX_VALID no radio tag is added. A message with radio="on" or "off" in the pack ignores the rule.
+How a line is heard is decided by the program from the variables the mission publishes: L:HMC_CREW_PRESENT and L:HMC_CREW_EXIST (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard, and existing), L:HMC_AT_BASE (1 = at the departure base, in wifi range), L:HMC_ZONE_TECH / L:HMC_ZONE_GROUND / L:HMC_ZONE_PATIENT (distance from the helicopter: 1 up to 5 m, 2 up to 30 m, 3 up to 100 m, 4 beyond), L:HMC_HELI_OFF, and L:HMC_CTX_VALID (1 = the context is published; without it no tag is added). The battery master is not published: the program reads the variable of the aircraft, L:H145_SDK_OH_BATTERY_MASTER (1 = on). The rules are in section 5. A message with radio="on", "off", "ics", "ext" or "ext-near" in the pack ignores them.
 
 The checklists of the mission are untagged speak texts: the mission sends {"speak":"<defaultactor:11>"} once (voice code APP only, the old audio service would read the tag aloud) and the program speaks every text without an actor tag with actor 11.
 

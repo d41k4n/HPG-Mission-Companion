@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Test pack for the texts of the mission (<text:KEY>English): a few Italian texts, the rest of the base pack is missing on purpose.
+     Install it with the command line option install-pack, then run tests/text-keys-lines.txt with the option expand. -->
+<voicepack name="TXT" language="IT" version="1" basever="9" vcp="APP" title="Test translation of the texts of the mission">
+  <names>
+    <name role="PLT">Pilota</name>
+  </names>
+  <message key="CHK.interiorckl.02" text="1" actor="11">
+    <o>Bagagli, carico e oggetti sciolti: sistemati e fissati!</o>
+  </message>
+  <message key="DSC.1.1" text="1" actor="8">
+    <o>Feriti, scontro tra due auto. Situazione poco chiara.</o>
+  </message>
+  <message key="DSC.1.2" text="1" actor="8">
+    <o>Questa frase non e quella del pack base.</o>
+  </message>
+  <message key="DSC.VEH" text="1" actor="8">
+    <o>Veicolo: {1} {0}.</o>
+  </message>
+  <message key="PLT.1" actor="1" radio="auto" lvar="L:PLT{VCP}1">
+    <o>Pilota, controllo radio.</o>
+  </message>
+</voicepack>

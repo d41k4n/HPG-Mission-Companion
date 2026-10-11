@@ -59,7 +59,7 @@ const seen = new Set();
 let changed = 0;
 text = text.replace(/<message\b([^>]*)>([\s\S]*?)<\/message>/g, (all, attrs, inner) => {
   const key = (attrs.match(/\bkey="([^"]+)"/) || [])[1];
-  if (/\bsfx="1"/.test(attrs)) return all;
+  if (/\bsfx="1"/.test(attrs) || /\btext="1"/.test(attrs)) return all;       // sounds, and the generated texts of the mission (tools/sync-pack-texts.js)
   const v = variants[key];
   if (!v) { problems.push(key + ': no variants'); return all; }
   seen.add(key);

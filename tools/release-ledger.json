@@ -1,8 +1,8 @@
 {
-    "sha256":  "26D02DAA89994AD5588E2DC939F70F7F83C152A36CFF086BDF12A28475081BC8",
-    "installerSha256":  "F25B8347733EC9E3E759309905B252BF1E14566CFB14C1B7F151EDDAC695FDA7",
+    "sha256":  "54CF53763CFFABB3F9A68889BEFACEB727570231E2170F7BF01414C070B623A4",
+    "installerSha256":  "AD66FE511A2D3831E4A5020F591A2BABE12CBCEE8ABFCB6AF9BE4A97D3FF70D4",
     "deliveredOn":  "2026-10-11",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.11",
-    "note":  "Local build 0.11 (fix of the replace of an encrypted mission file); installed over the runtime folder with the silent setup; the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.11.exe). Committed locally, not pushed (0.10 is the published release). The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.13",
+    "note":  "Local build 0.13 (texts of the mission with keys: <text:KEY>, active pack first, the Voice packs tab compares every pack with the base pack EN and shows the incomplete or incompatible ones in red, New translation and Add missing texts, pack EN 9 with 666 mission texts); built and checked offline (--expand scenario, --packs-check, --pack-template, --pack-add-missing, window snapshot), the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.13.exe), not installed over the runtime folder. Committed locally, not pushed (0.10 is the published release). Runtime pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

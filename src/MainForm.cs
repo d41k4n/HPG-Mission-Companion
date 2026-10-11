@@ -119,6 +119,9 @@ namespace HPGMissionCompanion
         readonly Button saveButton = new Button();
         readonly CheckBox listenAllBox = new CheckBox();
         readonly Label saveLabel = new Label();
+        readonly CheckBox advancedCheck = new CheckBox();      // footer: show or hide the advanced groups of the tabs
+        readonly ToolTip tips = new ToolTip();
+        int tabHover = -1;
         bool suppress;
         bool dirty;
 
@@ -139,6 +142,9 @@ namespace HPGMissionCompanion
         readonly TextBox testBox = new TextBox();
         readonly RichTextBox logBox = new RichTextBox();
         readonly Button exitButton = new Button();
+        readonly GroupBox logGroup = new GroupBox();
+        readonly GroupBox advBox = new GroupBox();
+        readonly Label footNote = new Label();
         readonly CheckBox autoIndexCheck = new CheckBox();
         readonly SynchronizationContext uiContext;
         bool indexRunning;
@@ -182,6 +188,8 @@ namespace HPGMissionCompanion
         readonly RadioButton namesFunc = new RadioButton();
         readonly RadioButton namesRandom = new RadioButton();
         readonly Label bridgeInfo = new Label();
+        Label bridgeHint;
+        const string BridgeHintText = "the lines of the mission are spoken with the texts of this pack";
 
         // volume tab
         readonly CheckBox missionVolCheck = new CheckBox();
@@ -213,6 +221,12 @@ namespace HPGMissionCompanion
         bool updateBalloon;
         readonly CheckBox autoUpdateCheck = new CheckBox();
         readonly Button whatsNewButton = new Button();
+        readonly TextBox updatesOut = new TextBox();
+        readonly RadioButton updBoth = new RadioButton();
+        readonly RadioButton updMission = new RadioButton();
+        readonly RadioButton updApp = new RadioButton();
+        TabPage updatesPage;
+        bool updatesAvailable;
 
         Server server;
         readonly NotifyIcon tray = new NotifyIcon();
@@ -239,7 +253,7 @@ namespace HPGMissionCompanion
 
             Text = AppInfo.Title;
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(760, 650);
+            ClientSize = new Size(760, 662);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             Icon = appIcon;
@@ -248,8 +262,10 @@ namespace HPGMissionCompanion
             Ctx.Log = AppendLog;
 
             tabs.Location = new Point(12, 12);
-            tabs.Size = new Size(736, 582);
+            tabs.Size = new Size(736, 594);
+            ConfigureTabs();
             Controls.Add(tabs);
+            advancedCheck.Checked = Ctx.Settings.ShowAdvanced;
             BuildServiceTab();
             BuildActorsTab();
             BuildPiperTab();
@@ -257,19 +273,35 @@ namespace HPGMissionCompanion
             BuildRadioTab();
             BuildVolumeTab();
             BuildToolsTab();
+            BuildUpdatesTab();
             BuildAboutTab();
             tabs.SelectedIndexChanged += delegate { if (tabs.SelectedIndex == 2) EnsureCatalog(); };
 
             saveButton.Text = "Save settings";
-            saveButton.Location = new Point(12, 606);
-            saveButton.Size = new Size(120, 32);
+            saveButton.Location = new Point(12, 618);
+            saveButton.Size = new Size(116, 32);
             saveButton.Click += delegate { SaveSettings(); };
             Controls.Add(saveButton);
+            updateButton.Text = "Check for updates";               // opens the Updates tab; turns amber when something newer is published
+            updateButton.Location = new Point(136, 618);
+            updateButton.Size = new Size(150, 32);
+            updateButton.Click += delegate { CheckUpdates(false); };
+            Controls.Add(updateButton);
             saveLabel.AutoSize = true;
-            saveLabel.Location = new Point(144, 614);
+            saveLabel.Location = new Point(296, 626);
             Controls.Add(saveLabel);
+            advancedCheck.Text = "Show advanced options";
+            advancedCheck.AutoSize = true;
+            advancedCheck.Location = new Point(478, 625);
+            advancedCheck.CheckedChanged += delegate
+            {
+                Ctx.Settings.ShowAdvanced = advancedCheck.Checked;
+                ApplyAdvanced();
+                if (!suppress) MarkDirty();
+            };
+            Controls.Add(advancedCheck);
             exitButton.Text = "Exit program";
-            exitButton.Location = new Point(628, 606);
+            exitButton.Location = new Point(628, 618);
             exitButton.Size = new Size(120, 32);
             exitButton.Click += delegate { ExitApp(true); };
             Controls.Add(exitButton);
@@ -283,11 +315,10 @@ namespace HPGMissionCompanion
             tray.DoubleClick += delegate { ShowWindow(); };
             tray.BalloonTipClicked += delegate
             {
-                // the balloon of an automatic check that found something newer: open the Tools tab and ask the question
+                // the balloon of an automatic check that found something newer: ask the question (the check opens the Updates tab)
                 if (!updateBalloon) return;
                 updateBalloon = false;
                 ShowWindow();
-                foreach (TabPage tp in tabs.TabPages) if (tp.Text == "Tools") tabs.SelectedTab = tp;
                 CheckUpdates(false);
             };
             tray.Visible = true;
@@ -319,6 +350,7 @@ namespace HPGMissionCompanion
             AppendLog("[INFO] Start with the simulator ON (--minimized --exit-with-sim) (sample line)");
             AppendLog("[INTERRUPT] (sample line)");
             for (int i = 0; i < 8; i++) { Application.DoEvents(); Thread.Sleep(100); }
+            advancedCheck.Checked = false;
             for (int t = 0; t < tabs.TabPages.Count; t++)
             {
                 tabs.SelectedIndex = t;
@@ -326,6 +358,15 @@ namespace HPGMissionCompanion
                 SaveShot(basePath + "-" + t + ".png");
             }
             tabs.SelectedIndex = 0;
+            advancedCheck.Checked = true;      // the Service tab again with the advanced options shown
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            SaveShot(basePath + "-0-advanced.png");
+            advancedCheck.Checked = false;
+            SetUpdateState("Update available: mission 0.997 169.47 and program 0.12 (sample)", true);      // the Updates tab in amber, with the footer button
+            SelectUpdatesTab();
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            SaveShot(basePath + "-updates-alert.png");
+            SetUpdateState("Program version " + AppInfo.Version, false);
             MarkDirty();
             for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
             SaveShot(basePath + "-dirty.png");
@@ -357,6 +398,44 @@ namespace HPGMissionCompanion
             Show();
             WindowState = FormWindowState.Normal;
             Activate();
+        }
+
+        // ---- tabs: drawn by the program so that they stand out (the system tabs are almost the colour of the page) ----
+        static readonly Color TabSelectedBack = Color.FromArgb(0, 92, 140);
+        static readonly Color TabIdleBack = Color.FromArgb(196, 212, 229);
+        static readonly Color TabHoverBack = Color.FromArgb(222, 234, 247);
+        static readonly Color TabBorder = Color.FromArgb(110, 135, 165);
+        static readonly Color TabAlertBack = Color.FromArgb(255, 200, 90);
+        static readonly Color TabAlertSelectedBack = Color.FromArgb(200, 100, 0);
+
+        void ConfigureTabs()
+        {
+            tabs.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabs.SizeMode = TabSizeMode.Fixed;
+            tabs.ItemSize = new Size(80, 34);
+            tabs.Padding = new Point(6, 4);
+            tabs.DrawItem += DrawTab;
+            tabs.MouseMove += delegate (object sender, MouseEventArgs e)
+            {
+                int h = -1;
+                for (int i = 0; i < tabs.TabCount; i++) if (tabs.GetTabRect(i).Contains(e.Location)) { h = i; break; }
+                if (h != tabHover) { tabHover = h; tabs.Invalidate(); }
+            };
+            tabs.MouseLeave += delegate { if (tabHover != -1) { tabHover = -1; tabs.Invalidate(); } };
+        }
+
+        void DrawTab(object sender, DrawItemEventArgs e)
+        {
+            bool selected = e.Index == tabs.SelectedIndex;
+            Rectangle r = tabs.GetTabRect(e.Index);
+            r.Width -= 2;
+            bool alert = updatesAvailable && tabs.TabPages[e.Index] == updatesPage;         // something newer is published: the Updates tab is amber
+            Color back = alert ? (selected ? TabAlertSelectedBack : TabAlertBack) : (selected ? TabSelectedBack : (e.Index == tabHover ? TabHoverBack : TabIdleBack));
+            using (SolidBrush b = new SolidBrush(back)) e.Graphics.FillRectangle(b, r);
+            using (Pen p = new Pen(TabBorder)) e.Graphics.DrawRectangle(p, r.X, r.Y, r.Width - 1, r.Height - 1);
+            using (Font f = new Font(Font, selected ? FontStyle.Bold : FontStyle.Regular))
+                TextRenderer.DrawText(e.Graphics, tabs.TabPages[e.Index].Text, f, r, selected ? Color.White : (alert ? Color.FromArgb(90, 40, 0) : Color.FromArgb(25, 35, 50)),
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix);
         }
 
         // ---- small helpers ----------------------------------------------------------------------
@@ -532,6 +611,8 @@ namespace HPGMissionCompanion
         }
 
         // ---- service tab -------------------------------------------------------------------------
+        // Basic part: start / stop, the language of the texts, the master volume and the log. Everything else is in the Advanced box,
+        // shown only while "Show advanced options" (window footer) is ticked.
         void BuildServiceTab()
         {
             TabPage page = new TabPage("Service");
@@ -542,49 +623,14 @@ namespace HPGMissionCompanion
             startStop.Size = new Size(130, 30);
             startStop.Click += delegate { if (server != null) StopServer(); else StartServer(false); };
             page.Controls.Add(startStop);
-            Lbl(page, "Port:", 160, 17, 0, 0);
-            portBox.Minimum = 1024;
-            portBox.Maximum = 65535;
-            portBox.Value = Ctx.Settings.Port;
-            portBox.Location = new Point(196, 13);
-            portBox.Size = new Size(70, 22);
-            portBox.ValueChanged += delegate { Ctx.Settings.Port = (int)portBox.Value; MarkDirty(); };
-            page.Controls.Add(portBox);
             serviceLabel.AutoSize = true;
-            serviceLabel.Location = new Point(290, 17);
+            serviceLabel.Location = new Point(160, 17);
             serviceLabel.Text = "Service: stopped";
             page.Controls.Add(serviceLabel);
-            listenAllBox.Text = "Accept connections from other computers (Windows Firewall may ask to open the port)";
-            listenAllBox.AutoSize = true;
-            listenAllBox.Location = new Point(160, 34);
-            listenAllBox.Checked = Ctx.Settings.ListenAll;
-            listenAllBox.CheckedChanged += delegate
-            {
-                Ctx.Settings.ListenAll = listenAllBox.Checked;
-                MarkDirty();
-                if (server != null) { StopServer(); StartServer(false); }      // the new address takes effect at once
-            };
-            page.Controls.Add(listenAllBox);
 
-            Lbl(page, "Audio folder (wav files of the mission):", 10, 56, 0, 0);
-            audioBox.Location = new Point(10, 76);
-            audioBox.Size = new Size(610, 22);
-            audioBox.Text = Ctx.AudioDir;
-            audioBox.TextChanged += delegate { Ctx.AudioDir = audioBox.Text; Ctx.Settings.AudioFolder = audioBox.Text; MarkDirty(); };
-            page.Controls.Add(audioBox);
-            Button browse = Btn(page, "Browse...", 628, 74, 90, 26);
-            browse.Click += delegate
-            {
-                using (FolderBrowserDialog d = new FolderBrowserDialog())
-                {
-                    d.SelectedPath = Ctx.AudioDir;
-                    if (d.ShowDialog(this) == DialogResult.OK) audioBox.Text = d.SelectedPath;
-                }
-            };
-
-            Lbl(page, "Language of the texts that have no language tag:", 10, 114, 0, 0);
+            Lbl(page, "Language of the texts that have no language tag:", 10, 58, 0, 0);
             defaultLangBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            defaultLangBox.Location = new Point(300, 110);
+            defaultLangBox.Location = new Point(300, 54);
             defaultLangBox.Width = 140;
             foreach (LangInfo l in LangInfo.All) defaultLangBox.Items.Add(l);
             defaultLangBox.SelectedItem = LangInfo.ByCode(Ctx.Settings.DefaultLanguage);
@@ -595,79 +641,9 @@ namespace HPGMissionCompanion
             };
             page.Controls.Add(defaultLangBox);
 
-            Lbl(page, "Master volume of the voices:", 10, 150, 0, 0);
-            masterBar.Minimum = 0; masterBar.Maximum = 100; masterBar.TickFrequency = 10; masterBar.LargeChange = 10;
-            masterBar.Value = Math.Max(0, Math.Min(100, Ctx.Settings.MasterVolume));
-            masterBar.Location = new Point(190, 142);
-            masterBar.Size = new Size(260, 36);
-            masterBar.ValueChanged += delegate
-            {
-                masterLabel.Text = masterBar.Value + "%";
-                Ctx.Settings.MasterVolume = masterBar.Value;
-                MarkDirty();
-            };
-            page.Controls.Add(masterBar);
-            masterLabel.Text = masterBar.Value + "%";
-            masterLabel.AutoSize = true;
-            masterLabel.Location = new Point(456, 150);
-            page.Controls.Add(masterLabel);
-            Lbl(page, "(the mission can set a text with <vol:50>)", 500, 150, 0, 0).ForeColor = SystemColors.GrayText;
-
-            simCheck.Text = "Start this program when Microsoft Flight Simulator starts (2020 and 2024)";
-            simCheck.AutoSize = true;
-            inhibitCheck.Text = "Auto set default audio inhibit L:AUDIOINHIBIT";
-            inhibitCheck.AutoSize = true;
-            inhibitCheck.Checked = Ctx.Settings.AutoAudioInhibit;
-            inhibitCheck.Location = new Point(10, 182);
-            inhibitCheck.CheckedChanged += delegate { Ctx.Settings.AutoAudioInhibit = inhibitCheck.Checked; MarkDirty(); };
-            page.Controls.Add(inhibitCheck);
-            inhibitInfo.AutoSize = true;
-            inhibitInfo.Location = new Point(360, 184);
-            inhibitInfo.ForeColor = SystemColors.GrayText;
-            inhibitInfo.Text = SimLink.Status;
-            page.Controls.Add(inhibitInfo);
-
-            simCheck.Location = new Point(10, 204);
-            simCheck.CheckedChanged += delegate { UpdateSimOptions(); if (!suppress) ApplyAutostart(); };
-            page.Controls.Add(simCheck);
-            minimizedCheck.Text = "Start minimized, in the notification area next to the clock";
-            minimizedCheck.AutoSize = true;
-            minimizedCheck.Checked = Ctx.Settings.StartMinimized;
-            minimizedCheck.Location = new Point(30, 226);
-            minimizedCheck.CheckedChanged += delegate
-            {
-                Ctx.Settings.StartMinimized = minimizedCheck.Checked;
-                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
-            };
-            page.Controls.Add(minimizedCheck);
-            exitCheck.Text = "Close it when the simulator closes";
-            exitCheck.AutoSize = true;
-            exitCheck.Checked = Ctx.Settings.ExitWithSim;
-            exitCheck.Location = new Point(30, 248);
-            exitCheck.CheckedChanged += delegate
-            {
-                Ctx.Settings.ExitWithSim = exitCheck.Checked;
-                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
-            };
-            page.Controls.Add(exitCheck);
-            simInfo.Location = new Point(30, 270);
-            simInfo.Size = new Size(690, 32);
-            simInfo.ForeColor = SystemColors.GrayText;
-            page.Controls.Add(simInfo);
-
-            GroupBox box = new GroupBox();
-            box.Text = "Mission text test and log";
-            box.Location = new Point(10, 304);
-            box.Size = new Size(708, 222);
-            page.Controls.Add(box);
-            Lbl(box, "Try a mission text (tags: <actor3> <Microsoft David> <ryan> <speed:1.2> <vol:60> <radio> <EN> <IT> <FR> <DE>):", 10, 22, 0, 0);
-            testBox.Location = new Point(10, 44);
-            testBox.Size = new Size(590, 22);
-            testBox.Text = "<actor3><speed:1.1>Crew three, ready for the next step.";
-            box.Controls.Add(testBox);
-            Button speak = Btn(box, "Speak", 608, 42, 88, 26);
-            speak.Click += delegate { Ctx.Player.EnqueueText(testBox.Text, true); };
-
+            logGroup.Text = "Log";
+            logGroup.Location = new Point(10, 96);
+            page.Controls.Add(logGroup);
             logBox.ReadOnly = true;
             logBox.BackColor = Color.FromArgb(10, 42, 24);
             logBox.ForeColor = Color.FromArgb(205, 240, 205);
@@ -675,12 +651,121 @@ namespace HPGMissionCompanion
             logBox.ScrollBars = RichTextBoxScrollBars.Vertical;
             logBox.WordWrap = true;
             logBox.Font = new Font("Consolas", 9F);
-            logBox.Location = new Point(10, 76);
-            logBox.Size = new Size(686, 136);
-            box.Controls.Add(logBox);
+            logBox.Location = new Point(10, 20);
+            logGroup.Controls.Add(logBox);
 
-            Lbl(page, "Closing the window keeps the program running in the notification area.", 10, 532, 0, 0).ForeColor = SystemColors.GrayText;
+            // advanced box
+            advBox.Text = "Advanced";
+            advBox.Location = new Point(10, 296);
+            advBox.Size = new Size(708, 232);
+            page.Controls.Add(advBox);
+
+            Lbl(advBox, "Port:", 10, 25, 0, 0);
+            portBox.Minimum = 1024;
+            portBox.Maximum = 65535;
+            portBox.Value = Ctx.Settings.Port;
+            portBox.Location = new Point(46, 21);
+            portBox.Size = new Size(70, 22);
+            portBox.ValueChanged += delegate { Ctx.Settings.Port = (int)portBox.Value; MarkDirty(); };
+            advBox.Controls.Add(portBox);
+            listenAllBox.Text = "Accept connections from other computers (Windows Firewall may ask to open the port)";
+            listenAllBox.AutoSize = true;
+            listenAllBox.Location = new Point(136, 23);
+            listenAllBox.Checked = Ctx.Settings.ListenAll;
+            listenAllBox.CheckedChanged += delegate
+            {
+                Ctx.Settings.ListenAll = listenAllBox.Checked;
+                MarkDirty();
+                if (server != null) { StopServer(); StartServer(false); }      // the new address takes effect at once
+            };
+            advBox.Controls.Add(listenAllBox);
+
+            Lbl(advBox, "Audio folder (wav files of the mission):", 10, 54, 0, 0);
+            audioBox.Location = new Point(10, 72);
+            audioBox.Size = new Size(590, 22);
+            audioBox.Text = Ctx.AudioDir;
+            audioBox.TextChanged += delegate { Ctx.AudioDir = audioBox.Text; Ctx.Settings.AudioFolder = audioBox.Text; MarkDirty(); };
+            advBox.Controls.Add(audioBox);
+            Button browse = Btn(advBox, "Browse...", 608, 70, 90, 26);
+            browse.Click += delegate
+            {
+                using (FolderBrowserDialog d = new FolderBrowserDialog())
+                {
+                    d.SelectedPath = Ctx.AudioDir;
+                    if (d.ShowDialog(this) == DialogResult.OK) audioBox.Text = d.SelectedPath;
+                }
+            };
+
+            inhibitCheck.Text = "Auto set default audio inhibit L:AUDIOINHIBIT";
+            inhibitCheck.AutoSize = true;
+            inhibitCheck.Checked = Ctx.Settings.AutoAudioInhibit;
+            inhibitCheck.Location = new Point(10, 104);
+            inhibitCheck.CheckedChanged += delegate { Ctx.Settings.AutoAudioInhibit = inhibitCheck.Checked; MarkDirty(); };
+            advBox.Controls.Add(inhibitCheck);
+            inhibitInfo.AutoSize = true;
+            inhibitInfo.Location = new Point(360, 106);
+            inhibitInfo.ForeColor = SystemColors.GrayText;
+            inhibitInfo.Text = SimLink.Status;
+            advBox.Controls.Add(inhibitInfo);
+
+            simCheck.Text = "Start this program when Microsoft Flight Simulator starts (2020 and 2024)";
+            simCheck.AutoSize = true;
+            simCheck.Location = new Point(10, 126);
+            simCheck.CheckedChanged += delegate { UpdateSimOptions(); if (!suppress) ApplyAutostart(); };
+            advBox.Controls.Add(simCheck);
+            minimizedCheck.Text = "Start minimized, in the notification area";
+            minimizedCheck.AutoSize = true;
+            minimizedCheck.Checked = Ctx.Settings.StartMinimized;
+            minimizedCheck.Location = new Point(30, 148);
+            minimizedCheck.CheckedChanged += delegate
+            {
+                Ctx.Settings.StartMinimized = minimizedCheck.Checked;
+                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
+            };
+            advBox.Controls.Add(minimizedCheck);
+            exitCheck.Text = "Close it when the simulator closes";
+            exitCheck.AutoSize = true;
+            exitCheck.Checked = Ctx.Settings.ExitWithSim;
+            exitCheck.Location = new Point(300, 148);
+            exitCheck.CheckedChanged += delegate
+            {
+                Ctx.Settings.ExitWithSim = exitCheck.Checked;
+                if (!suppress) { MarkDirty(); if (simCheck.Checked) ApplyAutostart(); }
+            };
+            advBox.Controls.Add(exitCheck);
+            simInfo.Location = new Point(30, 170);
+            simInfo.Size = new Size(660, 30);
+            simInfo.ForeColor = SystemColors.GrayText;
+            advBox.Controls.Add(simInfo);
+
+            Lbl(advBox, "Try a text:", 10, 206, 0, 0);
+            testBox.Location = new Point(80, 202);
+            testBox.Size = new Size(520, 22);
+            testBox.Text = "<actor3><speed:1.1>Crew three, ready for the next step.";
+            advBox.Controls.Add(testBox);
+            Button speak = Btn(advBox, "Speak", 608, 200, 90, 26);
+            speak.Click += delegate { Ctx.Player.EnqueueTest(testBox.Text); };
+            new ToolTip().SetToolTip(testBox, "Tags: <actor3> <Microsoft David> <ryan> <speed:1.2> <vol:60> <radio> <EN> <IT> <FR> <DE>");
+
+            footNote.Text = "Closing the window keeps the program running in the notification area.";
+            footNote.AutoSize = true;
+            footNote.ForeColor = SystemColors.GrayText;
+            footNote.Location = new Point(10, 532);
+            page.Controls.Add(footNote);
+
+            ApplyAdvanced();
         }
+
+        // the advanced groups follow the footer box; the log takes the room that the Advanced box leaves
+        void ApplyAdvanced()
+        {
+            bool on = advancedCheck.Checked;
+            advBox.Visible = on;
+            int bottom = on ? advBox.Top - 6 : 526;
+            logGroup.Size = new Size(708, bottom - logGroup.Top);
+            logBox.Size = new Size(686, logGroup.Height - 30);
+        }
+
         // the two sub-options only make sense with the simulator option
         void UpdateSimOptions()
         {
@@ -882,7 +967,7 @@ namespace HPGMissionCompanion
             string who = Actors.Names[i];
             int p = who.IndexOf(" (");
             if (p > 0) who = who.Substring(0, p);
-            Ctx.Player.EnqueueText("<actor" + (i + 1) + "><" + li.Code + ">" + string.Format(li.Sample, who), true);
+            Ctx.Player.EnqueueTest("<actor" + (i + 1) + "><" + li.Code + ">" + string.Format(li.Sample, who));
         }
 
         // ---- piper tab ---------------------------------------------------------------------------
@@ -1145,7 +1230,7 @@ namespace HPGMissionCompanion
             CatalogVoice c = SelectedCatalog();
             LangInfo li = CurrentLang();
             if (c == null || li == null) return;
-            Ctx.Player.EnqueueText("<" + c.Key + "><" + li.Code + ">" + string.Format(li.Sample, c.Name), true);
+            Ctx.Player.EnqueueTest("<" + c.Key + "><" + li.Code + ">" + string.Format(li.Sample, c.Name));
         }
 
         Action<long, long> ProgressReporter(string label)
@@ -1192,9 +1277,11 @@ namespace HPGMissionCompanion
             packList.Size = new Size(706, 150);
             packList.Columns.Add("Pack", 110);
             packList.Columns.Add("Language", 70);
-            packList.Columns.Add("Version", 62);
-            packList.Columns.Add("Messages", 72);
-            packList.Columns.Add("State", 370);
+            packList.Columns.Add("Version", 56);
+            packList.Columns.Add("Base", 44);
+            packList.Columns.Add("Messages", 66);
+            packList.Columns.Add("State", 354);
+            packList.SelectedIndexChanged += delegate { ShowPackDetail(); };
             page.Controls.Add(packList);
 
             dropZone.Location = new Point(10, 214);
@@ -1244,15 +1331,21 @@ namespace HPGMissionCompanion
             };
             Button reload = Btn(page, "Reload", 240, 292, 90, 30);
             reload.Click += delegate { VoicePacks.Refresh(); FillPacks(); packInfo.Text = "Packs read again from " + VoicePacks.Dir; };
-            Button remove = Btn(page, "Remove selected", 340, 292, 130, 30);
+            Button remove = Btn(page, "Remove selected", 340, 292, 112, 30);
             remove.Click += delegate { RemovePack(); };
+            Button template = Btn(page, "New translation...", 462, 292, 124, 30);
+            template.Click += delegate { NewTranslation(); };
+            Button complete = Btn(page, "Add missing texts", 596, 292, 120, 30);
+            complete.Click += delegate { AddMissingTexts(); };
 
             GroupBox gb = new GroupBox();
             gb.Text = "Simulator link of the packs";
             gb.Location = new Point(10, 330);
             gb.Size = new Size(706, 128);
             page.Controls.Add(gb);
-            Lbl(gb, "Pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP):", 10, 22, 0, 0);
+            Lbl(gb, "Active pack used by the mission:", 10, 22, 0, 0);
+            bridgeHint = Lbl(gb, BridgeHintText, 190, 22, 0, 0);
+            bridgeHint.ForeColor = SystemColors.GrayText;
             bridgeBox.DropDownStyle = ComboBoxStyle.DropDownList;
             bridgeBox.Location = new Point(10, 42);
             bridgeBox.Width = 200;
@@ -1262,6 +1355,7 @@ namespace HPGMissionCompanion
                 Ctx.Settings.BridgePack = (string)bridgeBox.SelectedItem;
                 MarkDirty();
                 Say.ApplySettings();
+                ShowActivePackWarning();
             };
             gb.Controls.Add(bridgeBox);
             Lbl(gb, "Texts:", 230, 46, 0, 0);
@@ -1331,20 +1425,102 @@ namespace HPGMissionCompanion
             if (bridgeBox.Items.Contains(chosen)) bridgeBox.SelectedItem = chosen; else if (bridgeBox.Items.Count > 0) bridgeBox.SelectedIndex = 0;
             suppress = false;
             packList.Items.Clear();
+            VoicePack reference = PackCheck.Reference();
             foreach (VoicePack p in VoicePacks.Packs)
             {
                 ListViewItem it = new ListViewItem(p.Name.Length > 0 ? p.Name : "(" + Path.GetFileName(p.File) + ")");
                 it.SubItems.Add(p.Language);
                 it.SubItems.Add(p.Version > 0 ? p.Version.ToString() : "-");
+                it.SubItems.Add(p == reference ? "base" : (p.BaseVer > 0 ? p.BaseVer.ToString() : "-"));
                 it.SubItems.Add(p.Messages.Count.ToString());
-                string state = p.Problems.Count == 0 ? "OK" : (p.Usable ? p.Problems.Count + " problem(s): " : "NOT USABLE: ") + p.Problems[0];
+                // red: unusable, texts missing against the base pack, or versions that cannot work together; orange: problems in the file, other values than the base pack, a base pack that moved on
+                PackReport rep = p.Usable ? PackCheck.Compare(p, reference) : new PackReport();
+                string state;
+                if (!p.Usable) state = "NOT USABLE: " + (p.Problems.Count > 0 ? p.Problems[0] : "no name or version");
+                else
+                {
+                    state = rep.Level > 0 ? rep.Summary() : (p.Problems.Count == 0 ? rep.Summary() : "");
+                    if (p.Problems.Count > 0) state = (state.Length > 0 && state != "OK" ? state + "; " : "") + p.Problems.Count + " problem(s): " + p.Problems[0];
+                }
                 it.SubItems.Add(state);
                 it.Tag = p;
-                if (!p.Usable) it.ForeColor = Color.Firebrick;
-                else if (p.Problems.Count > 0) it.ForeColor = Color.DarkOrange;
+                if (!p.Usable || rep.Level == 2) it.ForeColor = Color.Firebrick;
+                else if (p.Problems.Count > 0 || rep.Level == 1) it.ForeColor = Color.DarkOrange;
                 packList.Items.Add(it);
             }
             if (packList.Items.Count == 0) packInfo.Text = "No voice pack installed. Drop an XML file above.";
+            ShowActivePackWarning();
+        }
+
+        // under the choice of the active pack: the same warning in red when that pack lacks texts or does not fit the program
+        void ShowActivePackWarning()
+        {
+            if (bridgeHint == null) return;
+            VoicePack p = VoicePacks.Find(Say.BridgePackName);
+            PackReport rep = p != null ? PackCheck.Compare(p, PackCheck.Reference()) : null;
+            if (rep == null || rep.Level < 2) { bridgeHint.Text = BridgeHintText; bridgeHint.ForeColor = SystemColors.GrayText; return; }
+            bridgeHint.Text = rep.Missing.Count > 0 ? "INCOMPLETE: " + rep.Missing.Count + " texts missing, spoken in English" : "Does not fit the program: see the list above";
+            bridgeHint.ForeColor = Color.Firebrick;
+        }
+
+        void ShowPackDetail()
+        {
+            if (packList.SelectedItems.Count == 0) return;
+            VoicePack p = packList.SelectedItems[0].Tag as VoicePack;
+            if (p == null || !p.Usable) return;
+            VoicePack reference = PackCheck.Reference();
+            PackReport rep = PackCheck.Compare(p, reference);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(p.Name).Append(": ").Append(p == reference ? "the base pack (" + p.Messages.Count + " messages). A translation copies it." : rep.Summary());
+            if (rep.Missing.Count > 0)
+            {
+                sb.Append(" First missing keys: ");
+                for (int i = 0; i < rep.Missing.Count && i < 6; i++) sb.Append(i > 0 ? ", " : "").Append(rep.Missing[i]);
+                sb.Append(". Press Add missing texts to add them in English.");
+            }
+            packInfo.ForeColor = rep.Level == 2 ? Color.Firebrick : (rep.Level == 1 ? Color.DarkOrange : SystemColors.GrayText);
+            packInfo.Text = sb.ToString();
+        }
+
+        // a new pack file made from the base pack, to translate
+        void NewTranslation()
+        {
+            VoicePack reference = PackCheck.Reference();
+            if (reference == null) { packInfo.ForeColor = Color.Firebrick; packInfo.Text = "The base pack " + PackCheck.BaseName + " is not installed."; return; }
+            string lang = Ctx.Settings.DefaultLanguage;
+            using (SaveFileDialog d = new SaveFileDialog())
+            {
+                d.Title = "New translation of the pack " + reference.Name;
+                d.Filter = "Voice pack (*.xml)|*.xml";
+                d.FileName = (lang.Length > 0 && lang != "EN" ? lang : "MyPack") + ".xml";
+                d.InitialDirectory = VoicePacks.Dir;
+                if (d.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    string name = Path.GetFileNameWithoutExtension(d.FileName);
+                    string code = lang.Length > 0 && lang != "EN" ? lang : "IT";
+                    string msg = PackCheck.ExportTemplate(reference, name, code, d.FileName);
+                    packInfo.ForeColor = SystemColors.ControlText;
+                    packInfo.Text = msg + " Change language=\"\" in the file if it is not " + code + ", translate the texts, then press Reload.";
+                }
+                catch (Exception ex) { packInfo.ForeColor = Color.Firebrick; packInfo.Text = "ERROR: " + ex.Message; }
+            }
+        }
+
+        // the keys that the base pack gained since the pack was made, added in English at the end of the pack
+        void AddMissingTexts()
+        {
+            if (packList.SelectedItems.Count == 0) { packInfo.ForeColor = Color.Firebrick; packInfo.Text = "Select a pack in the list first."; return; }
+            VoicePack p = packList.SelectedItems[0].Tag as VoicePack;
+            try
+            {
+                string msg = PackCheck.AddMissing(p, PackCheck.Reference());
+                FillPacks();
+                packInfo.ForeColor = SystemColors.ControlText;
+                packInfo.Text = msg;
+                AppendLog("[INFO] Voice packs: " + msg);
+            }
+            catch (Exception ex) { packInfo.ForeColor = Color.Firebrick; packInfo.Text = "ERROR: " + ex.Message; }
         }
 
         void InstallPacks(string[] files)
@@ -1389,10 +1565,11 @@ namespace HPGMissionCompanion
             TabPage page = new TabPage("Radio effect");
             tabs.TabPages.Add(page);
             RadioSettings rs = Ctx.Settings.Radio;
-            Lbl(page, "A text with the tag <radio> is played like a radio call: a beep at the start, hiss under the voice, a band filter like a radio speaker and a short squelch burst at the end. " +
-                "<radio:off> ends the effect. Without the tag the voice is clean. These values are the same for every voice.", 10, 12, 706, 50);
+            Lbl(page, "Three sounds. The intercom (ICS) of the helicopter: a click and the hiss set here. A radio call (<radio>): the beep set here, the hiss + 10, a band filter like a radio speaker " +
+                "and a short squelch burst at the end. A call on an external radio (<radio:ext>, the dispatcher and the hospital): a double beep and the hiss + 20. Without a tag the voice is clean. " +
+                "These values are the same for every voice.", 10, 12, 706, 62);
 
-            Lbl(page, "Hiss under the voice:", 10, 82, 0, 0);
+            Lbl(page, "Hiss (intercom):", 10, 82, 0, 0);
             noiseBar.Minimum = 0; noiseBar.Maximum = 100; noiseBar.TickFrequency = 10; noiseBar.LargeChange = 10;
             noiseBar.Value = rs.NoiseLevel;
             noiseBar.Location = new Point(190, 74);
@@ -1404,7 +1581,7 @@ namespace HPGMissionCompanion
             noiseLabel.Location = new Point(496, 82);
             page.Controls.Add(noiseLabel);
 
-            Lbl(page, "Start beep:", 10, 130, 0, 0);
+            Lbl(page, "Start beep (radio):", 10, 130, 0, 0);
             beepBox.DropDownStyle = ComboBoxStyle.DropDownList;
             beepBox.Location = new Point(190, 126);
             beepBox.Width = 160;
@@ -1444,17 +1621,24 @@ namespace HPGMissionCompanion
             page.Controls.Add(qualityBox);
             Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 282, 0, 0).ForeColor = SystemColors.GrayText;
 
-            Button withRadio = Btn(page, "Listen with the radio effect", 10, 316, 210, 32);
-            withRadio.Click += delegate { TestRadio(true); };
-            Button without = Btn(page, "Listen without it", 230, 316, 150, 32);
-            without.Click += delegate { TestRadio(false); };
+            Button withRadio = Btn(page, "Radio call", 10, 316, 130, 32);
+            withRadio.Click += delegate { TestRadio("<radio>"); };
+            Button ics = Btn(page, "Intercom (ICS)", 150, 316, 130, 32);
+            ics.Click += delegate { TestRadio("<ics>"); };
+            Button ext = Btn(page, "External radio", 290, 316, 130, 32);
+            ext.Click += delegate { TestRadio("<radio:ext>"); };
+            Button without = Btn(page, "Clean voice", 430, 316, 130, 32);
+            without.Click += delegate { TestRadio("<radio:off>"); };
 
-            Lbl(page, "In the mission text:", 10, 370, 0, 0);
-            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 392, 0, 0);
-            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 414, 0, 0);
-            Lbl(page, "<radio:off>Back to the clean voice.", 30, 436, 0, 0);
-            Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 458, 0, 0);
-            Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Service tab.", 10, 488, 706, 40).ForeColor = SystemColors.GrayText;
+            Lbl(page, "In the mission text:", 10, 364, 0, 0);
+            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 384, 0, 0);
+            Lbl(page, "<ics>Pilot to crew, intercom.", 30, 402, 0, 0);
+            Lbl(page, "<radio:ext>Dispatcher call, external radio.", 30, 420, 0, 0);
+            Lbl(page, "<radio:off>Back to the clean voice.     <zone:far>  a voice heard very low (30 to 100 m away).", 30, 438, 0, 0);
+            Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 456, 0, 0);
+            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 474, 0, 0);
+            Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Volume tab. " +
+                "Who hears what (intercom, radio, voice, silence) is decided by the program from the context of the mission, see the guide of the About tab.", 10, 500, 706, 40).ForeColor = SystemColors.GrayText;
         }
 
         // ---- volume tab --------------------------------------------------------------------------
@@ -1462,68 +1646,94 @@ namespace HPGMissionCompanion
         {
             TabPage page = new TabPage("Volume");
             tabs.TabPages.Add(page);
-            Lbl(page, "How loud a voice is: the master volume of the Service tab, the volume tag of the text (<vol:..>), the volumes of the mission and the position of the view. " +
-                "The level is applied to each line when its turn to be spoken comes (not while it is playing): a change of a slider is heard from the next line.", 10, 12, 706, 50);
+            Lbl(page, "How loud a voice is: the master volume below, the volume tag of the text (<vol:..>), the volumes of the mission, the position of the view and, for a voice in the air, " +
+                "the distance from the helicopter. The level is applied to each line when its turn to be spoken comes (not while it is playing): a change of a slider is heard from the next line.", 10, 12, 706, 50);
+
+            Lbl(page, "Master volume of the voices:", 10, 78, 0, 0);
+            masterBar.Minimum = 0; masterBar.Maximum = 100; masterBar.TickFrequency = 10; masterBar.LargeChange = 10;
+            masterBar.Value = Math.Max(0, Math.Min(100, Ctx.Settings.MasterVolume));
+            masterBar.Location = new Point(190, 70);
+            masterBar.Size = new Size(260, 36);
+            masterBar.ValueChanged += delegate
+            {
+                masterLabel.Text = masterBar.Value + "%";
+                Ctx.Settings.MasterVolume = masterBar.Value;
+                MarkDirty();
+            };
+            page.Controls.Add(masterBar);
+            masterLabel.Text = masterBar.Value + "%";
+            masterLabel.AutoSize = true;
+            masterLabel.Location = new Point(456, 78);
+            page.Controls.Add(masterLabel);
+            Lbl(page, "(the mission can set a text with <vol:50>)", 500, 78, 0, 0).ForeColor = SystemColors.GrayText;
 
             missionVolCheck.Text = "Follow the volumes of the mission";
             missionVolCheck.AutoSize = true;
-            missionVolCheck.Location = new Point(10, 74);
+            missionVolCheck.Location = new Point(10, 122);
             missionVolCheck.Checked = Ctx.Settings.UseMissionVolumes;
             missionVolCheck.CheckedChanged += delegate { Ctx.Settings.UseMissionVolumes = missionVolCheck.Checked; if (!suppress) MarkDirty(); };
             page.Controls.Add(missionVolCheck);
-            Lbl(page, "Crew voices and sounds follow L:VOLUME_CREW, the checklist voice (actor 11) follows L:VOLUME_CHK: the two sliders of the mission tablet. 100 is the full level.", 30, 98, 690, 36).ForeColor = SystemColors.GrayText;
+            Lbl(page, "Crew voices and sounds follow L:VOLUME_CREW, the checklist voice (actor 11) follows L:VOLUME_CHK: the two sliders of the mission tablet. 100 is the full level. " +
+                "The Test buttons of this program ignore them.", 30, 146, 690, 36).ForeColor = SystemColors.GrayText;
 
-            Lbl(page, "A voice (not a radio call) from inside, view outside the helicopter:", 10, 140, 0, 0);
+            Lbl(page, "A voice (not a radio call) from inside, view outside the helicopter:", 10, 192, 0, 0);
             attOutBar.Minimum = 0; attOutBar.Maximum = 30; attOutBar.TickFrequency = 3; attOutBar.LargeChange = 3;
             attOutBar.Value = Ctx.Settings.AttenCamOutside;
-            attOutBar.Location = new Point(10, 160);
+            attOutBar.Location = new Point(10, 212);
             attOutBar.Size = new Size(420, 36);
             attOutBar.ValueChanged += delegate { attOutLabel.Text = attOutBar.Value == 0 ? "off" : "-" + attOutBar.Value + " dB"; Ctx.Settings.AttenCamOutside = attOutBar.Value; if (!suppress) MarkDirty(); };
             page.Controls.Add(attOutBar);
             attOutLabel.AutoSize = true;
-            attOutLabel.Location = new Point(440, 168);
+            attOutLabel.Location = new Point(440, 220);
             attOutLabel.Text = attOutBar.Value == 0 ? "off" : "-" + attOutBar.Value + " dB";
             page.Controls.Add(attOutLabel);
 
-            Lbl(page, "A voice from outside (technicians, ground unit, patient, crew on the ground), view inside the helicopter:", 10, 210, 0, 0);
+            Lbl(page, "A voice from outside (technicians, ground unit, patient, crew on the ground), view inside the helicopter:", 10, 262, 0, 0);
             attInBar.Minimum = 0; attInBar.Maximum = 30; attInBar.TickFrequency = 3; attInBar.LargeChange = 3;
             attInBar.Value = Ctx.Settings.AttenCamInside;
-            attInBar.Location = new Point(10, 230);
+            attInBar.Location = new Point(10, 282);
             attInBar.Size = new Size(420, 36);
             attInBar.ValueChanged += delegate { attInLabel.Text = attInBar.Value == 0 ? "off" : "-" + attInBar.Value + " dB"; Ctx.Settings.AttenCamInside = attInBar.Value; if (!suppress) MarkDirty(); };
             page.Controls.Add(attInBar);
             attInLabel.AutoSize = true;
-            attInLabel.Location = new Point(440, 238);
+            attInLabel.Location = new Point(440, 290);
             attInLabel.Text = attInBar.Value == 0 ? "off" : "-" + attInBar.Value + " dB";
             page.Controls.Add(attInLabel);
 
-            Lbl(page, "Radio calls are not changed: they are heard in the headset wherever the view is. Who is inside comes from the context of the mission (L:HMC_CREW_PRESENT), " +
-                "the view from the simulator (CAMERA STATE: 2 is the cockpit, every other view counts as outside). Without the mission context or the view nothing is reduced. " +
-                "Sound files (ringtones) follow L:VOLUME_CREW only. The attenuation is a fixed level, not a distance: a voice is as loud at one metre as at five.", 10, 284, 706, 80).ForeColor = SystemColors.GrayText;
-            mixInfo.Location = new Point(10, 380);
+            Lbl(page, "Radio calls, the intercom and external radio calls are not attenuated: they are heard in the headset wherever the view is. Who is aboard and how far the technician and the " +
+                "ground unit are comes from the context of the mission (L:HMC_CREW_PRESENT, L:HMC_ZONE_*); the view from the simulator (CAMERA STATE: 2 is the cockpit, every other view counts as outside). " +
+                "With somebody aboard, a voice in the air that comes from more than 30 m is heard very low and from more than 100 m not at all; when everybody is outside together the voices keep the normal level. " +
+                "Without the mission context or the view nothing is reduced. Sound files (ringtones) follow L:VOLUME_CREW only.", 10, 336, 706, 96).ForeColor = SystemColors.GrayText;
+            mixInfo.Location = new Point(10, 440);
             mixInfo.Size = new Size(706, 22);
             page.Controls.Add(mixInfo);
         }
 
-        void TestRadio(bool radio)
+        void TestRadio(string tag)
         {
             LangInfo li = CurrentLang();
-            Ctx.Player.EnqueueText("<actor1><" + li.Code + ">" + (radio ? "<radio>" : "<radio:off>") + string.Format(li.Sample, Actors.Names[0]), true);
+            Ctx.Player.EnqueueTest("<actor1><" + li.Code + ">" + tag + string.Format(li.Sample, Actors.Names[0]));
         }
 
         // ---- tools tab ---------------------------------------------------------------------------
+        // Two boxes: the work folder of the mission and the mission index. The updates have their own tab.
         void BuildToolsTab()
         {
             TabPage page = new TabPage("Tools");
             tabs.TabPages.Add(page);
 
-            Lbl(page, "Mission work folder: the tables, saved games and snapshots the mission writes. Close the simulator before cleaning it.", 10, 12, 706, 36);
+            GroupBox workBox = new GroupBox();
+            workBox.Text = "Work folder";
+            workBox.Location = new Point(10, 8);
+            workBox.Size = new Size(708, 156);
+            page.Controls.Add(workBox);
+            Lbl(workBox, "The tables, saved games and snapshots the mission writes. Close the simulator before cleaning it.", 10, 22, 688, 18);
             workCombo.DropDownStyle = ComboBoxStyle.DropDownList;
-            workCombo.Location = new Point(10, 50);
-            workCombo.Size = new Size(540, 24);
+            workCombo.Location = new Point(10, 48);
+            workCombo.Size = new Size(520, 24);
             workCombo.SelectedIndexChanged += delegate { UpdateWorkInfo(); };
-            page.Controls.Add(workCombo);
-            Button browseWork = Btn(page, "Browse...", 558, 48, 76, 27);
+            workBox.Controls.Add(workCombo);
+            Button browseWork = Btn(workBox, "Browse...", 538, 46, 76, 27);
             browseWork.Click += delegate
             {
                 using (FolderBrowserDialog d = new FolderBrowserDialog())
@@ -1532,24 +1742,28 @@ namespace HPGMissionCompanion
                     if (d.ShowDialog(this) == DialogResult.OK) { Ctx.Settings.WorkFolder = d.SelectedPath; MarkDirty(); RefreshTools(); }
                 }
             };
-            Button rescan = Btn(page, "Rescan", 642, 48, 76, 27);
+            Button rescan = Btn(workBox, "Rescan", 620, 46, 76, 27);
             rescan.Click += delegate { RefreshTools(); };
-
-            Button openWork = Btn(page, "Open folder", 10, 84, 140, 30);
+            Button openWork = Btn(workBox, "Open folder", 10, 84, 140, 30);
             openWork.Click += delegate { OpenWork(); };
-            Button clean = Btn(page, "Clean up...", 160, 84, 140, 30);
+            Button clean = Btn(workBox, "Clean up...", 160, 84, 140, 30);
             clean.Click += delegate { CleanWork(); };
-            workInfo.Size = new Size(708, 18);
-            workInfo.Location = new Point(10, 120);
+            workInfo.Size = new Size(686, 18);
+            workInfo.Location = new Point(10, 124);
             workInfo.ForeColor = SystemColors.GrayText;
-            page.Controls.Add(workInfo);
+            workBox.Controls.Add(workInfo);
 
-            Lbl(page, "Mission index: the HPG tool Update Mission Index, to run after a mission file is added or changed in the Community folder.", 10, 150, 706, 36);
+            GroupBox indexBox = new GroupBox();
+            indexBox.Text = "Mission index";
+            indexBox.Location = new Point(10, 172);
+            indexBox.Size = new Size(708, 132);
+            page.Controls.Add(indexBox);
+            Lbl(indexBox, "The HPG tool Update Mission Index, to run after a mission file is added or changed in the Community folder.", 10, 22, 688, 18);
             indexCombo.DropDownStyle = ComboBoxStyle.DropDownList;
-            indexCombo.Location = new Point(10, 188);
-            indexCombo.Size = new Size(624, 24);
-            page.Controls.Add(indexCombo);
-            Button browseIdx = Btn(page, "Browse...", 642, 186, 76, 27);
+            indexCombo.Location = new Point(10, 48);
+            indexCombo.Size = new Size(596, 24);
+            indexBox.Controls.Add(indexCombo);
+            Button browseIdx = Btn(indexBox, "Browse...", 614, 46, 76, 27);
             browseIdx.Click += delegate
             {
                 using (OpenFileDialog d = new OpenFileDialog())
@@ -1560,22 +1774,46 @@ namespace HPGMissionCompanion
                 }
             };
             indexButton.Text = "Update mission index";
-            indexButton.Location = new Point(10, 222);
+            indexButton.Location = new Point(10, 88);
             indexButton.Size = new Size(180, 30);
             indexButton.Click += delegate { UpdateIndex(false); };
-            page.Controls.Add(indexButton);
+            indexBox.Controls.Add(indexButton);
             autoIndexCheck.Text = "Update the index automatically when the app starts";
             autoIndexCheck.AutoSize = true;
             autoIndexCheck.Checked = Ctx.Settings.AutoIndex;
-            autoIndexCheck.Location = new Point(204, 228);
+            autoIndexCheck.Location = new Point(204, 94);
             autoIndexCheck.CheckedChanged += delegate { Ctx.Settings.AutoIndex = autoIndexCheck.Checked; MarkDirty(); };
-            page.Controls.Add(autoIndexCheck);
+            indexBox.Controls.Add(autoIndexCheck);
 
-            Lbl(page, "Updates: the R&&E mission (GitHub release, Google Drive link as a fallback) and this program (GitHub). The check runs when the program starts and on the button, and only reads: " +
-                "nothing is downloaded without the question. Then the mission file is replaced (the old one is kept beside it, extension .json.bak), the index is updated and, last, the program.", 10, 262, 706, 50);
+            toolsOut.Multiline = true;
+            toolsOut.ReadOnly = true;
+            toolsOut.ScrollBars = ScrollBars.Vertical;
+            toolsOut.Font = new Font("Consolas", 9F);
+            toolsOut.Location = new Point(10, 312);
+            toolsOut.Size = new Size(708, 230);
+            page.Controls.Add(toolsOut);
+        }
+
+        // ---- updates tab -------------------------------------------------------------------------
+        // Opened by the button Check for updates of the window footer. The scope (both, only the mission, only the program) is chosen here.
+        void BuildUpdatesTab()
+        {
+            TabPage page = new TabPage("Updates");
+            updatesPage = page;
+            tabs.TabPages.Add(page);
+
+            Lbl(page, "The R&&E mission (GitHub release, Google Drive link as a fallback) and this program (GitHub). The check runs when the program starts (option below) and on the button " +
+                "Check for updates at the bottom of the window, and only reads: nothing is downloaded without the question. A new mission replaces the mission file (the old one is kept beside it, " +
+                "extension .json.bak) and the index is updated; the program is updated last: it closes, the setup installs the new version and starts it again.", 10, 10, 706, 62);
+
+            GroupBox fileBox = new GroupBox();
+            fileBox.Text = "Mission file to update";
+            fileBox.Location = new Point(10, 78);
+            fileBox.Size = new Size(708, 64);
+            page.Controls.Add(fileBox);
             missionCombo.DropDownStyle = ComboBoxStyle.DropDownList;
-            missionCombo.Location = new Point(10, 316);
-            missionCombo.Size = new Size(624, 24);
+            missionCombo.Location = new Point(10, 26);
+            missionCombo.Size = new Size(596, 24);
             missionCombo.Items.Add("(the mission file to update is looked for when you press Check for updates)");
             missionCombo.SelectedIndex = 0;
             missionCombo.SelectedIndexChanged += delegate
@@ -1583,8 +1821,8 @@ namespace HPGMissionCompanion
                 MissionCopy c = missionCombo.SelectedItem as MissionCopy;
                 if (c != null && !string.Equals(Ctx.Settings.MissionFile, c.Path, StringComparison.OrdinalIgnoreCase)) { Ctx.Settings.MissionFile = c.Path; MarkDirty(); }
             };
-            page.Controls.Add(missionCombo);
-            Button browseMission = Btn(page, "Browse...", 642, 314, 76, 27);
+            fileBox.Controls.Add(missionCombo);
+            Button browseMission = Btn(fileBox, "Browse...", 614, 24, 76, 27);
             browseMission.Click += delegate
             {
                 using (OpenFileDialog d = new OpenFileDialog())
@@ -1593,38 +1831,111 @@ namespace HPGMissionCompanion
                     d.Filter = "Mission files|*.json|All files|*.*";
                     if (d.ShowDialog(this) != DialogResult.OK) return;
                     Ctx.Settings.MissionFile = d.FileName; MarkDirty();
-                    ToolsLog("Mission file chosen: " + d.FileName + " (press Check for updates)");
+                    UpdLog("Mission file chosen: " + d.FileName + " (press Check for updates)");
                 }
             };
-            updateButton.Text = "Check for updates";
-            updateButton.Location = new Point(10, 348);
-            updateButton.Size = new Size(180, 30);
-            updateButton.Click += delegate { CheckUpdates(false); };
-            page.Controls.Add(updateButton);
-            autoUpdateCheck.Text = "Check for updates when the program starts";
-            autoUpdateCheck.AutoSize = true;
-            autoUpdateCheck.Checked = Ctx.Settings.AutoUpdateCheck;
+
+            GroupBox whatBox = new GroupBox();
+            whatBox.Text = "What to update";
+            whatBox.Location = new Point(10, 150);
+            whatBox.Size = new Size(708, 96);
+            page.Controls.Add(whatBox);
+            updBoth.Text = "Both: the mission first, then the program";
+            updBoth.AutoSize = true;
+            updBoth.Location = new Point(14, 22);
+            updMission.Text = "Only the mission";
+            updMission.AutoSize = true;
+            updMission.Location = new Point(14, 44);
+            updApp.Text = "Only the program";
+            updApp.AutoSize = true;
+            updApp.Location = new Point(14, 66);
+            whatBox.Controls.Add(updBoth);
+            whatBox.Controls.Add(updMission);
+            whatBox.Controls.Add(updApp);
+            updBoth.Checked = Ctx.Settings.UpdateWhat == "both";
+            updMission.Checked = Ctx.Settings.UpdateWhat == "mission";
+            updApp.Checked = Ctx.Settings.UpdateWhat == "app";
+            EventHandler scopeChanged = delegate
+            {
+                if (suppress) return;
+                Ctx.Settings.UpdateWhat = updMission.Checked ? "mission" : (updApp.Checked ? "app" : "both");
+                MarkDirty();
+            };
+            updBoth.CheckedChanged += scopeChanged;
+            updMission.CheckedChanged += scopeChanged;
+            updApp.CheckedChanged += scopeChanged;
+
             whatsNewButton.Text = "What's new...";
-            whatsNewButton.Location = new Point(200, 348);
+            whatsNewButton.Location = new Point(10, 256);
             whatsNewButton.Size = new Size(120, 30);
             whatsNewButton.Click += delegate { ShowWhatsNew(); };
             page.Controls.Add(whatsNewButton);
-            autoUpdateCheck.Location = new Point(332, 354);
+            autoUpdateCheck.Text = "Check for updates when the program starts";
+            autoUpdateCheck.AutoSize = true;
+            autoUpdateCheck.Checked = Ctx.Settings.AutoUpdateCheck;
+            autoUpdateCheck.Location = new Point(144, 262);
             autoUpdateCheck.CheckedChanged += delegate { Ctx.Settings.AutoUpdateCheck = autoUpdateCheck.Checked; MarkDirty(); };
             page.Controls.Add(autoUpdateCheck);
             updateInfo.AutoSize = true;
-            updateInfo.Location = new Point(620, 355);
+            updateInfo.Location = new Point(10, 296);
             updateInfo.ForeColor = SystemColors.GrayText;
             updateInfo.Text = "Program version " + AppInfo.Version;
             page.Controls.Add(updateInfo);
 
-            toolsOut.Multiline = true;
-            toolsOut.ReadOnly = true;
-            toolsOut.ScrollBars = ScrollBars.Vertical;
-            toolsOut.Font = new Font("Consolas", 9F);
-            toolsOut.Location = new Point(10, 388);
-            toolsOut.Size = new Size(708, 154);
-            page.Controls.Add(toolsOut);
+            updatesOut.Multiline = true;
+            updatesOut.ReadOnly = true;
+            updatesOut.ScrollBars = ScrollBars.Vertical;
+            updatesOut.Font = new Font("Consolas", 9F);
+            updatesOut.Location = new Point(10, 322);
+            updatesOut.Size = new Size(708, 220);
+            page.Controls.Add(updatesOut);
+        }
+
+        void UpdLog(string line)
+        {
+            updatesOut.AppendText(line + Environment.NewLine);
+        }
+
+        void SelectUpdatesTab()
+        {
+            if (updatesPage != null) tabs.SelectedTab = updatesPage;
+        }
+
+        Font boldFont;
+        string updateSummary = "";
+
+        // the state shown by the Updates tab (amber), the status line and the footer button (amber text on a light fill) while something newer is published
+        void SetUpdateState(string info, bool available)
+        {
+            updatesAvailable = available;
+            if (boldFont == null) boldFont = new Font(Font, FontStyle.Bold);
+            updateInfo.Text = info;
+            updateInfo.ForeColor = available ? Color.FromArgb(170, 70, 0) : SystemColors.GrayText;
+            updateInfo.Font = available ? boldFont : Font;
+            if (available)
+            {
+                updateButton.FlatStyle = FlatStyle.Flat;
+                updateButton.FlatAppearance.BorderColor = Color.FromArgb(200, 100, 0);
+                updateButton.BackColor = Color.FromArgb(255, 232, 170);
+                updateButton.ForeColor = Color.FromArgb(150, 55, 0);
+                updateButton.Font = boldFont;
+            }
+            else
+            {
+                updateButton.FlatStyle = FlatStyle.Standard;
+                updateButton.UseVisualStyleBackColor = true;
+                updateButton.ForeColor = SystemColors.ControlText;
+                updateButton.Font = Font;
+            }
+            tabs.Invalidate();
+        }
+
+        // the check is over (or stopped): the button works again and the status line shows the news, if any are still waiting
+        void UpdateIdle()
+        {
+            updateRunning = false;
+            updateButton.Enabled = true;
+            SetUpdateState(updatesAvailable ? updateSummary : "Program version " + AppInfo.Version, updatesAvailable);
         }
 
         void ToolsLog(string line)
@@ -1752,13 +2063,14 @@ namespace HPGMissionCompanion
             }
             updateRunning = true;
             updateButton.Enabled = false;
-            updateInfo.Text = "Checking...";
+            if (!automatic) SelectUpdatesTab();             // the button of the footer opens the Updates tab
+            SetUpdateState("Checking...", updatesAvailable);
             Ctx.Settings.LastUpdateCheck = DateTime.UtcNow.ToString("o");
             try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
             string fallbackUrl = Ctx.Settings.MissionUrl;
             string chosen = missionCombo.SelectedItem is MissionCopy ? ((MissionCopy)missionCombo.SelectedItem).Path : Ctx.Settings.MissionFile;
             string indexCmd = indexCombo.SelectedItem as string;
-            if (!automatic) ToolsLog("--- Check for updates " + DateTime.Now.ToString("HH:mm:ss"));
+            if (!automatic) UpdLog("--- Check for updates " + DateTime.Now.ToString("HH:mm:ss"));
             ThreadPool.QueueUserWorkItem(delegate
             {
                 List<string> lines = new List<string>();
@@ -1804,55 +2116,64 @@ namespace HPGMissionCompanion
 
                 bool missionNew = rm != null && target != null && rm.Release.CompareTo(target.Release) > 0;
                 bool appNew = ra != null && ra.AssetUrl != null && Updates.AppIsNewer(ra);
+                string scope = Ctx.Settings.UpdateWhat;          // both | mission | app, chosen in the Updates tab
+                bool doMission = missionNew && scope != "app";
+                bool doApp = appNew && scope != "mission";
+                if (missionNew && !doMission) lines.Add("The mission is newer but the option Only the program is selected: it is not installed.");
+                if (appNew && !doApp) lines.Add("The program is newer but the option Only the mission is selected: it is not installed.");
                 if (rm != null && target == null) lines.Add("No R&E mission file was identified: choose it with Browse and check again.");
                 if (target != null && indexKnown && !indexListsFile && !missionNew)
                     lines.Add("[NOTICE] the mission index does not list the release of your mission file: press Update mission index.");
-                if (!missionNew && !appNew) lines.Add("Nothing to update.");
+                if (!doMission && !doApp) lines.Add(missionNew || appNew ? "Nothing to install with the chosen option." : "Nothing to update.");
 
                 Ui(delegate
                 {
                     if (automatic)
                     {
-                        bool any = missionNew || appNew;
+                        bool any = doMission || doApp;
+                        updatesAvailable = any;
                         if (any)
                         {
-                            foreach (string l in lines) ToolsLog(l);
-                            string what = (missionNew ? "mission " + rm.Release : "") + (missionNew && appNew ? " and " : "") + (appNew ? "program " + ra.Tag : "");
+                            foreach (string l in lines) UpdLog(l);
+                            string what = (doMission ? "mission " + rm.Release : "") + (doMission && doApp ? " and " : "") + (doApp ? "program " + ra.Tag : "");
+                            updateSummary = "Update available: " + what;
                             AppendLog("[INFO] Updates: " + what + " available");
                             updateBalloon = true;
                             tray.ShowBalloonTip(10000, AppInfo.Name, "Update available: " + what + ". Click here to install it.", ToolTipIcon.Info);
                         }
-                        else AppendLog("[INFO] Updates: nothing newer" + (lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); }) ? " (a source could not be read, see the Tools tab: press Check for updates)" : ""));
-                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        else AppendLog("[INFO] Updates: nothing newer" + (lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); }) ? " (a source could not be read, see the Updates tab: press Check for updates)" : ""));
+                        UpdateIdle();
                         return;
                     }
-                    foreach (string l in lines) ToolsLog(l);
+                    foreach (string l in lines) UpdLog(l);
                     if (copies.Count > 0)
                     {
                         missionCombo.Items.Clear();
                         foreach (MissionCopy c in copies) missionCombo.Items.Add(c);
                         if (target != null) missionCombo.SelectedItem = target;
                     }
+                    updatesAvailable = doMission || doApp;
+                    updateSummary = "Update available: " + (doMission ? "mission " + rm.Release : "") + (doMission && doApp ? " and " : "") + (doApp ? "program " + ra.Tag : "");
                     bool go = false;
-                    if (missionNew || appNew)
+                    if (doMission || doApp)
                     {
                         StringBuilder q = new StringBuilder();
-                        if (missionNew) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + (target.Missing ? "none installed" : target.Release.ToString()) + ").");
-                        if (appNew) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
+                        if (doMission) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + (target.Missing ? "none installed" : target.Release.ToString()) + ").");
+                        if (doApp) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
                         q.AppendLine();
-                        if (missionNew && target.Missing) q.AppendLine("The mission file does not exist yet: it will be created in " + Path.GetDirectoryName(target.Path) + ".\n");
-                        else if (missionNew && !target.Release.HasRelease) q.AppendLine("The mission file to replace is a file without a release number (" + target.Path + ").\n");
+                        if (doMission && target.Missing) q.AppendLine("The mission file does not exist yet: it will be created in " + Path.GetDirectoryName(target.Path) + ".\n");
+                        else if (doMission && !target.Release.HasRelease) q.AppendLine("The mission file to replace is a file without a release number (" + target.Path + ").\n");
                         if (Tools.SimulatorRunning()) q.AppendLine("Microsoft Flight Simulator is running: restart the mission after the update.\n");
                         q.Append("Download and install now?\n\n");
-                        if (missionNew) q.Append("The mission file is replaced first (the old one is kept beside it with the extension .json.bak) and the mission index is updated. ");
-                        if (appNew) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
+                        if (doMission) q.Append("The mission file is replaced first (the old one is kept beside it with the extension .json.bak) and the mission index is updated. ");
+                        if (doApp) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
                         StringBuilder notes = new StringBuilder();
-                        if (missionNew) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
-                        if (appNew) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)));
+                        if (doMission) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
+                        if (doApp) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)));
                         go = NotesForm.Ask(this, Text + " - update available", q.ToString().TrimEnd(), notes.ToString()) == DialogResult.Yes;
                     }
-                    if (!go) { updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version; return; }
-                    InstallUpdates(missionNew ? target : null, missionNew ? rm : null, appNew ? ra : null, indexCmd);
+                    if (!go) { UpdateIdle(); return; }
+                    InstallUpdates(doMission ? target : null, doMission ? rm : null, doApp ? ra : null, indexCmd);
                 });
             });
         }
@@ -1902,32 +2223,32 @@ namespace HPGMissionCompanion
                     {
                         string file = Path.Combine(tmp, "everywhere_all-" + rm.Release.Major + "." + rm.Release.Minor + ".json");
                         long shown = -1;
-                        Ui(delegate { ToolsLog("Downloading the mission " + rm.Release + " (" + rm.Source + ")..."); });
+                        Ui(delegate { UpdLog("Downloading the mission " + rm.Release + " (" + rm.Source + ")..."); });
                         Updates.DownloadMission(rm, file, delegate (long done, long total)
                         {
                             long step = total > 0 ? done * 4 / total : 0;
-                            if (step != shown) { shown = step; Ui(delegate { ToolsLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
+                            if (step != shown) { shown = step; Ui(delegate { UpdLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
                         });
                         string backup = Updates.ReplaceInstalled(target.Path, file, null);
                         try { File.Delete(file); } catch (Exception) { }
-                        Ui(delegate { ToolsLog((backup == null ? "Mission file created: " : "Mission file replaced: ") + target.Path); if (backup != null) ToolsLog("The previous file is kept beside it: " + backup); });
+                        Ui(delegate { UpdLog((backup == null ? "Mission file created: " : "Mission file replaced: ") + target.Path); if (backup != null) UpdLog("The previous file is kept beside it: " + backup); });
                         if (indexCmd != null)
                         {
-                            Ui(delegate { ToolsLog("Updating the mission index..."); });
-                            int rc = Tools.RunIndex(indexCmd, delegate (string line) { Ui(delegate { ToolsLog(line); }); });
-                            Ui(delegate { ToolsLog("Index tool finished, exit code " + rc + ". In the simulator press Refresh in the mission app."); });
+                            Ui(delegate { UpdLog("Updating the mission index..."); });
+                            int rc = Tools.RunIndex(indexCmd, delegate (string line) { Ui(delegate { UpdLog(line); }); });
+                            Ui(delegate { UpdLog("Index tool finished, exit code " + rc + ". In the simulator press Refresh in the mission app."); });
                         }
-                        else Ui(delegate { ToolsLog("[NOTICE] no index tool is known: run Update Mission Index yourself."); });
+                        else Ui(delegate { UpdLog("[NOTICE] no index tool is known: run Update Mission Index yourself."); });
                     }
                     if (ra != null)
                     {
                         setup = Path.Combine(tmp, "HPGMissionCompanionSetup-" + ra.Tag + ".exe");
                         long shown = -1;
-                        Ui(delegate { ToolsLog("Downloading the program " + ra.Tag + "..."); });
+                        Ui(delegate { UpdLog("Downloading the program " + ra.Tag + "..."); });
                         Updates.DownloadSetup(ra, setup, delegate (long done, long total)
                         {
                             long step = total > 0 ? done * 4 / total : 0;
-                            if (step != shown) { shown = step; Ui(delegate { ToolsLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
+                            if (step != shown) { shown = step; Ui(delegate { UpdLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
                         });
                     }
                 }
@@ -1936,28 +2257,29 @@ namespace HPGMissionCompanion
                 {
                     if (error != null)
                     {
-                        ToolsLog("[ERROR] " + error);
-                        ToolsLog("The update stopped here: what was already replaced is kept, press Check for updates to go on.");
-                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        UpdLog("[ERROR] " + error);
+                        UpdLog("The update stopped here: what was already replaced is kept, press Check for updates to go on.");
+                        UpdateIdle();
                         return;
                     }
                     if (setup == null)
                     {
-                        ToolsLog("Update finished.");
-                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        UpdLog("Update finished.");
+                        updatesAvailable = false;
+                        UpdateIdle();
                         return;
                     }
                     try
                     {
                         if (dirty) SaveSettings();
-                        ToolsLog("Starting the setup: this program closes and starts again.");
+                        UpdLog("Starting the setup: this program closes and starts again.");
                         Process.Start(Updates.SetupStart(setup, Ctx.BaseDir));
                         ExitApp(false);
                     }
                     catch (Exception ex)
                     {
-                        ToolsLog("[ERROR] the setup could not be started: " + ex.Message + " (the file is " + setup + ")");
-                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        UpdLog("[ERROR] the setup could not be started: " + ex.Message + " (the file is " + setup + ")");
+                        UpdateIdle();
                     }
                 });
             });

@@ -14,7 +14,7 @@ namespace HPGMissionCompanion
     {
         public string Key;
         public int Actor = 1;
-        public string Radio = "auto";           // auto: the mission decides with its own <radio> tags; on / off: the pack decides when the mission does not
+        public string Radio = "auto";           // auto: the program decides from the context of the mission; on (radio call), off (voice), ics (intercom), ext (external radio call, heard only when the radio is on), ext-near (external call from somebody next to the crew, always heard): the pack decides when the mission sends no radio tag
         public string Group = "";               // conversation: with the coherent variety the lines of a group use the same option number
         public int Seq;
         public string Lvar = "";                // the LVAR of the wav voice packs (information)
@@ -23,6 +23,7 @@ namespace HPGMissionCompanion
         public string Trigger = "";             // when the message happens (information)
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
         public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
+        public bool Text;                       // the words of a text that the mission speaks as it is (<text:KEY>English in the mission): the pack replaces the English words, the mission decides who speaks and how
         public List<string> Options = new List<string>();
         public List<string> OptionSex = new List<string>();     // for each option: "" (any technician), "m" or "f" (only when the technician of the scene is male or female); the voice follows: actor 6 or 7
 
@@ -40,6 +41,8 @@ namespace HPGMissionCompanion
         public string Language = "EN";
         public string Title = "";
         public int Version;
+        public int BaseVer;                     // basever="": the version of the base pack (EN) this pack was made from or last completed with; 0 = not said
+        public string MinApp = "";              // minapp="": the oldest program version that can use the pack ("" = any)
         public string File = "";
         public Dictionary<string, PackMessage> Messages = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, string> Names = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -71,6 +74,13 @@ namespace HPGMissionCompanion
                 }
             }
             Packs = list;
+            VoicePack reference = PackCheck.Reference();
+            foreach (VoicePack p in list)
+            {
+                if (!p.Usable || p == reference) continue;
+                PackReport r = PackCheck.Compare(p, reference);
+                if (r.Level > 0) Ctx.Log("[WARN] voice pack " + Path.GetFileName(p.File) + ": " + r.Summary());
+            }
             Say.Reload();
         }
 
@@ -99,6 +109,11 @@ namespace HPGMissionCompanion
             int v;
             if (!int.TryParse(root.GetAttribute("version"), NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || v < 1) { p.Problems.Add("version must be a whole number from 1"); v = 0; }
             p.Version = v;
+            int bv;
+            if (int.TryParse(root.GetAttribute("basever"), NumberStyles.Integer, CultureInfo.InvariantCulture, out bv) && bv >= 1) p.BaseVer = bv;
+            else if (root.HasAttribute("basever")) p.Problems.Add("basever must be a whole number from 1");
+            p.MinApp = (root.GetAttribute("minapp") ?? "").Trim();
+            if (p.MinApp.Length > 0 && !Regex.IsMatch(p.MinApp, "^[0-9]+\\.[0-9]+$")) { p.Problems.Add("minapp must look like 0.13"); p.MinApp = ""; }
             if (p.Name.Length == 0) p.Problems.Add("the pack has no name");
             else if (!Regex.IsMatch(p.Name, "^[A-Za-z0-9_-]{1,24}$")) { p.Problems.Add("the name may only have letters, digits, _ and - (up to 24)"); p.Name = ""; }
             if (LangInfo.ByCode(p.Language) == null) p.Problems.Add("language " + p.Language + " is not supported (EN, FR, IT, DE)");
@@ -140,8 +155,8 @@ namespace HPGMissionCompanion
                     else p.Problems.Add("message " + m.Key + ": actor must be 1-" + Actors.Count);
                 }
                 string radio = e.GetAttribute("radio").Trim().ToLowerInvariant();
-                if (radio == "on" || radio == "off" || radio == "auto") m.Radio = radio;
-                else if (radio.Length > 0) p.Problems.Add("message " + m.Key + ": radio must be auto, on or off");
+                if (radio == "on" || radio == "off" || radio == "auto" || radio == "ics" || radio == "ext" || radio == "ext-near") m.Radio = radio;
+                else if (radio.Length > 0) p.Problems.Add("message " + m.Key + ": radio must be auto, on, off, ics, ext or ext-near");
                 m.Group = e.GetAttribute("group").Trim();
                 int.TryParse(e.GetAttribute("seq"), NumberStyles.Integer, CultureInfo.InvariantCulture, out m.Seq);
                 m.Lvar = e.GetAttribute("lvar").Trim();
@@ -151,6 +166,7 @@ namespace HPGMissionCompanion
                 if (double.TryParse(e.GetAttribute("sleep"), NumberStyles.Float, CultureInfo.InvariantCulture, out sl)) m.Sleep = sl;
                 m.Sfx = e.GetAttribute("sfx") == "1";
                 m.Futile = e.GetAttribute("futile") == "1";
+                m.Text = e.GetAttribute("text") == "1";
                 foreach (XmlNode o in e.SelectNodes("o"))
                 {
                     string t = Regex.Replace(o.InnerText, "\\s+", " ").Trim();
@@ -199,7 +215,163 @@ namespace HPGMissionCompanion
             if (!string.Equals(Path.GetFullPath(path), Path.GetFullPath(target), StringComparison.OrdinalIgnoreCase)) File.Copy(path, target, true);
             Refresh();
             int warnings = np.Problems.Count;
-            return "Installed " + np.Name + " version " + np.Version + " (" + np.Messages.Count + " messages)" + (old != null && old.Usable ? "; version " + old.Version + " moved to the obsolete folder" : "") + (warnings > 0 ? "; " + warnings + " warning(s), see the log" : "") + ".";
+            VoicePack installed = Find(np.Name);
+            PackReport rep = installed != null && installed != PackCheck.Reference() ? PackCheck.Compare(installed, PackCheck.Reference()) : null;
+            return "Installed " + np.Name + " version " + np.Version + " (" + np.Messages.Count + " messages)" + (old != null && old.Usable ? "; version " + old.Version + " moved to the obsolete folder" : "") + (warnings > 0 ? "; " + warnings + " warning(s), see the log" : "") + (rep != null && rep.Level > 0 ? ". CHECK: " + rep.Summary() : "") + ".";
+        }
+    }
+
+    // ---- the pack against the base pack (EN) ---------------------------------------------------------------
+    // A translated pack copies the base pack: the same keys, the same {0} {1} values. The base pack grows with the missions (new keys, new texts), so a pack that
+    // lacks keys speaks them in English (the program says so in the log) and the Voice packs tab shows it in red, with the keys that are missing.
+    internal sealed class PackReport
+    {
+        public List<string> Missing = new List<string>();           // keys of the base pack that the pack does not have
+        public int Extra;                                           // keys that the base pack does not have (fine: the pack has more)
+        public List<string> Values = new List<string>();            // keys whose texts use a {n} value the base message has not, or never use one it has
+        public int Same;                                            // messages whose texts are the English ones (not translated yet)
+        public int Total;                                           // messages of the base pack
+        public string Version = "";                                 // what is wrong with the versions ("" = nothing)
+        public bool VersionBad;                                     // the versions cannot work together (red); otherwise only a hint (orange)
+        public int Level { get { return Missing.Count > 0 || VersionBad ? 2 : (Values.Count > 0 || Version.Length > 0 ? 1 : 0); } }     // 0 fine, 1 orange, 2 red
+        public string Summary()
+        {
+            List<string> parts = new List<string>();
+            if (Missing.Count > 0) parts.Add("MISSING " + Missing.Count + " of the " + Total + " texts of the base pack (spoken in English)");
+            if (Version.Length > 0) parts.Add(Version);
+            if (Values.Count > 0) parts.Add(Values.Count + " text(s) with other {values} than the base pack");
+            if (parts.Count == 0) return "OK" + (Same > 0 ? ", " + Same + " text(s) still the English ones" : "");
+            return string.Join("; ", parts.ToArray());
+        }
+    }
+
+    internal static class PackCheck
+    {
+        public const string BaseName = "EN";
+        static readonly Regex ValueRx = new Regex("\\{(?:[A-Za-z]+:)?([0-9]+)\\}", RegexOptions.Compiled);
+
+        public static VoicePack Reference() { return VoicePacks.Find(BaseName); }
+
+        static HashSet<int> Values(PackMessage m)
+        {
+            HashSet<int> set = new HashSet<int>();
+            foreach (string o in m.Options) foreach (Match x in ValueRx.Matches(o)) set.Add(int.Parse(x.Groups[1].Value, CultureInfo.InvariantCulture));
+            return set;
+        }
+
+        static bool SameOptions(PackMessage a, PackMessage b)
+        {
+            if (a.Options.Count != b.Options.Count) return false;
+            for (int i = 0; i < a.Options.Count; i++) if (!string.Equals(a.Options[i], b.Options[i], StringComparison.Ordinal)) return false;
+            return true;
+        }
+
+        public static PackReport Compare(VoicePack p, VoicePack reference)
+        {
+            PackReport r = new PackReport();
+            if (p == null) return r;
+            if (reference != null && p != reference)
+            {
+                r.Total = reference.Messages.Count;
+                foreach (KeyValuePair<string, PackMessage> kv in reference.Messages)
+                {
+                    PackMessage m;
+                    if (!p.Messages.TryGetValue(kv.Key, out m)) { r.Missing.Add(kv.Key); continue; }
+                    if (SameOptions(m, kv.Value)) r.Same++;
+                    HashSet<int> have = Values(m), want = Values(kv.Value);
+                    bool bad = false;
+                    foreach (int n in have) if (!want.Contains(n)) bad = true;
+                    foreach (int n in want) if (!have.Contains(n)) bad = true;
+                    if (bad) r.Values.Add(kv.Key);
+                }
+                foreach (string key in p.Messages.Keys) if (!reference.Messages.ContainsKey(key)) r.Extra++;
+                r.Missing.Sort(StringComparer.Ordinal);
+                if (p.BaseVer > reference.Version) { r.Version = "made for the base pack version " + p.BaseVer + " but this program has " + reference.Version + ": update the program"; r.VersionBad = true; }
+                else if (p.BaseVer > 0 && p.BaseVer < reference.Version) r.Version = "made for the base pack version " + p.BaseVer + ", now " + reference.Version + ": check the new texts";
+            }
+            int needMajor, needMinor, haveMajor, haveMinor;       // two integers: 0.10 comes after 0.9
+            if (p.MinApp.Length > 0 && Updates.ParseVersion(p.MinApp, out needMajor, out needMinor) && Updates.ParseVersion(AppInfo.Version, out haveMajor, out haveMinor)
+                && (needMajor > haveMajor || (needMajor == haveMajor && needMinor > haveMinor)))
+            {
+                r.Version = (r.Version.Length > 0 ? r.Version + "; " : "") + "needs the program " + p.MinApp + " or newer (this is " + AppInfo.Version + ")";
+                r.VersionBad = true;
+            }
+            if (Say.Declared.Length > 0 && string.Equals(Say.Declared, p.Name, StringComparison.OrdinalIgnoreCase) && Say.Required > p.Version)
+            {
+                r.Version = (r.Version.Length > 0 ? r.Version + "; " : "") + "the mission needs version " + Say.Required + " of this pack";
+                r.VersionBad = true;
+            }
+            return r;
+        }
+
+        // the base pack as the starting point of a translation: the same file with the name, the language and the version of the new pack
+        public static string ExportTemplate(VoicePack reference, string name, string language, string path)
+        {
+            if (reference == null) throw new InvalidOperationException("The base pack " + BaseName + " is not installed.");
+            language = (language ?? "").Trim().ToUpperInvariant();
+            if (LangInfo.ByCode(language) == null) throw new InvalidOperationException("The language " + language + " is not supported (EN, FR, IT, DE).");
+            name = Regex.Replace((name ?? "").Trim(), "[^A-Za-z0-9_-]+", "_").Trim('_');
+            if (name.Length == 0 || name.Length > 24) throw new InvalidOperationException("The name may only have letters, digits, _ and - (up to 24).");
+            XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.Load(reference.File);
+            XmlElement root = doc.DocumentElement;
+            root.SetAttribute("name", name);
+            root.SetAttribute("language", language);
+            root.SetAttribute("title", language + " voices of the HEMS missions (translation of " + BaseName + " " + reference.Version + ")");
+            root.SetAttribute("version", "1");
+            root.SetAttribute("basever", reference.Version.ToString(CultureInfo.InvariantCulture));
+            XmlNode comment = null;
+            foreach (XmlNode n in doc.ChildNodes) if (n.NodeType == XmlNodeType.Comment) { comment = n; break; }
+            XmlComment help = doc.CreateComment(" Translation of the pack " + BaseName + ". Translate the texts inside <o>..</o>; keep the keys, the {0} {1} values, the tags and the number of options. Raise version=\"\" at every change. basever is the version of " + BaseName + " this file was made from. ");
+            if (comment != null) doc.ReplaceChild(help, comment); else doc.InsertBefore(help, root);
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+            XmlWriterSettings ws = new XmlWriterSettings();
+            ws.Encoding = new UTF8Encoding(false);
+            using (XmlWriter w = XmlWriter.Create(path, ws)) doc.Save(w);
+            return "Template of the pack " + name + " (" + language + ") written to " + path + ": " + reference.Messages.Count + " messages to translate.";
+        }
+
+        // adds the messages that the base pack has and the pack lacks, with their English texts, to the pack file (the old file is kept in voicepacks\obsolete); basever and version go up
+        public static string AddMissing(VoicePack p, VoicePack reference)
+        {
+            if (p == null || !p.Usable) throw new InvalidOperationException("Choose a usable pack.");
+            if (reference == null) throw new InvalidOperationException("The base pack " + BaseName + " is not installed.");
+            if (p == reference) throw new InvalidOperationException("This is the base pack.");
+            PackReport r = Compare(p, reference);
+            XmlDocument refDoc = new XmlDocument();
+            refDoc.PreserveWhitespace = true;
+            refDoc.Load(reference.File);
+            XmlDocument doc = new XmlDocument();
+            doc.PreserveWhitespace = true;
+            doc.Load(p.File);
+            XmlElement root = doc.DocumentElement;
+            HashSet<string> want = new HashSet<string>(r.Missing, StringComparer.OrdinalIgnoreCase);
+            int added = 0;
+            if (want.Count > 0)
+            {
+                root.AppendChild(doc.CreateWhitespace("\n  "));
+                root.AppendChild(doc.CreateComment(" Added from the base pack " + BaseName + " version " + reference.Version + ": still in English, translate them. "));
+                root.AppendChild(doc.CreateWhitespace("\n"));
+                foreach (XmlNode n in refDoc.DocumentElement.SelectNodes("message"))
+                {
+                    XmlElement e = n as XmlElement;
+                    if (e == null || !want.Contains(e.GetAttribute("key").Trim())) continue;
+                    root.AppendChild(doc.ImportNode(e, true));
+                    root.AppendChild(doc.CreateWhitespace("\n"));
+                    added++;
+                }
+            }
+            root.SetAttribute("basever", reference.Version.ToString(CultureInfo.InvariantCulture));
+            root.SetAttribute("version", (p.Version + 1).ToString(CultureInfo.InvariantCulture));
+            Directory.CreateDirectory(VoicePacks.ObsoleteDir);
+            string arch = Path.Combine(VoicePacks.ObsoleteDir, p.Name + "-v" + p.Version + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xml");
+            System.IO.File.Copy(p.File, arch, true);
+            XmlWriterSettings ws = new XmlWriterSettings();
+            ws.Encoding = new UTF8Encoding(false);
+            using (XmlWriter w = XmlWriter.Create(p.File, ws)) doc.Save(w);
+            VoicePacks.Refresh();
+            return p.Name + ": " + added + " message(s) added in English" + (added == 0 ? " (none was missing)" : "") + ", version " + (p.Version + 1) + " (basever " + reference.Version + "); the old file is in voicepacks\\obsolete.";
         }
     }
 
@@ -207,6 +379,8 @@ namespace HPGMissionCompanion
     //   <say:KEY>args      speak the message KEY of the pack; args = texts separated by // that fill {0} {1} ...  (everything after the tag)
     //   <say:KEY:3>args    the same with option 3 forced
     //   <plain>text        speak the text as it is: no tag inside it is interpreted (for free texts such as a dispatch)
+    //   <text:KEY>English text//value//value   a free text of the mission that has a key: the active pack may have a message KEY with the words in its language
+    //                      (the tags before it, the actor and the radio, stay the mission's); without one the English text is spoken as it is. The values fill {0} {1}
     //   <pack:EN:2>        the pack the mission uses and the version it needs (status goes to L:HMC_VOICE_STATUS)
     //   <names:PLT=Mark,CPL=Anna>  names for {PLT} {CPL} {PAX1} {PAX2} {PAX3}; <names:off> goes back to the functions
     //   <variety:random> / <variety:coherent>  how the option of a message is chosen
@@ -214,7 +388,7 @@ namespace HPGMissionCompanion
     internal static class Say
     {
         const string Rest = "(?:\\s*[:=]\\s*([^<>\\[\\]]{0,400}))?";
-        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HolderRx = new Regex("\\{(@?[A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
@@ -242,11 +416,16 @@ namespace HPGMissionCompanion
         static int chatMax = 6;                               // L:HMC_CHAT_MAX: the highest option number the mission lets a message use (the setting CREW CHATTER: 6 full, 3 reduced, 1 minimal)
         static int muteMask;                                // L:HMC_CREW_MUTE: the same bits, crew members who cannot speak
         static readonly Dictionary<string, PackMessage> watchMap = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
+        static int radioVar = -1;                           // the battery master of the aircraft (SimLink.CtxRadio): 1 on, -1 not read
+        static bool atBase;                                 // L:HMC_AT_BASE
+        static int crewExist;                               // L:HMC_CREW_EXIST (0 = not published)
+        static int zoneTech, zoneGround, zonePatient;       // L:HMC_ZONE_TECH / _GROUND / _PATIENT (0 = not published)
         static VoicePack watchPack;
         static string lastBridgeText = "";
         public static Action<string> Sink;                  // tests: gets the text that would be spoken instead of the player
 
         public static string Declared { get { return declared; } }
+        public static int Required { get { return required; } }
         public static string BridgePackName { get { return bridgePack; } }
 
         public static void Seed(int seed) { lock (sync) { rng = new Random(seed); } }
@@ -314,6 +493,12 @@ namespace HPGMissionCompanion
                     else if (kind == "plain")
                     {
                         outp.Append(Literal(text.Substring(pos)));
+                        pos = text.Length;
+                        break;
+                    }
+                    else if (kind == "text")
+                    {
+                        outp.Append(ExpandText(arg, text.Substring(pos), notes));
                         pos = text.Length;
                         break;
                     }
@@ -470,6 +655,7 @@ namespace HPGMissionCompanion
             lock (sync)
             {
                 if (!ctxValid || actor == 8 || actor == 11) return null;      // the dispatcher is remote, the checklist voice is the tablet: no position
+                if (crewMask == 0) return null;                  // nobody aboard: everybody is outside together, the voices keep the normal level
                 if (actor >= 1 && actor <= 5) return (crewMask & (1 << (actor - 1))) != 0;
                 return false;
             }
@@ -487,6 +673,7 @@ namespace HPGMissionCompanion
                 watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
                 if (watchPack == null) return list;
                 list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew); list.Add(SimLink.CtxTechSex); list.Add(SimLink.CtxMute); list.Add(SimLink.CtxChat);
+                list.Add(SimLink.CtxRadio); list.Add(SimLink.CtxExist); list.Add(SimLink.CtxBase); list.Add(SimLink.CtxZoneTech); list.Add(SimLink.CtxZoneGround); list.Add(SimLink.CtxZonePatient);
                 foreach (PackMessage m in watchPack.Messages.Values)
                 {
                     string l = m.LvarFor(watchPack.Vcp);
@@ -519,6 +706,12 @@ namespace HPGMissionCompanion
                 if (name == SimLink.CtxHeliOff) { heliOff = value > 0.5; return; }
                 if (name == SimLink.CtxCrew) { crewMask = (int)Math.Round(value); return; }
                 if (name == SimLink.CtxMute) { muteMask = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxRadio) { radioVar = value > 0.5 ? 1 : 0; return; }
+                if (name == SimLink.CtxExist) { crewExist = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxBase) { atBase = value > 0.5; return; }
+                if (name == SimLink.CtxZoneTech) { zoneTech = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxZoneGround) { zoneGround = (int)Math.Round(value); return; }
+                if (name == SimLink.CtxZonePatient) { zonePatient = (int)Math.Round(value); return; }
                 if (name == SimLink.CtxChat) { int c = (int)Math.Round(value); chatMax = c >= 1 && c <= 6 ? c : 6; return; }
                 if (name == SimLink.CtxTechSex) { techSex = value > 0.5 ? 1 : 0; return; }
                 if (baseline || value <= oldValue) return;     // only a rise of the counter speaks; a reset to 0 is not a message
@@ -543,15 +736,61 @@ namespace HPGMissionCompanion
             if (!string.IsNullOrEmpty(text)) Ctx.Player.EnqueueText(text, false, maxAgeSeconds);
         }
 
+        // ---- text: a free text of the mission that has a key ----
+        static string FirstText(PackMessage m)
+        {
+            foreach (string o in m.Options) if (o.Length > 0) return o;
+            return "";
+        }
+
+        static string SameKey(string s)
+        {
+            return Regex.Replace(Literal(s), "\\s+", " ").Trim().TrimEnd('.', ' ').ToLowerInvariant();
+        }
+
+        // <text:KEY>English//value//value. The active pack (the one of the Voice packs tab) may have a message KEY with the words in its language: it replaces the English.
+        // The base pack says which English text the key stands for: when the text of the mission is another one (the key is stale, or the base pack is older than the
+        // mission) the English of the mission is spoken, never a wrong sentence. A pack without the key: the English as the mission sends it, and one log line per key.
+        static string ExpandText(string spec, string rest, List<string> notes)
+        {
+            string key = spec.Trim();
+            string[] parts = rest.Split(new string[] { "//" }, StringSplitOptions.None);
+            string english = parts[0].Trim();
+            string[] values = new string[parts.Length - 1];
+            Array.Copy(parts, 1, values, 0, values.Length);
+            VoicePack pack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
+            PackMessage msg = null;
+            if (pack != null && key.Length > 0) pack.Messages.TryGetValue(key, out msg);
+            string words = msg != null ? FirstText(msg) : "";
+            if (words.Length == 0)
+            {
+                if (pack != null && warned.Add("text:" + key)) Ctx.Log("[UNTRANSLATED] " + key + " is not in the pack " + pack.Name + ": spoken in English as the mission sends it");
+                return Literal(english);
+            }
+            VoicePack reference = PackCheck.Reference();
+            PackMessage basis;
+            if (reference != null && reference.Messages.TryGetValue(key, out basis))
+            {
+                string was = FirstText(basis);
+                if (was.Length > 0 && was.IndexOf('{') < 0 && SameKey(was) != SameKey(english))
+                {
+                    if (warned.Add("stale:" + key)) Ctx.Log("[UNTRANSLATED] " + key + ": the text of the mission is not the one of the base pack " + reference.Name + " (version " + reference.Version + "), spoken in English: update the pack");
+                    return Literal(english);
+                }
+            }
+            return Fill(words, values, pack, notes);
+        }
+
         // ---- say ----
+        // the pack of the Voice packs tab (the one the player chose) comes first, then the pack the mission declares, then any other
         static PackMessage FindMessage(string key, out VoicePack pack)
         {
             pack = null;
             VoicePack d = declared.Length > 0 ? VoicePacks.Find(declared) : null;
             VoicePack b = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
             PackMessage m;
-            if (d != null && d.Messages.TryGetValue(key, out m)) { pack = d; return m; }
-            if (b != null && b != d && b.Messages.TryGetValue(key, out m)) { pack = b; return m; }
+            if (b != null && b.Messages.TryGetValue(key, out m)) { pack = b; return m; }
+            if (d != null && d != b && d.Messages.TryGetValue(key, out m)) { pack = d; return m; }
             foreach (VoicePack p in VoicePacks.Packs)
             {
                 if (!p.Usable || p == d || p == b) continue;
@@ -579,6 +818,8 @@ namespace HPGMissionCompanion
                 if (notes != null) notes.Add("voice pack message '" + key + "' not found" + (declared.Length > 0 ? " (pack " + declared + ")" : "") + ": nothing spoken");
                 return "";
             }
+            if (bridgePack.Length > 0 && !string.Equals(pack.Name, bridgePack, StringComparison.OrdinalIgnoreCase) && warned.Add("say:" + key))
+                Ctx.Log("[UNTRANSLATED] " + key + " is not in the pack " + bridgePack + ": the text of the pack " + pack.Name + " is spoken");
             return Compose(msg, pack, args, before, forced, notes, out wavFile);
         }
 
@@ -615,27 +856,110 @@ namespace HPGMissionCompanion
             if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(actor).Append('>');
             if (!RadioTagRx.IsMatch(before))
             {
-                int radio = msg.Radio == "on" ? 1 : (msg.Radio == "off" ? 0 : AutoRadio(actor));
-                if (radio == 1) tags.Append("<radio>");
-                else if (radio == 0) tags.Append("<radio:off>");
+                Hear h;
+                switch (msg.Radio)
+                {
+                    case "on": h = Hear.Radio; break;
+                    case "off": h = Hear.Voice; break;
+                    case "ics": h = Hear.Ics; break;
+                    case "ext": h = !ctxValid || RadioOn || atBase ? Hear.External : Hear.Silent; break;
+                    case "ext-near": h = Hear.External; break;
+                    default: h = Decide(actor); break;
+                }
+                if (h == Hear.Silent)
+                {
+                    Ctx.Log("[SAY] " + msg.Key + " not heard: " + SilentReason(actor));
+                    return "";
+                }
+                tags.Append(TagsFor(h));
             }
             Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " (" + pack.Name + " v" + pack.Version + ")");
             return tags.ToString() + body;
         }
 
-        // The radio rule of the HEMS mission, from the context the mission publishes (L:HMC_CTX_VALID, L:HMC_HELI_OFF, L:HMC_CREW_PRESENT):
-        // helicopter completely off: voice; the dispatcher: radio; the speaker inside: radio (intercom, or to somebody outside);
-        // the speaker outside: radio when somebody is inside, voice when everybody is outside. -1: no context, the text gets no radio tag.
-        static int AutoRadio(int a)
+        // ---- how a line is heard (the rules of the user, 2026-10-11) ----
+        // None: no context from the mission, the text gets no tag. Voice: spoken in the air at the normal level; VoiceFar: heard very low (30 to 100 m);
+        // Ics: the wired intercom of the helicopter; Radio: a radio call (the crew radios, so also with the battery off); External: a call on an external
+        // radio (the dispatcher, the hospital); Silent: not heard at all.
+        internal enum Hear { None, Voice, VoiceFar, Ics, Radio, External, Silent }
+
+        // the radio works with the battery master on (the aircraft variable); when it is not read, the opposite of L:HMC_HELI_OFF
+        static bool RadioOn { get { return radioVar >= 0 ? radioVar == 1 : !heliOff; } }
+
+        // From the context the mission publishes (L:HMC_CTX_VALID, L:HMC_CREW_PRESENT, L:HMC_CREW_EXIST, L:HMC_AT_BASE, L:HMC_ZONE_*) and the battery of the aircraft:
+        // - the dispatcher: external radio call when the battery is on, or with the helicopter at the base (the crew radios reach it there); otherwise nothing;
+        // - a crew member (actors 1-5; they carry radios, so the battery does not matter): radio when the call is between inside and outside, the intercom
+        //   (battery on) or the voice (battery off) when everybody is aboard, the voice when everybody is outside;
+        // - the technician: the intercom when next to the helicopter, with the pilot aboard and the battery on; otherwise the voice;
+        // - technician, ground unit, patient (no radio): by voice; heard from inside at the normal level up to 30 m, very low up to 100 m, not beyond;
+        //   when nobody is aboard everybody is outside together: normal level. The distance is the zone that the mission publishes (0 = unknown: normal).
+        static Hear Decide(int a)
         {
-            if (!ctxValid) return -1;
-            if (a == 8) return 1;
-            if (heliOff) return 0;
-            bool crewActor = a >= 1 && a <= 5;
-            if (crewActor && (crewMask & (1 << (a - 1))) != 0) return 1;
-            int others = crewMask;
-            if (crewActor) others &= ~(1 << (a - 1));
-            return others != 0 ? 1 : 0;
+            if (!ctxValid) return Hear.None;
+            if (a == 8) return RadioOn || atBase ? Hear.External : Hear.Silent;
+            if (a >= 1 && a <= 5)
+            {
+                int bit = 1 << (a - 1);
+                if ((crewMask & bit) != 0)
+                {
+                    if (crewExist == 0) return Hear.Radio;                   // the mission does not say who is outside: the old rule
+                    return (crewExist & ~crewMask & ~bit) != 0 ? Hear.Radio : (RadioOn ? Hear.Ics : Hear.Voice);
+                }
+                return (crewMask & ~bit) != 0 ? Hear.Radio : Hear.Voice;
+            }
+            int zone;
+            if (a == 6 || a == 7)
+            {
+                if (zoneTech == RadioRules.ZoneNear && (crewMask & 1) != 0 && RadioOn) return Hear.Ics;
+                zone = zoneTech;
+            }
+            else if (a == 9) zone = zoneGround;
+            else if (a == 10) zone = zonePatient;
+            else return Hear.None;
+            if (crewMask == 0) return Hear.Voice;
+            if (zone >= RadioRules.ZoneOut) return Hear.Silent;
+            return zone == RadioRules.ZoneFar ? Hear.VoiceFar : Hear.Voice;
+        }
+
+        static string TagsFor(Hear h)
+        {
+            switch (h)
+            {
+                case Hear.Ics: return "<ics>";
+                case Hear.Radio: return "<radio>";
+                case Hear.External: return "<radio:ext>";
+                case Hear.Voice: return "<radio:off>";
+                case Hear.VoiceFar: return "<radio:off><zone:far>";
+                default: return "";
+            }
+        }
+
+        static string SilentReason(int actor)
+        {
+            if (actor == 8) return "the radio is off (battery master off) and the helicopter is not at the base";
+            if (actor >= 6) return "more than 100 m from the helicopter";
+            return "no listener";
+        }
+
+        // the dispatcher of a plain speak text (the reading of a dispatch) follows the same rule: an external radio call, or nothing with the radio off;
+        // the other speakers of a plain text keep the tags the mission wrote
+        public static void ApplyDelivery(List<Segment> segs)
+        {
+            lock (sync)
+            {
+                for (int i = 0; i < segs.Count; i++)
+                {
+                    Segment s = segs[i];
+                    if (s.Actor != 8 || Decide(8) == Hear.None) continue;
+                    if (Decide(8) == Hear.Silent)
+                    {
+                        Ctx.Log("[SAY] dispatcher text not heard: " + SilentReason(8));
+                        segs.RemoveAt(i--);
+                        continue;
+                    }
+                    s.Radio = 1; s.Fx = "ext";
+                }
+            }
         }
         // the technician of the scene (L:HMC_TECH_SEX); when the mission does not say, the one the message was written for (actor 7: female)
         static string TechSexOf(PackMessage m)

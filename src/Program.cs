@@ -13,7 +13,9 @@
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
 //   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   (lines: @watch NAME VALUE, @settings k=v) what a mission text becomes (voice pack expansion and tags), no audio
 //   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
-//   --packs-check <report>   list the voice packs of the voicepacks folder and their problems
+//   --packs-check <report>   list the voice packs of the voicepacks folder, their problems and what they lack against the base pack EN
+//   --pack-template <xml> --lang IT [--name IT] [--report <file>]   write the base pack as the start of a translation
+//   --pack-add-missing <pack> [--report <file>]   add the English texts of the keys that a pack lacks to its file (the old file goes to voicepacks\obsolete)
 //   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
 //   --sim-root <dir>       (test) use this folder instead of the simulator folders for the start with the simulator
 //   --test-autostart <on|off> (with --sim-root) add or remove the entry and exit
@@ -28,8 +30,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.11.0.0")]
-[assembly: AssemblyFileVersion("0.11.0.0")]
+[assembly: AssemblyVersion("0.13.0.0")]
+[assembly: AssemblyFileVersion("0.13.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -254,13 +256,48 @@ namespace HPGMissionCompanion
                 StringBuilder rep = new StringBuilder();
                 VoicePacks.Refresh();
                 rep.AppendLine("folder: " + VoicePacks.Dir);
+                VoicePack baseRef = PackCheck.Reference();
                 foreach (VoicePack p in VoicePacks.Packs)
                 {
-                    rep.AppendLine("pack " + (p.Name.Length > 0 ? p.Name : "(no name)") + " version " + p.Version + " language " + p.Language + " messages " + p.Messages.Count + " file " + Path.GetFileName(p.File));
+                    rep.AppendLine("pack " + (p.Name.Length > 0 ? p.Name : "(no name)") + " version " + p.Version + " language " + p.Language + " messages " + p.Messages.Count + (p.BaseVer > 0 ? " basever " + p.BaseVer : "") + " file " + Path.GetFileName(p.File));
                     foreach (string problem in p.Problems) rep.AppendLine("  problem: " + problem);
+                    if (!p.Usable || baseRef == null) continue;
+                    PackReport pr = PackCheck.Compare(p, baseRef);
+                    rep.AppendLine("  against " + PackCheck.BaseName + " " + baseRef.Version + ": " + (p == baseRef ? "the base pack" : pr.Summary()) + " [level " + pr.Level + "]");
+                    for (int i = 0; i < pr.Missing.Count && i < 8; i++) rep.AppendLine("  missing: " + pr.Missing[i]);
+                    for (int i = 0; i < pr.Values.Count && i < 8; i++) rep.AppendLine("  values differ: " + pr.Values[i]);
                 }
                 File.WriteAllText(packsCheck, rep.ToString());
                 return 0;
+            }
+
+            // --pack-template <out.xml> --lang IT [--name IT] [--report <file>]: a translation of the base pack as a new file
+            // --pack-add-missing <pack name> [--report <file>]: adds the English texts of the keys that a pack lacks to its file
+            string packTemplate = Option(args, "--pack-template");
+            string packAdd = Option(args, "--pack-add-missing");
+            if (packTemplate != null || packAdd != null)
+            {
+                string reportPath = Option(args, "--report") ?? Path.Combine(Ctx.BaseDir, "pack-tools-report.txt");
+                string msg;
+                int rc = 0;
+                try
+                {
+                    VoicePacks.Refresh();
+                    if (packTemplate != null)
+                    {
+                        string lang = Option(args, "--lang") ?? "";
+                        msg = PackCheck.ExportTemplate(PackCheck.Reference(), Option(args, "--name") ?? lang, lang, packTemplate);
+                    }
+                    else
+                    {
+                        VoicePack target = VoicePacks.Find(packAdd);
+                        if (target == null) throw new InvalidOperationException("The pack " + packAdd + " is not installed.");
+                        msg = PackCheck.AddMissing(target, PackCheck.Reference());
+                    }
+                }
+                catch (Exception ex) { msg = "ERROR: " + ex.Message; rc = 1; }
+                File.WriteAllText(reportPath, msg + Environment.NewLine);
+                return rc;
             }
 
             // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)
@@ -322,10 +359,12 @@ namespace HPGMissionCompanion
                     string expanded = Say.Process(text, notes, out wavFile);
                     rep.AppendLine("expanded: " + expanded);
                     if (wavFile != null) rep.AppendLine("sound file: " + wavFile);
-                    foreach (Segment s in TagParser.Parse(expanded, notes))
+                    List<Segment> parsed = TagParser.Parse(expanded, notes);
+                    Say.ApplyDelivery(parsed);
+                    foreach (Segment s in parsed)
                     {
                         Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
-                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " level=" + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + " radio=" + p.Radio + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
+                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " level=" + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + " radio=" + p.Radio + (p.Radio && p.Fx != null ? " fx=" + p.Fx : "") + (p.Far ? " far=1" : "") + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
                     }
                     foreach (string n in notes) rep.AppendLine("note: " + n);
                 }

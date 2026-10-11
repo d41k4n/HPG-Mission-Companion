@@ -1,0 +1,43 @@
+@settings variety=random bridge=EN
+<say:APR.CPL.N:1>
+@watch L:HMC_CTX_VALID 1
+@watch L:HMC_CREW_EXIST 7
+@watch L:HMC_CREW_PRESENT 7
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+<say:APR.CPL.N:1>
+@watch L:H145_SDK_OH_BATTERY_MASTER 0
+<say:APR.CPL.N:1>
+@watch L:HMC_CREW_PRESENT 3
+<say:APR.CPL.N:1>
+<say:APR.DOC.A:1>
+@watch L:HMC_CREW_PRESENT 0
+<say:APR.DOC.A:1>
+@watch L:HMC_CREW_PRESENT 7
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+<actor8><radio><plain>Dispatch, a new mission for you.
+@watch L:H145_SDK_OH_BATTERY_MASTER 0
+<actor8><radio><plain>Dispatch, a new mission for you.
+@watch L:HMC_AT_BASE 1
+<actor8><radio><plain>Dispatch, a new mission for you.
+@watch L:HMC_AT_BASE 0
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+@watch L:HMC_ZONE_TECH 1
+<say:FRA.1:1>
+@watch L:HMC_ZONE_TECH 2
+<say:FRA.1:1>
+@watch L:HMC_ZONE_TECH 3
+<say:FRA.1:1>
+@watch L:HMC_ZONE_TECH 4
+<say:FRA.1:1>
+@watch L:H145_SDK_OH_BATTERY_MASTER 0
+@watch L:HMC_ZONE_TECH 1
+<say:FRA.1:1>
+@watch L:HMC_CREW_PRESENT 0
+@watch L:HMC_ZONE_TECH 4
+<say:FRA.1:1>
+@watch L:HMC_CREW_PRESENT 7
+@watch L:HMC_ZONE_GROUND 3
+<say:HOS.WEL:1>
+<ics>Plain intercom text
+<radio:ext>Plain external text
+<radio>Plain radio text

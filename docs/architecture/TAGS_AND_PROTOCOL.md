@@ -24,12 +24,15 @@ Tags are written in angle brackets, or in square brackets with the same meaning.
 | `<actor3>` | actor 1 to 11 (11 = Checklist): the voice and the usual speed the user chose for that actor in the chosen language |
 | `<Microsoft David>`, `<ryan>`, `<en_US-ryan-medium>`, `<voice:ryan>` | a voice by name (exact name first, then part of a name; the language of the text wins, then the best quality); it forces the voice |
 | `<speed:1.2>` (also `<rate:..>`) | speed 0.5 to 3.0; it forces the speed, otherwise the actor's slider is used (1.0 for a forced voice with no actor) |
-| `<vol:60>` (also `<volume:..>`) | volume 0 to 100 of the text; the gain is the volume times the master volume of the Service tab; without the tag 100 |
-| `<radio>`, `<radio:on>`, `<radio:off>` | radio effect on or off; without the tag the voice is clean |
+| `<vol:60>` (also `<volume:..>`) | volume 0 to 100 of the text; the gain is the volume times the master volume of the Volume tab; without the tag 100 |
+| `<radio>`, `<radio:on>`, `<radio:off>` | radio call on or off: beep of the user, hiss of the user + 10, band filter, squelch tail; without the tag the voice is clean |
+| `<ics>`, `<ics:off>` | the wired intercom of the helicopter: a click, no beep, the hiss of the user, no squelch tail |
+| `<radio:ext>` | a call on an external radio (dispatcher, hospital): double beep, hiss of the user + 20, squelch tail |
+| `<zone:far>`, `<zone:near>` | a voice heard from inside that comes from 30 to 100 m away: very low (-20 dB); `near` cancels it. The program adds it itself from `L:HMC_ZONE_*` |
 | `<beep:double>` | optional beep type of the radio effect for the text: `none`, `click`, `beep`, `double`, `chirp` (or 0-4); without it the type chosen in the Radio effect tab |
 | `<radio:chirp>` | shortcut: radio on with that beep type |
 | `<defaultactor:11>` | state tag: from now on a text with no actor tag is spoken by that actor (the mission checklists use 11); `<defaultactor:off>` ends it; not reset by a new connection, only by the next tag or a restart |
-| `<say:KEY>args`, `<plain>text`, `<pack:NAME:VER>`, `<names:..>`, `<variety:..>` | voice pack tags, expanded before the tags above (see VOICEPACKS.md) |
+| `<say:KEY>args`, `<text:KEY>English//value`, `<plain>text`, `<pack:NAME:VER>`, `<names:..>`, `<variety:..>` | voice pack tags, expanded before the tags above (see VOICEPACKS.md) |
 | `<EN>` `<FR>` `<IT>` `<DE>`, `<language:us>` | language of the user's voice set; without it the "language of the texts" of the Service tab |
 | `<stop>` | with `"interrupt":1`, stops what is playing and speaks nothing |
 
@@ -41,7 +44,7 @@ The volume of a mission variable goes in through the `speak` params, with no Sim
 {"speak":{"text":"<actor1><vol:{0}><radio>Pilot to dispatch, ready.","params":[{"global":"VOLUME_CREW"}]}}
 ```
 
-The voice pack tags are resolved first (`Say.Process`): `<say:KEY>` is replaced by the actor tag of the message, the radio tag of the message when the mission sent none and the chosen option with its placeholders filled; everything after `<say>` and `<plain>` is literal text (the characters `< > [ ]` are removed from it).
+The voice pack tags are resolved first (`Say.Process`): `<say:KEY>` is replaced by the actor tag of the message, the radio tag of the message when the mission sent none and the chosen option with its placeholders filled; everything after `<say>`, `<text>` and `<plain>` is literal text (the characters `< > [ ]` are removed from it). `<text:KEY>English//value//value` is a free text with a key: the active pack's message KEY replaces the English when it has one (its `{0} {1}` take the values), otherwise the English is spoken; the tags before it stay (`Say.ExpandText`).
 
 ## Resolution order
 
