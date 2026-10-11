@@ -384,12 +384,22 @@ namespace HPGMissionCompanion
             string tag = "unknown";
             try { if (ParseHead(ReadHead(installed), out title, out id) && MissionRelease.TryParse(title, out r)) tag = r.HasRelease ? r.Major + "." + r.Minor : r.Family; } catch (Exception) { }
             string backup = Path.Combine(backupDir, "everywhere_all-" + tag + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
-            File.Copy(installed, backup, false);
+            // not File.Copy: the mission file of the Community folder is encrypted (EFS, the Store keeps it that way) and CopyFile refuses to write an encrypted
+            // file where encryption is not possible (the backups folder is usually on OneDrive): "the specified file could not be encrypted". A stream copy writes a plain copy.
+            CopyContents(installed, backup, false);
             string part = installed + ".part";
-            File.Copy(newFile, part, true);
+            CopyContents(newFile, part, true);
             if (File.Exists(installed)) File.Delete(installed);
             File.Move(part, installed);
             return backup;
+        }
+
+        // copies the bytes of a file (the destination takes the attributes of its own folder, never those of the source)
+        static void CopyContents(string src, string dst, bool overwrite)
+        {
+            using (FileStream i = new FileStream(src, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream o = new FileStream(dst, overwrite ? FileMode.Create : FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                i.CopyTo(o);
         }
 
         // ---- GitHub: the program ---------------------------------------------------------------------

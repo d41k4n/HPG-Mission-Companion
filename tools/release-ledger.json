@@ -1,8 +1,8 @@
 {
-    "sha256":  "DDA65EC99F75FD5294B7831AD48CC3358DF74898FB315952A4E13601070CD2DA",
-    "installerSha256":  "D42F2EE4E9D0DC13CA057F2128F5CC49719FC7127FFB99253BC555C56C244DF7",
+    "sha256":  "BBD8F91A6EED260C64FDCE8C4F8F70777E61DDA32747A1B99BABBCFFBEA0B1D8",
+    "installerSha256":  "D9E4494487E51BEC1B10C1C85E3A4994A221E7E2E36670B7EF6631EF05B0E74B",
     "deliveredOn":  "2026-10-11",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.10",
-    "note":  "Local build 0.10 in a scratch folder; the installer HPGMissionCompanionSetup.exe is in Desktop\\claude (HPGMissionCompanionSetup-0.10.exe) and in the runtime folder, the running program was not replaced. Not pushed to GitHub. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.11",
+    "note":  "Local build 0.11 (fix of the replace of an encrypted mission file); installed over the runtime folder with the silent setup; the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.11.exe). Committed locally, not pushed (0.10 is the published release). The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
