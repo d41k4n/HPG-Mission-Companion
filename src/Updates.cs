@@ -88,6 +88,7 @@ namespace HPGMissionCompanion
         public string Url;
         public string Sha256;       // from the GitHub asset digest when it gives one
         public string Source;       // "GitHub release" or "Google Drive link"
+        public string Notes;        // the body of the GitHub release (the user changelog of the build), null from the Drive link
     }
 
     internal sealed class RemoteApp
@@ -100,6 +101,7 @@ namespace HPGMissionCompanion
         public long AssetSize;
         public string Sha256;       // from the GitHub asset digest when it gives one
         public string Page;
+        public string Notes;        // the body of the GitHub release
     }
 
     internal static class Updates
@@ -260,7 +262,7 @@ namespace HPGMissionCompanion
                     Dictionary<string, object> e = o as Dictionary<string, object>;
                     if (e == null || !string.Equals(Str(e, "name"), MissionAsset, StringComparison.OrdinalIgnoreCase)) continue;
                     RemoteMission m = new RemoteMission();
-                    m.Release = r; m.Title = tag; m.Url = Str(e, "browser_download_url"); m.Source = "GitHub release " + tag;
+                    m.Release = r; m.Title = tag; m.Url = Str(e, "browser_download_url"); m.Source = "GitHub release " + tag; m.Notes = Str(d, "body");
                     object size;
                     if (e.TryGetValue("size", out size)) m.Size = Convert.ToInt64(size);
                     string digest = Str(e, "digest");
@@ -269,6 +271,35 @@ namespace HPGMissionCompanion
                 }
             }
             throw new InvalidOperationException("the latest release (" + tag + ") has no " + MissionAsset + " asset");
+        }
+
+        // the release notes are Markdown written for the GitHub page: headings in capitals, real bullets, no emphasis marks
+        public static string PlainNotes(string md)
+        {
+            if (string.IsNullOrEmpty(md)) return "";
+            StringBuilder sb = new StringBuilder();
+            foreach (string raw in md.Replace("\r\n", "\n").Split('\n'))
+            {
+                string line = raw.TrimEnd();
+                Match h = Regex.Match(line, "^#{1,6}\\s+(.*)$");
+                if (h.Success)
+                {
+                    if (sb.Length > 0) sb.AppendLine();
+                    sb.AppendLine(h.Groups[1].Value.Trim().Replace("**", "").ToUpperInvariant());
+                    continue;
+                }
+                if (Regex.IsMatch(line, "^\\s*[-*]\\s+")) line = "\u2022 " + Regex.Replace(line, "^\\s*[-*]\\s+", "");
+                sb.AppendLine(line.Replace("**", "").Replace("`", ""));
+            }
+            return Regex.Replace(sb.ToString().Trim(), "(\r?\n){3,}", "\r\n\r\n");
+        }
+
+        // the notes of the latest release of a repository, also when nothing is newer (the What's new button)
+        public static string ReadReleaseNotes(string apiUrl, out string label)
+        {
+            Dictionary<string, object> d = GetJson(apiUrl);
+            label = Str(d, "tag_name") ?? Str(d, "name");
+            return PlainNotes(Str(d, "body"));
         }
 
         static Dictionary<string, object> GetJson(string url)
@@ -368,6 +399,7 @@ namespace HPGMissionCompanion
             RemoteApp a = new RemoteApp();
             a.Tag = Str(d, "tag_name");
             a.Page = Str(d, "html_url");
+            a.Notes = Str(d, "body");
             if (!ParseVersion(a.Tag, out a.Major, out a.Minor)) throw new InvalidOperationException("the latest release has no version tag (" + a.Tag + ")");
             object assets;
             if (d.TryGetValue("assets", out assets) && assets is System.Collections.IEnumerable)

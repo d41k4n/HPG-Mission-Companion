@@ -212,6 +212,7 @@ namespace HPGMissionCompanion
         bool updateRunning;
         bool updateBalloon;
         readonly CheckBox autoUpdateCheck = new CheckBox();
+        readonly Button whatsNewButton = new Button();
 
         Server server;
         readonly NotifyIcon tray = new NotifyIcon();
@@ -1603,11 +1604,16 @@ namespace HPGMissionCompanion
             autoUpdateCheck.Text = "Check for updates when the program starts";
             autoUpdateCheck.AutoSize = true;
             autoUpdateCheck.Checked = Ctx.Settings.AutoUpdateCheck;
-            autoUpdateCheck.Location = new Point(204, 354);
+            whatsNewButton.Text = "What's new...";
+            whatsNewButton.Location = new Point(200, 348);
+            whatsNewButton.Size = new Size(120, 30);
+            whatsNewButton.Click += delegate { ShowWhatsNew(); };
+            page.Controls.Add(whatsNewButton);
+            autoUpdateCheck.Location = new Point(332, 354);
             autoUpdateCheck.CheckedChanged += delegate { Ctx.Settings.AutoUpdateCheck = autoUpdateCheck.Checked; MarkDirty(); };
             page.Controls.Add(autoUpdateCheck);
             updateInfo.AutoSize = true;
-            updateInfo.Location = new Point(560, 355);
+            updateInfo.Location = new Point(620, 355);
             updateInfo.ForeColor = SystemColors.GrayText;
             updateInfo.Text = "Program version " + AppInfo.Version;
             page.Controls.Add(updateInfo);
@@ -1839,10 +1845,42 @@ namespace HPGMissionCompanion
                         q.Append("Download and install now?\n\n");
                         if (missionNew) q.Append("The mission file is replaced first (the old one is kept in the backups folder) and the mission index is updated. ");
                         if (appNew) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
-                        go = MessageBox.Show(this, q.ToString(), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                        StringBuilder notes = new StringBuilder();
+                        if (missionNew) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
+                        if (appNew) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)));
+                        go = NotesForm.Ask(this, Text + " - update available", q.ToString().TrimEnd(), notes.ToString()) == DialogResult.Yes;
                     }
                     if (!go) { updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version; return; }
                     InstallUpdates(missionNew ? target : null, missionNew ? rm : null, appNew ? ra : null, indexCmd);
+                });
+            });
+        }
+
+        // the release notes of the mission and of the program as published on GitHub, also when nothing is newer
+        void ShowWhatsNew()
+        {
+            whatsNewButton.Enabled = false;
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                StringBuilder n = new StringBuilder();
+                try
+                {
+                    string label;
+                    string text = Updates.ReadReleaseNotes(Updates.MissionReleasesApi, out label);
+                    n.AppendLine("MISSION " + label + "\n\n" + (text.Length > 0 ? text : "The release has no notes.") + "\n");
+                }
+                catch (Exception ex) { n.AppendLine("MISSION\n\nThe notes of the mission could not be read: " + ex.Message + "\n"); }
+                try
+                {
+                    string label;
+                    string text = Updates.ReadReleaseNotes(Updates.ReleasesApi, out label);
+                    n.AppendLine("PROGRAM " + label + " (this one is " + AppInfo.Version + ")\n\n" + (text.Length > 0 ? text : "The release has no notes."));
+                }
+                catch (Exception ex) { n.AppendLine("PROGRAM\n\nThe notes of the program could not be read: " + ex.Message); }
+                Ui(delegate
+                {
+                    whatsNewButton.Enabled = true;
+                    NotesForm.View(this, Text + " - what's new", "Release notes of the latest published versions (GitHub).", n.ToString());
                 });
             });
         }
