@@ -4,6 +4,8 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 
 ## Check for updates (0.10, tested offline on dummy folders, runtime PENDING)
 
+Target and backup (0.11): with the pack of the user (a test copy `hpgmission\everywhere_all.json` and a folder `RANDOM AND EVERYWHERE` without everywhere_all.json) Check for updates names the mission file to create in `RANDOM AND EVERYWHERE`; Yes writes `RANDOM AND EVERYWHERE\everywhere_all.json` and leaves the test copy untouched; a second update keeps `everywhere_all-<release>-<time>.json.bak` beside it. The files of the Community pack are encrypted (EFS): the replacement must not fail with "the specified file could not be encrypted".
+
 1. `--check-updates report.txt --community <dummy Community> --index-file <GeneratedMissionIndex.json> --mission-url <Drive link> --github-mission <api url> --github-app <api url>`: the installed copies (title, release, size), the releases the index lists, the published mission by Range request and by GitHub, the program release. The dummy Community folder holds `hpg-x\hpgmission\<file>.json` with a head `{"title": "HEMS RANDOM AND EVERYWHERE MISSIONS 0.997 169.45", "id": "HEMSRandE"`.
 2. `--test-replace <dummy installed file> --with <new file> --backup <dir>`: the backup holds the old file, the installed file is the new one and no `.part` file is left.
 3. The notes window: with a published release newer than the installed mission or program, the question shows the notes of each one (scroll to the end), "Not now" is the default button and closes without downloading; the Tools button "What's new..." shows the notes of the latest mission and program releases even when nothing is newer (an offline PC shows the error of each source and not a crash).

@@ -77,7 +77,17 @@ namespace HPGMissionCompanion
         public string Title;
         public MissionRelease Release;
         public long Size;
-        public override string ToString() { return Package + "\\" + System.IO.Path.GetFileName(Path) + "  -  " + Release; }
+        public bool Missing;        // the official place has no mission file yet: the update creates it
+        // the place of the R&E mission of a package: hpgmission\RANDOM AND EVERYWHERE\everywhere_all.json. Any other copy (a test copy beside it, the file called ORIGINAL) is listed but never chosen by itself.
+        public bool Official
+        {
+            get
+            {
+                return string.Equals(System.IO.Path.GetFileName(Path), Updates.MissionAsset, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(Path)), Updates.OfficialFolder, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        public override string ToString() { return Package + "\\" + Updates.OfficialFolderIfAny(Path) + System.IO.Path.GetFileName(Path) + "  -  " + (Missing ? "not installed (the update creates it)" : Release.ToString()); }
     }
 
     internal sealed class RemoteMission
@@ -111,6 +121,13 @@ namespace HPGMissionCompanion
         public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
         public const string MissionAsset = "everywhere_all.json";
         public const string MissionId = "HEMSRandE";
+        public const string OfficialFolder = "RANDOM AND EVERYWHERE";
+
+        public static string OfficialFolderIfAny(string path)
+        {
+            string dir = System.IO.Path.GetDirectoryName(path);
+            return dir != null && string.Equals(System.IO.Path.GetFileName(dir), OfficialFolder, StringComparison.OrdinalIgnoreCase) ? OfficialFolder + "\\" : "";
+        }
         const int HeadBytes = 4096;
 
         // ---- the mission text ---------------------------------------------------------------------
@@ -150,6 +167,16 @@ namespace HPGMissionCompanion
                     string mdir = System.IO.Path.Combine(pkg, "hpgmission");
                     if (!Directory.Exists(mdir)) continue;
                     foreach (string f in SafeFiles(mdir)) TryAdd(list, f, System.IO.Path.GetFileName(pkg));
+                    // the official folder exists but has no everywhere_all.json: the update puts the mission there
+                    string official = System.IO.Path.Combine(mdir, OfficialFolder);
+                    string target = System.IO.Path.Combine(official, MissionAsset);
+                    if (Directory.Exists(official) && !File.Exists(target))
+                    {
+                        MissionCopy m = new MissionCopy();
+                        m.Path = target; m.Package = System.IO.Path.GetFileName(pkg); m.Title = null; m.Missing = true;
+                        m.Release = new MissionRelease();
+                        list.Add(m);
+                    }
                 }
             }
             if (!string.IsNullOrEmpty(custom) && File.Exists(custom))
@@ -158,9 +185,11 @@ namespace HPGMissionCompanion
                 foreach (MissionCopy c in list) if (string.Equals(c.Path, custom, StringComparison.OrdinalIgnoreCase)) known = true;
                 if (!known) TryAdd(list, custom, "(chosen)");
             }
-            // tester builds (with a release number) first, newest first; then the originals
+            // the official places first (the installed file, then the folder still without it), then the other copies: tester builds with a release number, newest first, then the originals
             list.Sort(delegate (MissionCopy a, MissionCopy b)
             {
+                if (a.Official != b.Official) return a.Official ? -1 : 1;
+                if (a.Official && a.Missing != b.Missing) return a.Missing ? 1 : -1;
                 if (a.Release.HasRelease != b.Release.HasRelease) return a.Release.HasRelease ? -1 : 1;
                 int c = b.Release.CompareTo(a.Release);
                 return c != 0 ? c : string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase);
@@ -374,19 +403,26 @@ namespace HPGMissionCompanion
             }
         }
 
-        // Replaces the installed file: the old one is copied to backupDir first (never into the Community folder: the index tool would list a copy as a mission),
-        // the new one is written beside it as .part and moved over it. Returns the backup path.
+        // Replaces the installed file. The old one is copied first: beside it with the extension .json.bak when backupDir is empty (the index tool lists only *.json,
+        // so a .bak beside the mission is not taken for a mission; a .json copy would be), or into backupDir as .json. A file that does not exist yet is simply created.
+        // The new one is written beside it as .part and moved over it. Returns the backup path, null when there was nothing to keep.
         public static string ReplaceInstalled(string installed, string newFile, string backupDir)
         {
-            Directory.CreateDirectory(backupDir);
-            MissionRelease r;
-            string title, id;
-            string tag = "unknown";
-            try { if (ParseHead(ReadHead(installed), out title, out id) && MissionRelease.TryParse(title, out r)) tag = r.HasRelease ? r.Major + "." + r.Minor : r.Family; } catch (Exception) { }
-            string backup = Path.Combine(backupDir, "everywhere_all-" + tag + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
-            // not File.Copy: the mission file of the Community folder is encrypted (EFS, the Store keeps it that way) and CopyFile refuses to write an encrypted
-            // file where encryption is not possible (the backups folder is usually on OneDrive): "the specified file could not be encrypted". A stream copy writes a plain copy.
-            CopyContents(installed, backup, false);
+            string backup = null;
+            if (File.Exists(installed))
+            {
+                bool beside = string.IsNullOrEmpty(backupDir);
+                if (!beside) Directory.CreateDirectory(backupDir);
+                MissionRelease r;
+                string title, id;
+                string tag = "unknown";
+                try { if (ParseHead(ReadHead(installed), out title, out id) && MissionRelease.TryParse(title, out r)) tag = r.HasRelease ? r.Major + "." + r.Minor : r.Family; } catch (Exception) { }
+                string name = "everywhere_all-" + tag + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json";
+                backup = beside ? Path.Combine(Path.GetDirectoryName(installed), name + ".bak") : Path.Combine(backupDir, name);
+                // not File.Copy: the mission file of the Community folder is encrypted (EFS, the Store keeps it that way) and CopyFile refuses to write an encrypted
+                // file where encryption is not possible (a backups folder on OneDrive): "the specified file could not be encrypted". A stream copy writes the bytes only.
+                CopyContents(installed, backup, false);
+            }
             string part = installed + ".part";
             CopyContents(newFile, part, true);
             if (File.Exists(installed)) File.Delete(installed);

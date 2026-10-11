@@ -1572,7 +1572,7 @@ namespace HPGMissionCompanion
             page.Controls.Add(autoIndexCheck);
 
             Lbl(page, "Updates: the R&&E mission (GitHub release, Google Drive link as a fallback) and this program (GitHub). The check runs when the program starts and on the button, and only reads: " +
-                "nothing is downloaded without the question. Then the mission file is replaced (the old one goes to the backups folder), the index is updated and, last, the program.", 10, 262, 706, 50);
+                "nothing is downloaded without the question. Then the mission file is replaced (the old one is kept beside it, extension .json.bak), the index is updated and, last, the program.", 10, 262, 706, 50);
             missionCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             missionCombo.Location = new Point(10, 316);
             missionCombo.Size = new Size(624, 24);
@@ -1771,7 +1771,7 @@ namespace HPGMissionCompanion
                 {
                     copies = Updates.FindInstalled(Tools.CommunityRoots(), chosen);
                     foreach (MissionCopy c in copies) if (chosen.Length > 0 && string.Equals(c.Path, chosen, StringComparison.OrdinalIgnoreCase)) target = c;
-                    if (target == null && copies.Count > 0 && copies[0].Release.HasRelease) target = copies[0];
+                    if (target == null && copies.Count > 0 && copies[0].Official) target = copies[0];
                     lines.Add("R&E mission files found in the Community folders: " + copies.Count);
                     foreach (MissionCopy c in copies) lines.Add("  " + (c == target ? "> " : "  ") + c);
                     if (target != null && indexCmd != null)
@@ -1837,13 +1837,14 @@ namespace HPGMissionCompanion
                     if (missionNew || appNew)
                     {
                         StringBuilder q = new StringBuilder();
-                        if (missionNew) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + target.Release + ").");
+                        if (missionNew) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + (target.Missing ? "none installed" : target.Release.ToString()) + ").");
                         if (appNew) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
                         q.AppendLine();
-                        if (missionNew && !target.Release.HasRelease) q.AppendLine("The mission file to replace is an original file without a release number (" + target.Path + ").\n");
+                        if (missionNew && target.Missing) q.AppendLine("The mission file does not exist yet: it will be created in " + Path.GetDirectoryName(target.Path) + ".\n");
+                        else if (missionNew && !target.Release.HasRelease) q.AppendLine("The mission file to replace is a file without a release number (" + target.Path + ").\n");
                         if (Tools.SimulatorRunning()) q.AppendLine("Microsoft Flight Simulator is running: restart the mission after the update.\n");
                         q.Append("Download and install now?\n\n");
-                        if (missionNew) q.Append("The mission file is replaced first (the old one is kept in the backups folder) and the mission index is updated. ");
+                        if (missionNew) q.Append("The mission file is replaced first (the old one is kept beside it with the extension .json.bak) and the mission index is updated. ");
                         if (appNew) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
                         StringBuilder notes = new StringBuilder();
                         if (missionNew) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
@@ -1907,9 +1908,9 @@ namespace HPGMissionCompanion
                             long step = total > 0 ? done * 4 / total : 0;
                             if (step != shown) { shown = step; Ui(delegate { ToolsLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
                         });
-                        string backup = Updates.ReplaceInstalled(target.Path, file, Path.Combine(Path.Combine(Ctx.BaseDir, "backups"), "mission"));
+                        string backup = Updates.ReplaceInstalled(target.Path, file, null);
                         try { File.Delete(file); } catch (Exception) { }
-                        Ui(delegate { ToolsLog("Mission file replaced: " + target.Path); ToolsLog("The previous file is kept in " + backup); });
+                        Ui(delegate { ToolsLog((backup == null ? "Mission file created: " : "Mission file replaced: ") + target.Path); if (backup != null) ToolsLog("The previous file is kept beside it: " + backup); });
                         if (indexCmd != null)
                         {
                             Ui(delegate { ToolsLog("Updating the mission index..."); });
