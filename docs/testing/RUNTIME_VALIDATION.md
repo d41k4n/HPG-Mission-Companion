@@ -2,6 +2,13 @@
 
 Static checks (`tools/check.js`) and the self-tests of the executable never prove simulator behaviour. The simulator tests are standalone HPG test missions in `tests/`; the user also keeps them in `Desktop\claude\tests`.
 
+## Check for updates (0.10, tested offline on dummy folders, runtime PENDING)
+
+1. `--check-updates report.txt --community <dummy Community> --index-file <GeneratedMissionIndex.json> --mission-url <Drive link> --github-mission <api url> --github-app <api url>`: the installed copies (title, release, size), the releases the index lists, the published mission by Range request and by GitHub, the program release. The dummy Community folder holds `hpg-x\hpgmission\<file>.json` with a head `{"title": "HEMS RANDOM AND EVERYWHERE MISSIONS 0.997 169.45", "id": "HEMSRandE"`.
+2. `--test-replace <dummy installed file> --with <new file> --backup <dir>`: the backup holds the old file, the installed file is the new one and no `.part` file is left.
+3. The window: Tools, Check for updates with an older dummy file: the question names the mission and the program releases; Yes downloads the mission, replaces it, updates the index (tool of the Tools tab) and then starts the setup; the program closes and starts again with the new version. With nothing newer the log says "Nothing to update".
+4. Failures to try: no network, a Drive link that is not shared, a release without the asset, a truncated download (the file is refused and the old one stays).
+
 ## Status (2026-10-10, version 0.4)
 
 | Area | Status |

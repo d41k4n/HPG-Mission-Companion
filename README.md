@@ -1,13 +1,13 @@
 # HPG Mission Companion
 
-Version 0.9
+Version 0.10
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
 - **Voice service**: the WebSocket voice server the HPG mission system expects (`localhost:5997`), speaking with the voices installed in Windows and with [Piper](https://github.com/rhasspy/piper) voices that the app downloads on request. The text of a `speak` command carries tags that choose the actor, the voice, the speed, the volume, the language and a radio effect. See `docs/architecture/TAGS_AND_PROTOCOL.md`.
 - **Actors**: ten actors (Pilota, Copilota, Doctor, HEMS1, HEMS2, Frank, Sarah, Dispatcher, Ground unit, Patient), a voice and a speed for each, per language (English, French, Italian, German).
 - **Radio effect**: beep, hiss, band filter and squelch tail, adjustable.
-- **Tools**: open and clean the mission work folder (grouped, with a zip backup), run the HPG `Update Mission Index` tool (also at start, option on by default).
+- **Tools**: open and clean the mission work folder (grouped, with a zip backup), run the HPG `Update Mission Index` tool (also at start, option on by default), and Check for updates (at start, option on by default, and on a click): the R&E mission file and the program, mission first, always after a question.
 - **Voice packs**: XML files with the texts of the mission messages (several options each); a mission speaks one with `<say:KEY>` and passes dynamic parts as arguments separated by `//`. Drag and drop in the Voice packs tab. The guide for mission authors is `docs/DEVELOPER_GUIDE.md` and the About tab.
 - **Voice app mode**: with the mission in app mode (`L:AUDIOINHIBIT` 1, voice code APP) the program reads the LVAR counters of the mission through SimConnect and speaks the matching message of the pack; radio rule, sounds without voice, conversations. See `docs/architecture/VOICEPACKS.md`.
 - **Simulator link**: keeps `L:AUDIOINHIBIT` at 1 through SimConnect while the simulator runs (option on by default; needs `SimConnect.dll` from the MSFS SDK next to the program).

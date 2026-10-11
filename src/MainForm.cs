@@ -206,6 +206,12 @@ namespace HPGMissionCompanion
         readonly ComboBox indexCombo = new ComboBox();
         readonly Button indexButton = new Button();
         readonly TextBox toolsOut = new TextBox();
+        readonly ComboBox missionCombo = new ComboBox();
+        readonly Button updateButton = new Button();
+        readonly Label updateInfo = new Label();
+        bool updateRunning;
+        bool updateBalloon;
+        readonly CheckBox autoUpdateCheck = new CheckBox();
 
         Server server;
         readonly NotifyIcon tray = new NotifyIcon();
@@ -274,6 +280,15 @@ namespace HPGMissionCompanion
             menu.MenuItems.Add("Exit", delegate { ExitApp(true); });
             tray.ContextMenu = menu;
             tray.DoubleClick += delegate { ShowWindow(); };
+            tray.BalloonTipClicked += delegate
+            {
+                // the balloon of an automatic check that found something newer: open the Tools tab and ask the question
+                if (!updateBalloon) return;
+                updateBalloon = false;
+                ShowWindow();
+                foreach (TabPage tp in tabs.TabPages) if (tp.Text == "Tools") tabs.SelectedTab = tp;
+                CheckUpdates(false);
+            };
             tray.Visible = true;
 
             tick.Interval = 300;
@@ -473,6 +488,7 @@ namespace HPGMissionCompanion
             UpdateEngineState();
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
+            if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
             StartServer(true);
             SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
@@ -1554,12 +1570,54 @@ namespace HPGMissionCompanion
             autoIndexCheck.CheckedChanged += delegate { Ctx.Settings.AutoIndex = autoIndexCheck.Checked; MarkDirty(); };
             page.Controls.Add(autoIndexCheck);
 
+            Lbl(page, "Updates: the R&&E mission (GitHub release, Google Drive link as a fallback) and this program (GitHub). The check runs when the program starts and on the button, and only reads: " +
+                "nothing is downloaded without the question. Then the mission file is replaced (the old one goes to the backups folder), the index is updated and, last, the program.", 10, 262, 706, 50);
+            missionCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+            missionCombo.Location = new Point(10, 316);
+            missionCombo.Size = new Size(624, 24);
+            missionCombo.Items.Add("(the mission file to update is looked for when you press Check for updates)");
+            missionCombo.SelectedIndex = 0;
+            missionCombo.SelectedIndexChanged += delegate
+            {
+                MissionCopy c = missionCombo.SelectedItem as MissionCopy;
+                if (c != null && !string.Equals(Ctx.Settings.MissionFile, c.Path, StringComparison.OrdinalIgnoreCase)) { Ctx.Settings.MissionFile = c.Path; MarkDirty(); }
+            };
+            page.Controls.Add(missionCombo);
+            Button browseMission = Btn(page, "Browse...", 642, 314, 76, 27);
+            browseMission.Click += delegate
+            {
+                using (OpenFileDialog d = new OpenFileDialog())
+                {
+                    d.Title = "Choose the R&E mission file (everywhere_all.json in a hpgmission folder)";
+                    d.Filter = "Mission files|*.json|All files|*.*";
+                    if (d.ShowDialog(this) != DialogResult.OK) return;
+                    Ctx.Settings.MissionFile = d.FileName; MarkDirty();
+                    ToolsLog("Mission file chosen: " + d.FileName + " (press Check for updates)");
+                }
+            };
+            updateButton.Text = "Check for updates";
+            updateButton.Location = new Point(10, 348);
+            updateButton.Size = new Size(180, 30);
+            updateButton.Click += delegate { CheckUpdates(false); };
+            page.Controls.Add(updateButton);
+            autoUpdateCheck.Text = "Check for updates when the program starts";
+            autoUpdateCheck.AutoSize = true;
+            autoUpdateCheck.Checked = Ctx.Settings.AutoUpdateCheck;
+            autoUpdateCheck.Location = new Point(204, 354);
+            autoUpdateCheck.CheckedChanged += delegate { Ctx.Settings.AutoUpdateCheck = autoUpdateCheck.Checked; MarkDirty(); };
+            page.Controls.Add(autoUpdateCheck);
+            updateInfo.AutoSize = true;
+            updateInfo.Location = new Point(560, 355);
+            updateInfo.ForeColor = SystemColors.GrayText;
+            updateInfo.Text = "Program version " + AppInfo.Version;
+            page.Controls.Add(updateInfo);
+
             toolsOut.Multiline = true;
             toolsOut.ReadOnly = true;
             toolsOut.ScrollBars = ScrollBars.Vertical;
             toolsOut.Font = new Font("Consolas", 9F);
-            toolsOut.Location = new Point(10, 266);
-            toolsOut.Size = new Size(708, 276);
+            toolsOut.Location = new Point(10, 388);
+            toolsOut.Size = new Size(708, 154);
             page.Controls.Add(toolsOut);
         }
 
@@ -1671,6 +1729,197 @@ namespace HPGMissionCompanion
                     ToolsLog("In the simulator press Refresh in the mission app to pick up the new index.");
                     indexRunning = false;
                     indexButton.Enabled = indexCombo.Items.Count > 0;
+                });
+            });
+        }
+
+        // ---- updates -----------------------------------------------------------------------------
+        // Check for updates (user click only): the installed mission file and the index, the published mission, the published program.
+        void CheckUpdates(bool automatic)
+        {
+            if (updateRunning) return;
+            if (automatic)
+            {
+                // at most one automatic check every 6 hours
+                DateTime last;
+                if (DateTime.TryParse(Ctx.Settings.LastUpdateCheck, null, System.Globalization.DateTimeStyles.RoundtripKind, out last) && (DateTime.UtcNow - last).TotalHours < 6) return;
+            }
+            updateRunning = true;
+            updateButton.Enabled = false;
+            updateInfo.Text = "Checking...";
+            Ctx.Settings.LastUpdateCheck = DateTime.UtcNow.ToString("o");
+            try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
+            string fallbackUrl = Ctx.Settings.MissionUrl;
+            string chosen = missionCombo.SelectedItem is MissionCopy ? ((MissionCopy)missionCombo.SelectedItem).Path : Ctx.Settings.MissionFile;
+            string indexCmd = indexCombo.SelectedItem as string;
+            if (!automatic) ToolsLog("--- Check for updates " + DateTime.Now.ToString("HH:mm:ss"));
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                List<string> lines = new List<string>();
+                List<MissionCopy> copies = new List<MissionCopy>();
+                MissionCopy target = null;
+                RemoteMission rm = null;
+                RemoteApp ra = null;
+                bool indexKnown = false, indexListsFile = false;
+                try
+                {
+                    copies = Updates.FindInstalled(Tools.CommunityRoots(), chosen);
+                    foreach (MissionCopy c in copies) if (chosen.Length > 0 && string.Equals(c.Path, chosen, StringComparison.OrdinalIgnoreCase)) target = c;
+                    if (target == null && copies.Count > 0 && copies[0].Release.HasRelease) target = copies[0];
+                    lines.Add("R&E mission files found in the Community folders: " + copies.Count);
+                    foreach (MissionCopy c in copies) lines.Add("  " + (c == target ? "> " : "  ") + c);
+                    if (target != null && indexCmd != null)
+                    {
+                        string indexFile = Tools.IndexFileOf(indexCmd);
+                        if (indexFile != null)
+                        {
+                            indexKnown = true;
+                            List<MissionRelease> rel = Updates.ReadIndexReleases(indexFile);
+                            foreach (MissionRelease r in rel) if (r.CompareTo(target.Release) == 0 && r.HasRelease == target.Release.HasRelease) indexListsFile = true;
+                            StringBuilder sb = new StringBuilder();
+                            foreach (MissionRelease r in rel) { if (sb.Length > 0) sb.Append(", "); sb.Append(r.ToString()); }
+                            lines.Add("Mission index " + indexFile + " lists R&E: " + (sb.Length > 0 ? sb.ToString() : "nothing"));
+                        }
+                    }
+                }
+                catch (Exception ex) { lines.Add("[ERROR] reading the installed mission: " + ex.Message); }
+                try
+                {
+                    rm = Updates.ReadRemoteMissionAuto(fallbackUrl, delegate (string s) { lines.Add("  " + s); });
+                    lines.Add("Published mission: " + rm.Release + " (" + rm.Source + ", " + (rm.Size / 1024) + " KB)");
+                }
+                catch (Exception ex) { lines.Add("[ERROR] the published mission could not be read: " + ex.Message); }
+                try
+                {
+                    ra = Updates.ReadRemoteApp(Updates.ReleasesApi);
+                    lines.Add("Published program: " + ra.Tag + (ra.AssetUrl == null ? " (no setup file in the release)" : "") + ", this one is " + AppInfo.Version);
+                }
+                catch (Exception ex) { lines.Add("[ERROR] the published program could not be read: " + ex.Message); }
+
+                bool missionNew = rm != null && target != null && rm.Release.CompareTo(target.Release) > 0;
+                bool appNew = ra != null && ra.AssetUrl != null && Updates.AppIsNewer(ra);
+                if (rm != null && target == null) lines.Add("No R&E mission file was identified: choose it with Browse and check again.");
+                if (target != null && indexKnown && !indexListsFile && !missionNew)
+                    lines.Add("[NOTICE] the mission index does not list the release of your mission file: press Update mission index.");
+                if (!missionNew && !appNew) lines.Add("Nothing to update.");
+
+                Ui(delegate
+                {
+                    if (automatic)
+                    {
+                        bool any = missionNew || appNew;
+                        if (any)
+                        {
+                            foreach (string l in lines) ToolsLog(l);
+                            string what = (missionNew ? "mission " + rm.Release : "") + (missionNew && appNew ? " and " : "") + (appNew ? "program " + ra.Tag : "");
+                            AppendLog("[INFO] Updates: " + what + " available");
+                            updateBalloon = true;
+                            tray.ShowBalloonTip(10000, AppInfo.Name, "Update available: " + what + ". Click here to install it.", ToolTipIcon.Info);
+                        }
+                        else AppendLog("[INFO] Updates: nothing newer" + (lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); }) ? " (a source could not be read, see the Tools tab: press Check for updates)" : ""));
+                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        return;
+                    }
+                    foreach (string l in lines) ToolsLog(l);
+                    if (copies.Count > 0)
+                    {
+                        missionCombo.Items.Clear();
+                        foreach (MissionCopy c in copies) missionCombo.Items.Add(c);
+                        if (target != null) missionCombo.SelectedItem = target;
+                    }
+                    bool go = false;
+                    if (missionNew || appNew)
+                    {
+                        StringBuilder q = new StringBuilder();
+                        if (missionNew) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + target.Release + ").");
+                        if (appNew) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
+                        q.AppendLine();
+                        if (missionNew && !target.Release.HasRelease) q.AppendLine("The mission file to replace is an original file without a release number (" + target.Path + ").\n");
+                        if (Tools.SimulatorRunning()) q.AppendLine("Microsoft Flight Simulator is running: restart the mission after the update.\n");
+                        q.Append("Download and install now?\n\n");
+                        if (missionNew) q.Append("The mission file is replaced first (the old one is kept in the backups folder) and the mission index is updated. ");
+                        if (appNew) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
+                        go = MessageBox.Show(this, q.ToString(), Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                    }
+                    if (!go) { updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version; return; }
+                    InstallUpdates(missionNew ? target : null, missionNew ? rm : null, appNew ? ra : null, indexCmd);
+                });
+            });
+        }
+
+        // mission first (download, backup, replace, index), then the program (download, setup, exit)
+        void InstallUpdates(MissionCopy target, RemoteMission rm, RemoteApp ra, string indexCmd)
+        {
+            updateInfo.Text = "Updating...";
+            string tmp = Path.Combine(Path.GetTempPath(), "hmc-update");
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                string error = null;
+                string setup = null;
+                try
+                {
+                    Directory.CreateDirectory(tmp);
+                    if (target != null && rm != null)
+                    {
+                        string file = Path.Combine(tmp, "everywhere_all-" + rm.Release.Major + "." + rm.Release.Minor + ".json");
+                        long shown = -1;
+                        Ui(delegate { ToolsLog("Downloading the mission " + rm.Release + " (" + rm.Source + ")..."); });
+                        Updates.DownloadMission(rm, file, delegate (long done, long total)
+                        {
+                            long step = total > 0 ? done * 4 / total : 0;
+                            if (step != shown) { shown = step; Ui(delegate { ToolsLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
+                        });
+                        string backup = Updates.ReplaceInstalled(target.Path, file, Path.Combine(Path.Combine(Ctx.BaseDir, "backups"), "mission"));
+                        try { File.Delete(file); } catch (Exception) { }
+                        Ui(delegate { ToolsLog("Mission file replaced: " + target.Path); ToolsLog("The previous file is kept in " + backup); });
+                        if (indexCmd != null)
+                        {
+                            Ui(delegate { ToolsLog("Updating the mission index..."); });
+                            int rc = Tools.RunIndex(indexCmd, delegate (string line) { Ui(delegate { ToolsLog(line); }); });
+                            Ui(delegate { ToolsLog("Index tool finished, exit code " + rc + ". In the simulator press Refresh in the mission app."); });
+                        }
+                        else Ui(delegate { ToolsLog("[NOTICE] no index tool is known: run Update Mission Index yourself."); });
+                    }
+                    if (ra != null)
+                    {
+                        setup = Path.Combine(tmp, "HPGMissionCompanionSetup-" + ra.Tag + ".exe");
+                        long shown = -1;
+                        Ui(delegate { ToolsLog("Downloading the program " + ra.Tag + "..."); });
+                        Updates.DownloadSetup(ra, setup, delegate (long done, long total)
+                        {
+                            long step = total > 0 ? done * 4 / total : 0;
+                            if (step != shown) { shown = step; Ui(delegate { ToolsLog("  " + (done / 1024) + " of " + (total / 1024) + " KB"); }); }
+                        });
+                    }
+                }
+                catch (Exception ex) { error = ex.Message; }
+                Ui(delegate
+                {
+                    if (error != null)
+                    {
+                        ToolsLog("[ERROR] " + error);
+                        ToolsLog("The update stopped here: what was already replaced is kept, press Check for updates to go on.");
+                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        return;
+                    }
+                    if (setup == null)
+                    {
+                        ToolsLog("Update finished.");
+                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                        return;
+                    }
+                    try
+                    {
+                        if (dirty) SaveSettings();
+                        ToolsLog("Starting the setup: this program closes and starts again.");
+                        Process.Start(Updates.SetupStart(setup, Ctx.BaseDir));
+                        ExitApp(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        ToolsLog("[ERROR] the setup could not be started: " + ex.Message + " (the file is " + setup + ")");
+                        updateRunning = false; updateButton.Enabled = true; updateInfo.Text = "Program version " + AppInfo.Version;
+                    }
                 });
             });
         }

@@ -30,6 +30,8 @@ namespace HPGMissionCompanion
             return req;
         }
 
+        public static HttpWebRequest NewRequestPublic(string url) { return NewRequest(url); }
+
         public static string GetString(string url)
         {
             using (WebResponse resp = NewRequest(url).GetResponse())

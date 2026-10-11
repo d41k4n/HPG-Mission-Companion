@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.9";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.10";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -111,6 +111,10 @@ namespace HPGMissionCompanion
         public string WorkFolder = "";
         public string IndexTool = "";
         public bool AutoIndex = true;           // run the mission index update when the app starts
+        public string MissionUrl = Updates.DefaultMissionUrl;   // where the published R&E mission file is (Google Drive direct download); read only when the user presses Check for updates
+        public bool AutoUpdateCheck = true;     // check for updates when the program starts (the user's request of 2026-10-11): only reads the published versions and tells; nothing is downloaded without the question
+        public string LastUpdateCheck = "";     // UTC time of the last check (ISO); an automatic check is skipped within 6 hours of it
+        public string MissionFile = "";         // the installed R&E mission file to update ("" = the one found first)
         public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
         public string BridgePack = "";          // voice pack played when the mission increments its LVARs (L:AUDIOINHIBIT = 1, voice code APP); "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
@@ -153,6 +157,8 @@ namespace HPGMissionCompanion
             if (AudioFolder == null) AudioFolder = "";
             if (WorkFolder == null) WorkFolder = "";
             if (IndexTool == null) IndexTool = "";
+            if (string.IsNullOrEmpty(MissionUrl)) MissionUrl = Updates.DefaultMissionUrl;
+            if (MissionFile == null) MissionFile = "";
             MasterVolume = Math.Max(0, Math.Min(100, MasterVolume));
             if (Radio == null) Radio = new RadioSettings();
             Radio.NoiseLevel = Math.Max(0, Math.Min(100, Radio.NoiseLevel));

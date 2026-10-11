@@ -1,0 +1,434 @@
+// HPG Mission Companion - updates: the installed R&E mission (file and mission index), the mission file published on Google Drive, the program release on GitHub.
+// Everything here runs only after the user presses "Check for updates"; there is no automatic check.
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
+
+namespace HPGMissionCompanion
+{
+    // "HEMS RANDOM AND EVERYWHERE MISSIONS 0.997 169.45": family 0.997, release 169 . 45 (two integers: 169.9 comes before 169.45).
+    // A title without the release ("... MISSIONS 0.997", the original mission) is release 0 . 0.
+    internal struct MissionRelease : IComparable<MissionRelease>
+    {
+        public string Family;
+        public int Major;
+        public int Minor;
+        public bool HasRelease;
+
+        static readonly Regex Title = new Regex("MISSIONS\\s+(\\d+(?:\\.\\d+)?)(?:\\s+(\\d+)\\.(\\d+))?", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        public static bool TryParse(string title, out MissionRelease r)
+        {
+            r = new MissionRelease();
+            if (string.IsNullOrEmpty(title)) return false;
+            Match m = Title.Match(title);
+            if (!m.Success) return false;
+            r.Family = m.Groups[1].Value;
+            if (m.Groups[2].Success)
+            {
+                r.HasRelease = true;
+                int a, b;
+                if (!int.TryParse(m.Groups[2].Value, out a) || !int.TryParse(m.Groups[3].Value, out b)) return false;
+                r.Major = a; r.Minor = b;
+            }
+            return true;
+        }
+
+        static readonly Regex Loose = new Regex("(\\d+\\.\\d+)\\D+(\\d+)\\.(\\d+)", RegexOptions.CultureInvariant);
+
+        public static bool TryParseLoose(string text, out MissionRelease r)
+        {
+            r = new MissionRelease();
+            if (string.IsNullOrEmpty(text)) return false;
+            Match m = Loose.Match(text);
+            int a, b;
+            if (!m.Success || !int.TryParse(m.Groups[2].Value, out a) || !int.TryParse(m.Groups[3].Value, out b)) return false;
+            r.Family = m.Groups[1].Value; r.HasRelease = true; r.Major = a; r.Minor = b;
+            return true;
+        }
+
+        static double FamilyValue(string f)
+        {
+            double v;
+            return double.TryParse(f, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out v) ? v : 0;
+        }
+
+        public int CompareTo(MissionRelease o)
+        {
+            int c = FamilyValue(Family).CompareTo(FamilyValue(o.Family));
+            if (c != 0) return c;
+            c = Major.CompareTo(o.Major);
+            return c != 0 ? c : Minor.CompareTo(o.Minor);
+        }
+
+        public override string ToString() { return Family + (HasRelease ? " " + Major + "." + Minor : " (no release number)"); }
+    }
+
+    internal sealed class MissionCopy
+    {
+        public string Path;
+        public string Package;      // the Community package folder name
+        public string Title;
+        public MissionRelease Release;
+        public long Size;
+        public override string ToString() { return Package + "\\" + System.IO.Path.GetFileName(Path) + "  -  " + Release; }
+    }
+
+    internal sealed class RemoteMission
+    {
+        public MissionRelease Release;
+        public string Title;
+        public long Size;           // total bytes of the file on the server
+        public string Url;
+        public string Sha256;       // from the GitHub asset digest when it gives one
+        public string Source;       // "GitHub release" or "Google Drive link"
+    }
+
+    internal sealed class RemoteApp
+    {
+        public string Tag;
+        public int Major;
+        public int Minor;
+        public string AssetName;
+        public string AssetUrl;
+        public long AssetSize;
+        public string Sha256;       // from the GitHub asset digest when it gives one
+        public string Page;
+    }
+
+    internal static class Updates
+    {
+        public const string DefaultMissionUrl = "https://drive.google.com/uc?export=download&id=12A_yYb0hu7z7LrtUO-Cms2Ft4ua-BSij";
+        public const string ReleasesApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/latest";
+        public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
+        public const string MissionAsset = "everywhere_all.json";
+        public const string MissionId = "HEMSRandE";
+        const int HeadBytes = 4096;
+
+        // ---- the mission text ---------------------------------------------------------------------
+        // the first bytes of a mission file: its title and its id
+        public static bool ParseHead(string head, out string title, out string id)
+        {
+            title = null; id = null;
+            if (head == null) return false;
+            Match t = Regex.Match(head, "\"title\"\\s*:\\s*\"([^\"]*)\"");
+            Match i = Regex.Match(head, "\"id\"\\s*:\\s*\"([^\"]*)\"");
+            if (t.Success) title = t.Groups[1].Value;
+            if (i.Success) id = i.Groups[1].Value;
+            return title != null && id != null;
+        }
+
+        public static string ReadHead(string file)
+        {
+            using (FileStream f = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                byte[] buf = new byte[HeadBytes];
+                int n = f.Read(buf, 0, buf.Length);
+                return Encoding.UTF8.GetString(buf, 0, n).TrimStart((char)0xFEFF);
+            }
+        }
+
+        // ---- the installed mission ------------------------------------------------------------------
+        // every R&E mission file (id HEMSRandE) in the hpgmission folders of the HPG packages of the Community folders
+        public static List<MissionCopy> FindInstalled(IEnumerable<string> communityRoots, string custom)
+        {
+            List<MissionCopy> list = new List<MissionCopy>();
+            foreach (string root in communityRoots)
+            {
+                if (!Directory.Exists(root)) continue;
+                foreach (string pkg in SafeDirs(root))
+                {
+                    if (!System.IO.Path.GetFileName(pkg).StartsWith("hpg-", StringComparison.OrdinalIgnoreCase)) continue;
+                    string mdir = System.IO.Path.Combine(pkg, "hpgmission");
+                    if (!Directory.Exists(mdir)) continue;
+                    foreach (string f in SafeFiles(mdir)) TryAdd(list, f, System.IO.Path.GetFileName(pkg));
+                }
+            }
+            if (!string.IsNullOrEmpty(custom) && File.Exists(custom))
+            {
+                bool known = false;
+                foreach (MissionCopy c in list) if (string.Equals(c.Path, custom, StringComparison.OrdinalIgnoreCase)) known = true;
+                if (!known) TryAdd(list, custom, "(chosen)");
+            }
+            // tester builds (with a release number) first, newest first; then the originals
+            list.Sort(delegate (MissionCopy a, MissionCopy b)
+            {
+                if (a.Release.HasRelease != b.Release.HasRelease) return a.Release.HasRelease ? -1 : 1;
+                int c = b.Release.CompareTo(a.Release);
+                return c != 0 ? c : string.Compare(a.Path, b.Path, StringComparison.OrdinalIgnoreCase);
+            });
+            return list;
+        }
+
+        static void TryAdd(List<MissionCopy> list, string file, string package)
+        {
+            try
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.Length < 100000) return;                    // the mission is many megabytes; the small examples are not it
+                string title, id;
+                if (!ParseHead(ReadHead(file), out title, out id) || id != MissionId) return;
+                MissionRelease r;
+                if (!MissionRelease.TryParse(title, out r)) return;
+                MissionCopy c = new MissionCopy();
+                c.Path = file; c.Package = package; c.Title = title; c.Release = r; c.Size = fi.Length;
+                list.Add(c);
+            }
+            catch (Exception) { }
+        }
+
+        static IEnumerable<string> SafeDirs(string dir)
+        {
+            try { return Directory.GetDirectories(dir); } catch (Exception) { return new string[0]; }
+        }
+
+        static IEnumerable<string> SafeFiles(string dir)
+        {
+            try { return Directory.GetFiles(dir, "*.json", SearchOption.AllDirectories); } catch (Exception) { return new string[0]; }
+        }
+
+        // ---- the mission index ---------------------------------------------------------------------
+        // GeneratedMissionIndex.json keeps a copy of every mission file as base64 (the whole file). The releases of the R&E copies in it:
+        // every string that starts with base64 is decoded for its first bytes only.
+        public static List<MissionRelease> ReadIndexReleases(string indexFile)
+        {
+            List<MissionRelease> list = new List<MissionRelease>();
+            string text = File.ReadAllText(indexFile, Encoding.UTF8);
+            int pos = 0;
+            const int probe = 1200;                                 // base64 characters decoded per entry: 900 bytes
+            while (pos < text.Length)
+            {
+                int q = text.IndexOf('"', pos);
+                if (q < 0 || q + 1 + probe >= text.Length) break;
+                int i = q + 1;
+                int stop = i + probe;
+                bool b64 = true;
+                for (int k = i; k < stop; k++)
+                {
+                    char ch = text[k];
+                    if (!((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || ch == '+' || ch == '/' || ch == '=')) { b64 = false; break; }
+                }
+                if (b64)
+                {
+                    try
+                    {
+                        string head = Encoding.UTF8.GetString(Convert.FromBase64String(text.Substring(i, probe))).TrimStart((char)0xFEFF);
+                        string title, id;
+                        MissionRelease r;
+                        if (ParseHead(head, out title, out id) && id == MissionId && MissionRelease.TryParse(title, out r)) list.Add(r);
+                    }
+                    catch (Exception) { }
+                    int end = text.IndexOf('"', stop);              // skip the rest of the entry
+                    pos = end < 0 ? text.Length : end + 1;
+                }
+                else pos = q + 1;
+            }
+            return list;
+        }
+
+        // ---- where the published mission is ---------------------------------------------------------
+        // GitHub release first (tag with the release, the asset everywhere_all.json with its size and sha256), then the Google Drive link as a fallback
+        public static RemoteMission ReadRemoteMissionAuto(string fallbackUrl, Action<string> log)
+        {
+            string githubError;
+            try { return ReadRemoteMissionGitHub(MissionReleasesApi); }
+            catch (Exception ex) { githubError = ex.Message; log("GitHub release of the mission: " + githubError); }
+            if (string.IsNullOrEmpty(fallbackUrl)) throw new InvalidOperationException(githubError);
+            try { return ReadRemoteMission(fallbackUrl); }
+            catch (Exception ex) { throw new InvalidOperationException("GitHub: " + githubError + " / Google Drive: " + ex.Message); }
+        }
+
+        public static RemoteMission ReadRemoteMissionGitHub(string apiUrl)
+        {
+            Dictionary<string, object> d = GetJson(apiUrl);
+            string tag = Str(d, "tag_name");
+            string name = Str(d, "name");
+            MissionRelease r;
+            if (!MissionRelease.TryParseLoose(tag, out r) && !MissionRelease.TryParseLoose(name, out r))
+                throw new InvalidOperationException("the latest release has no mission release in its tag (" + tag + ")");
+            object assets;
+            if (d.TryGetValue("assets", out assets) && assets is System.Collections.IEnumerable)
+            {
+                foreach (object o in (System.Collections.IEnumerable)assets)
+                {
+                    Dictionary<string, object> e = o as Dictionary<string, object>;
+                    if (e == null || !string.Equals(Str(e, "name"), MissionAsset, StringComparison.OrdinalIgnoreCase)) continue;
+                    RemoteMission m = new RemoteMission();
+                    m.Release = r; m.Title = tag; m.Url = Str(e, "browser_download_url"); m.Source = "GitHub release " + tag;
+                    object size;
+                    if (e.TryGetValue("size", out size)) m.Size = Convert.ToInt64(size);
+                    string digest = Str(e, "digest");
+                    if (digest != null && digest.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase)) m.Sha256 = digest.Substring(7).ToLowerInvariant();
+                    return m;
+                }
+            }
+            throw new InvalidOperationException("the latest release (" + tag + ") has no " + MissionAsset + " asset");
+        }
+
+        static Dictionary<string, object> GetJson(string url)
+        {
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            js.MaxJsonLength = int.MaxValue;
+            return js.Deserialize<Dictionary<string, object>>(Net.GetString(url));
+        }
+
+        // ---- Google Drive: the published mission ----------------------------------------------------
+        // reads only the first bytes (HTTP Range) and the total size; falls back to the first bytes of a full response
+        public static RemoteMission ReadRemoteMission(string url)
+        {
+            HttpWebRequest req = Net.NewRequestPublic(url);
+            req.AddRange(0, HeadBytes - 1);
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
+            {
+                long total = resp.ContentLength;
+                string cr = resp.Headers["Content-Range"];
+                if (!string.IsNullOrEmpty(cr))
+                {
+                    int slash = cr.LastIndexOf('/');
+                    long t;
+                    if (slash >= 0 && long.TryParse(cr.Substring(slash + 1), out t)) total = t;
+                }
+                byte[] buf = new byte[HeadBytes];
+                int got = 0, n;
+                using (Stream s = resp.GetResponseStream())
+                    while (got < buf.Length && (n = s.Read(buf, got, buf.Length - got)) > 0) got += n;
+                string head = Encoding.UTF8.GetString(buf, 0, got).TrimStart((char)0xFEFF);
+                string title, id;
+                MissionRelease r;
+                if (!ParseHead(head, out title, out id) || id != MissionId || !MissionRelease.TryParse(title, out r))
+                    throw new InvalidOperationException("the link did not return the R&E mission (is the file shared with everyone who has the link, or is Google Drive limiting the downloads?)");
+                RemoteMission m = new RemoteMission();
+                m.Release = r; m.Title = title; m.Size = total; m.Url = url; m.Source = "Google Drive link";
+                return m;
+            }
+        }
+
+        // downloads the mission to dest (through dest.part, never a .json beside the missions), checks the size and the shape of the file
+        public static void DownloadMission(RemoteMission m, string dest, Action<long, long> progress)
+        {
+            Net.Download(m.Url, dest, progress, null, m.Size);
+            FileInfo fi = new FileInfo(dest);
+            if (m.Size > 0 && fi.Length != m.Size) { File.Delete(dest); throw new IOException("the download is incomplete (" + fi.Length + " of " + m.Size + " bytes), try again"); }
+            string title, id;
+            if (!ParseHead(ReadHead(dest), out title, out id) || id != MissionId) { File.Delete(dest); throw new IOException("the downloaded file is not the R&E mission"); }
+            if (!TailIsClosed(dest)) { File.Delete(dest); throw new IOException("the downloaded file is cut (it does not end with a closing brace), try again"); }
+            if (!string.IsNullOrEmpty(m.Sha256) && Sha256Of(dest) != m.Sha256) { File.Delete(dest); throw new IOException("the mission file is corrupted (sha256 differs), try again"); }
+            MissionRelease got;
+            if (!MissionRelease.TryParse(title, out got) || got.CompareTo(m.Release) != 0) { File.Delete(dest); throw new IOException("the title of the downloaded file (" + title + ") is not the release announced (" + m.Release + ")"); }
+        }
+
+        static string Sha256Of(string file)
+        {
+            using (SHA256 h = SHA256.Create())
+            using (FileStream f = File.OpenRead(file))
+                return BitConverter.ToString(h.ComputeHash(f)).Replace("-", "").ToLowerInvariant();
+        }
+
+        static bool TailIsClosed(string file)
+        {
+            using (FileStream f = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                int n = (int)Math.Min(64, f.Length);
+                byte[] buf = new byte[n];
+                f.Seek(-n, SeekOrigin.End);
+                f.Read(buf, 0, n);
+                string tail = Encoding.UTF8.GetString(buf).TrimEnd();
+                return tail.EndsWith("}");
+            }
+        }
+
+        // Replaces the installed file: the old one is copied to backupDir first (never into the Community folder: the index tool would list a copy as a mission),
+        // the new one is written beside it as .part and moved over it. Returns the backup path.
+        public static string ReplaceInstalled(string installed, string newFile, string backupDir)
+        {
+            Directory.CreateDirectory(backupDir);
+            MissionRelease r;
+            string title, id;
+            string tag = "unknown";
+            try { if (ParseHead(ReadHead(installed), out title, out id) && MissionRelease.TryParse(title, out r)) tag = r.HasRelease ? r.Major + "." + r.Minor : r.Family; } catch (Exception) { }
+            string backup = Path.Combine(backupDir, "everywhere_all-" + tag + "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
+            File.Copy(installed, backup, false);
+            string part = installed + ".part";
+            File.Copy(newFile, part, true);
+            if (File.Exists(installed)) File.Delete(installed);
+            File.Move(part, installed);
+            return backup;
+        }
+
+        // ---- GitHub: the program ---------------------------------------------------------------------
+        public static RemoteApp ReadRemoteApp(string apiUrl)
+        {
+            Dictionary<string, object> d = GetJson(apiUrl);
+            RemoteApp a = new RemoteApp();
+            a.Tag = Str(d, "tag_name");
+            a.Page = Str(d, "html_url");
+            if (!ParseVersion(a.Tag, out a.Major, out a.Minor)) throw new InvalidOperationException("the latest release has no version tag (" + a.Tag + ")");
+            object assets;
+            if (d.TryGetValue("assets", out assets) && assets is System.Collections.IEnumerable)
+            {
+                foreach (object o in (System.Collections.IEnumerable)assets)
+                {
+                    Dictionary<string, object> e = o as Dictionary<string, object>;
+                    if (e == null) continue;
+                    string name = Str(e, "name");
+                    if (!string.Equals(name, "HPGMissionCompanionSetup.exe", StringComparison.OrdinalIgnoreCase)) continue;
+                    a.AssetName = name;
+                    a.AssetUrl = Str(e, "browser_download_url");
+                    object size;
+                    if (e.TryGetValue("size", out size)) a.AssetSize = Convert.ToInt64(size);
+                    string digest = Str(e, "digest");
+                    if (digest != null && digest.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase)) a.Sha256 = digest.Substring(7).ToLowerInvariant();
+                }
+            }
+            return a;
+        }
+
+        static string Str(Dictionary<string, object> d, string key)
+        {
+            object v;
+            return d.TryGetValue(key, out v) && v != null ? v.ToString() : null;
+        }
+
+        // "v0.10", "0.9" -> 0, 10 / 0, 9 (two integers: 0.10 comes after 0.9)
+        public static bool ParseVersion(string text, out int major, out int minor)
+        {
+            major = 0; minor = 0;
+            if (string.IsNullOrEmpty(text)) return false;
+            Match m = Regex.Match(text, "(\\d+)\\.(\\d+)");
+            return m.Success && int.TryParse(m.Groups[1].Value, out major) && int.TryParse(m.Groups[2].Value, out minor);
+        }
+
+        public static bool AppIsNewer(RemoteApp a)
+        {
+            int cm, cn;
+            if (!ParseVersion(AppInfo.Version, out cm, out cn)) return false;
+            return a.Major > cm || (a.Major == cm && a.Minor > cn);
+        }
+
+        public static void DownloadSetup(RemoteApp a, string dest, Action<long, long> progress)
+        {
+            Net.Download(a.AssetUrl, dest, progress, null, a.AssetSize);
+            FileInfo fi = new FileInfo(dest);
+            if (a.AssetSize > 0 && fi.Length != a.AssetSize) { File.Delete(dest); throw new IOException("the download is incomplete (" + fi.Length + " of " + a.AssetSize + " bytes), try again"); }
+            if (!string.IsNullOrEmpty(a.Sha256) && Sha256Of(dest) != a.Sha256) { File.Delete(dest); throw new IOException("the setup program is corrupted (sha256 differs), try again"); }
+        }
+
+        // The setup closes this program (it is running from the folder it installs into), copies the new files and starts it again. Shortcuts are
+        // asked for only when this folder was installed by the setup (its uninstaller is there).
+        public static ProcessStartInfo SetupStart(string setupFile, string installDir)
+        {
+            bool installed = File.Exists(Path.Combine(installDir, "Uninstall.exe"));
+            string args = "/S /dir=\"" + installDir.TrimEnd('\\') + "\"" + (installed ? "" : " /nodesktop /nostartmenu");
+            ProcessStartInfo psi = new ProcessStartInfo(setupFile, args);
+            psi.UseShellExecute = false;
+            psi.WorkingDirectory = Path.GetDirectoryName(setupFile);
+            return psi;
+        }
+    }
+}

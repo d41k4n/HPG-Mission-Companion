@@ -28,8 +28,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.9.0.0")]
-[assembly: AssemblyFileVersion("0.9.0.0")]
+[assembly: AssemblyVersion("0.10.0.0")]
+[assembly: AssemblyFileVersion("0.10.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -158,6 +158,60 @@ namespace HPGMissionCompanion
                 }
                 catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
                 File.WriteAllText(reportPath, rep.ToString());
+                return rc;
+            }
+
+            // --check-updates <report> [--community <dir>] [--index-file <file>] [--mission-url <url>] [--github-mission <api url>] [--github-app <api url>]: the reads of the Check for updates button, no download
+            // --test-replace <installed> --with <file> --backup <dir> [--report <file>]: the replacement of the mission file (check it on a dummy copy)
+            string checkUpdates = Option(args, "--check-updates");
+            string testReplace = Option(args, "--test-replace");
+            if (checkUpdates != null || testReplace != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                int rc = 0;
+                try
+                {
+                    if (testReplace != null)
+                    {
+                        string backup = Updates.ReplaceInstalled(testReplace, Option(args, "--with"), Option(args, "--backup"));
+                        rep.AppendLine("replaced " + testReplace + "; backup " + backup);
+                        string t, i;
+                        Updates.ParseHead(Updates.ReadHead(testReplace), out t, out i);
+                        rep.AppendLine("now: " + t);
+                        File.WriteAllText(Option(args, "--report") ?? testReplace + ".report.txt", rep.ToString());
+                        return 0;
+                    }
+                    string community = Option(args, "--community");
+                    List<string> roots = community != null ? new List<string>(new string[] { community }) : Tools.CommunityRoots();
+                    List<MissionCopy> copies = Updates.FindInstalled(roots, null);
+                    rep.AppendLine("installed copies: " + copies.Count);
+                    foreach (MissionCopy c in copies) rep.AppendLine("  " + c + " | " + c.Size + " bytes | " + c.Path);
+                    string indexFile = Option(args, "--index-file");
+                    if (indexFile != null)
+                    {
+                        foreach (MissionRelease r in Updates.ReadIndexReleases(indexFile)) rep.AppendLine("index lists: " + r);
+                    }
+                    string url = Option(args, "--mission-url");
+                    string ghMission = Option(args, "--github-mission");
+                    if (ghMission != null)
+                    {
+                        try { RemoteMission m = Updates.ReadRemoteMissionGitHub(ghMission); rep.AppendLine("github mission: " + m.Release + " size " + m.Size + " sha256 " + m.Sha256 + " " + m.Url); }
+                        catch (Exception ex) { rep.AppendLine("github mission: " + ex.Message); }
+                    }
+                    if (url != null)
+                    {
+                        try { RemoteMission m = Updates.ReadRemoteMission(url); rep.AppendLine("link mission: " + m.Release + " size " + m.Size + " (" + m.Source + ")"); }
+                        catch (Exception ex) { rep.AppendLine("link mission: " + ex.Message); }
+                    }
+                    string ghApp = Option(args, "--github-app");
+                    if (ghApp != null)
+                    {
+                        try { RemoteApp a = Updates.ReadRemoteApp(ghApp); rep.AppendLine("github app: " + a.Tag + " newer=" + Updates.AppIsNewer(a) + " asset " + a.AssetName + " size " + a.AssetSize + " sha256 " + a.Sha256); }
+                        catch (Exception ex) { rep.AppendLine("github app: " + ex.Message); }
+                    }
+                }
+                catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
+                File.WriteAllText(checkUpdates ?? (testReplace + ".report.txt"), rep.ToString());
                 return rc;
             }
 

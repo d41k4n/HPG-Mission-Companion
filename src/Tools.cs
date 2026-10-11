@@ -46,7 +46,7 @@ namespace HPGMissionCompanion
             });
         }
 
-        static List<string> CommunityRoots()
+        public static List<string> CommunityRoots()
         {
             string local = Environment.GetEnvironmentVariable("LOCALAPPDATA") ?? "";
             string roaming = Environment.GetEnvironmentVariable("APPDATA") ?? "";
