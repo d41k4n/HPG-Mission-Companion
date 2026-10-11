@@ -96,6 +96,10 @@ namespace HPGMissionCompanion
         public int Speakers;
         public List<CatalogFile> Files = new List<CatalogFile>();
         public long OnnxSize;
+        public string BaseUrl;          // where the files are, for a voice that is not in the Piper repository (null: the Piper repository)
+        public string Source = "";      // community voices: who made it and where it is
+        public string License = "";     // community voices: the licence, shown before the download and written to the model card file
+        public string Note = "";        // community voices: what the page of the voice says (gender, how it was made); not tested by the author of the program
     }
 
     internal static class PiperInstaller
@@ -173,6 +177,43 @@ namespace HPGMissionCompanion
             return list;
         }
 
+        // Voices that are not in the official Piper list: community voices on Hugging Face, with their licence. They are listed beside the official ones
+        // (Piper voices tab) and downloaded from their own repository when you press Install; they are not part of this program. Italian has few voices,
+        // and only one official male one (riccardo, x_low). The sizes are the ones the server reports (no md5 is published), the gender is what the page says.
+        public static readonly List<CatalogVoice> Community = MakeCommunity();
+
+        static CatalogVoice Community1(string key, string name, string baseUrl, string onnx, string config, long size, string source, string license, string note)
+        {
+            CatalogVoice c = new CatalogVoice();
+            c.Key = key; c.Name = name; c.LangCode = "it_IT"; c.Family = "it"; c.Quality = "medium"; c.Speakers = 1;
+            c.BaseUrl = baseUrl; c.Source = source; c.License = license; c.Note = note;
+            CatalogFile f = new CatalogFile(); f.Path = onnx; f.Size = size; c.Files.Add(f);
+            CatalogFile j = new CatalogFile(); j.Path = config; j.Size = 0; c.Files.Add(j);
+            c.OnnxSize = size;
+            return c;
+        }
+
+        static List<CatalogVoice> MakeCommunity()
+        {
+            List<CatalogVoice> list = new List<CatalogVoice>();
+            string kirys = "https://huggingface.co/kirys79/piper_italiano/resolve/main/";
+            list.Add(Community1("it_IT-leonardo-medium", "leonardo", kirys, "Leonardo/leonardo-epoch=2024-step=996300.onnx", "Leonardo/leonardo-epoch=2024-step=996300.json", 63511038,
+                "kirys79/piper_italiano on Hugging Face, trained from scratch on Multilingual LibriSpeech", "CC BY 4.0 (attribution)",
+                "Male, probably the voice of riccardo with a higher quality."));
+            list.Add(Community1("it_IT-giorgio-medium", "giorgio", kirys, "Giorgio/giorgio-epoch=5028-step=1098436.onnx", "Giorgio/giorgio-epoch=5028-step=1098436.json", 63511038,
+                "kirys79/piper_italiano on Hugging Face, an experimental fine-tune of leonardo", "CC BY 4.0 (attribution)",
+                "Gender not stated, no quality rating: listen first."));
+            list.Add(Community1("it_IT-miro-medium", "miro", "https://huggingface.co/OpenVoiceOS/pipertts_it-IT_miro/resolve/main/", "miro_it-IT.onnx", "miro_it-IT.onnx.json", 63511038,
+                "OpenVoiceOS/pipertts_it-IT_miro on Hugging Face, synthetic training data", "CC BY-NC-ND 4.0, non-commercial use only, attribution to TigreGotico Lda",
+                "Male, says its page."));
+            return list;
+        }
+
+        public static string CommunityCard(CatalogVoice c)
+        {
+            return "Community voice " + c.Name + " (" + c.Key + ")\r\nSource: " + c.Source + "\r\nLicence: " + c.License + "\r\n" + c.Note + "\r\nNot tested by the author of the HPG Mission Companion.\r\n\r\nDownloaded by the HPG Mission Companion from the source above; read the page of the voice for the full terms before using it outside your own PC.\r\n";
+        }
+
         public static bool IsInstalled(CatalogVoice c)
         {
             return File.Exists(Path.Combine(Ctx.PiperVoicesDir, c.Key + ".onnx")) && File.Exists(Path.Combine(Ctx.PiperVoicesDir, c.Key + ".onnx.json"));
@@ -186,14 +227,16 @@ namespace HPGMissionCompanion
                 string dest;
                 if (f.Path.EndsWith(".onnx.json", StringComparison.OrdinalIgnoreCase)) dest = Path.Combine(Ctx.PiperVoicesDir, c.Key + ".onnx.json");
                 else if (f.Path.EndsWith(".onnx", StringComparison.OrdinalIgnoreCase)) dest = Path.Combine(Ctx.PiperVoicesDir, c.Key + ".onnx");
+                else if (c.BaseUrl != null && f.Path.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) dest = Path.Combine(Ctx.PiperVoicesDir, c.Key + ".onnx.json");    // a config named model.json: Piper wants model.onnx.json
                 else if (f.Path.EndsWith("MODEL_CARD", StringComparison.OrdinalIgnoreCase)) dest = Path.Combine(Ctx.PiperVoicesDir, c.Key + ".MODEL_CARD.txt");
                 else continue;
-                try { Net.Download(VoiceBase + f.Path, dest, progress, f.Md5, f.Size); }
+                try { Net.Download((c.BaseUrl ?? VoiceBase) + f.Path, dest, progress, f.Md5, f.Size); }
                 catch (Exception)
                 {
                     if (!dest.EndsWith(".MODEL_CARD.txt")) throw;
                 }
             }
+            if (c.BaseUrl != null) File.WriteAllText(Path.Combine(Ctx.PiperVoicesDir, c.Key + ".MODEL_CARD.txt"), CommunityCard(c), new UTF8Encoding(false));
         }
 
         public static void RemoveVoice(CatalogVoice c)

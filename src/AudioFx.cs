@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace HPGMissionCompanion
 {
@@ -302,6 +304,155 @@ namespace HPGMissionCompanion
             double peak = 0, sum = 0;
             foreach (float s in p.Data) { double a = Math.Abs(s); if (a > peak) peak = a; sum += s * s; }
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.00} s at {1} Hz, peak {2:0.000}, rms {3:0.0000}", p.Data.Length / (double)p.Rate, p.Rate, peak, p.Data.Length > 0 ? Math.Sqrt(sum / p.Data.Length) : 0);
+        }
+    }
+
+    // The output devices of Windows (the classic wave out, winmm.dll: the names are the ones of the sound settings of Windows, cut at 31 characters) and
+    // the playback of a PCM wav on a chosen one. Id -1 is the Windows default device (the wave mapper).
+    internal static class WaveOutDevices
+    {
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        struct WAVEOUTCAPS
+        {
+            public ushort wMid; public ushort wPid; public uint vDriverVersion;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string szPname;
+            public uint dwFormats; public ushort wChannels; public ushort wReserved1; public uint dwSupport;
+        }
+
+        [DllImport("winmm.dll")] static extern int waveOutGetNumDevs();
+        [DllImport("winmm.dll", CharSet = CharSet.Auto)] static extern int waveOutGetDevCaps(IntPtr uDeviceID, ref WAVEOUTCAPS caps, int size);
+
+        public const string DefaultName = "Windows default device";
+        static readonly HashSet<string> warned = new HashSet<string>();
+
+        // the names of the output devices, in the order of Windows; a name that repeats gets " (2)", " (3)"
+        public static List<string> Names()
+        {
+            List<string> list = new List<string>();
+            try
+            {
+                int n = waveOutGetNumDevs();
+                Dictionary<string, int> seen = new Dictionary<string, int>();
+                for (int i = 0; i < n; i++)
+                {
+                    WAVEOUTCAPS caps = new WAVEOUTCAPS();
+                    string name = "Device " + i;
+                    if (waveOutGetDevCaps((IntPtr)i, ref caps, Marshal.SizeOf(typeof(WAVEOUTCAPS))) == 0 && !string.IsNullOrEmpty(caps.szPname)) name = caps.szPname;
+                    int c;
+                    seen.TryGetValue(name, out c);
+                    seen[name] = c + 1;
+                    list.Add(c == 0 ? name : name + " (" + (c + 1) + ")");
+                }
+            }
+            catch (Exception) { }
+            return list;
+        }
+
+        // -1 = the default device: no name, or a name that is not there any more (said once in the log)
+        public static int Resolve(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return -1;
+            List<string> names = Names();
+            for (int i = 0; i < names.Count; i++) if (string.Equals(names[i], name, StringComparison.OrdinalIgnoreCase)) return i;
+            if (warned.Add(name)) Ctx.Log("[WARN] the output device '" + name + "' is not there: the Windows default device is used");
+            return -1;
+        }
+    }
+
+    // One playback of a PCM wav on a device; Play blocks until the end, Stop (from another thread) ends it at once.
+    internal sealed class WaveOutPlayback
+    {
+        [StructLayout(LayoutKind.Sequential)]
+        struct WAVEFORMATEX
+        {
+            public ushort wFormatTag; public ushort nChannels; public uint nSamplesPerSec; public uint nAvgBytesPerSec;
+            public ushort nBlockAlign; public ushort wBitsPerSample; public ushort cbSize;
+        }
+
+        [DllImport("winmm.dll")] static extern int waveOutOpen(out IntPtr hwo, int uDeviceID, ref WAVEFORMATEX fmt, IntPtr callback, IntPtr instance, int flags);
+        [DllImport("winmm.dll")] static extern int waveOutPrepareHeader(IntPtr hwo, IntPtr pwh, int size);
+        [DllImport("winmm.dll")] static extern int waveOutUnprepareHeader(IntPtr hwo, IntPtr pwh, int size);
+        [DllImport("winmm.dll")] static extern int waveOutWrite(IntPtr hwo, IntPtr pwh, int size);
+        [DllImport("winmm.dll")] static extern int waveOutReset(IntPtr hwo);
+        [DllImport("winmm.dll")] static extern int waveOutClose(IntPtr hwo);
+
+        volatile bool stop;
+
+        public void Stop() { stop = true; }
+
+        // false: the wav is not a PCM one or the device could not be opened (the caller plays it another way)
+        public bool Play(byte[] wav, int deviceId)
+        {
+            WAVEFORMATEX fmt = new WAVEFORMATEX();
+            int dataPos = -1, dataLen = 0;
+            if (!Parse(wav, ref fmt, out dataPos, out dataLen)) return false;
+            IntPtr hwo;
+            if (waveOutOpen(out hwo, deviceId, ref fmt, IntPtr.Zero, IntPtr.Zero, 0) != 0) return false;
+            int hdrSize = IntPtr.Size == 8 ? 48 : 32;
+            int flagsOffset = IntPtr.Size == 8 ? 24 : 16;
+            IntPtr data = Marshal.AllocHGlobal(dataLen);
+            IntPtr hdr = Marshal.AllocHGlobal(hdrSize);
+            bool prepared = false;
+            try
+            {
+                Marshal.Copy(wav, dataPos, data, dataLen);
+                for (int i = 0; i < hdrSize; i++) Marshal.WriteByte(hdr, i, 0);
+                Marshal.WriteIntPtr(hdr, 0, data);
+                Marshal.WriteInt32(hdr, IntPtr.Size, dataLen);
+                if (waveOutPrepareHeader(hwo, hdr, hdrSize) != 0) return false;
+                prepared = true;
+                if (waveOutWrite(hwo, hdr, hdrSize) != 0) return false;
+                bool reset = false;
+                while ((Marshal.ReadInt32(hdr, flagsOffset) & 1) == 0)       // WHDR_DONE
+                {
+                    if (stop && !reset) { waveOutReset(hwo); reset = true; }
+                    Thread.Sleep(10);
+                }
+                return true;
+            }
+            finally
+            {
+                if (prepared) waveOutUnprepareHeader(hwo, hdr, hdrSize);
+                waveOutClose(hwo);
+                Marshal.FreeHGlobal(hdr);
+                Marshal.FreeHGlobal(data);
+            }
+        }
+
+        // the format and the data of a RIFF wav (PCM only)
+        static bool Parse(byte[] w, ref WAVEFORMATEX fmt, out int dataPos, out int dataLen)
+        {
+            dataPos = -1; dataLen = 0;
+            if (w == null || w.Length < 44 || w[0] != 'R' || w[1] != 'I' || w[2] != 'F' || w[3] != 'F' || w[8] != 'W' || w[9] != 'A' || w[10] != 'V' || w[11] != 'E') return false;
+            bool haveFmt = false;
+            int pos = 12;
+            while (pos + 8 <= w.Length)
+            {
+                string id = "" + (char)w[pos] + (char)w[pos + 1] + (char)w[pos + 2] + (char)w[pos + 3];
+                int len = BitConverter.ToInt32(w, pos + 4);
+                int body = pos + 8;
+                if (id == "fmt " && len >= 16 && body + 16 <= w.Length)
+                {
+                    fmt.wFormatTag = BitConverter.ToUInt16(w, body);
+                    fmt.nChannels = BitConverter.ToUInt16(w, body + 2);
+                    fmt.nSamplesPerSec = BitConverter.ToUInt32(w, body + 4);
+                    fmt.nAvgBytesPerSec = BitConverter.ToUInt32(w, body + 8);
+                    fmt.nBlockAlign = BitConverter.ToUInt16(w, body + 12);
+                    fmt.wBitsPerSample = BitConverter.ToUInt16(w, body + 14);
+                    fmt.cbSize = 0;
+                    haveFmt = fmt.wFormatTag == 1;
+                }
+                else if (id == "data")
+                {
+                    dataPos = body;
+                    dataLen = len < 0 || body + len > w.Length ? w.Length - body : len;     // a streamed wav may say 0 or 0xFFFFFFFF
+                    if (len == 0) dataLen = w.Length - body;
+                    break;
+                }
+                if (len < 0) break;
+                pos = body + len + (len & 1);
+            }
+            return haveFmt && dataPos >= 0 && dataLen > 0;
         }
     }
 }

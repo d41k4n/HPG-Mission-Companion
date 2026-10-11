@@ -198,6 +198,7 @@ namespace HPGMissionCompanion
         readonly Label attInLabel = new Label();
         readonly Label attOutLabel = new Label();
         readonly Label mixInfo = new Label();
+        readonly GroupBox audioOutBox = new GroupBox();          // Volume tab, advanced: device and level of the headset, the external voices and the notifications
 
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
@@ -226,7 +227,14 @@ namespace HPGMissionCompanion
         readonly RadioButton updMission = new RadioButton();
         readonly RadioButton updApp = new RadioButton();
         TabPage updatesPage;
+        public static bool QuietPort;       // --screenshot: a busy port is only logged (the program of the user is probably running), no question
+        readonly CheckBox updPackCheck = new CheckBox();
+        readonly CheckBox readyCheck = new CheckBox();
+        long logBytes;
+        bool logCapped;
         bool updatesAvailable;
+        bool updChecked, updMissionNew, updAppNew, updPackNew, updGood;            // what the last check found: it was made, a newer mission, a newer program, everything up to date and every source read
+        string updateIdleText = "Program version " + AppInfo.Version;   // the status line when nothing is newer
 
         Server server;
         readonly NotifyIcon tray = new NotifyIcon();
@@ -243,7 +251,7 @@ namespace HPGMissionCompanion
         {
             this.startHidden = startHidden;
             this.exitWithSimArg = exitWithSim;
-            this.logFile = logFile;
+            this.logFile = logFile ?? (QuietPort ? null : NewLogFile());       // one file for each start in the logs folder, unless --log-file names one
             this.simRoot = simRoot;
             allowShow = !startHidden;
 
@@ -260,6 +268,7 @@ namespace HPGMissionCompanion
 
             uiContext = SynchronizationContext.Current;
             Ctx.Log = AppendLog;
+            if (this.logFile != null) AppendLog("[INFO] " + AppInfo.Title + " started" + (startHidden ? " minimized" : "") + ", " + Environment.OSVersion + ", log file " + this.logFile);
 
             tabs.Location = new Point(12, 12);
             tabs.Size = new Size(736, 594);
@@ -361,15 +370,39 @@ namespace HPGMissionCompanion
             advancedCheck.Checked = true;      // the Service tab again with the advanced options shown
             for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
             SaveShot(basePath + "-0-advanced.png");
+            for (int vt = 0; vt < tabs.TabPages.Count; vt++)
+                if (tabs.TabPages[vt].Text == "Volume")       // the Volume tab with the advanced audio output group, and scrolled down to it
+                {
+                    tabs.SelectedIndex = vt;
+                    for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+                    SaveShot(basePath + "-volume-advanced.png");
+                    tabs.TabPages[vt].AutoScrollPosition = new Point(0, 300);
+                    for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+                    SaveShot(basePath + "-volume-advanced-2.png");
+                    tabs.TabPages[vt].AutoScrollPosition = new Point(0, 0);
+                }
+            tabs.SelectedIndex = 0;
             advancedCheck.Checked = false;
-            SetUpdateState("Update available: mission 0.997 169.47 and program 0.12 (sample)", true);      // the Updates tab in amber, with the footer button
+            updMissionNew = true; updAppNew = true;
+            SetUpdateState("UPDATE AVAILABLE: mission 0.997 169.48 and program 0.13 (sample)", true);      // the Updates tab in amber, with the footer button
             SelectUpdatesTab();
             for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
             SaveShot(basePath + "-updates-alert.png");
+            updMissionNew = false; updAppNew = false; updChecked = true; updGood = true;
+            SetUpdateState("UP TO DATE: mission 0.997 169.48, program " + AppInfo.Version + " (sample)", false);      // everything up to date: green line, button Up to date
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            SaveShot(basePath + "-updates-ok.png");
+            updChecked = false; updGood = false;
             SetUpdateState("Program version " + AppInfo.Version, false);
             MarkDirty();
             for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
             SaveShot(basePath + "-dirty.png");
+            for (int i = 0; i < langBox.Items.Count; i++) if (((LangInfo)langBox.Items[i]).Code == "IT") langBox.SelectedIndex = i;      // the Piper voices tab in Italian: the community voices
+            tabs.SelectedIndex = 2;
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            if (catalogList.Items.Count > 0) { catalogList.Items[0].Selected = true; catalogList.Items[0].EnsureVisible(); }
+            for (int i = 0; i < 6; i++) { Application.DoEvents(); Thread.Sleep(80); }
+            SaveShot(basePath + "-piper-it.png");
             reallyExit = true;
             StopServer();
             PiperEngine.StopAll();
@@ -524,13 +557,38 @@ namespace HPGMissionCompanion
             logBox.AppendText(line + "\n");
         }
 
+        // a new log file for this start (logs\hmc-<date>-<time>.log next to the program); the ten newest are kept
+        static string NewLogFile()
+        {
+            try
+            {
+                string dir = Path.Combine(Ctx.BaseDir, "logs");
+                Directory.CreateDirectory(dir);
+                string[] old = Directory.GetFiles(dir, "hmc-*.log");
+                Array.Sort(old, StringComparer.OrdinalIgnoreCase);
+                for (int i = 0; i < old.Length - 9; i++) { try { File.Delete(old[i]); } catch (Exception) { } }
+                return Path.Combine(dir, "hmc-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".log");
+            }
+            catch (Exception) { return null; }
+        }
+
         void AppendLog(string line)
         {
-            string stamped = DateTime.Now.ToString("HH:mm:ss") + " " + line;
+            string stamped = DateTime.Now.ToString("HH:mm:ss.fff") + " " + line;
             logQueue.Enqueue(stamped);
             if (logFile != null)
             {
-                try { lock (logQueue) { File.AppendAllText(logFile, stamped + Environment.NewLine); } } catch (Exception) { }
+                try
+                {
+                    lock (logQueue)
+                    {
+                        if (logCapped) return;
+                        if (logBytes > 20L * 1024 * 1024) { logCapped = true; stamped += Environment.NewLine + "[INFO] the log reached 20 MB: nothing more is written to this file"; }
+                        File.AppendAllText(logFile, stamped + Environment.NewLine);
+                        logBytes += stamped.Length + 2;
+                    }
+                }
+                catch (Exception) { }
             }
         }
 
@@ -572,6 +630,16 @@ namespace HPGMissionCompanion
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
             StartServer(true);
             SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
+            // started minimized (by the simulator) while the simulator runs: the pilot says that the program is ready
+            if (startHidden && Ctx.Settings.ReadyAnnounce && server != null && Tools.SimulatorRunning())
+            {
+                ThreadPool.QueueUserWorkItem(delegate
+                {
+                    Thread.Sleep(2500);
+                    try { string line = Say.ReadyText(); Ctx.Log("[INFO] Ready announcement"); Ctx.Player.EnqueueTest(line); }
+                    catch (Exception ex) { Ctx.Log("[WARN] ready announcement: " + ex.Message); }
+                });
+            }
         }
 
         void MarkDirty()
@@ -713,6 +781,20 @@ namespace HPGMissionCompanion
             simCheck.Location = new Point(10, 126);
             simCheck.CheckedChanged += delegate { UpdateSimOptions(); if (!suppress) ApplyAutostart(); };
             advBox.Controls.Add(simCheck);
+            readyCheck.Text = "Pilot says Ready at start";
+            readyCheck.AutoSize = true;
+            readyCheck.Checked = Ctx.Settings.ReadyAnnounce;
+            readyCheck.Location = new Point(520, 126);
+            readyCheck.CheckedChanged += delegate { Ctx.Settings.ReadyAnnounce = readyCheck.Checked; if (!suppress) MarkDirty(); };
+            new ToolTip().SetToolTip(readyCheck, "When the program starts minimized and the simulator is running, the pilot says that the program is ready.");
+            advBox.Controls.Add(readyCheck);
+            Button openLogs = Btn(advBox, "Open log folder", 578, 46, 120, 24);
+            openLogs.Click += delegate
+            {
+                try { Directory.CreateDirectory(Path.GetDirectoryName(logFile ?? Path.Combine(Ctx.BaseDir, "logs", "x"))); System.Diagnostics.Process.Start(Path.GetDirectoryName(logFile ?? Path.Combine(Ctx.BaseDir, "logs", "x"))); }
+                catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            };
+            new ToolTip().SetToolTip(openLogs, "One log file for each start of the program (the last 10 are kept): " + (logFile ?? "none in this run"));
             minimizedCheck.Text = "Start minimized, in the notification area";
             minimizedCheck.AutoSize = true;
             minimizedCheck.Checked = Ctx.Settings.StartMinimized;
@@ -761,6 +843,7 @@ namespace HPGMissionCompanion
         {
             bool on = advancedCheck.Checked;
             advBox.Visible = on;
+            audioOutBox.Visible = on;
             int bottom = on ? advBox.Top - 6 : 526;
             logGroup.Size = new Size(708, bottom - logGroup.Top);
             logBox.Size = new Size(686, logGroup.Height - 30);
@@ -813,6 +896,15 @@ namespace HPGMissionCompanion
             }
             catch (SocketException)
             {
+                if (QuietPort) { AppendLog("[WARN] Port " + port + " is busy (picture run: no question asked)"); SetServiceState(false); return; }
+                // right after an update the previous program may still be closing: wait a few seconds before asking
+                bool freed = false;
+                for (int attempt = 0; attempt < 8 && !freed; attempt++)
+                {
+                    Thread.Sleep(500);
+                    try { s.Start(port, Ctx.Settings.ListenAll); freed = true; } catch (SocketException) { }
+                }
+                if (freed) { server = s; SetServiceState(true); return; }
                 List<Process> old = new List<Process>();
                 foreach (string n in new string[] { "HPGMissionAudioService", "HPGMissionAudioOneCore", "HPGMissionAudioLauncher", "HPGVoiceHub" })
                     old.AddRange(Process.GetProcessesByName(n));
@@ -997,7 +1089,13 @@ namespace HPGMissionCompanion
             catalogList.Columns.Add("Size", 70);
             catalogList.Columns.Add("Voice type", 90);
             catalogList.Columns.Add("Status", 190);
-            catalogList.SelectedIndexChanged += delegate { UpdateEngineState(); };
+            catalogList.SelectedIndexChanged += delegate
+            {
+                UpdateEngineState();
+                // a community voice: who made it, the licence and what its page says, before the download
+                CatalogVoice cv = SelectedCatalog();
+                if (cv != null && cv.BaseUrl != null && !busy) progressLabel.Text = "Community voice: " + cv.Source + ". Licence: " + cv.License + ". " + cv.Note;
+            };
             catalogList.ColumnClick += delegate (object s, ColumnClickEventArgs e) { OnCatalogColumnClick(e.Column); };
             page.Controls.Add(catalogList);
 
@@ -1134,9 +1232,10 @@ namespace HPGMissionCompanion
             for (int i = 0; i < CatalogColumns.Length && i < catalogList.Columns.Count; i++)
                 catalogList.Columns[i].Text = CatalogColumns[i] + (i == catalogSortColumn ? (catalogSortAscending ? "  ^" : "  v") : "");
             catalogList.Items.Clear();
-            if (piperHint != null) piperHint.Text = "Voices for " + li.Name + " (change the language in the Actors and voices tab). Select one and press Install (60 to 140 MB each, from the Piper voices repository).";
+            if (piperHint != null) piperHint.Text = "Voices for " + li.Name + " (change the language in the Actors and voices tab). Select one and press Install (60 to 140 MB each). Rows marked Community voice come from other authors: their licence is shown below.";
             List<CatalogVoice> rows = new List<CatalogVoice>();
             foreach (CatalogVoice c in catalog) if (c.Family == li.Family) rows.Add(c);
+            foreach (CatalogVoice c in PiperInstaller.Community) if (c.Family == li.Family && !rows.Exists(delegate (CatalogVoice o) { return o.Key == c.Key; })) rows.Add(c);
             rows.Sort(CompareCatalog);
             foreach (CatalogVoice c in rows)
             {
@@ -1146,7 +1245,7 @@ namespace HPGMissionCompanion
                 item.SubItems.Add(c.Quality);
                 item.SubItems.Add((c.OnnxSize / 1048576) + " MB");
                 item.SubItems.Add(c.Speakers > 1 ? "mixed" : gender);
-                item.SubItems.Add(PiperInstaller.IsInstalled(c) ? "Installed" : "");
+                item.SubItems.Add(PiperInstaller.IsInstalled(c) ? (c.BaseUrl != null ? "Installed (community)" : "Installed") : (c.BaseUrl != null ? "Community voice" : ""));
                 item.Tag = c;
                 catalogList.Items.Add(item);
                 if (keep != null && ReferenceEquals(keep, c)) { item.Selected = true; item.EnsureVisible(); }
@@ -1645,6 +1744,7 @@ namespace HPGMissionCompanion
         void BuildVolumeTab()
         {
             TabPage page = new TabPage("Volume");
+            page.AutoScroll = true;
             tabs.TabPages.Add(page);
             Lbl(page, "How loud a voice is: the master volume below, the volume tag of the text (<vol:..>), the volumes of the mission, the position of the view and, for a voice in the air, " +
                 "the distance from the helicopter. The level is applied to each line when its turn to be spoken comes (not while it is playing): a change of a slider is heard from the next line.", 10, 12, 706, 50);
@@ -1703,12 +1803,86 @@ namespace HPGMissionCompanion
             Lbl(page, "Radio calls, the intercom and external radio calls are not attenuated: they are heard in the headset wherever the view is. Who is aboard and how far the technician and the " +
                 "ground unit are comes from the context of the mission (L:HMC_CREW_PRESENT, L:HMC_ZONE_*); the view from the simulator (CAMERA STATE: 2 is the cockpit, every other view counts as outside). " +
                 "With somebody aboard, a voice in the air that comes from more than 30 m is heard very low and from more than 100 m not at all; when everybody is outside together the voices keep the normal level. " +
-                "Without the mission context or the view nothing is reduced. Sound files (ringtones) follow L:VOLUME_CREW only.", 10, 336, 706, 96).ForeColor = SystemColors.GrayText;
+                "Without the mission context or the view nothing is reduced. Sound files (ringtones, notifications) follow L:VOLUME_CREW and the notification level of the advanced options below.", 10, 336, 706, 96).ForeColor = SystemColors.GrayText;
             mixInfo.Location = new Point(10, 440);
             mixInfo.Size = new Size(706, 22);
             page.Controls.Add(mixInfo);
+
+            BuildAudioOutBox(page);
         }
 
+        // Advanced: where each kind of sound goes and how loud (the user's request of 2026-10-11). Headset = intercom, radio calls, external radio calls
+        // and the notifications (also with the helicopter off); external = voices in the air; the notifications have their own level. The levels
+        // multiply with the master volume, the tag of the text and the volumes and the view of the mission.
+        void BuildAudioOutBox(TabPage page)
+        {
+            audioOutBox.Text = "Audio output (advanced)";
+            audioOutBox.Location = new Point(10, 472);
+            audioOutBox.Size = new Size(664, 292);
+            page.Controls.Add(audioOutBox);
+            AudioOutSettings ao = Ctx.Settings.AudioOut;
+            List<string> devices = WaveOutDevices.Names();
+
+            Lbl(audioOutBox, "Headset: intercom, radio calls, external radio calls and the notifications (also with the helicopter off)", 10, 22, 644, 18);
+            ComboBox headsetCombo = AudioDeviceCombo(10, 44, devices, ao.HeadsetDevice, delegate (string n) { Ctx.Settings.AudioOut.HeadsetDevice = n; });
+            AudioLevel(44, 406, 446, 170, ao.HeadsetLevel, delegate (int v) { Ctx.Settings.AudioOut.HeadsetLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><ics>Headset test. Intercom and radio calls are heard here."); });
+
+            Lbl(audioOutBox, "External: voices in the air (technicians, ground unit, patient, the crew outside the helicopter)", 10, 92, 644, 18);
+            ComboBox externalCombo = AudioDeviceCombo(10, 114, devices, ao.ExternalDevice, delegate (string n) { Ctx.Settings.AudioOut.ExternalDevice = n; });
+            AudioLevel(114, 406, 446, 170, ao.ExternalLevel, delegate (int v) { Ctx.Settings.AudioOut.ExternalLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><radio:off>External test. A voice in the air is heard here."); });
+
+            Lbl(audioOutBox, "Notifications: ringtones, new message tone, tablet alarm. They use the device of the headset, and their own level:", 10, 162, 644, 18);
+            AudioLevel(186, 10, 56, 300, ao.NotifyLevel, delegate (int v) { Ctx.Settings.AudioOut.NotifyLevel = v; }, 440, delegate { Ctx.Player.PlayNotificationTest("AND.NEW.MSG.wav"); });
+
+            Lbl(audioOutBox, "The default is the Windows default device and every level at 100. A level multiplies the master volume, the volume tag of the text, the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and the view; " +
+                "the notifications have no radio effect. The list shows the output devices as Windows names them (cut at 31 characters): a device that is not there when a sound plays is replaced by the default one, and the log says so. " +
+                "A change is heard from the next sound.", 10, 228, 644, 56).ForeColor = SystemColors.GrayText;
+            audioOutBox.Visible = advancedCheck.Checked;
+        }
+
+        // a drop-down of the output devices: the first line is the Windows default device ("" in the settings)
+        ComboBox AudioDeviceCombo(int x, int y, List<string> devices, string current, Action<string> set)
+        {
+            ComboBox c = new ComboBox();
+            c.DropDownStyle = ComboBoxStyle.DropDownList;
+            c.Location = new Point(x, y);
+            c.Size = new Size(320, 24);
+            c.Items.Add(WaveOutDevices.DefaultName);
+            foreach (string d in devices) c.Items.Add(d);
+            int idx = 0;
+            for (int i = 0; i < devices.Count; i++) if (string.Equals(devices[i], current, StringComparison.OrdinalIgnoreCase)) idx = i + 1;
+            if (idx == 0 && !string.IsNullOrEmpty(current)) { c.Items.Add(current + " (not found)"); idx = c.Items.Count - 1; }
+            c.SelectedIndex = idx;
+            c.SelectedIndexChanged += delegate
+            {
+                string chosen = c.SelectedIndex <= 0 ? "" : c.SelectedItem.ToString();
+                if (chosen.EndsWith(" (not found)")) chosen = chosen.Substring(0, chosen.Length - " (not found)".Length);
+                set(chosen);
+                if (!suppress) MarkDirty();
+            };
+            audioOutBox.Controls.Add(c);
+            return c;
+        }
+
+        // a level slider with its percentage and a Test button on the line of y
+        void AudioLevel(int y, int captionX, int barX, int barW, int value, Action<int> set, int testX, EventHandler test)
+        {
+            Lbl(audioOutBox, "Level:", captionX, y + 6, 0, 0);
+            TrackBar bar = new TrackBar();
+            bar.Minimum = 0; bar.Maximum = 100; bar.TickFrequency = 10; bar.LargeChange = 10;
+            bar.Value = Math.Max(0, Math.Min(100, value));
+            bar.Location = new Point(barX, y - 4);
+            bar.Size = new Size(barW, 36);
+            Label pct = new Label();
+            pct.AutoSize = true;
+            pct.Location = new Point(bar.Right + 2, y + 6);
+            pct.Text = bar.Value + "%";
+            bar.ValueChanged += delegate { pct.Text = bar.Value + "%"; set(bar.Value); if (!suppress) MarkDirty(); };
+            audioOutBox.Controls.Add(bar);
+            audioOutBox.Controls.Add(pct);
+            Button t = Btn(audioOutBox, "Test", testX, y - 1, 60, 26);
+            t.Click += test;
+        }
         void TestRadio(string tag)
         {
             LangInfo li = CurrentLang();
@@ -1861,6 +2035,12 @@ namespace HPGMissionCompanion
                 Ctx.Settings.UpdateWhat = updMission.Checked ? "mission" : (updApp.Checked ? "app" : "both");
                 MarkDirty();
             };
+            updPackCheck.Text = "Also the voice pack EN when a newer one is published (XML only)";
+            updPackCheck.AutoSize = true;
+            updPackCheck.Location = new Point(330, 22);
+            updPackCheck.Checked = Ctx.Settings.UpdatePack;
+            updPackCheck.CheckedChanged += delegate { if (suppress) return; Ctx.Settings.UpdatePack = updPackCheck.Checked; MarkDirty(); };
+            whatBox.Controls.Add(updPackCheck);
             updBoth.CheckedChanged += scopeChanged;
             updMission.CheckedChanged += scopeChanged;
             updApp.CheckedChanged += scopeChanged;
@@ -1909,9 +2089,19 @@ namespace HPGMissionCompanion
         {
             updatesAvailable = available;
             if (boldFont == null) boldFont = new Font(Font, FontStyle.Bold);
+            bool good = !available && updChecked && updGood && !updateRunning;
             updateInfo.Text = info;
-            updateInfo.ForeColor = available ? Color.FromArgb(170, 70, 0) : SystemColors.GrayText;
-            updateInfo.Font = available ? boldFont : Font;
+            updateInfo.ForeColor = available ? Color.FromArgb(170, 70, 0) : (good ? Color.FromArgb(0, 110, 40) : SystemColors.GrayText);
+            updateInfo.Font = available || good ? boldFont : Font;
+            // the footer button says what was found: Update: mission / program / both, Up to date, or the plain Check for updates
+            if (updateRunning) updateButton.Text = "Checking...";
+            else if (available)
+            {
+                int count = (updMissionNew ? 1 : 0) + (updAppNew ? 1 : 0) + (updPackNew ? 1 : 0);
+                updateButton.Text = count >= 3 ? "Update: all" : (count == 0 ? "Update available" : "Update: " + (updMissionNew ? "mission" : "") + (updMissionNew && (updAppNew || updPackNew) ? "+" : "") + (updAppNew ? "program" : "") + (updAppNew && updPackNew ? "+" : "") + (updPackNew ? "pack" : ""));
+            }
+            else if (good) updateButton.Text = "Up to date";
+            else updateButton.Text = "Check for updates";
             if (available)
             {
                 updateButton.FlatStyle = FlatStyle.Flat;
@@ -1935,7 +2125,19 @@ namespace HPGMissionCompanion
         {
             updateRunning = false;
             updateButton.Enabled = true;
-            SetUpdateState(updatesAvailable ? updateSummary : "Program version " + AppInfo.Version, updatesAvailable);
+            SetUpdateState(updatesAvailable ? updateSummary : updateIdleText, updatesAvailable);
+        }
+
+        // the result of a check, for the status line, the footer button and the Updates tab
+        void RememberCheck(bool missionNew, bool appNew, bool packNew, string summary, string upToDate, bool allRead)
+        {
+            updChecked = true;
+            updMissionNew = missionNew;
+            updAppNew = appNew;
+            updPackNew = packNew;
+            updGood = !missionNew && !appNew && !packNew && allRead;
+            if (missionNew || appNew || packNew) updateSummary = summary;
+            else updateIdleText = allRead ? upToDate : "Nothing newer found, but a source could not be read: see the log below";
         }
 
         void ToolsLog(string line)
@@ -2043,7 +2245,7 @@ namespace HPGMissionCompanion
                     if (error != null) ToolsLog("[ERROR] " + error);
                     else ToolsLog("Finished, exit code " + rc + ".");
                     if (fileInfo.Length > 0) ToolsLog(fileInfo);
-                    ToolsLog("In the simulator press Refresh in the mission app to pick up the new index.");
+                    ToolsLog("If a flight is already running, press REFRESH at the top of the tablet to pick up the new index.");
                     indexRunning = false;
                     indexButton.Enabled = indexCombo.Items.Count > 0;
                 });
@@ -2113,33 +2315,61 @@ namespace HPGMissionCompanion
                     lines.Add("Published program: " + ra.Tag + (ra.AssetUrl == null ? " (no setup file in the release)" : "") + ", this one is " + AppInfo.Version);
                 }
                 catch (Exception ex) { lines.Add("[ERROR] the published program could not be read: " + ex.Message); }
+                RemotePack rpk = null;
+                string packWhy = "";
+                if (Ctx.Settings.UpdatePack)
+                {
+                    try
+                    {
+                        rpk = Updates.ReadRemotePack(Updates.PackReleaseApi, Path.Combine(Path.GetTempPath(), "hmc-update"));
+                        if (rpk != null && rpk.Info != null)
+                        {
+                            VoicePack have = VoicePacks.Find(rpk.Info.Name);
+                            lines.Add("Published voice pack " + rpk.Info.Name + ": version " + rpk.Info.Version + " (yours: " + (have != null ? have.Version.ToString() : "not installed") + ")");
+                        }
+                    }
+                    catch (Exception ex) { lines.Add("[ERROR] the published voice pack could not be read: " + ex.Message); }
+                }
 
                 bool missionNew = rm != null && target != null && rm.Release.CompareTo(target.Release) > 0;
                 bool appNew = ra != null && ra.AssetUrl != null && Updates.AppIsNewer(ra);
                 string scope = Ctx.Settings.UpdateWhat;          // both | mission | app, chosen in the Updates tab
                 bool doMission = missionNew && scope != "app";
                 bool doApp = appNew && scope != "mission";
+                bool packNew = rpk != null && Updates.PackIsNewer(rpk, out packWhy);
+                if (rpk != null && !packNew && packWhy.Length > 0) lines.Add("The published voice pack is not installed: " + packWhy + ".");
+                bool doPack = packNew && !doApp;            // a new program brings its own pack with the setup
+                if (packNew && doApp) lines.Add("The voice pack comes with the new program.");
                 if (missionNew && !doMission) lines.Add("The mission is newer but the option Only the program is selected: it is not installed.");
                 if (appNew && !doApp) lines.Add("The program is newer but the option Only the mission is selected: it is not installed.");
                 if (rm != null && target == null) lines.Add("No R&E mission file was identified: choose it with Browse and check again.");
                 if (target != null && indexKnown && !indexListsFile && !missionNew)
                     lines.Add("[NOTICE] the mission index does not list the release of your mission file: press Update mission index.");
-                if (!doMission && !doApp) lines.Add(missionNew || appNew ? "Nothing to install with the chosen option." : "Nothing to update.");
+                if (!doMission && !doApp && !doPack) lines.Add(missionNew || appNew ? "Nothing to install with the chosen option." : "Nothing to update.");
+                List<string> whatList = new List<string>();
+                if (doMission) whatList.Add("mission " + rm.Release);
+                if (doApp) whatList.Add("program " + ra.Tag);
+                if (doPack) whatList.Add("voice pack " + rpk.Info.Name + " " + rpk.Info.Version);
+                string newWhat = string.Join(", ", whatList.ToArray());
+                bool allRead = target != null && rm != null && ra != null && !lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); });
+                string upToDate = "UP TO DATE: mission " + (target != null && !target.Missing ? target.Release.ToString() : "not found") + ", program " + AppInfo.Version
+                    + (doPack ? "" : (rpk != null && rpk.Info != null && rpk.Info.Usable ? ", voice pack " + rpk.Info.Name + " " + rpk.Info.Version : ""))
+                    + (missionNew && !doMission ? " (a newer mission exists but is not selected)" : "") + (appNew && !doApp ? " (a newer program exists but is not selected)" : "");
 
                 Ui(delegate
                 {
+                    RememberCheck(doMission, doApp, doPack, "UPDATE AVAILABLE: " + newWhat, upToDate, allRead);
                     if (automatic)
                     {
-                        bool any = doMission || doApp;
+                        bool any = doMission || doApp || doPack;
                         updatesAvailable = any;
                         if (any)
                         {
                             foreach (string l in lines) UpdLog(l);
-                            string what = (doMission ? "mission " + rm.Release : "") + (doMission && doApp ? " and " : "") + (doApp ? "program " + ra.Tag : "");
-                            updateSummary = "Update available: " + what;
-                            AppendLog("[INFO] Updates: " + what + " available");
-                            updateBalloon = true;
-                            tray.ShowBalloonTip(10000, AppInfo.Name, "Update available: " + what + ". Click here to install it.", ToolTipIcon.Info);
+                            updateSummary = "UPDATE AVAILABLE: " + newWhat;
+                            AppendLog("[INFO] Updates: " + newWhat + " available");
+                            // a message of its own in the corner of the screen: the Windows balloon is not always shown
+                            UpdatePopup.Announce(AppInfo.Name + ": update available", "New: " + newWhat + ". Open the Updates tab to see what is new and install it.", "Open Updates", delegate { ShowWindow(); CheckUpdates(false); });
                         }
                         else AppendLog("[INFO] Updates: nothing newer" + (lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); }) ? " (a source could not be read, see the Updates tab: press Check for updates)" : ""));
                         UpdateIdle();
@@ -2152,28 +2382,30 @@ namespace HPGMissionCompanion
                         foreach (MissionCopy c in copies) missionCombo.Items.Add(c);
                         if (target != null) missionCombo.SelectedItem = target;
                     }
-                    updatesAvailable = doMission || doApp;
-                    updateSummary = "Update available: " + (doMission ? "mission " + rm.Release : "") + (doMission && doApp ? " and " : "") + (doApp ? "program " + ra.Tag : "");
+                    updatesAvailable = doMission || doApp || doPack;
+                    updateSummary = "UPDATE AVAILABLE: " + newWhat;
                     bool go = false;
-                    if (doMission || doApp)
+                    if (doMission || doApp || doPack)
                     {
                         StringBuilder q = new StringBuilder();
                         if (doMission) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + (target.Missing ? "none installed" : target.Release.ToString()) + ").");
                         if (doApp) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
+                        if (doPack) q.AppendLine("Voice pack " + rpk.Info.Name + ": version " + rpk.Info.Version + " is available (yours: " + (VoicePacks.Find(rpk.Info.Name) != null ? VoicePacks.Find(rpk.Info.Name).Version.ToString() : "none") + "). Only the XML is replaced; the old one goes to voicepacks\\obsolete.");
                         q.AppendLine();
                         if (doMission && target.Missing) q.AppendLine("The mission file does not exist yet: it will be created in " + Path.GetDirectoryName(target.Path) + ".\n");
                         else if (doMission && !target.Release.HasRelease) q.AppendLine("The mission file to replace is a file without a release number (" + target.Path + ").\n");
-                        if (Tools.SimulatorRunning()) q.AppendLine("Microsoft Flight Simulator is running: restart the mission after the update.\n");
+                        if (Tools.SimulatorRunning()) q.AppendLine("Microsoft Flight Simulator is running. The mission file can be replaced now; when the update is done, if the flight has started, press REFRESH at the top of the tablet.\n");
                         q.Append("Download and install now?\n\n");
                         if (doMission) q.Append("The mission file is replaced first (the old one is kept beside it with the extension .json.bak) and the mission index is updated. ");
                         if (doApp) q.Append("Then the program is updated: it closes, the setup installs the new version and starts it again.");
                         StringBuilder notes = new StringBuilder();
                         if (doMission) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
-                        if (doApp) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)));
+                        if (doApp) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)) + "\n");
+                        if (doPack) notes.AppendLine("WHAT'S NEW IN THE VOICE PACK, " + rpk.Info.Name + " " + rpk.Info.Version + "\n\n" + (string.IsNullOrEmpty(rpk.Notes) ? "No notes are published for this pack." : Updates.PlainNotes(rpk.Notes)));
                         go = NotesForm.Ask(this, Text + " - update available", q.ToString().TrimEnd(), notes.ToString()) == DialogResult.Yes;
                     }
                     if (!go) { UpdateIdle(); return; }
-                    InstallUpdates(doMission ? target : null, doMission ? rm : null, doApp ? ra : null, indexCmd);
+                    InstallUpdates(doMission ? target : null, doMission ? rm : null, doApp ? ra : null, doPack ? rpk : null, indexCmd);
                 });
             });
         }
@@ -2208,7 +2440,7 @@ namespace HPGMissionCompanion
         }
 
         // mission first (download, backup, replace, index), then the program (download, setup, exit)
-        void InstallUpdates(MissionCopy target, RemoteMission rm, RemoteApp ra, string indexCmd)
+        void InstallUpdates(MissionCopy target, RemoteMission rm, RemoteApp ra, RemotePack rpk, string indexCmd)
         {
             updateInfo.Text = "Updating...";
             string tmp = Path.Combine(Path.GetTempPath(), "hmc-update");
@@ -2236,9 +2468,15 @@ namespace HPGMissionCompanion
                         {
                             Ui(delegate { UpdLog("Updating the mission index..."); });
                             int rc = Tools.RunIndex(indexCmd, delegate (string line) { Ui(delegate { UpdLog(line); }); });
-                            Ui(delegate { UpdLog("Index tool finished, exit code " + rc + ". In the simulator press Refresh in the mission app."); });
+                            Ui(delegate { UpdLog("Index tool finished, exit code " + rc + ". If a flight is already running, press REFRESH at the top of the tablet to load the new mission."); });
                         }
                         else Ui(delegate { UpdLog("[NOTICE] no index tool is known: run Update Mission Index yourself."); });
+                    }
+                    if (rpk != null && rpk.File != null && File.Exists(rpk.File))
+                    {
+                        // the XML only: Install keeps the old version in voicepacks\obsolete (a newer version is never asked about)
+                        string msg = VoicePacks.Install(rpk.File, delegate (string q) { return true; });
+                        Ui(delegate { UpdLog("Voice pack: " + msg); FillPacks(); });
                     }
                     if (ra != null)
                     {
@@ -2266,6 +2504,8 @@ namespace HPGMissionCompanion
                     {
                         UpdLog("Update finished.");
                         updatesAvailable = false;
+                        updChecked = true; updMissionNew = false; updAppNew = false; updPackNew = false; updGood = true;
+                        updateIdleText = "UP TO DATE: the update is installed." + (Tools.SimulatorRunning() ? " A flight is running: press REFRESH at the top of the tablet." : "");
                         UpdateIdle();
                         return;
                     }
@@ -2275,6 +2515,7 @@ namespace HPGMissionCompanion
                         UpdLog("Starting the setup: this program closes and starts again.");
                         Process.Start(Updates.SetupStart(setup, Ctx.BaseDir));
                         ExitApp(false);
+                        Environment.Exit(0);       // this program must be gone when the setup starts the new one (the port is free, nothing keeps the files)
                     }
                     catch (Exception ex)
                     {
@@ -2317,6 +2558,19 @@ namespace HPGMissionCompanion
             channel.Location = new Point(140, 152);
             channel.LinkClicked += delegate { try { System.Diagnostics.Process.Start(AppInfo.DiscordChannel); } catch (Exception) { } };
             page.Controls.Add(channel);
+            Lbl(page, "GitHub:", 330, 152, 0, 0);
+            LinkLabel gitApp = new LinkLabel();
+            gitApp.Text = "program";
+            gitApp.AutoSize = true;
+            gitApp.Location = new Point(384, 152);
+            gitApp.LinkClicked += delegate { try { System.Diagnostics.Process.Start(AppInfo.GitHubApp); } catch (Exception) { } };
+            page.Controls.Add(gitApp);
+            LinkLabel gitMission = new LinkLabel();
+            gitMission.Text = "mission";
+            gitMission.AutoSize = true;
+            gitMission.Location = new Point(444, 152);
+            gitMission.LinkClicked += delegate { try { System.Diagnostics.Process.Start(AppInfo.GitHubMission); } catch (Exception) { } };
+            page.Controls.Add(gitMission);
 
             Lbl(page, "A companion program for the HPG H145 missions: voices for the mission actors (Windows and Piper voices, volume, radio effect, voice packs), " +
                 "the mission work folder and the mission index.", 14, 188, 700, 36);

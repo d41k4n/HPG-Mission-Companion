@@ -83,4 +83,64 @@ namespace HPGMissionCompanion
             using (NotesForm f = new NotesForm(title, header, notes, false)) f.ShowDialog(owner);
         }
     }
+
+    // A small message in the corner of the screen, over the other windows and without taking the focus: the Windows balloon of the notification area is not always shown
+    // (notification settings, focus assist, a tray icon the shell has not drawn yet), so an update found at the start is announced here too. Click it, or the button, to open the Updates.
+    internal sealed class UpdatePopup : Form
+    {
+        readonly Timer closer = new Timer();
+
+        UpdatePopup(string title, string text, string button, Action onOpen)
+        {
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            ControlBox = false;
+            ShowInTaskbar = false;
+            TopMost = true;
+            StartPosition = FormStartPosition.Manual;
+            Font = SystemFonts.MessageBoxFont;
+            Text = title;
+            BackColor = Color.FromArgb(255, 238, 190);
+            ClientSize = new Size(380, 112);
+            Rectangle area = Screen.PrimaryScreen.WorkingArea;
+            Location = new Point(area.Right - Width - 12, area.Bottom - Height - 12);
+
+            Label head = new Label();
+            head.Text = title;
+            head.Font = new Font(Font, FontStyle.Bold);
+            head.ForeColor = Color.FromArgb(150, 55, 0);
+            head.Location = new Point(12, 10);
+            head.AutoSize = true;
+            Label body = new Label();
+            body.Text = text;
+            body.Location = new Point(12, 34);
+            body.Size = new Size(356, 36);
+            Button open = new Button();
+            open.Text = button;
+            open.Location = new Point(12, 74);
+            open.Size = new Size(150, 28);
+            open.Click += delegate { Close(); if (onOpen != null) onOpen(); };
+            Button later = new Button();
+            later.Text = "Later";
+            later.Location = new Point(172, 74);
+            later.Size = new Size(80, 28);
+            later.Click += delegate { Close(); };
+            Controls.Add(head);
+            Controls.Add(body);
+            Controls.Add(open);
+            Controls.Add(later);
+
+            closer.Interval = 30000;
+            closer.Tick += delegate { closer.Stop(); Close(); };
+            Shown += delegate { closer.Start(); };
+            FormClosed += delegate { closer.Stop(); closer.Dispose(); };
+        }
+
+        protected override bool ShowWithoutActivation { get { return true; } }
+
+        public static void Announce(string title, string text, string button, Action onOpen)
+        {
+            UpdatePopup p = new UpdatePopup(title, text, button, onOpen);
+            p.Show();
+        }
+    }
 }

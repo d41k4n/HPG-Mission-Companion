@@ -114,8 +114,22 @@ namespace HPGMissionCompanion
         public string Notes;        // the body of the GitHub release
     }
 
+    // The voice pack EN published apart from the program (the release with the tag voicepack-EN holds the file EN.xml, replaced when the pack changes), so that a
+    // change of texts reaches the players without a new program. Version and minapp are read from the downloaded file itself.
+    internal sealed class RemotePack
+    {
+        public string Url;
+        public long Size;
+        public string Sha256;
+        public string Notes;        // the body of that release: what changed in the pack
+        public string File;         // the downloaded copy, once Fetch has run
+        public VoicePack Info;      // that copy as the loader reads it
+    }
+
     internal static class Updates
     {
+        public const string PackReleaseApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/tags/voicepack-EN";
+        public const string PackAsset = "EN.xml";
         public const string DefaultMissionUrl = "https://drive.google.com/uc?export=download&id=12A_yYb0hu7z7LrtUO-Cms2Ft4ua-BSij";
         public const string ReleasesApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/latest";
         public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
@@ -471,6 +485,56 @@ namespace HPGMissionCompanion
         {
             object v;
             return d.TryGetValue(key, out v) && v != null ? v.ToString() : null;
+        }
+
+        // ---- GitHub: the voice pack EN ----------------------------------------------------------------
+        // null when no pack release exists (404); the file is downloaded to tmpDir and read, so the caller can compare the version
+        public static RemotePack ReadRemotePack(string apiUrl, string tmpDir)
+        {
+            Dictionary<string, object> d;
+            try { d = GetJson(apiUrl); }
+            catch (WebException ex)
+            {
+                HttpWebResponse r = ex.Response as HttpWebResponse;
+                if (r != null && r.StatusCode == HttpStatusCode.NotFound) return null;
+                throw;
+            }
+            RemotePack p = new RemotePack();
+            p.Notes = Str(d, "body");
+            object assets;
+            if (d.TryGetValue("assets", out assets) && assets is System.Collections.IEnumerable)
+            {
+                foreach (object o in (System.Collections.IEnumerable)assets)
+                {
+                    Dictionary<string, object> e = o as Dictionary<string, object>;
+                    if (e == null || !string.Equals(Str(e, "name"), PackAsset, StringComparison.OrdinalIgnoreCase)) continue;
+                    p.Url = Str(e, "browser_download_url");
+                    object size;
+                    if (e.TryGetValue("size", out size)) p.Size = Convert.ToInt64(size);
+                    string digest = Str(e, "digest");
+                    if (digest != null && digest.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase)) p.Sha256 = digest.Substring(7).ToLowerInvariant();
+                }
+            }
+            if (p.Url == null) return null;
+            Directory.CreateDirectory(tmpDir);
+            p.File = Path.Combine(tmpDir, "EN-published.xml");
+            Net.Download(p.Url, p.File, null, null, p.Size);
+            if (!string.IsNullOrEmpty(p.Sha256) && Sha256Of(p.File) != p.Sha256) { File.Delete(p.File); throw new IOException("the published voice pack is corrupted (sha256 differs)"); }
+            p.Info = VoicePacks.Load(p.File);
+            return p;
+        }
+
+        // true when the published pack is usable, newer than the installed one with the same name, and not for a newer program than this one
+        public static bool PackIsNewer(RemotePack p, out string why)
+        {
+            why = "";
+            if (p == null || p.Info == null || !p.Info.Usable) { why = p != null && p.Info != null && p.Info.Problems.Count > 0 ? p.Info.Problems[0] : "not usable"; return false; }
+            int needMajor, needMinor, haveMajor, haveMinor;
+            if (p.Info.MinApp.Length > 0 && ParseVersion(p.Info.MinApp, out needMajor, out needMinor) && ParseVersion(AppInfo.Version, out haveMajor, out haveMinor)
+                && (needMajor > haveMajor || (needMajor == haveMajor && needMinor > haveMinor)))
+            { why = "it needs the program " + p.Info.MinApp + " or newer"; return false; }
+            VoicePack installed = VoicePacks.Find(p.Info.Name);
+            return installed == null || p.Info.Version > installed.Version;
         }
 
         // "v0.10", "0.9" -> 0, 10 / 0, 9 (two integers: 0.10 comes after 0.9)

@@ -252,12 +252,25 @@ namespace HPGMissionCompanion
     // Speech and wav playback, one item at a time, in order. Interrupt cancels the current item and the queue.
     internal sealed class Player
     {
-        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public bool Test; public DateTime Born = DateTime.UtcNow; public int MaxAge; }
+        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public bool Test; public DateTime Born = DateTime.UtcNow; public int MaxAge; public int Vol = 100; }
 
         readonly BlockingCollection<Item> queue = new BlockingCollection<Item>();
         readonly object sync = new object();
         int generation;
-        SoundPlayer current;
+        Playing current;
+
+        // what plays now, to be stopped by an interrupt: the system player (default device only) or a playback on a chosen device
+        sealed class Playing
+        {
+            public SoundPlayer Sp; public WaveOutPlayback Wo;
+            public void Stop() { if (Sp != null) Sp.Stop(); if (Wo != null) Wo.Stop(); }
+        }
+
+        // the categories of the output (the advanced options of the Volume tab)
+        enum Cat { Headset, External, Notify }
+
+        static string DeviceFor(Cat c) { return c == Cat.External ? Ctx.Settings.AudioOut.ExternalDevice : Ctx.Settings.AudioOut.HeadsetDevice; }      // the notifications go to the headset
+        static double LevelFor(Cat c) { AudioOutSettings a = Ctx.Settings.AudioOut; return (c == Cat.External ? a.ExternalLevel : c == Cat.Notify ? a.NotifyLevel : a.HeadsetLevel) / 100.0; }
 
         public Player()
         {
@@ -286,8 +299,10 @@ namespace HPGMissionCompanion
             if (!test) Say.ApplyDelivery(segs);              // the dispatcher: external radio call, or nothing with the radio off
             if (wavFile != null)
             {
+                int wavVol;
+                wavFile = Say.SplitWav(wavFile, out wavVol);
                 string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, wavFile.Replace("\\", "").Replace("..", "")));
-                if (File.Exists(path)) { Ctx.Log("[PLAY] " + wavFile); EnqueueFile(path, false); }
+                if (File.Exists(path)) { Ctx.Log("[PLAY] " + wavFile + (wavVol < 100 ? " (level " + wavVol + ")" : "")); EnqueueFile(path, false, wavVol); }
                 else Ctx.Log("[WARN] sound file " + wavFile + " is not in the audio folder");
             }
             if (segs.Count == 0) return;
@@ -300,25 +315,45 @@ namespace HPGMissionCompanion
         }
 
         // a sound file of the audio folder by name (sound-only messages of a pack)
-        public void PlayAudioFile(string name, int maxAgeSeconds)
+        public void PlayAudioFile(string spec, int maxAgeSeconds)
         {
+            int vol;
+            string name = Say.SplitWav(spec, out vol);
             string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name.Replace("\\", "").Replace("..", "")));
             if (!File.Exists(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder"); return; }
-            Ctx.Log("[PLAY] " + name);
+            Ctx.Log("[PLAY] " + name + (vol < 100 ? " (level " + vol + ")" : ""));
             Item item = new Item();
             item.IsFile = true;
             item.Value = path;
+            item.Vol = vol;
             item.MaxAge = maxAgeSeconds;
             item.Generation = Thread.VolatileRead(ref generation);
             queue.Add(item);
         }
 
-        public void EnqueueFile(string path, bool interrupt)
+        public void EnqueueFile(string path, bool interrupt) { EnqueueFile(path, interrupt, 100); }
+
+        // the Test button of the notifications: a sound file of the audio folder at the notification level, not at the volume of the mission
+        public void PlayNotificationTest(string name)
+        {
+            string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name));
+            if (!File.Exists(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder"); return; }
+            Ctx.Log("[PLAY] " + name + " (test)");
+            Item item = new Item();
+            item.IsFile = true;
+            item.Value = path;
+            item.Test = true;
+            item.Generation = Thread.VolatileRead(ref generation);
+            queue.Add(item);
+        }
+
+        public void EnqueueFile(string path, bool interrupt, int vol)
         {
             if (interrupt) CancelAll();
             Item item = new Item();
             item.IsFile = true;
             item.Value = path;
+            item.Vol = vol;
             item.Generation = Thread.VolatileRead(ref generation);
             queue.Add(item);
         }
@@ -372,6 +407,8 @@ namespace HPGMissionCompanion
             if (p.Voice == null) { Ctx.Log("[ERROR] no voice available"); return; }
             double level = item.Test ? p.Volume : p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor));
             if (p.Far) level *= RadioRules.FarVolume;
+            Cat cat = p.Radio ? Cat.Headset : Cat.External;       // intercom, radio and external radio calls are heard in the headset, a voice in the air is not
+            level *= LevelFor(cat);
             Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + level.ToString("0.#", CultureInfo.InvariantCulture) + (item.Test ? " (test: the volume of the mission is not applied)" : "") + (p.Radio ? (p.Fx == "ics" ? ", intercom" : (p.Fx == "ext" ? ", external radio" : ", radio")) + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Far ? ", far (30 to 100 m)" : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
             DateTime t0 = DateTime.UtcNow;
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
@@ -379,7 +416,7 @@ namespace HPGMissionCompanion
             if (item.Generation != Thread.VolatileRead(ref generation)) return;
             RadioSettings rs = FxSettings(p);
             byte[] fx = AudioFx.Apply(wav, level, Ctx.Settings.MasterVolume, p.Radio, rs);
-            PlayBytes(item, fx, null);
+            PlayBytes(item, fx, null, cat);
         }
 
         // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the hiss + 10 and the beep of the user (or the one of
@@ -403,22 +440,38 @@ namespace HPGMissionCompanion
         void PlayFile(Item item)
         {
             byte[] fx = null;
-            try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), 100 * Mixer.CrewFactor(), Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
+            double level = item.Vol * (item.Test ? 1.0 : Mixer.CrewFactor()) * LevelFor(Cat.Notify);
+            try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), level, Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
             catch (Exception) { fx = null; }
-            if (fx != null) PlayBytes(item, fx, null); else PlayBytes(item, null, item.Value);
+            if (fx != null) PlayBytes(item, fx, null, Cat.Notify); else PlayBytes(item, null, item.Value, Cat.Notify);
         }
 
-        void PlayBytes(Item item, byte[] bytes, string path)
+        void PlayBytes(Item item, byte[] bytes, string path, Cat cat)
         {
             if (Ctx.Silent)
             {
                 Ctx.Log("[SILENT] " + (path != null ? path : (bytes.Length + " bytes of speech")));
                 return;
             }
+            // a PCM wav goes to the device of its category (the Windows default device when none is chosen); any other format, or a device that does not open, plays on the default device
+            if (bytes != null)
+            {
+                WaveOutPlayback wo = new WaveOutPlayback();
+                Playing pw = new Playing(); pw.Wo = wo;
+                lock (sync) { current = pw; }
+                if (item.Generation != Thread.VolatileRead(ref generation)) { lock (sync) { current = null; } return; }
+                bool played = false;
+                try { played = wo.Play(bytes, WaveOutDevices.Resolve(DeviceFor(cat))); }
+                catch (Exception ex) { Ctx.Log("[WARN] the output device failed (" + ex.Message + "): the Windows default device is used"); }
+                finally { lock (sync) { current = null; } }
+                if (played) return;
+                if (item.Generation != Thread.VolatileRead(ref generation)) return;
+            }
             using (MemoryStream ms = bytes != null ? new MemoryStream(bytes) : null)
             {
                 SoundPlayer player = bytes != null ? new SoundPlayer(ms) : new SoundPlayer(path);
-                lock (sync) { current = player; }
+                Playing ps = new Playing(); ps.Sp = player;
+                lock (sync) { current = ps; }
                 if (item.Generation != Thread.VolatileRead(ref generation)) { lock (sync) { current = null; } return; }
                 try { player.PlaySync(); }
                 finally { lock (sync) { current = null; } player.Dispose(); }

@@ -65,7 +65,7 @@ Placeholders of the pack texts: {0}..{9} the arguments; {PLT} {CPL} {PAX1} {PAX2
 
 Lists of vehicles: {list:N} and {be:N} take argument N made of the letters A (ambulance), F (fire engine), P (police): "AFP" gives "ambulance, fire engine and police" and "are". Example: {"speak":{"text":"<say:DSP.VEH.BOTH>{0}//{1}","params":["A","FP"]}} says "fire engine and police are already on scene, ambulance is on the way" (argument 0 is the vehicles on the way, argument 1 the vehicles on scene, as the pack message uses them).
 
-Volume: the program follows the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and lowers a voice (not a radio call) by 12 dB when the view is outside and the speaker is aboard, by 9 dB when the view is inside and the speaker is outside (Volume tab). The level is applied when a line starts, not while it plays.
+Audio output (advanced options of the Volume tab, setting AudioOut): the headset category (intercom, radio, external radio, notifications) and the external category (voices in the air) each have an output device (the classic wave out of Windows, winmm.dll; "" = the Windows default) and a level; the notifications (sound files) have their own level and use the headset device; a level multiplies the other volumes. `--audio-devices <report>` lists the devices. Volume: the program follows the volumes of the mission (L:VOLUME_CREW, L:VOLUME_CHK) and lowers a voice (not a radio call) by 12 dB when the view is outside and the speaker is aboard, by 9 dB when the view is inside and the speaker is outside (Volume tab). The level is applied when a line starts, not while it plays.
 
 Names of the crew: by default the job words (Pilot, Copilot, Chief, Paramedic, Doc, Technician; a pack can change them in its <names> list); {@PLT} gives a name only when there is one: the user typed it in the Actors tab (Name box next to the voice), or the option "Random names for each shift" draws one for each role from the static lists of first names of the program (the male technician takes a male name, the female one a female name). The mission only says <names:random> at a new shift; <names:PLT=Mark,CPL=Anna> forces names, <names:off> removes them.
 
@@ -122,7 +122,7 @@ voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the
   </voicepack>
 
 voicepack: name (optional: letters, digits, _ -, up to 24; when it is missing the name of the file is used, so any XML file can be dropped in), language (EN FR IT DE), version (whole number from 1), title.
-message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off|ics|ext|ext-near, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav. lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
+message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off|ics|ext|ext-near, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav (vol="0-100" plays it at that level at most). lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
 <o>: one text option (any number; 4-5 is good; sex="m" or "f" for the technicians). Texts may contain {0}.. {PLT}.. {@PLT}.. and the normal tags (for example <speed:1.1>).
 
 Install a pack: drag the XML file onto the Voice packs tab (or Browse), or copy it into the voicepacks folder and press Reload. A pack of the same name and an older or equal version asks before replacing. Command line: HPGMissionCompanion.exe --install-pack file.xml.

@@ -22,6 +22,7 @@ namespace HPGMissionCompanion
         public double Sleep = -1;               // seconds the mission waits after the message (information)
         public string Trigger = "";             // when the message happens (information)
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
+        public int Vol = 100;                   // vol="70": the level (0-100) of the wav of a sound-only message, at most; 100 = the file as it is
         public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
         public bool Text;                       // the words of a text that the mission speaks as it is (<text:KEY>English in the mission): the pack replaces the English words, the mission decides who speaks and how
         public List<string> Options = new List<string>();
@@ -165,6 +166,8 @@ namespace HPGMissionCompanion
                 double sl;
                 if (double.TryParse(e.GetAttribute("sleep"), NumberStyles.Float, CultureInfo.InvariantCulture, out sl)) m.Sleep = sl;
                 m.Sfx = e.GetAttribute("sfx") == "1";
+                int volAttr;
+                if (int.TryParse(e.GetAttribute("vol"), NumberStyles.Integer, CultureInfo.InvariantCulture, out volAttr)) m.Vol = Math.Max(0, Math.Min(100, volAttr));
                 m.Futile = e.GetAttribute("futile") == "1";
                 m.Text = e.GetAttribute("text") == "1";
                 foreach (XmlNode o in e.SelectNodes("o"))
@@ -702,24 +705,58 @@ namespace HPGMissionCompanion
             if (Mixer.IsMixerName(name)) { Mixer.OnWatch(name, value); return; }
             lock (sync)
             {
-                if (name == SimLink.CtxValid) { ctxValid = value > 0.5; return; }
-                if (name == SimLink.CtxHeliOff) { heliOff = value > 0.5; return; }
-                if (name == SimLink.CtxCrew) { crewMask = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxMute) { muteMask = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxRadio) { radioVar = value > 0.5 ? 1 : 0; return; }
-                if (name == SimLink.CtxExist) { crewExist = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxBase) { atBase = value > 0.5; return; }
-                if (name == SimLink.CtxZoneTech) { zoneTech = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxZoneGround) { zoneGround = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxZonePatient) { zonePatient = (int)Math.Round(value); return; }
-                if (name == SimLink.CtxChat) { int c = (int)Math.Round(value); chatMax = c >= 1 && c <= 6 ? c : 6; return; }
-                if (name == SimLink.CtxTechSex) { techSex = value > 0.5 ? 1 : 0; return; }
+                // every change of the context goes to the log: how a line is heard (intercom, radio, external radio, voice) follows these values
+                if (name == SimLink.CtxValid) { bool v = value > 0.5; CtxLog("mission context valid", ctxValid ? 1 : 0, v ? 1 : 0, baseline); ctxValid = v; return; }
+                if (name == SimLink.CtxHeliOff) { bool v = value > 0.5; CtxLog("helicopter off (battery master off and rotor stopped)", heliOff ? 1 : 0, v ? 1 : 0, baseline); heliOff = v; return; }
+                if (name == SimLink.CtxCrew) { int v = (int)Math.Round(value) | 1; CtxLog("crew aboard mask (1 pilot, 2 copilot, 4 doctor, 8 HEMS1, 16 HEMS2; the pilot, the user, counts as aboard)", crewMask, v, baseline); crewMask = v; return; }   // mission up to 169.48 never sets bit 1 (it reads the visible pilot model); to be dropped when the mission with PILOT_OUT (169.49) is the one in use
+                if (name == SimLink.CtxMute) { int v = (int)Math.Round(value); CtxLog("crew who cannot speak mask", muteMask, v, baseline); muteMask = v; return; }
+                if (name == SimLink.CtxRadio) { int v = value > 0.5 ? 1 : 0; CtxLog("battery master (" + SimLink.CtxRadio + ", the radio works with it on)", radioVar, v, baseline); radioVar = v; return; }
+                if (name == SimLink.CtxExist) { int v = (int)Math.Round(value); CtxLog("crew existing mask", crewExist, v, baseline); crewExist = v; return; }
+                if (name == SimLink.CtxBase) { bool v = value > 0.5; CtxLog("at the start base (dispatcher reaches the crew radios)", atBase ? 1 : 0, v ? 1 : 0, baseline); atBase = v; return; }
+                if (name == SimLink.CtxZoneTech) { int v = (int)Math.Round(value); CtxLog("technician zone (1 up to 5 m, 2 up to 30 m, 3 up to 100 m, 4 beyond)", zoneTech, v, baseline); zoneTech = v; return; }
+                if (name == SimLink.CtxZoneGround) { int v = (int)Math.Round(value); CtxLog("ground unit zone", zoneGround, v, baseline); zoneGround = v; return; }
+                if (name == SimLink.CtxZonePatient) { int v = (int)Math.Round(value); CtxLog("patient zone", zonePatient, v, baseline); zonePatient = v; return; }
+                if (name == SimLink.CtxChat) { int c = (int)Math.Round(value); int v = c >= 1 && c <= 6 ? c : 6; CtxLog("chatter level (highest option number)", chatMax, v, baseline); chatMax = v; return; }
+                if (name == SimLink.CtxTechSex) { int v = value > 0.5 ? 1 : 0; CtxLog("technician sex (0 male, 1 female)", techSex, v, baseline); techSex = v; return; }
                 if (baseline || value <= oldValue) return;     // only a rise of the counter speaks; a reset to 0 is not a message
                 if (!watchMap.TryGetValue(name, out m)) return;
                 p = watchPack;
                 lastBridgeText = m.Key;
             }
             Speak(p, m, "", 30);
+        }
+
+        static void CtxLog(string what, int oldValue, int value, bool baseline)
+        {
+            if (oldValue == value && !baseline) return;
+            Ctx.Log("[CTX] " + what + ": " + (baseline ? "read " + value : oldValue + " -> " + value));
+        }
+
+        // the line the pilot says when the program has started minimized with the simulator running: SYS.READY of the active pack (any option), else the English text
+        public static string ReadyText()
+        {
+            lock (sync)
+            {
+                VoicePack pack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
+                PackMessage msg = null;
+                if (pack != null) pack.Messages.TryGetValue("SYS.READY", out msg);
+                if (pack == null || msg == null || msg.Options.Count == 0) return "<actor1>HPG Companion ready, minimized.";
+                string wav;
+                List<string> notes = new List<string>();
+                string text = Compose(msg, pack, "", "", 0, notes, out wav);
+                return string.IsNullOrEmpty(text) ? "<actor1>HPG Companion ready, minimized." : text;
+            }
+        }
+
+        // the sound file of a message comes as "name" or "name|vol" (the vol of the pack message, 0-100)
+        public static string SplitWav(string spec, out int vol)
+        {
+            vol = 100;
+            int bar = spec.LastIndexOf('|');
+            if (bar < 0) return spec;
+            int v;
+            if (int.TryParse(spec.Substring(bar + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out v)) vol = Math.Max(0, Math.Min(100, v));
+            return spec.Substring(0, bar);
         }
 
         // speaks one message of a pack (the LVAR bridge); lines older than maxAgeSeconds when their turn comes are dropped
@@ -829,11 +866,13 @@ namespace HPGMissionCompanion
             wavFile = null;
             if (msg.Options.Count == 0)
             {
-                if (msg.Wav.Length > 0) wavFile = msg.Wav;
+                if (msg.Wav.Length > 0) wavFile = msg.Vol < 100 ? msg.Wav + "|" + msg.Vol : msg.Wav;       // "name|vol": SplitWav
                 return "";
             }
             int index = forced >= 1 && forced <= msg.Options.Count ? forced - 1 : Pick(msg);
             string[] parts = args.Length > 0 ? args.Split(new string[] { "//" }, StringSplitOptions.None) : new string[0];
+            for (int pi = 0; pi < parts.Length; pi++)
+                if (Regex.IsMatch(parts[pi].Trim(), "^[A-Za-z0-9_]+_[Nn]ame$")) { notes.Add("the name " + parts[pi].Trim() + " arrived unresolved (the simulator did not replace it in a spoken text): said as the one on the tablet"); parts[pi] = "the one shown on the tablet"; }
             string body = Fill(msg.Options[index], parts, pack, notes);
             if (msg.Options[index].Length == 0)
             {

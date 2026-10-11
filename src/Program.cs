@@ -30,8 +30,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.13.0.0")]
-[assembly: AssemblyFileVersion("0.13.0.0")]
+[assembly: AssemblyVersion("0.17.0.0")]
+[assembly: AssemblyFileVersion("0.17.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -300,6 +300,32 @@ namespace HPGMissionCompanion
                 return rc;
             }
 
+            // --audio-devices <report>: the output devices of Windows and a silent test of each one (0.3 s of silence, nothing is heard): the open path of the audio output
+            string devReport = Option(args, "--audio-devices");
+            if (devReport != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                Ctx.Log = delegate (string s) { rep.AppendLine("log: " + s); };
+                byte[] silence = new byte[44 + 13230];
+                Encoding.ASCII.GetBytes("RIFF").CopyTo(silence, 0); BitConverter.GetBytes(36 + 13230).CopyTo(silence, 4); Encoding.ASCII.GetBytes("WAVEfmt ").CopyTo(silence, 8);
+                BitConverter.GetBytes(16).CopyTo(silence, 16); BitConverter.GetBytes((short)1).CopyTo(silence, 20); BitConverter.GetBytes((short)1).CopyTo(silence, 22);
+                BitConverter.GetBytes(22050).CopyTo(silence, 24); BitConverter.GetBytes(44100).CopyTo(silence, 28); BitConverter.GetBytes((short)2).CopyTo(silence, 32); BitConverter.GetBytes((short)16).CopyTo(silence, 34);
+                Encoding.ASCII.GetBytes("data").CopyTo(silence, 36); BitConverter.GetBytes(13230).CopyTo(silence, 40);
+                List<string> names = WaveOutDevices.Names();
+                rep.AppendLine("devices: " + names.Count);
+                for (int i = -1; i < names.Count; i++)
+                {
+                    bool ok = false;
+                    try { ok = new WaveOutPlayback().Play(silence, i); } catch (Exception ex) { rep.AppendLine("error: " + ex.Message); }
+                    rep.AppendLine((i < 0 ? "default" : i + " " + names[i]) + ": " + (ok ? "ok" : "FAILED"));
+                }
+                rep.AppendLine("resolve empty: " + WaveOutDevices.Resolve(""));
+                if (names.Count > 0) rep.AppendLine("resolve " + names[0] + ": " + WaveOutDevices.Resolve(names[0]));
+                rep.AppendLine("resolve unknown: " + WaveOutDevices.Resolve("no such device"));
+                File.WriteAllText(devReport, rep.ToString(), new UTF8Encoding(false));
+                return 0;
+            }
+
             // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)
             string expandReport = Option(args, "--expand");
             if (expandReport != null)
@@ -437,6 +463,7 @@ namespace HPGMissionCompanion
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Ctx.Player = new Player();
+            MainForm.QuietPort = Option(args, "--screenshot") != null;
             MainForm form = new MainForm(Has(args, "--minimized"), Has(args, "--exit-with-sim"), logFile, simRoot);
             string shot = Option(args, "--screenshot");
             if (shot != null) { form.Snapshot(shot); return 0; }

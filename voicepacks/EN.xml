@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="9" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="11" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -871,6 +871,46 @@
       <o>On scene we have {list:1}; {list:0} {be:0} on the way.</o>
       <o>You will find {list:1} on scene, and {list:0} {be:0} coming.</o>
       <o>{list:1} {be:1} there already, {list:0} {be:0} coming.</o>
+    </message>
+    <message key="CRW.VEH.BOTH" actor="3" radio="auto" new="1" trigger="the crew confirms the vehicles: some on scene (argument 1), others on the way (argument 0), one sentence">
+      <o>{list:1} on scene, {list:0} on the way.</o>
+      <o>We have {list:1} on scene and {list:0} on the way.</o>
+      <o>On scene: {list:1}. On the way: {list:0}.</o>
+      <o>{list:1} {be:1} already here, {list:0} {be:0} coming.</o>
+      <o>We see {list:1} on scene, {list:0} still on the way.</o>
+      <o>{list:1} on location, and {list:0} on the way.</o>
+    </message>
+    <message key="CRW.VEH.SCENE" actor="3" radio="auto" new="1" trigger="the crew confirms the vehicles already on scene (argument 1 = letters), one sentence">
+      <o>{list:1} on scene.</o>
+      <o>We have {list:1} on scene.</o>
+      <o>{list:1} {be:1} already on location.</o>
+      <o>On scene we have {list:1}.</o>
+      <o>{list:1} {be:1} already here.</o>
+      <o>We see {list:1} on scene.</o>
+    </message>
+    <message key="CRW.VEH.WAY" actor="3" radio="auto" new="1" trigger="the crew confirms the vehicles still on the way (argument 0 = letters), one sentence">
+      <o>{list:0} {be:0} on the way.</o>
+      <o>We have {list:0} on the way.</o>
+      <o>{list:0} {be:0} en route to the scene.</o>
+      <o>Still waiting for {list:0}, on the way.</o>
+      <o>{list:0} {be:0} coming to the scene.</o>
+      <o>{list:0} on the way.</o>
+    </message>
+    <message key="HOSP.FOUND" actor="3" radio="auto" new="1" trigger="the proposed hospital is ready on the tablet (argument 0 = its name)">
+      <o>A possible hospital destination: {0}. We can confirm or change it later.</o>
+      <o>Proposed hospital: {0}. We can confirm or change it later.</o>
+      <o>The tablet suggests {0} as the hospital. We can still change it.</o>
+      <o>Possible hospital: {0}. We confirm or change it later.</o>
+      <o>{0} is proposed as the hospital. We can change it later.</o>
+      <o>The tablet suggests {0}, we can still change it.</o>
+    </message>
+    <message key="HOSP.NONE" actor="3" radio="auto" new="1" trigger="no hospital was found near the scene: the destination will be chosen by hand">
+      <o>No hospital found nearby. We will select the destination manually.</o>
+      <o>I cannot find a hospital nearby. We select the destination manually.</o>
+      <o>No hospital in range. We choose the destination by hand later.</o>
+      <o>There is no hospital nearby on the tablet. We select it manually.</o>
+      <o>No hospital nearby, we pick the destination manually.</o>
+      <o>No luck with hospitals nearby, we select one by hand.</o>
     </message>
     <message key="DSP.VEH.NONE" actor="8" radio="on" new="1" trigger="no rescue vehicles">
       <o>No rescue vehicles at the location. You will be first on scene.</o>
@@ -3168,7 +3208,7 @@
     </message>
     <message key="SYS.DEAD" actor="1" radio="auto" lvar="L:DEAD{VCP}" wav="AND.dead.wav" sleep="3" sfx="1">
     </message>
-    <message key="SYS.DISPATCH2" actor="1" radio="auto" lvar="L:{VCP}DISPATCH2" wav="AND.Inside.TabletAlarm2.wav" sleep="0" sfx="1">
+    <message key="SYS.DISPATCH2" actor="1" radio="auto" lvar="L:{VCP}DISPATCH2" wav="AND.Inside.TabletAlarm2.wav" sleep="0" sfx="1" vol="70">
     </message>
     <message key="SYS.DISPATCHED" actor="1" radio="auto" lvar="L:{VCP}DISPATCHED" wav="AND.NEW.DISPATCH.wav" sleep="0" sfx="1">
     </message>
@@ -3181,6 +3221,8 @@
     <message key="SYS.DISPATCHED4" actor="1" radio="auto" lvar="L:{VCP}DISPATCHED4" wav="AND.NEW.DISPATCH4.wav" sleep="0" sfx="1">
     </message>
     <message key="SYS.FOOL" actor="1" radio="auto" lvar="L:{VCP}FOOL" wav="stayngalive.wav" sleep="0" sfx="1">
+    </message>
+    <message key="SYS.NEWMSG" actor="1" radio="auto" lvar="L:{VCP}NEWMSG" wav="AND.NEW.MSG.wav" sleep="0" sfx="1">
     </message>
     <message key="SYS.TEST1" actor="1" radio="auto" lvar="L:{VCP}TEST1" wav="AND.packtest.wav" sleep="0">
       <o>This is the default hoist pack. Enjoy.</o>
@@ -3389,6 +3431,14 @@
       <o>We lost the patient. We finish here and come back to you.</o>
       <o>We could not save them. We finish the paperwork and we are on our way back.</o>
       <o>We lost them, I am sorry. Give us a moment to finish here and we come back.</o>
+    </message>
+    <message key="SYS.READY" actor="1" radio="off" new="1" trigger="the program started minimized (with the simulator) and the simulator is running">
+      <o>HPG Companion ready, minimized.</o>
+      <o>Companion ready. I am running minimized.</o>
+      <o>HPG Companion is ready and running in the background.</o>
+      <o>Companion ready, running in the background.</o>
+      <o>All set. HPG Companion is running minimized.</o>
+      <o>Voices ready. HPG Companion is in the background.</o>
     </message>
   <!-- MISSION TEXTS BEGIN: generated by node tools/sync-pack-texts.js from the mission tools/voice-texts.json. Do not edit this block by hand: translate it in your own pack. -->
     <message key="CHK.afterengstartckl.01" text="1" actor="11" trigger="checklist afterengstartckl">
