@@ -1,8 +1,8 @@
 {
-    "sha256":  "EB74287FBB37A91471CCB8A53723EAA8595002D22EB86ADB9662D4C09B537438",
-    "installerSha256":  "97C1CF05F24684BBE65A2670FC48811736093C02803BEDDB3375DDB06199000C",
+    "sha256":  "AFD6D425AF5A80091C41415FF889109D0243ECBB15D77121AD9A46DF730402EF",
+    "installerSha256":  "397BD4EF142195DD734A32D6726DD68EB2883D35A0634A47251DFC19087C1FA6",
     "deliveredOn":  "2026-10-13",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.20",
-    "note":  "Release 0.20: no shell tricks (restart with --after-pid, uninstaller from a temp copy, Process.Kill instead of taskkill), check.js fails on ping/taskkill, README Antivirus section. Static check PASS; tested on dummy folders (silent install, uninstall with and without /removedata, --after-pid wait). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.21",
+    "note":  "Release 0.21: the automatic update check runs at every start (no 6 hour limit), GitHub only (the Google Drive link only for the button). Static check PASS; a scratch run confirmed that the check is no longer skipped within 6 hours of the last one. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

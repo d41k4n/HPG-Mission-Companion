@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.20";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.21";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -155,7 +155,7 @@ namespace HPGMissionCompanion
         public bool UpdatePack = true;          // the Updates tab also installs a newer voice pack EN (the XML only, published apart from the program) when the program itself is not updated
         public bool ReadyAnnounce = true;       // started minimized with the simulator running: the pilot says that the program is ready
         public bool AutoUpdateCheck = true;     // check for updates when the program starts (the user's request of 2026-10-11): only reads the published versions and tells; nothing is downloaded without the question
-        public string LastUpdateCheck = "";     // UTC time of the last check (ISO); an automatic check is skipped within 6 hours of it
+        public string LastUpdateCheck = "";     // UTC time of the last check (ISO), for information: the automatic check runs at every start
         public string MissionFile = "";         // the installed R&E mission file to update ("" = the one found first)
         public bool AutoAudioInhibit = true;    // keep L:AUDIOINHIBIT at 1 in the simulator (SimConnect, checked every 5 s)
         public bool ShowAdvanced = false;       // the "Show advanced options" box of the window: false hides the advanced groups (the user's request of 2026-10-11)

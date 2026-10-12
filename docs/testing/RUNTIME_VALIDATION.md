@@ -2,6 +2,10 @@
 
 Static checks (`tools/check.js`) and the self-tests of the executable never prove simulator behaviour. The simulator tests are standalone HPG test missions in `tests/`; the user also keeps them in `Desktop\claude\tests`.
 
+## Check for updates at every start (0.21, runtime PENDING)
+
+With the program 0.21 installed and a newer release published: close the program and start it again at once, twice in a row: both times the log has the lines of the check (`[INFO] Updates: ...`) and, with something newer, the small message in the corner and the amber button. Without internet the log says that the published program could not be read and no Google Drive address is tried; the button Check for updates still falls back to the Drive link for the mission.
+
 ## Restart and uninstall without a shell (0.20, tested on dummy folders: --after-pid wait, silent install and uninstall with and without /removedata; runtime PENDING)
 
 The restart of the program (after Set up in one click, Load settings) starts `HPGMissionCompanion.exe --after-pid <pid>`: the new copy waits up to 20 s for the old process to end (its mutex and the port are free) and then starts as usual; no `cmd`, no `ping`. Test: press Set up in one click with everything installed ("Nothing to download"), close the window: the program is gone for a moment and comes back, one icon in the notification area, the log of the new run starts at once and the port is not reported busy. Start `HPGMissionCompanion.exe --after-pid 999999` (a pid that does not exist): it starts without waiting.

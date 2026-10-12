@@ -2389,19 +2389,13 @@ namespace HPGMissionCompanion
         void CheckUpdates(bool automatic)
         {
             if (updateRunning) return;
-            if (automatic)
-            {
-                // at most one automatic check every 6 hours
-                DateTime last;
-                if (DateTime.TryParse(Ctx.Settings.LastUpdateCheck, null, System.Globalization.DateTimeStyles.RoundtripKind, out last) && (DateTime.UtcNow - last).TotalHours < 6) return;
-            }
             updateRunning = true;
             updateButton.Enabled = false;
             if (!automatic) SelectUpdatesTab();             // the button of the footer opens the Updates tab
             SetUpdateState("Checking...", updatesAvailable);
             Ctx.Settings.LastUpdateCheck = DateTime.UtcNow.ToString("o");
             try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
-            string fallbackUrl = Ctx.Settings.MissionUrl;
+            string fallbackUrl = automatic ? "" : Ctx.Settings.MissionUrl;     // the check at every start reads GitHub only: the Google Drive link (rate limited) is the fallback of the button
             string chosen = missionCombo.SelectedItem is MissionCopy ? ((MissionCopy)missionCombo.SelectedItem).Path : Ctx.Settings.MissionFile;
             string indexCmd = indexCombo.SelectedItem as string;
             if (!automatic) UpdLog("--- Check for updates " + DateTime.Now.ToString("HH:mm:ss"));
