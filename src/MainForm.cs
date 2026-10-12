@@ -144,6 +144,7 @@ namespace HPGMissionCompanion
         readonly Button exitButton = new Button();
         readonly GroupBox logGroup = new GroupBox();
         readonly GroupBox advBox = new GroupBox();
+        readonly GroupBox profileGroup = new GroupBox();      // profile: setup in one click, save and load of the settings
         readonly Label footNote = new Label();
         readonly CheckBox autoIndexCheck = new CheckBox();
         readonly SynchronizationContext uiContext;
@@ -655,7 +656,8 @@ namespace HPGMissionCompanion
             saveLabel.Text = text;
         }
 
-        void SaveSettings()
+        // the voices chosen in the Actors tab (the language shown there) go into the settings
+        void CaptureVoices()
         {
             LangInfo li = CurrentLang();
             if (li != null)
@@ -666,6 +668,11 @@ namespace HPGMissionCompanion
                     if (v != null) Ctx.Settings.Get(li.Code, i + 1).Voice = v.Id;
                 }
             }
+        }
+
+        void SaveSettings()
+        {
+            CaptureVoices();
             try
             {
                 Ctx.Settings.Save(Ctx.SettingsPath);
@@ -709,8 +716,24 @@ namespace HPGMissionCompanion
             };
             page.Controls.Add(defaultLangBox);
 
+            profileGroup.Text = "Settings profile";
+            profileGroup.Location = new Point(10, 88);
+            profileGroup.Size = new Size(708, 74);
+            page.Controls.Add(profileGroup);
+            Button oneClick = Btn(profileGroup, "Set up in one click...", 10, 20, 170, 28);
+            oneClick.Click += delegate { OneClickSetup(); };
+            Button saveProfile = Btn(profileGroup, "Save settings to a file...", 190, 20, 170, 28);
+            saveProfile.Click += delegate { SaveProfileToFile(); };
+            Button loadProfile = Btn(profileGroup, "Load settings from a file...", 370, 20, 180, 28);
+            loadProfile.Click += delegate { LoadProfileFromFile(); };
+            Label profileInfo = Lbl(profileGroup, "One click: the recommended voices, radio and volumes, plus the Piper engine and voices they need (internet, about 530 MB).", 10, 52, 690, 18);
+            profileInfo.ForeColor = SystemColors.GrayText;
+            new ToolTip().SetToolTip(oneClick, "Applies the recommended profile and downloads what it needs. Your current settings are kept in backups\\settings.");
+            new ToolTip().SetToolTip(saveProfile, "Writes the voices, speeds, radio, volumes and options to a file you can keep or give to somebody. Folders, the mission file, the port and the audio devices are not saved.");
+            new ToolTip().SetToolTip(loadProfile, "Reads such a file (or a copy of HPGMissionCompanion.json) and applies it, downloading the Piper voices it needs.");
+
             logGroup.Text = "Log";
-            logGroup.Location = new Point(10, 96);
+            logGroup.Location = new Point(10, 168);
             page.Controls.Add(logGroup);
             logBox.ReadOnly = true;
             logBox.BackColor = Color.FromArgb(10, 42, 24);
@@ -836,6 +859,116 @@ namespace HPGMissionCompanion
             page.Controls.Add(footNote);
 
             ApplyAdvanced();
+        }
+
+        // ---- settings profile --------------------------------------------------------------------
+        void OneClickSetup()
+        {
+            ProfileData p;
+            try { p = Profiles.Recommended(); }
+            catch (Exception ex) { MessageBox.Show("Cannot read the recommended profile: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            RunProfile(p, "Set up in one click");
+        }
+
+        void LoadProfileFromFile()
+        {
+            using (OpenFileDialog d = new OpenFileDialog())
+            {
+                d.Title = "Load settings from a file";
+                d.Filter = "Settings profile (*.json)|*.json|All files (*.*)|*.*";
+                if (Directory.Exists(Profiles.ProfilesDir)) d.InitialDirectory = Profiles.ProfilesDir;
+                if (d.ShowDialog(this) != DialogResult.OK) return;
+                ProfileData p;
+                try { p = Profiles.Parse(File.ReadAllText(d.FileName, Encoding.UTF8)); }
+                catch (Exception ex) { MessageBox.Show("Cannot use this file: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+                if (p.Name.Length == 0) p.Name = Path.GetFileNameWithoutExtension(d.FileName);
+                RunProfile(p, "Load settings");
+            }
+        }
+
+        void SaveProfileToFile()
+        {
+            CaptureVoices();
+            using (SaveFileDialog d = new SaveFileDialog())
+            {
+                d.Title = "Save settings to a file";
+                d.Filter = "Settings profile (*.json)|*.json";
+                d.FileName = "my-settings.json";
+                try { Directory.CreateDirectory(Profiles.ProfilesDir); d.InitialDirectory = Profiles.ProfilesDir; } catch (Exception) { }
+                if (d.ShowDialog(this) != DialogResult.OK) return;
+                bool names = false;
+                if (Ctx.Settings.CrewNames.Count > 0)
+                    names = MessageBox.Show("Include the crew names you typed in the Actors tab?\n\nChoose No to leave them out (for a file you give to somebody).", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                try
+                {
+                    ProfileData p = Profiles.FromSettings(Ctx.Settings, Path.GetFileNameWithoutExtension(d.FileName), "Saved by the HPG Mission Companion " + AppInfo.Version + " on " + DateTime.Now.ToString("yyyy-MM-dd"), names);
+                    File.WriteAllText(d.FileName, Profiles.ToJson(p), new UTF8Encoding(false));
+                    AppendLog("[INFO] Settings written to " + d.FileName);
+                    MessageBox.Show("Settings saved to " + d.FileName, Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex) { MessageBox.Show("Cannot save: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            }
+        }
+
+        // applies a profile: asks first, downloads what it needs (Piper engine, voices), keeps the old settings in backups\settings, then restarts the program
+        void RunProfile(ProfileData p, string title)
+        {
+            if (busy) { MessageBox.Show("A download is running (Piper voices tab). Try again when it ends.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            ProfileNeeds needs;
+            Cursor = Cursors.WaitCursor;
+            try { needs = Profiles.Plan(p, delegate (string s) { AppendLog("[INFO] " + s); }); }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                if (MessageBox.Show("The list of Piper voices cannot be read (" + ex.Message + ").\n\nApply the settings without downloading the voices? Voices that are not on this PC use the default one.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+                needs = new ProfileNeeds();
+            }
+            Cursor = Cursors.Default;
+            StringBuilder q = new StringBuilder();
+            q.Append("This applies the settings profile" + (p.Name.Length > 0 ? " \"" + p.Name + "\"" : "") + ": the voices and speeds of the actors, the radio, the volumes and the options of the program.\n");
+            q.Append("Folders, the mission file, the audio devices and the port are not changed. The settings you have now are kept in backups\\settings.\n\n");
+            q.Append(needs.Any ? "To download (internet needed): " + needs.Describe() + ".\n" : "Nothing to download.\n");
+            if (needs.Unknown.Count > 0) q.Append("Not in any list of Piper voices, the default voice is used: " + string.Join(", ", needs.Unknown.ToArray()) + ".\n");
+            if (p.StartWithSim) q.Append("The program will start with Microsoft Flight Simulator.\n");
+            q.Append("\nThe program restarts at the end. Continue?");
+            if (MessageBox.Show(q.ToString(), title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            busy = true;
+            using (ProfileProgressForm f = new ProfileProgressForm(title))
+            {
+                f.Shown += delegate
+                {
+                    ThreadPool.QueueUserWorkItem(delegate
+                    {
+                        bool ok = true;
+                        try { if (needs.Any) ok = Profiles.Download(needs, f.AddLine, f.SetProgress); }
+                        catch (Exception ex) { f.AddLine("ERROR " + ex.Message); ok = false; }
+                        f.BeginInvoke((MethodInvoker)delegate
+                        {
+                            try { Profiles.Finish(p, simRoot, f.AddLine); }
+                            catch (Exception ex) { f.AddLine("ERROR " + ex.Message); ok = false; }
+                            f.Finished(ok ? "Done. The program restarts when you close this window." : "Done, but something went wrong (see the lines below). The program restarts when you close this window.");
+                        });
+                    });
+                };
+                f.ShowDialog(this);
+            }
+            busy = false;
+            RestartApp();
+        }
+
+        // a new copy starts after this one has ended (the port and the Piper processes are free by then)
+        void RestartApp()
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo("cmd.exe", "/c ping 127.0.0.1 -n 3 >nul & start \"\" \"" + Application.ExecutablePath + "\"");
+                psi.CreateNoWindow = true;
+                psi.UseShellExecute = false;
+                psi.WorkingDirectory = Ctx.BaseDir;
+                Process.Start(psi);
+            }
+            catch (Exception ex) { MessageBox.Show("Cannot restart the program, start it again by hand: " + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            ExitApp(false);
         }
 
         // the advanced groups follow the footer box; the log takes the room that the Advanced box leaves

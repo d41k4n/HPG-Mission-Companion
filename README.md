@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.18
+Version 0.19
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
@@ -18,7 +18,7 @@ The program is a single Windows executable built with the compiler that ships wi
 
 ## Install
 
-Run `HPGMissionCompanionSetup.exe` (from the releases page): it installs for the current user (no administrator rights) in `%LOCALAPPDATA%\Programs\HPG Mission Companion` or a folder you choose, with Start menu and desktop shortcuts, the voice pack EN and `SimConnect.dll`. An update keeps your settings, Piper and the voices. Remove it from Windows Apps (or the Start menu shortcut); the uninstaller asks before deleting your settings and voices. Silent install: `HPGMissionCompanionSetup.exe /S /dir="D:\HPG"`.
+Run `HPGMissionCompanionSetup.exe` (from the releases page; the box "Complete setup" in its window, ticked on a new install, applies the recommended voices and settings and downloads the Piper engine and voices they need, about 500 MB; in the program the same is the button Set up in one click of the Service tab, which also saves and loads your settings): it installs for the current user (no administrator rights) in `%LOCALAPPDATA%\Programs\HPG Mission Companion` or a folder you choose, with Start menu and desktop shortcuts, the voice pack EN and `SimConnect.dll`. An update keeps your settings, Piper and the voices. Remove it from Windows Apps (or the Start menu shortcut); the uninstaller asks before deleting your settings and voices. Silent install: `HPGMissionCompanionSetup.exe /S /dir="D:\HPG"`.
 
 ## Build
 

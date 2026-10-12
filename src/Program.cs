@@ -12,6 +12,7 @@
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
 //   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   (lines: @watch NAME VALUE, @settings k=v) what a mission text becomes (voice pack expansion and tags), no audio
+//   --oneclick <report> [--profile <file>] [--no-download]   apply a settings profile (default: the recommended one), download the Piper engine and voices it needs, keep the old settings in backups\settings; the report grows line by line
 //   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
 //   --packs-check <report>   list the voice packs of the voicepacks folder, their problems and what they lack against the base pack EN
 //   --pack-template <xml> --lang IT [--name IT] [--report <file>]   write the base pack as the start of a translation
@@ -30,8 +31,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.18.0.0")]
-[assembly: AssemblyFileVersion("0.18.0.0")]
+[assembly: AssemblyVersion("0.19.0.0")]
+[assembly: AssemblyFileVersion("0.19.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -62,6 +63,10 @@ namespace HPGMissionCompanion
                 }
                 return 0;
             }
+
+            // --oneclick <report>: the setup in one click without the window (the installer runs it)
+            string oneClick = Option(args, "--oneclick");
+            if (oneClick != null) return Profiles.RunCli(oneClick, Option(args, "--profile"), !Has(args, "--no-download"), simRoot);
 
             if (Has(args, "--install-engine") || Option(args, "--install-voice") != null)
             {

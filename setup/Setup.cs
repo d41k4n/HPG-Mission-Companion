@@ -1,9 +1,11 @@
 // HPG Mission Companion installer and uninstaller (one executable, .NET Framework 4, no SDK).
 // Install: per user, no administrator rights. It writes only the program files, the voice packs through the program's own
 // --install-pack (an older version of a pack is archived), the shortcuts and the uninstall entry of the current user.
-// It never touches the settings, the Piper engine, the voices, the audio folder or the backups of an earlier install.
+// It never touches the settings, the Piper engine, the voices, the audio folder or the backups of an earlier install, unless the complete setup is chosen:
+// then the program itself (--oneclick) applies the recommended profile and downloads the Piper engine and the voices it needs (the old settings are kept in backups\settings).
 // Uninstall: removes what the install wrote; the user data is removed only when the user answers yes (default no).
-// Switches: /S silent, /dir=PATH install folder, /nodesktop, /nostartmenu, /nolaunch, /uninstall, /removedata (silent uninstall).
+// Switches: /S silent, /dir=PATH install folder, /nodesktop, /nostartmenu, /nolaunch, /oneclick (complete setup; /nooneclick leaves it out), /uninstall, /removedata (silent uninstall).
+// The window offers the complete setup, ticked when the folder has no settings yet; the silent install does it only with /oneclick.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,14 +18,14 @@ using Microsoft.Win32;
 
 [assembly: AssemblyTitle("HPG Mission Companion Setup")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.18.0.0")]
+[assembly: AssemblyVersion("0.19.0.0")]
 [assembly: AssemblyFileVersion("0.12.0.0")]
 
 namespace HpgSetup
 {
     static class Info
     {
-        public const string Version = "0.18";
+        public const string Version = "0.19";
         public const string Name = "HPG Mission Companion";
         public const string Author = "Andrea Daviero";
         public const string ExeName = "HPGMissionCompanion.exe";
@@ -71,6 +73,8 @@ namespace HpgSetup
         public bool StartMenu = true;
         public bool Launch = true;
         public bool RemoveData;
+        public bool OneClick;
+        public bool OneClickSet;
         public string Screenshot;
 
         public static Options Parse(string[] args)
@@ -86,6 +90,8 @@ namespace HpgSetup
                 else if (l == "/nostartmenu") o.StartMenu = false;
                 else if (l == "/nolaunch") o.Launch = false;
                 else if (l == "/removedata") o.RemoveData = true;
+                else if (l == "/oneclick") { o.OneClick = true; o.OneClickSet = true; }
+                else if (l == "/nooneclick") { o.OneClick = false; o.OneClickSet = true; }
                 else if (l.StartsWith("/dir=")) o.Dir = a.Substring(5).Trim('"');
                 else if (l.StartsWith("/screenshot=")) o.Screenshot = a.Substring(12).Trim('"');
             }
@@ -291,6 +297,53 @@ namespace HpgSetup
                 k.SetValue("EstimatedSize", (int)(DirSize(dir) / 1024), RegistryValueKind.DWord);
             }
             log("Installed version " + Info.Version + " in " + dir);
+            if (o.OneClick) OneClick(dir, log);
+        }
+
+        static int ShowNewLines(string report, int seen, Action<string> log)
+        {
+            try
+            {
+                if (!File.Exists(report)) return seen;
+                List<string> lines = new List<string>();
+                using (FileStream fs = new FileStream(report, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader r = new StreamReader(fs, Encoding.UTF8))
+                {
+                    string line;
+                    while ((line = r.ReadLine()) != null) lines.Add(line);
+                }
+                for (int i = seen; i < lines.Count; i++) log(lines[i]);
+                return Math.Max(seen, lines.Count);
+            }
+            catch (Exception) { return seen; }
+        }
+
+        // the recommended profile and what it needs (Piper engine, voices): the program does it with --oneclick, this shows its report
+        public static void OneClick(string dir, Action<string> log)
+        {
+            string exe = Path.Combine(dir, Info.ExeName);
+            string report = Path.Combine(Path.GetTempPath(), "hmc-oneclick-" + Guid.NewGuid().ToString("N") + ".txt");
+            log("Complete setup: the recommended settings, the Piper engine and voices (needs internet, can take several minutes)");
+            ProcessStartInfo psi = new ProcessStartInfo(exe, "--oneclick \"" + report + "\"");
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
+            psi.WorkingDirectory = dir;
+            int seen = 0;
+            DateTime limit = DateTime.UtcNow.AddMinutes(90);
+            using (Process p = Process.Start(psi))
+            {
+                if (p == null) { log("The program could not be started for the complete setup"); return; }
+                while (!p.WaitForExit(400))
+                {
+                    seen = ShowNewLines(report, seen, log);
+                    Application.DoEvents();
+                    if (DateTime.UtcNow > limit) { try { p.Kill(); } catch (Exception) { } log("The complete setup took too long and was stopped"); break; }
+                }
+                seen = ShowNewLines(report, seen, log);
+                if (p.HasExited)
+                    log(p.ExitCode == 0 ? "Complete setup done" : p.ExitCode == 2 ? "Complete setup done, but some downloads failed: press Set up in one click in the program (Service tab) when the connection works" : "The complete setup failed: press Set up in one click in the program (Service tab) to try again");
+            }
+            try { File.Delete(report); } catch (Exception) { }
         }
 
         static void TryDeleteFile(string path, Action<string> log)
@@ -342,7 +395,7 @@ namespace HpgSetup
             {
                 log("Removing the user data");
                 TryDeleteFile(Path.Combine(dir, "HPGMissionCompanion.json"), log);
-                foreach (string name in new string[] { "piper", "voices", "audio", "backups", "voicepacks" })
+                foreach (string name in new string[] { "piper", "voices", "audio", "backups", "voicepacks", "profiles" })
                 {
                     try { string d = Path.Combine(dir, name); if (Directory.Exists(d)) Directory.Delete(d, true); }
                     catch (Exception ex) { log("Could not delete " + name + ": " + ex.Message); }
@@ -371,6 +424,8 @@ namespace HpgSetup
         CheckBox desktop = new CheckBox();
         CheckBox startMenu = new CheckBox();
         CheckBox launch = new CheckBox();
+        CheckBox oneClick = new CheckBox();
+        Label oneClickNote = new Label();
         TextBox logBox = new TextBox();
         Button install = new Button();
         Button close = new Button();
@@ -414,7 +469,7 @@ namespace HpgSetup
                 using (FolderBrowserDialog d = new FolderBrowserDialog())
                 {
                     d.Description = "Choose the install folder";
-                    if (d.ShowDialog(this) == DialogResult.OK) dirBox.Text = d.SelectedPath;
+                    if (d.ShowDialog(this) == DialogResult.OK) { dirBox.Text = d.SelectedPath; ShowOneClickDefault(opt); }
                 }
             };
             Controls.Add(browse);
@@ -431,11 +486,18 @@ namespace HpgSetup
             launch.Checked = o.Launch;
             launch.SetBounds(16, 208, 360, 22);
             Controls.Add(launch);
+            oneClick.Text = "Complete setup: the recommended voices and settings, with the Piper engine and voices they need (internet, about 500 MB)";
+            oneClick.SetBounds(16, 234, 528, 36);
+            Controls.Add(oneClick);
+            oneClickNote.ForeColor = SystemColors.GrayText;
+            oneClickNote.SetBounds(34, 270, 510, 18);
+            Controls.Add(oneClickNote);
+            ShowOneClickDefault(o);
 
             logBox.Multiline = true;
             logBox.ReadOnly = true;
             logBox.ScrollBars = ScrollBars.Vertical;
-            logBox.SetBounds(16, 240, 528, 108);
+            logBox.SetBounds(16, 294, 528, 56);
             Controls.Add(logBox);
 
             install.Text = "Install";
@@ -447,6 +509,14 @@ namespace HpgSetup
             close.Click += delegate { Close(); };
             Controls.Add(close);
             AcceptButton = install;
+        }
+
+        // ticked when the folder has no settings yet (a new install); with settings the choice is left to the user and says what it replaces
+        void ShowOneClickDefault(Options o)
+        {
+            bool has = File.Exists(Path.Combine((dirBox.Text ?? "").Trim().Trim('"'), "HPGMissionCompanion.json"));
+            oneClick.Checked = o.OneClickSet ? o.OneClick : !has;
+            oneClickNote.Text = has ? "This folder has settings: the complete setup replaces the voices and levels (a copy is kept in backups\\settings)." : "";
         }
 
         void AddLog(string line)
@@ -463,6 +533,7 @@ namespace HpgSetup
             opt.StartMenu = startMenu.Checked;
             opt.Desktop = desktop.Checked;
             opt.Launch = launch.Checked;
+            opt.OneClick = oneClick.Checked;
             string err = Ops.ValidateDir(opt.Dir);
             if (err != null) { MessageBox.Show(this, err, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
             string exe = Path.Combine(opt.Dir, Info.ExeName);
@@ -477,6 +548,7 @@ namespace HpgSetup
             install.Enabled = false;
             close.Enabled = false;
             dirBox.Enabled = false;
+            oneClick.Enabled = false;
             try
             {
                 Ops.Install(opt, AddLog);
@@ -498,6 +570,7 @@ namespace HpgSetup
                 install.Enabled = true;
                 close.Enabled = true;
                 dirBox.Enabled = true;
+                oneClick.Enabled = true;
             }
         }
     }

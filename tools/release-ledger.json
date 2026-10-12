@@ -1,8 +1,8 @@
 {
-    "sha256":  "532316A9E54059F9AD2C51D6F4404B930CF8F204D8C11DF393F29798FB5962B0",
-    "installerSha256":  "7D2C6AB734BE2D7672ED71325B453C41F249369639FEBD790B7DC474222E659F",
-    "deliveredOn":  "2026-10-11",
+    "sha256":  "C89BA71EB6BFEBB23173ED3040551F5E52DC1B1CFF03EC922CCA22A5CC7AD0C3",
+    "installerSha256":  "588DDB99EF1EDDEC06865BE904FBEADDDD60828C0650C7DFC2FDD7B0DD40EEE4",
+    "deliveredOn":  "2026-10-12",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.18",
-    "note":  "Local build 0.18 (the program no longer forces the pilot aboard: the mission 169.49 and later publishes it; the [CTX] crew line shows the raw value; pack EN 12 with the DSA.* messages of the decision on a new dispatch), plus the 0.14 to 0.17 changes; installed over Desktop\\HPGMissionCompanion with the silent setup (settings kept, pack EN 12), the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.18.exe). Committed locally, not pushed (0.13 is the published release). Runtime pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.19",
+    "note":  "Local build 0.19 (settings profiles: setup in one click with the recommended profile, save and load of the settings, complete setup in the installer with the Piper engine and voices; the 0.18 changes: the pilot read from the mission, pack EN 12), installed over Desktop\\HPGMissionCompanion with the silent setup (settings kept), the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.19.exe). Runtime pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
