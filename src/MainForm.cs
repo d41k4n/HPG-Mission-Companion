@@ -956,13 +956,12 @@ namespace HPGMissionCompanion
             RestartApp();
         }
 
-        // a new copy starts after this one has ended (the port and the Piper processes are free by then)
+        // a new copy of this program waits for this one to end (--after-pid: the mutex, the port and the Piper processes are free by then); no shell, no timer
         void RestartApp()
         {
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo("cmd.exe", "/c ping 127.0.0.1 -n 3 >nul & start \"\" \"" + Application.ExecutablePath + "\"");
-                psi.CreateNoWindow = true;
+                ProcessStartInfo psi = new ProcessStartInfo(Application.ExecutablePath, "--after-pid " + Process.GetCurrentProcess().Id);
                 psi.UseShellExecute = false;
                 psi.WorkingDirectory = Ctx.BaseDir;
                 Process.Start(psi);

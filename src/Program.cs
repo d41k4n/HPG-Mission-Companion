@@ -22,6 +22,7 @@
 //   --test-autostart <on|off> (with --sim-root) add or remove the entry and exit
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -31,8 +32,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.19.0.0")]
-[assembly: AssemblyFileVersion("0.19.0.0")]
+[assembly: AssemblyVersion("0.20.0.0")]
+[assembly: AssemblyFileVersion("0.20.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -455,6 +456,14 @@ namespace HPGMissionCompanion
                     PiperEngine.StopAll();
                     return 1;
                 }
+            }
+
+            // a copy started by the restart of the program (--after-pid) waits for the one that is ending: the mutex and the port are free when it goes on
+            int afterPid;
+            if (int.TryParse(Option(args, "--after-pid") ?? "", out afterPid) && afterPid > 0)
+            {
+                try { using (Process old = Process.GetProcessById(afterPid)) old.WaitForExit(20000); }
+                catch (Exception) { }                         // the process is already gone
             }
 
             bool createdNew = true;

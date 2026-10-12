@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.19
+Version 0.20
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
@@ -19,6 +19,10 @@ The program is a single Windows executable built with the compiler that ships wi
 ## Install
 
 Run `HPGMissionCompanionSetup.exe` (from the releases page; the box "Complete setup" in its window, ticked on a new install, applies the recommended voices and settings and downloads the Piper engine and voices they need, about 500 MB; in the program the same is the button Set up in one click of the Service tab, which also saves and loads your settings): it installs for the current user (no administrator rights) in `%LOCALAPPDATA%\Programs\HPG Mission Companion` or a folder you choose, with Start menu and desktop shortcuts, the voice pack EN and `SimConnect.dll`. An update keeps your settings, Piper and the voices. Remove it from Windows Apps (or the Start menu shortcut); the uninstaller asks before deleting your settings and voices. Silent install: `HPGMissionCompanionSetup.exe /S /dir="D:\HPG"`.
+
+## Antivirus
+
+The program and the setup are not signed (a code signing certificate costs money) and few people download them, so an antivirus may stop or warn about a new release (a tester reported Avast on the update). Check what you have: the page of each release shows the SHA-256 of the file (Digest), and `Get-FileHash HPGMissionCompanionSetup.exe` in PowerShell must print the same value; the update of the program checks it before it starts the setup. If your antivirus still blocks a file that matches, you can report it as a false positive (Avast: https://www.avast.com/false-positive-file-form.php, Microsoft Defender: https://www.microsoft.com/en-us/wdsi/filesubmission). The program does not use a shell to restart or uninstall itself (`tools/check.js` fails on `ping 127.0.0.1` and `taskkill`).
 
 ## Build
 

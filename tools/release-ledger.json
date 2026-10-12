@@ -1,8 +1,8 @@
 {
-    "sha256":  "C89BA71EB6BFEBB23173ED3040551F5E52DC1B1CFF03EC922CCA22A5CC7AD0C3",
-    "installerSha256":  "588DDB99EF1EDDEC06865BE904FBEADDDD60828C0650C7DFC2FDD7B0DD40EEE4",
-    "deliveredOn":  "2026-10-12",
+    "sha256":  "EB74287FBB37A91471CCB8A53723EAA8595002D22EB86ADB9662D4C09B537438",
+    "installerSha256":  "97C1CF05F24684BBE65A2670FC48811736093C02803BEDDB3375DDB06199000C",
+    "deliveredOn":  "2026-10-13",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.19",
-    "note":  "Local build 0.19 (settings profiles: setup in one click with the recommended profile, save and load of the settings, complete setup in the installer with the Piper engine and voices; the 0.18 changes: the pilot read from the mission, pack EN 12), installed over Desktop\\HPGMissionCompanion with the silent setup (settings kept), the installer is in Desktop\\claude (HPGMissionCompanionSetup-0.19.exe). Runtime pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.20",
+    "note":  "Release 0.20: no shell tricks (restart with --after-pid, uninstaller from a temp copy, Process.Kill instead of taskkill), check.js fails on ping/taskkill, README Antivirus section. Static check PASS; tested on dummy folders (silent install, uninstall with and without /removedata, --after-pid wait). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

@@ -127,6 +127,14 @@ for (const f of present) {
   if (m) errors.push(`src/${f} has a non-ASCII character (${JSON.stringify(m[0])})`);
 }
 
+// 3b. no shell tricks that antivirus heuristics treat as malware behaviour (the user's request of 2026-10-13, after a tester's Avast alert on the update):
+// a restart waits for the old process with --after-pid, the uninstaller deletes itself from a temp copy, processes are ended with the .NET calls
+for (const f of [...present.map((n) => path.join('src', n)), 'setup/Setup.cs']) {
+  const text = read(f);
+  if (/ping\s+127\.0\.0\.1/i.test(text)) errors.push(`${f} uses "ping 127.0.0.1" as a timer (use --after-pid or a wait on the process)`);
+  if (/taskkill/i.test(text)) errors.push(`${f} runs taskkill (use Process.Kill)`);
+}
+
 // 4. tracked files
 try {
   const tracked = cp.execFileSync('git', ['-C', root, 'ls-files'], { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean);

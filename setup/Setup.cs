@@ -3,7 +3,8 @@
 // --install-pack (an older version of a pack is archived), the shortcuts and the uninstall entry of the current user.
 // It never touches the settings, the Piper engine, the voices, the audio folder or the backups of an earlier install, unless the complete setup is chosen:
 // then the program itself (--oneclick) applies the recommended profile and downloads the Piper engine and the voices it needs (the old settings are kept in backups\settings).
-// Uninstall: removes what the install wrote; the user data is removed only when the user answers yes (default no).
+// Uninstall: removes what the install wrote; the user data is removed only when the user answers yes (default no). The uninstaller of the folder copies itself to the temp folder
+// (/fromtemp /waitpid=PID, internal switches) and ends there, so that it can delete itself and the folder without a shell.
 // Switches: /S silent, /dir=PATH install folder, /nodesktop, /nostartmenu, /nolaunch, /oneclick (complete setup; /nooneclick leaves it out), /uninstall, /removedata (silent uninstall).
 // The window offers the complete setup, ticked when the folder has no settings yet; the silent install does it only with /oneclick.
 using System;
@@ -18,14 +19,14 @@ using Microsoft.Win32;
 
 [assembly: AssemblyTitle("HPG Mission Companion Setup")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.19.0.0")]
-[assembly: AssemblyFileVersion("0.12.0.0")]
+[assembly: AssemblyVersion("0.20.0.0")]
+[assembly: AssemblyFileVersion("0.20.0.0")]
 
 namespace HpgSetup
 {
     static class Info
     {
-        public const string Version = "0.19";
+        public const string Version = "0.20";
         public const string Name = "HPG Mission Companion";
         public const string Author = "Andrea Daviero";
         public const string ExeName = "HPGMissionCompanion.exe";
@@ -76,6 +77,8 @@ namespace HpgSetup
         public bool OneClick;
         public bool OneClickSet;
         public string Screenshot;
+        public bool FromTemp;       // the uninstaller runs from a copy in the temp folder (the one in the install folder cannot delete itself)
+        public int WaitPid;         // the process to wait for before going on
 
         public static Options Parse(string[] args)
         {
@@ -92,6 +95,8 @@ namespace HpgSetup
                 else if (l == "/removedata") o.RemoveData = true;
                 else if (l == "/oneclick") { o.OneClick = true; o.OneClickSet = true; }
                 else if (l == "/nooneclick") { o.OneClick = false; o.OneClickSet = true; }
+                else if (l == "/fromtemp") o.FromTemp = true;
+                else if (l.StartsWith("/waitpid=")) int.TryParse(a.Substring(9), out o.WaitPid);
                 else if (l.StartsWith("/dir=")) o.Dir = a.Substring(5).Trim('"');
                 else if (l.StartsWith("/screenshot=")) o.Screenshot = a.Substring(12).Trim('"');
             }
@@ -154,7 +159,18 @@ namespace HpgSetup
 
         public static bool IsRunning(string dir) { return RunningFrom(dir).Count > 0; }
 
-        // asks the program to close; if it only hides in the notification area, ends it with its child processes (Piper)
+        // ends the Piper processes that run from this folder (the children of the program: a program that is ended by force leaves them behind)
+        static void KillPiper(string dir)
+        {
+            string root = Path.GetFullPath(dir).TrimEnd('\\') + "\\";
+            foreach (Process q in Process.GetProcessesByName("piper"))
+            {
+                try { if (q.MainModule.FileName.StartsWith(root, StringComparison.OrdinalIgnoreCase)) q.Kill(); }
+                catch (Exception) { }
+            }
+        }
+
+        // asks the program to close; if it only hides in the notification area, ends it and its Piper processes with the .NET calls (no helper program)
         public static void CloseRunning(string dir, Action<string> log)
         {
             foreach (Process p in RunningFrom(dir))
@@ -165,10 +181,8 @@ namespace HpgSetup
                     p.CloseMainWindow();
                     if (!p.WaitForExit(4000))
                     {
-                        ProcessStartInfo psi = new ProcessStartInfo("taskkill.exe", "/PID " + p.Id + " /T /F");
-                        psi.UseShellExecute = false;
-                        psi.CreateNoWindow = true;
-                        using (Process k = Process.Start(psi)) { if (k != null) k.WaitForExit(8000); }
+                        KillPiper(dir);
+                        p.Kill();
                         p.WaitForExit(4000);
                     }
                 }
@@ -214,6 +228,7 @@ namespace HpgSetup
             string err = ValidateDir(dir);
             if (err != null) throw new InvalidOperationException(err);
             Info.Log("install to " + dir);
+            CleanTempUninstallers();
 
             CloseRunning(dir, log);
             Directory.CreateDirectory(dir);
@@ -403,18 +418,34 @@ namespace HpgSetup
                 try { foreach (string f in Directory.GetFiles(dir, "*.log")) TryDeleteFile(f, log); } catch (Exception) { }
             }
 
-            // this executable may be the uninstaller in the folder: it is deleted after it ends
-            string self = Assembly.GetExecutingAssembly().Location;
-            bool selfInDir = string.Equals(Path.GetDirectoryName(Path.GetFullPath(self)), dir.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase);
-            string cmd = "/c ping 127.0.0.1 -n 3 >nul & ";
-            if (selfInDir) cmd += "del /f /q \"" + self + "\" & ";
-            cmd += "rmdir \"" + dir + "\"";
-            ProcessStartInfo del = new ProcessStartInfo("cmd.exe", cmd);
-            del.UseShellExecute = false;
-            del.CreateNoWindow = true;
-            del.WorkingDirectory = Path.GetTempPath();
-            Process.Start(del);
+            // the uninstaller runs from a copy in the temp folder (see Program.Main), so the one in the folder is deleted like any other file;
+            // the folder goes only when it is empty (a file of the user in it stays)
+            TryDeleteFile(Path.Combine(dir, Info.UninstallerName), log);
+            try { if (Directory.Exists(dir)) Directory.Delete(dir, false); }
+            catch (Exception ex) { log("The folder is not empty or in use, it stays: " + ex.Message); }
             log("Uninstalled");
+        }
+
+        // a copy of this executable in the temp folder: it ends the uninstall after the one in the install folder has ended (no shell, no timer)
+        public static bool StartUninstallFromTemp(string[] args, string dir)
+        {
+            string self = Assembly.GetExecutingAssembly().Location;
+            string copy = Path.Combine(Path.GetTempPath(), "HPGMissionCompanionUninstall-" + Process.GetCurrentProcess().Id + ".exe");
+            File.Copy(self, copy, true);
+            StringBuilder a = new StringBuilder("/fromtemp /waitpid=" + Process.GetCurrentProcess().Id + " /dir=\"" + dir.TrimEnd('\\') + "\"");
+            foreach (string x in args) { string l = x.Trim().ToLowerInvariant(); if (l == "/s" || l == "/silent" || l == "-s" || l == "--silent" || l == "/uninstall" || l == "--uninstall" || l == "/removedata") a.Append(' ').Append(x.Trim()); }
+            ProcessStartInfo psi = new ProcessStartInfo(copy, a.ToString());
+            psi.UseShellExecute = false;
+            psi.WorkingDirectory = Path.GetTempPath();
+            Process.Start(psi);
+            return true;
+        }
+
+        // the copies of earlier uninstalls (the one that runs is locked and stays)
+        public static void CleanTempUninstallers()
+        {
+            try { foreach (string f in Directory.GetFiles(Path.GetTempPath(), "HPGMissionCompanionUninstall-*.exe")) { try { File.Delete(f); } catch (Exception) { } } }
+            catch (Exception) { }
         }
     }
 
@@ -588,6 +619,18 @@ namespace HpgSetup
                 if (o.Uninstall)
                 {
                     string dir = o.Dir ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string selfDir = Path.GetDirectoryName(Path.GetFullPath(Assembly.GetExecutingAssembly().Location));
+                    if (!o.FromTemp && string.Equals(selfDir, Path.GetFullPath(dir).TrimEnd('\\'), StringComparison.OrdinalIgnoreCase))
+                    {
+                        // an executable cannot delete itself: a copy in the temp folder does the uninstall once this one has ended
+                        try { Ops.StartUninstallFromTemp(args, dir); return 0; }
+                        catch (Exception ex) { Info.Log("the uninstaller could not start from the temp folder, it runs here: " + ex.Message); }
+                    }
+                    if (o.WaitPid > 0)
+                    {
+                        try { using (Process old = Process.GetProcessById(o.WaitPid)) old.WaitForExit(20000); }
+                        catch (Exception) { }
+                    }
                     if (!o.Silent)
                     {
                         if (MessageBox.Show("Remove " + Info.Name + " from " + dir + "?", Info.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return 0;
