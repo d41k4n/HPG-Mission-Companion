@@ -2108,7 +2108,7 @@ namespace HPGMissionCompanion
             updatesPage = page;
             tabs.TabPages.Add(page);
 
-            Lbl(page, "The R&&E mission (GitHub release, Google Drive link as a fallback) and this program (GitHub). The check runs when the program starts (option below) and on the button " +
+            Lbl(page, "The R&&E mission, this program and the voice pack (GitHub releases). The check runs when the program starts (option below) and on the button " +
                 "Check for updates at the bottom of the window, and only reads: nothing is downloaded without the question. A new mission replaces the mission file (the old one is kept beside it, " +
                 "extension .json.bak) and the index is updated; the program is updated last: it closes, the setup installs the new version and starts it again.", 10, 10, 706, 62);
 
@@ -2395,7 +2395,6 @@ namespace HPGMissionCompanion
             SetUpdateState("Checking...", updatesAvailable);
             Ctx.Settings.LastUpdateCheck = DateTime.UtcNow.ToString("o");
             try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
-            string fallbackUrl = automatic ? "" : Ctx.Settings.MissionUrl;     // the check at every start reads GitHub only: the Google Drive link (rate limited) is the fallback of the button
             string chosen = missionCombo.SelectedItem is MissionCopy ? ((MissionCopy)missionCombo.SelectedItem).Path : Ctx.Settings.MissionFile;
             string indexCmd = indexCombo.SelectedItem as string;
             if (!automatic) UpdLog("--- Check for updates " + DateTime.Now.ToString("HH:mm:ss"));
@@ -2431,7 +2430,7 @@ namespace HPGMissionCompanion
                 catch (Exception ex) { lines.Add("[ERROR] reading the installed mission: " + ex.Message); }
                 try
                 {
-                    rm = Updates.ReadRemoteMissionAuto(fallbackUrl, delegate (string s) { lines.Add("  " + s); });
+                    rm = Updates.ReadRemoteMissionGitHub(Updates.MissionReleasesApi);
                     lines.Add("Published mission: " + rm.Release + " (" + rm.Source + ", " + (rm.Size / 1024) + " KB)");
                 }
                 catch (Exception ex) { lines.Add("[ERROR] the published mission could not be read: " + ex.Message); }

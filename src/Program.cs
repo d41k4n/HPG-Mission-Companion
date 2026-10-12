@@ -32,8 +32,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.21.0.0")]
-[assembly: AssemblyFileVersion("0.21.0.0")]
+[assembly: AssemblyVersion("0.22.0.0")]
+[assembly: AssemblyFileVersion("0.22.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -169,7 +169,7 @@ namespace HPGMissionCompanion
                 return rc;
             }
 
-            // --check-updates <report> [--community <dir>] [--index-file <file>] [--mission-url <url>] [--github-mission <api url>] [--github-app <api url>]: the reads of the Check for updates button, no download
+            // --check-updates <report> [--community <dir>] [--index-file <file>] [--github-mission <api url>] [--github-app <api url>]: the reads of the Check for updates button, no download
             // --test-replace <installed> --with <file> --backup <dir> [--report <file>]: the replacement of the mission file (check it on a dummy copy)
             string checkUpdates = Option(args, "--check-updates");
             string testReplace = Option(args, "--test-replace");
@@ -199,17 +199,11 @@ namespace HPGMissionCompanion
                     {
                         foreach (MissionRelease r in Updates.ReadIndexReleases(indexFile)) rep.AppendLine("index lists: " + r);
                     }
-                    string url = Option(args, "--mission-url");
                     string ghMission = Option(args, "--github-mission");
                     if (ghMission != null)
                     {
                         try { RemoteMission m = Updates.ReadRemoteMissionGitHub(ghMission); rep.AppendLine("github mission: " + m.Release + " size " + m.Size + " sha256 " + m.Sha256 + " " + m.Url); }
                         catch (Exception ex) { rep.AppendLine("github mission: " + ex.Message); }
-                    }
-                    if (url != null)
-                    {
-                        try { RemoteMission m = Updates.ReadRemoteMission(url); rep.AppendLine("link mission: " + m.Release + " size " + m.Size + " (" + m.Source + ")"); }
-                        catch (Exception ex) { rep.AppendLine("link mission: " + ex.Message); }
                     }
                     string ghApp = Option(args, "--github-app");
                     if (ghApp != null)

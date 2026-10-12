@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.21";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.22";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -150,7 +150,6 @@ namespace HPGMissionCompanion
         public string WorkFolder = "";
         public string IndexTool = "";
         public bool AutoIndex = true;           // run the mission index update when the app starts
-        public string MissionUrl = Updates.DefaultMissionUrl;   // where the published R&E mission file is (Google Drive direct download); read only when the user presses Check for updates
         public string UpdateWhat = "both";      // what the Updates tab installs: both | mission | app (the user's request of 2026-10-11)
         public bool UpdatePack = true;          // the Updates tab also installs a newer voice pack EN (the XML only, published apart from the program) when the program itself is not updated
         public bool ReadyAnnounce = true;       // started minimized with the simulator running: the pilot says that the program is ready
@@ -200,7 +199,6 @@ namespace HPGMissionCompanion
             if (AudioFolder == null) AudioFolder = "";
             if (WorkFolder == null) WorkFolder = "";
             if (IndexTool == null) IndexTool = "";
-            if (string.IsNullOrEmpty(MissionUrl)) MissionUrl = Updates.DefaultMissionUrl;
             if (MissionFile == null) MissionFile = "";
             if (UpdateWhat != "mission" && UpdateWhat != "app") UpdateWhat = "both";
             MasterVolume = Math.Max(0, Math.Min(100, MasterVolume));

@@ -4,7 +4,7 @@ Static checks (`tools/check.js`) and the self-tests of the executable never prov
 
 ## Check for updates at every start (0.21, runtime PENDING)
 
-With the program 0.21 installed and a newer release published: close the program and start it again at once, twice in a row: both times the log has the lines of the check (`[INFO] Updates: ...`) and, with something newer, the small message in the corner and the amber button. Without internet the log says that the published program could not be read and no Google Drive address is tried; the button Check for updates still falls back to the Drive link for the mission.
+With the program 0.21 installed and a newer release published: close the program and start it again at once, twice in a row: both times the log has the lines of the check (`[INFO] Updates: ...`) and, with something newer, the small message in the corner and the amber button. Without internet the log says that the published mission and program could not be read; no other address is tried.
 
 ## Restart and uninstall without a shell (0.20, tested on dummy folders: --after-pid wait, silent install and uninstall with and without /removedata; runtime PENDING)
 
@@ -40,11 +40,11 @@ The mission speaks its checklist rows and its dispatch descriptions as `<text:KE
 
 Target and backup (0.11): with the pack of the user (a test copy `hpgmission\everywhere_all.json` and a folder `RANDOM AND EVERYWHERE` without everywhere_all.json) Check for updates names the mission file to create in `RANDOM AND EVERYWHERE`; Yes writes `RANDOM AND EVERYWHERE\everywhere_all.json` and leaves the test copy untouched; a second update keeps `everywhere_all-<release>-<time>.json.bak` beside it. The files of the Community pack are encrypted (EFS): the replacement must not fail with "the specified file could not be encrypted".
 
-1. `--check-updates report.txt --community <dummy Community> --index-file <GeneratedMissionIndex.json> --mission-url <Drive link> --github-mission <api url> --github-app <api url>`: the installed copies (title, release, size), the releases the index lists, the published mission by Range request and by GitHub, the program release. The dummy Community folder holds `hpg-x\hpgmission\<file>.json` with a head `{"title": "HEMS RANDOM AND EVERYWHERE MISSIONS 0.997 169.45", "id": "HEMSRandE"`.
+1. `--check-updates report.txt --community <dummy Community> --index-file <GeneratedMissionIndex.json> --github-mission <api url> --github-app <api url>`: the installed copies (title, release, size), the releases the index lists, the published mission and the program release (GitHub). The dummy Community folder holds `hpg-x\hpgmission\<file>.json` with a head `{"title": "HEMS RANDOM AND EVERYWHERE MISSIONS 0.997 169.45", "id": "HEMSRandE"`.
 2. `--test-replace <dummy installed file> --with <new file> --backup <dir>`: the backup holds the old file, the installed file is the new one and no `.part` file is left.
 3. The notes window: with a published release newer than the installed mission or program, the question shows the notes of each one (scroll to the end), "Not now" is the default button and closes without downloading; the Tools button "What's new..." shows the notes of the latest mission and program releases even when nothing is newer (an offline PC shows the error of each source and not a crash).
 4. The window: Tools, Check for updates with an older dummy file: the question names the mission and the program releases; Yes downloads the mission, replaces it, updates the index (tool of the Tools tab) and then starts the setup; the program closes and starts again with the new version. With nothing newer the log says "Nothing to update".
-4. Failures to try: no network, a Drive link that is not shared, a release without the asset, a truncated download (the file is refused and the old one stays).
+4. Failures to try: no network, a release without the asset, a truncated download (the file is refused and the old one stays).
 
 ## Status (2026-10-10, version 0.4)
 

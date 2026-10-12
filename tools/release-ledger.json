@@ -1,8 +1,8 @@
 {
-    "sha256":  "AFD6D425AF5A80091C41415FF889109D0243ECBB15D77121AD9A46DF730402EF",
-    "installerSha256":  "397BD4EF142195DD734A32D6726DD68EB2883D35A0634A47251DFC19087C1FA6",
+    "sha256":  "AC1861F65938B9133B40A2A2DBEBF81D30946992D1D33EEE4092B0983E29AFFA",
+    "installerSha256":  "02B6AEDF9EC041184F1F65DECCF0C251C5619695971F26C961F9B6B37D5B58BA",
     "deliveredOn":  "2026-10-13",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.21",
-    "note":  "Release 0.21: the automatic update check runs at every start (no 6 hour limit), GitHub only (the Google Drive link only for the button). Static check PASS; a scratch run confirmed that the check is no longer skipped within 6 hours of the last one. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.22",
+    "note":  "Release 0.22: Google Drive removed (the mission, the program and the voice pack are read from GitHub only; MissionUrl, --mission-url and the Drive reader are gone). Static check PASS; smoke test of --check-updates with the real settings file. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

@@ -1,5 +1,5 @@
-// HPG Mission Companion - updates: the installed R&E mission (file and mission index), the mission file published on Google Drive, the program release on GitHub.
-// Everything here runs only after the user presses "Check for updates"; there is no automatic check.
+// HPG Mission Companion - updates: the installed R&E mission (file and mission index), the mission, the program and the voice pack published as GitHub releases.
+// Everything is read from GitHub (no Google Drive: the user's decision, the old link is dead); a check runs at every start and on the button "Check for updates".
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -97,8 +97,8 @@ namespace HPGMissionCompanion
         public long Size;           // total bytes of the file on the server
         public string Url;
         public string Sha256;       // from the GitHub asset digest when it gives one
-        public string Source;       // "GitHub release" or "Google Drive link"
-        public string Notes;        // the body of the GitHub release (the user changelog of the build), null from the Drive link
+        public string Source;       // "GitHub release <tag>"
+        public string Notes;        // the body of the GitHub release (the user changelog of the build)
     }
 
     internal sealed class RemoteApp
@@ -130,7 +130,6 @@ namespace HPGMissionCompanion
     {
         public const string PackReleaseApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/tags/voicepack-EN";
         public const string PackAsset = "EN.xml";
-        public const string DefaultMissionUrl = "https://drive.google.com/uc?export=download&id=12A_yYb0hu7z7LrtUO-Cms2Ft4ua-BSij";
         public const string ReleasesApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/latest";
         public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
         public const string MissionAsset = "everywhere_all.json";
@@ -278,17 +277,7 @@ namespace HPGMissionCompanion
         }
 
         // ---- where the published mission is ---------------------------------------------------------
-        // GitHub release first (tag with the release, the asset everywhere_all.json with its size and sha256), then the Google Drive link as a fallback
-        public static RemoteMission ReadRemoteMissionAuto(string fallbackUrl, Action<string> log)
-        {
-            string githubError;
-            try { return ReadRemoteMissionGitHub(MissionReleasesApi); }
-            catch (Exception ex) { githubError = ex.Message; log("GitHub release of the mission: " + githubError); }
-            if (string.IsNullOrEmpty(fallbackUrl)) throw new InvalidOperationException(githubError);
-            try { return ReadRemoteMission(fallbackUrl); }
-            catch (Exception ex) { throw new InvalidOperationException("GitHub: " + githubError + " / Google Drive: " + ex.Message); }
-        }
-
+        // the GitHub release of the mission repository (tag with the release, the asset everywhere_all.json with its size and sha256)
         public static RemoteMission ReadRemoteMissionGitHub(string apiUrl)
         {
             Dictionary<string, object> d = GetJson(apiUrl);
@@ -350,37 +339,6 @@ namespace HPGMissionCompanion
             JavaScriptSerializer js = new JavaScriptSerializer();
             js.MaxJsonLength = int.MaxValue;
             return js.Deserialize<Dictionary<string, object>>(Net.GetString(url));
-        }
-
-        // ---- Google Drive: the published mission ----------------------------------------------------
-        // reads only the first bytes (HTTP Range) and the total size; falls back to the first bytes of a full response
-        public static RemoteMission ReadRemoteMission(string url)
-        {
-            HttpWebRequest req = Net.NewRequestPublic(url);
-            req.AddRange(0, HeadBytes - 1);
-            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
-            {
-                long total = resp.ContentLength;
-                string cr = resp.Headers["Content-Range"];
-                if (!string.IsNullOrEmpty(cr))
-                {
-                    int slash = cr.LastIndexOf('/');
-                    long t;
-                    if (slash >= 0 && long.TryParse(cr.Substring(slash + 1), out t)) total = t;
-                }
-                byte[] buf = new byte[HeadBytes];
-                int got = 0, n;
-                using (Stream s = resp.GetResponseStream())
-                    while (got < buf.Length && (n = s.Read(buf, got, buf.Length - got)) > 0) got += n;
-                string head = Encoding.UTF8.GetString(buf, 0, got).TrimStart((char)0xFEFF);
-                string title, id;
-                MissionRelease r;
-                if (!ParseHead(head, out title, out id) || id != MissionId || !MissionRelease.TryParse(title, out r))
-                    throw new InvalidOperationException("the link did not return the R&E mission (is the file shared with everyone who has the link, or is Google Drive limiting the downloads?)");
-                RemoteMission m = new RemoteMission();
-                m.Release = r; m.Title = title; m.Size = total; m.Url = url; m.Source = "Google Drive link";
-                return m;
-            }
         }
 
         // downloads the mission to dest (through dest.part, never a .json beside the missions), checks the size and the shape of the file
