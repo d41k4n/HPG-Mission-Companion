@@ -601,28 +601,28 @@
       <o>Wow, butterweich, Kapitän.</o>
     </message>
     <message key="CPL.42" actor="2" radio="auto" lvar="L:CPL{VCP}42" wav="AND.cpl.x.VNE.wav" sleep="0">
-      <o>V N E.</o>
-      <o>V N E.</o>
-      <o>V N E.</o>
-      <o>V N E.</o>
-      <o>V N E.</o>
-      <o>V N E.</o>
+      <o>Vii en ii.</o>
+      <o>Vii en ii.</o>
+      <o>Vii en ii.</o>
+      <o>Vii en ii.</o>
+      <o>Vii en ii.</o>
+      <o>Vii en ii.</o>
     </message>
     <message key="CPL.43" actor="2" radio="auto" lvar="L:CPL{VCP}43" wav="AND.cpl.x.VTOSS.wav" sleep="0">
-      <o>V TOSS.</o>
-      <o>V TOSS.</o>
-      <o>V TOSS.</o>
-      <o>V TOSS.</o>
-      <o>V TOSS.</o>
-      <o>V TOSS.</o>
+      <o>Vitoß.</o>
+      <o>Vitoß.</o>
+      <o>Vitoß.</o>
+      <o>Vitoß.</o>
+      <o>Vitoß.</o>
+      <o>Vitoß.</o>
     </message>
     <message key="CPL.44" actor="2" radio="auto" lvar="L:CPL{VCP}44" wav="AND.cpl.x.Vy.wav" sleep="0">
-      <o>V Y.</o>
-      <o>V Y.</o>
-      <o>V Y.</o>
-      <o>V Y.</o>
-      <o>V Y.</o>
-      <o>V Y.</o>
+      <o>Viiuaii.</o>
+      <o>Viiuaai.</o>
+      <o>Viiuaai.</o>
+      <o>Viiuaai.</o>
+      <o>Viiuaai.</o>
+      <o>Viiuaai.</o>
     </message>
     <message key="CPL.45" actor="2" radio="auto" lvar="L:CPL{VCP}45" wav="AND.cpl.x.we.crashed.wav" sleep="0">
       <o>Wir sind abgestürzt. Geht es allen gut?</o>
@@ -2454,11 +2454,11 @@
     </message>
     <message key="PAX3.5" actor="3" radio="auto" lvar="L:PAX3{VCP}5" wav="AND.pax3.gnd.ops.pls.standby.wav" sleep="0">
       <o>Wir benötigen Zeit für Maßnahmen am Boden. Bitte warten.</o>
-      <o>Wir brauchen etwas Zeit für die Versorgung am Boden. Standby.</o>
+      <o>Wir brauchen etwas Zeit für die Versorgung am Boden. Bitte warten.</o>
       <o>Maßnahmen am Boden brauchen Zeit. Bitte auf Empfang bleiben.</o>
       <o>Wir brauchen am Boden noch einen Moment. Bitte warten.</o>
       <o>Wir brauchen etwas Zeit für die Bodenmaßnahmen, bitte warten.</o>
-      <o>Gebt uns am Boden noch etwas Zeit, bitte standby.</o>
+      <o>Gebt uns am Boden noch etwas Zeit, bitte warten</o>
     </message>
     <message key="PAX3.6" actor="3" radio="auto" lvar="L:PAX3{VCP}6" wav="AND.pax3.hosppital.proposal.wav" sleep="0">
       <o>Ein mögliches Zielkrankenhaus ist auf dem Tablet hinterlegt. Wir können es später bestätigen oder ändern.</o>
@@ -2550,11 +2550,11 @@
     </message>
     <message key="PAX3.17" actor="3" radio="auto" lvar="L:PAX3{VCP}17" wav="AND.PAX3.wea.CPR.in.progress.wav" sleep="0">
       <o>Reanimation läuft. Bitte warten; das kann dauern.</o>
-      <o>Reanimation im Gange. Standby, das kann etwas dauern.</o>
+      <o>Reanimation im Gange. Bitte warten, das kann etwas dauern.</o>
       <o>Wir führen eine Reanimation durch. Bitte warten; das kann etwas dauern.</o>
       <o>Reanimation läuft. Bitte auf Empfang bleiben, das nimmt noch Zeit in Anspruch.</o>
-      <o>Wir reanimieren, kann noch etwas dauern, bitte standby.</o>
-      <o>HLW läuft noch, dauert eine Weile, bleibt auf Standby.</o>
+      <o>Wir reanimieren, kann noch etwas dauern, bitte warten.</o>
+      <o>Reanimation läuft noch, dauert eine Weile, bleibt auf Empfang.</o>
     </message>
     <message key="PAX3.18" actor="3" radio="auto" lvar="L:PAX3{VCP}18" wav="AND.PAX3.wea.land.for.CPR.wav">
       <o>Wir müssen für die Reanimation landen.</o>
@@ -2565,12 +2565,12 @@
       <o>Landen, sofort landen, wir müssen jetzt reanimieren!</o>
     </message>
     <message key="PAX3.19" actor="3" radio="auto" lvar="L:PAX3{VCP}19" wav="AND.PAX3.wea.lost.patient.wav" sleep="0">
-      <o>Wir haben den Patienten verloren. Todeszeitpunkt notieren und standby, während wir die Kabine sichern.</o>
-      <o>Wir haben den Patienten verloren. Wir notieren den Todeszeitpunkt. Bitte standby, während wir hinten sichern.</o>
-      <o>Der Patient ist verstorben. Todeszeitpunkt dokumentiert. Standby, während wir die Kabine sichern.</o>
-      <o>Wir haben den Patienten verloren. Standby, während wir die Todeszeit festhalten und die Kabine sichern.</o>
+      <o>Wir haben den Patienten verloren. Todeszeitpunkt notieren und warten, während wir die Kabine sichern.</o>
+      <o>Wir haben den Patienten verloren. Wir notieren den Todeszeitpunkt. Bitte warten, während wir hinten sichern.</o>
+      <o>Der Patient ist verstorben. Todeszeitpunkt dokumentiert. Bitte warten, während wir die Kabine sichern.</o>
+      <o>Wir haben den Patienten verloren. Bitte warten, während wir die Todeszeit festhalten und die Kabine sichern.</o>
       <o>Er hat es nicht geschafft. Ich notiere den Todeszeitpunkt, bitte kurz warten, bis die Kabine gesichert ist.</o>
-      <o>Wir haben den Patienten verloren, tut mir leid. Standby, während wir Zeit notieren und hinten klarschiff machen.</o>
+      <o>Wir haben den Patienten verloren, tut mir leid. Bitte warten, während wir Zeit notieren und hinten klarschiff machen.</o>
     </message>
     <message key="PAX3.20" actor="3" radio="auto" lvar="L:PAX3{VCP}20" wav="AND.PAX3.wea.patient.CPR.successful.wav" sleep="0">
       <o>Reanimation war erfolgreich. Patient hat wieder Spontankreislauf; wir sichern ihn für den Flug.</o>
