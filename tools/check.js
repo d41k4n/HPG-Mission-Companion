@@ -71,7 +71,8 @@ if (fs.existsSync(packDir)) {
   for (const f of fs.readdirSync(packDir).filter((n) => n.endsWith('.xml'))) {
     const text = read(path.join('voicepacks', f));
     const where = 'voicepacks/' + f;
-    if (/[^\x00-\x7F]/.test(text)) errors.push(`${where} has a non-ASCII character`);
+    // EN.xml is the base reference pack and must remain ASCII-only; localized packs (e.g. DE.xml) may use UTF-8
+    if (f === 'EN.xml' && /[^\x00-\x7F]/.test(text)) errors.push(`${where} has a non-ASCII character`);
     const head = text.match(/<voicepack\b[^>]*>/);
     if (!head) { errors.push(`${where}: no <voicepack> element`); continue; }
     const ver = (head[0].match(/\bversion="(\d+)"/) || [])[1];

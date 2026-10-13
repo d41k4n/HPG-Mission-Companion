@@ -110,6 +110,7 @@ namespace HPGMissionCompanion
             if (string.IsNullOrEmpty(tag)) return null;
             string t = tag.Trim().ToUpperInvariant();
             if (t == "US" || t == "GB" || t == "UK" || t == "EN" || t == "AU") return "EN";
+            if (t == "CH" || t == "GSW" || t == "DE-CH") return "DE";
             return t;
         }
     }
@@ -413,6 +414,7 @@ namespace HPGMissionCompanion
             }
             catch (Exception ex) { Ctx.Log("[ERROR] Windows voices: " + ex.Message); }
             if (Ctx.PiperInstalled) ScanPiper(list);
+            ScanStt4sg(list);
             list.Sort(delegate (VoiceInfo a, VoiceInfo b)
             {
                 int c = string.Compare(a.Family, b.Family, StringComparison.Ordinal);
@@ -549,6 +551,23 @@ namespace HPGMissionCompanion
             bool fa = a.Family == family, fb = b.Family == family;
             if (fa != fb) return fa;
             return a.Rank > b.Rank;
+        }
+
+        static void ScanStt4sg(List<VoiceInfo> list)
+        {
+            foreach (string dialect in Stt4sgEngine.Dialects)
+            {
+                VoiceInfo e = new VoiceInfo();
+                e.Id = "stt4sg:" + dialect;
+                e.Engine = "stt4sg";
+                e.Family = "de";
+                string label;
+                if (!Stt4sgEngine.DialectLabels.TryGetValue(dialect, out label)) label = dialect;
+                e.Display = label + " (STT4SG)";
+                e.Keys = new string[] { "stt4sg:" + dialect, dialect, "de_" + dialect, "ch_" + dialect, "stt4sg_" + dialect };
+                e.Rank = 4;
+                list.Add(e);
+            }
         }
 
         public static List<VoiceInfo> OfFamily(List<VoiceInfo> voices, string family)

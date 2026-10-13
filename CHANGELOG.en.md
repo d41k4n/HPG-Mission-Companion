@@ -2,6 +2,11 @@
 
 - Google Drive is gone from the program (the old link is dead and the mission is published on GitHub only): the mission is read from the GitHub release of the mission repository at every start and on the button Check for updates, with no fallback; the setting MissionUrl, the function that read the Drive link, the command line option --mission-url and the sentence about the Drive link in the Updates tab are removed (an old settings file that still holds MissionUrl is read without trouble). 0.21 had left the Drive link as a fallback of the button by mistake.
 
+### Changes in this fork
+- German voice pack (`voicepacks/DE.xml`): all mission messages and choices translated and checked; enables native German voice output for missions.
+- Swiss-German speech synthesis (STT4SG): added support for the FHNW STT4SG SpeechT5 service with 8 cantonal dialects (Aargau, Basel, Bern, Graubuenden, Luzern, St. Gallen, Valais, Zuerich) selectable directly under the German voice family. Includes on-the-fly text translation and dual caching (audio WAV files and text translations).
+- Translation helper scripts: `tools/export-for-translation.js` and `tools/apply-translation.js` to streamline voice pack export and import for community translations.
+
 ## Release 0.21
 
 - Check for updates at every start: the automatic check (option "Check for updates when the program starts", on by default) no longer waits 6 hours after the last check, so a release is announced the next time the program starts (a tester's 0.19 did not announce 0.20 because the last check was 5 h 35 min old). The 6 hours were meant for the Google Drive link, which has download limits: the automatic check now reads GitHub only (the mission release, the program release, the voice pack release) and never the Drive link; the button Check for updates still uses the Drive link as a fallback when GitHub cannot be read. The setting LastUpdateCheck stays in the settings file for information only.
