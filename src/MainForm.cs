@@ -597,6 +597,7 @@ namespace HPGMissionCompanion
         {
             VoiceLibrary.Refresh();
             VoicePacks.Refresh();
+            Synth.PruneOrphanedCache();
             LoadCatalogFromCache();
             sims = SimAutostart.Detect(simRoot);
             suppress = true;

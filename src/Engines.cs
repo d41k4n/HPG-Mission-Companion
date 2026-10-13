@@ -254,6 +254,7 @@ namespace HPGMissionCompanion
         static readonly object cacheLock = new object();
         static readonly Dictionary<string, string> textCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         static bool textCacheLoaded;
+        static bool textCacheLoadFailed;
 
         public static void ClearCache()
         {
@@ -261,6 +262,7 @@ namespace HPGMissionCompanion
             {
                 textCache.Clear();
                 textCacheLoaded = false;
+                textCacheLoadFailed = false;
             }
         }
 
@@ -280,6 +282,7 @@ namespace HPGMissionCompanion
             {
                 if (textCacheLoaded) return;
                 textCacheLoaded = true;
+                textCacheLoadFailed = false;
                 try
                 {
                     if (File.Exists(TranslationsFile))
@@ -296,7 +299,11 @@ namespace HPGMissionCompanion
                         }
                     }
                 }
-                catch (Exception ex) { Ctx.Log("[WARN] STT4SG load text cache: " + ex.Message); }
+                catch (Exception ex)
+                {
+                    textCacheLoadFailed = true;
+                    Ctx.Log("[WARN] STT4SG load text cache: " + ex.Message);
+                }
             }
         }
 
@@ -396,6 +403,61 @@ namespace HPGMissionCompanion
             return DownloadWav(url);
         }
 
+        public static int PruneOrphanedAudioFiles()
+        {
+            lock (cacheLock)
+            {
+                EnsureCacheLoaded();
+                if (textCacheLoadFailed) return 0;
+                if (!Directory.Exists(CacheDir)) return 0;
+
+                HashSet<string> validFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (KeyValuePair<string, string> kv in textCache)
+                {
+                    if (string.IsNullOrEmpty(kv.Key) || kv.Value == null) continue;
+                    int pipe = kv.Key.IndexOf('|');
+                    if (pipe <= 0 || pipe >= kv.Key.Length - 1) continue;
+                    string dialect = SafeDialect(kv.Key.Substring(0, pipe));
+                    string norm = kv.Key.Substring(pipe + 1);
+                    string chText = kv.Value;
+                    string hash = Hash(dialect + "|" + norm + "|" + chText);
+                    string expectedPath = Path.GetFullPath(Path.Combine(Path.Combine(CacheDir, dialect), hash + ".wav"));
+                    validFiles.Add(expectedPath);
+                }
+
+                int pruned = 0;
+                try
+                {
+                    foreach (string dialectDir in Directory.GetDirectories(CacheDir))
+                    {
+                        foreach (string wav in Directory.GetFiles(dialectDir, "*.wav"))
+                        {
+                            string fullWav = Path.GetFullPath(wav);
+                            if (!validFiles.Contains(fullWav))
+                            {
+                                try
+                                {
+                                    File.Delete(wav);
+                                    pruned++;
+                                }
+                                catch (Exception) { }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Ctx.Log("[WARN] STT4SG prune cache: " + ex.Message);
+                }
+
+                if (pruned > 0)
+                {
+                    Ctx.Log("[CACHE] Pruned " + pruned + " orphaned STT4SG audio file(s)");
+                }
+                return pruned;
+            }
+        }
+
         public static byte[] Render(VoiceInfo v, double speed, string text)
         {
             if (string.IsNullOrEmpty(text)) return new byte[0];
@@ -407,7 +469,9 @@ namespace HPGMissionCompanion
             dialect = SafeDialect(dialect);
 
             string norm = text.Trim();
-            string hash = Hash(dialect + "|" + norm);
+            // Translate first (using memory/disk cache, or Gradio API on miss)
+            string chText = Translate(norm, dialect);
+            string hash = Hash(dialect + "|" + norm + "|" + chText);
             string dDir = Path.Combine(CacheDir, dialect);
             string wavFile = Path.Combine(dDir, hash + ".wav");
 
@@ -420,9 +484,6 @@ namespace HPGMissionCompanion
                 }
                 catch (Exception) { }
             }
-
-            // Not in audio cache: translate first
-            string chText = Translate(norm, dialect);
 
             // Generate speech audio
             byte[] wav = Synthesize(chText, dialect);
@@ -595,6 +656,11 @@ namespace HPGMissionCompanion
             Stt4sgEngine.ClearCache();
             ClearCache();
             return files;
+        }
+
+        public static int PruneOrphanedCache()
+        {
+            return Stt4sgEngine.PruneOrphanedAudioFiles();
         }
     }
 
