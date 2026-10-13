@@ -204,6 +204,8 @@ namespace HPGMissionCompanion
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
         readonly Label noiseLabel = new Label();
+        readonly TrackBar radioNoiseBar = new TrackBar();
+        readonly Label radioNoiseLabel = new Label();
         readonly ComboBox beepBox = new ComboBox();
         readonly TrackBar beepBar = new TrackBar();
         readonly Label beepLabel = new Label();
@@ -1838,27 +1840,40 @@ namespace HPGMissionCompanion
         void BuildRadioTab()
         {
             TabPage page = new TabPage("Radio effect");
+            page.AutoScroll = true;
             tabs.TabPages.Add(page);
             RadioSettings rs = Ctx.Settings.Radio;
-            Lbl(page, "Three sounds. The intercom (ICS) of the helicopter: a click and the hiss set here. A radio call (<radio>): the beep set here, the hiss + 10, a band filter like a radio speaker " +
-                "and a short squelch burst at the end. A call on an external radio (<radio:ext>, the dispatcher and the hospital): a double beep and the hiss + 20. Without a tag the voice is clean. " +
-                "These values are the same for every voice.", 10, 12, 706, 62);
+            Lbl(page, "Three sounds. The intercom (ICS) of the helicopter: a click and the hiss set here. A radio call (<radio>): the beep set here, the radio hiss set here, a band filter like a radio speaker " +
+                "and a short squelch burst at the end. A call on an external radio (<radio:ext>, the dispatcher and the hospital): a double beep and the radio hiss + 10. Without a tag the voice is clean. " +
+                "These values are the same for every voice.", 10, 10, 696, 52);
 
-            Lbl(page, "Hiss (intercom):", 10, 82, 0, 0);
+            Lbl(page, "Hiss (intercom):", 10, 80, 0, 0);
             noiseBar.Minimum = 0; noiseBar.Maximum = 100; noiseBar.TickFrequency = 10; noiseBar.LargeChange = 10;
             noiseBar.Value = rs.NoiseLevel;
-            noiseBar.Location = new Point(190, 74);
+            noiseBar.Location = new Point(190, 68);
             noiseBar.Size = new Size(300, 36);
             noiseBar.ValueChanged += delegate { noiseLabel.Text = noiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.NoiseLevel = noiseBar.Value; MarkDirty(); } };
             page.Controls.Add(noiseBar);
             noiseLabel.Text = rs.NoiseLevel + "%";
             noiseLabel.AutoSize = true;
-            noiseLabel.Location = new Point(496, 82);
+            noiseLabel.Location = new Point(496, 80);
             page.Controls.Add(noiseLabel);
 
-            Lbl(page, "Start beep (radio):", 10, 130, 0, 0);
+            Lbl(page, "Hiss (radio):", 10, 132, 0, 0);
+            radioNoiseBar.Minimum = 0; radioNoiseBar.Maximum = 100; radioNoiseBar.TickFrequency = 10; radioNoiseBar.LargeChange = 10;
+            radioNoiseBar.Value = rs.RadioNoiseLevel;
+            radioNoiseBar.Location = new Point(190, 120);
+            radioNoiseBar.Size = new Size(300, 36);
+            radioNoiseBar.ValueChanged += delegate { radioNoiseLabel.Text = radioNoiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.RadioNoiseLevel = radioNoiseBar.Value; MarkDirty(); } };
+            page.Controls.Add(radioNoiseBar);
+            radioNoiseLabel.Text = rs.RadioNoiseLevel + "%";
+            radioNoiseLabel.AutoSize = true;
+            radioNoiseLabel.Location = new Point(496, 132);
+            page.Controls.Add(radioNoiseLabel);
+
+            Lbl(page, "Start beep (radio):", 10, 176, 0, 0);
             beepBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            beepBox.Location = new Point(190, 126);
+            beepBox.Location = new Point(190, 172);
             beepBox.Width = 160;
             foreach (string b in AudioFx.BeepTypes) beepBox.Items.Add(b);
             beepBox.SelectedItem = rs.Beep;
@@ -1866,54 +1881,54 @@ namespace HPGMissionCompanion
             beepBox.SelectedIndexChanged += delegate { if (!suppress && beepBox.SelectedItem != null) { Ctx.Settings.Radio.Beep = (string)beepBox.SelectedItem; MarkDirty(); } };
             page.Controls.Add(beepBox);
 
-            Lbl(page, "Beep volume:", 10, 174, 0, 0);
+            Lbl(page, "Beep volume:", 10, 214, 0, 0);
             beepBar.Minimum = 0; beepBar.Maximum = 100; beepBar.TickFrequency = 10; beepBar.LargeChange = 10;
             beepBar.Value = rs.BeepLevel;
-            beepBar.Location = new Point(190, 166);
+            beepBar.Location = new Point(190, 202);
             beepBar.Size = new Size(300, 36);
             beepBar.ValueChanged += delegate { beepLabel.Text = beepBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.BeepLevel = beepBar.Value; MarkDirty(); } };
             page.Controls.Add(beepBar);
             beepLabel.Text = rs.BeepLevel + "%";
             beepLabel.AutoSize = true;
-            beepLabel.Location = new Point(496, 174);
+            beepLabel.Location = new Point(496, 214);
             page.Controls.Add(beepLabel);
 
             tailCheck.Text = "Squelch burst when the transmission ends";
             tailCheck.AutoSize = true;
             tailCheck.Checked = rs.Tail;
-            tailCheck.Location = new Point(10, 218);
+            tailCheck.Location = new Point(10, 254);
             tailCheck.CheckedChanged += delegate { if (!suppress) { Ctx.Settings.Radio.Tail = tailCheck.Checked; MarkDirty(); } };
             page.Controls.Add(tailCheck);
 
-            Lbl(page, "Radio sound:", 10, 254, 0, 0);
+            Lbl(page, "Radio sound:", 10, 284, 0, 0);
             qualityBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            qualityBox.Location = new Point(190, 250);
+            qualityBox.Location = new Point(190, 280);
             qualityBox.Width = 160;
             foreach (string q in AudioFx.Qualities) qualityBox.Items.Add(q);
             qualityBox.SelectedItem = rs.Quality;
             if (qualityBox.SelectedIndex < 0) qualityBox.SelectedItem = "Aviation";
             qualityBox.SelectedIndexChanged += delegate { if (!suppress && qualityBox.SelectedItem != null) { Ctx.Settings.Radio.Quality = (string)qualityBox.SelectedItem; MarkDirty(); } };
             page.Controls.Add(qualityBox);
-            Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 282, 0, 0).ForeColor = SystemColors.GrayText;
+            Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 308, 0, 0).ForeColor = SystemColors.GrayText;
 
-            Button withRadio = Btn(page, "Radio call", 10, 316, 130, 32);
+            Button withRadio = Btn(page, "Radio call", 10, 330, 130, 30);
             withRadio.Click += delegate { TestRadio("<radio>"); };
-            Button ics = Btn(page, "Intercom (ICS)", 150, 316, 130, 32);
+            Button ics = Btn(page, "Intercom (ICS)", 150, 330, 130, 30);
             ics.Click += delegate { TestRadio("<ics>"); };
-            Button ext = Btn(page, "External radio", 290, 316, 130, 32);
+            Button ext = Btn(page, "External radio", 290, 330, 130, 30);
             ext.Click += delegate { TestRadio("<radio:ext>"); };
-            Button without = Btn(page, "Clean voice", 430, 316, 130, 32);
+            Button without = Btn(page, "Clean voice", 430, 330, 130, 30);
             without.Click += delegate { TestRadio("<radio:off>"); };
 
-            Lbl(page, "In the mission text:", 10, 364, 0, 0);
-            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 384, 0, 0);
-            Lbl(page, "<ics>Pilot to crew, intercom.", 30, 402, 0, 0);
-            Lbl(page, "<radio:ext>Dispatcher call, external radio.", 30, 420, 0, 0);
-            Lbl(page, "<radio:off>Back to the clean voice.     <zone:far>  a voice heard very low (30 to 100 m away).", 30, 438, 0, 0);
+            Lbl(page, "In the mission text:", 10, 368, 0, 0);
+            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 388, 0, 0);
+            Lbl(page, "<ics>Pilot to crew, intercom.", 30, 405, 0, 0);
+            Lbl(page, "<radio:ext>Dispatcher call, external radio.", 30, 422, 0, 0);
+            Lbl(page, "<radio:off>Back to the clean voice.     <zone:far>  a voice heard very low (30 to 100 m away).", 30, 439, 0, 0);
             Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 456, 0, 0);
-            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 474, 0, 0);
+            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 473, 0, 0);
             Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Volume tab. " +
-                "Who hears what (intercom, radio, voice, silence) is decided by the program from the context of the mission, see the guide of the About tab.", 10, 500, 706, 40).ForeColor = SystemColors.GrayText;
+                "Who hears what (intercom, radio, voice, silence) is decided by the program from the context of the mission, see the guide of the About tab.", 10, 496, 696, 40).ForeColor = SystemColors.GrayText;
         }
 
         // ---- volume tab --------------------------------------------------------------------------

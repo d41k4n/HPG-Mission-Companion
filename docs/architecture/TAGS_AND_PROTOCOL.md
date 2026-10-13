@@ -25,9 +25,9 @@ Tags are written in angle brackets, or in square brackets with the same meaning.
 | `<Microsoft David>`, `<ryan>`, `<en_US-ryan-medium>`, `<voice:ryan>` | a voice by name (exact name first, then part of a name; the language of the text wins, then the best quality); it forces the voice |
 | `<speed:1.2>` (also `<rate:..>`) | speed 0.5 to 3.0; it forces the speed, otherwise the actor's slider is used (1.0 for a forced voice with no actor) |
 | `<vol:60>` (also `<volume:..>`) | volume 0 to 100 of the text; the gain is the volume times the master volume of the Volume tab; without the tag 100 |
-| `<radio>`, `<radio:on>`, `<radio:off>` | radio call on or off: beep of the user, hiss of the user + 10, band filter, squelch tail; without the tag the voice is clean |
-| `<ics>`, `<ics:off>` | the wired intercom of the helicopter: a click, no beep, the hiss of the user, no squelch tail |
-| `<radio:ext>` | a call on an external radio (dispatcher, hospital): double beep, hiss of the user + 20, squelch tail |
+| `<radio>`, `<radio:on>`, `<radio:off>` | radio call on or off: beep of the user, radio hiss of the user, band filter, squelch tail; without the tag the voice is clean |
+| `<ics>`, `<ics:off>` | the wired intercom of the helicopter: a click, no beep, the intercom hiss of the user, no squelch tail |
+| `<radio:ext>` | a call on an external radio (dispatcher, hospital): double beep, radio hiss of the user + 10, squelch tail |
 | `<zone:far>`, `<zone:near>` | a voice heard from inside that comes from 30 to 100 m away: very low (-20 dB); `near` cancels it. The program adds it itself from `L:HMC_ZONE_*` |
 | `<beep:double>` | optional beep type of the radio effect for the text: `none`, `click`, `beep`, `double`, `chirp` (or 0-4); without it the type chosen in the Radio effect tab |
 | `<radio:chirp>` | shortcut: radio on with that beep type |

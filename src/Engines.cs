@@ -834,18 +834,18 @@ namespace HPGMissionCompanion
             PlayBytes(item, fx, null, cat);
         }
 
-        // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the hiss + 10 and the beep of the user (or the one of
-        // the tag); an external radio call the hiss + 20 and a double beep (RadioRules)
+        // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the radio hiss and the beep of the user (or the one of
+        // the tag); an external radio call the radio hiss + 10 and a double beep (RadioRules)
         static RadioSettings FxSettings(Plan p)
         {
             RadioSettings b = Ctx.Settings.Radio;
             RadioSettings rs = new RadioSettings();
-            rs.NoiseLevel = b.NoiseLevel; rs.BeepLevel = b.BeepLevel; rs.Tail = b.Tail; rs.Quality = b.Quality; rs.Beep = b.Beep;
+            rs.NoiseLevel = b.NoiseLevel; rs.RadioNoiseLevel = b.RadioNoiseLevel; rs.BeepLevel = b.BeepLevel; rs.Tail = b.Tail; rs.Quality = b.Quality; rs.Beep = b.Beep;
             if (p.Fx == "ics") { rs.Beep = RadioRules.IcsBeep; rs.Tail = false; }
-            else if (p.Fx == "ext") { rs.Beep = RadioRules.ExternalBeep; rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.ExternalHissExtra); }
+            else if (p.Fx == "ext") { rs.Beep = RadioRules.ExternalBeep; rs.NoiseLevel = Math.Min(100, b.RadioNoiseLevel + RadioRules.RadioHissExtra); }
             else
             {
-                rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.RadioHissExtra);
+                rs.NoiseLevel = b.RadioNoiseLevel;
                 if (p.Beep != null) rs.Beep = p.Beep;
             }
             return rs;

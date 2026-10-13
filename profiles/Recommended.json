@@ -6,6 +6,7 @@
   "MasterVolume": 100,
   "Radio": {
     "NoiseLevel": 15,
+    "RadioNoiseLevel": 25,
     "Beep": "Click",
     "BeepLevel": 75,
     "Tail": true,
