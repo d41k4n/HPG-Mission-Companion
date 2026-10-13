@@ -255,6 +255,15 @@ namespace HPGMissionCompanion
         static readonly Dictionary<string, string> textCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         static bool textCacheLoaded;
 
+        public static void ClearCache()
+        {
+            lock (cacheLock)
+            {
+                textCache.Clear();
+                textCacheLoaded = false;
+            }
+        }
+
         public static string CacheDir
         {
             get { return Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache", "stt4sg"); }
@@ -548,6 +557,44 @@ namespace HPGMissionCompanion
                 }
             }
             return wav;
+        }
+
+        public static void ClearCache()
+        {
+            lock (cache)
+            {
+                cache.Clear();
+                order.Clear();
+                cacheBytes = 0;
+            }
+        }
+
+        public static int PurgeCache(out long bytesFreed)
+        {
+            bytesFreed = 0;
+            int files = 0;
+            string cacheDir = Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache");
+            if (Directory.Exists(cacheDir))
+            {
+                try
+                {
+                    foreach (string f in Directory.GetFiles(cacheDir, "*", SearchOption.AllDirectories))
+                    {
+                        try
+                        {
+                            FileInfo fi = new FileInfo(f);
+                            bytesFreed += fi.Length;
+                            files++;
+                        }
+                        catch (Exception) { }
+                    }
+                    Directory.Delete(cacheDir, true);
+                }
+                catch (Exception ex) { Ctx.Log("[ERROR] Purge cache: " + ex.Message); }
+            }
+            Stt4sgEngine.ClearCache();
+            ClearCache();
+            return files;
         }
     }
 

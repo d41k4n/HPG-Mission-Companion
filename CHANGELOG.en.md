@@ -6,6 +6,7 @@
 - German voice pack (`voicepacks/DE.xml`): all mission messages and choices translated and checked; enables native German voice output for missions.
 - Swiss-German speech synthesis (STT4SG): added support for the FHNW STT4SG SpeechT5 service with 8 cantonal dialects (Aargau, Basel, Bern, Graubuenden, Luzern, St. Gallen, Valais, Zuerich) selectable directly under the German voice family. Includes on-the-fly text translation and dual caching (audio WAV files and text translations).
 - Translation helper scripts: `tools/export-for-translation.js` and `tools/apply-translation.js` to streamline voice pack export and import for community translations.
+- Purge audio cache: added button under Advanced in the Service tab (and `--purge-cache` command-line switch) to clear cached speech WAVs and dialect translations.
 
 ## Release 0.21
 

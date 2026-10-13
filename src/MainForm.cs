@@ -811,6 +811,49 @@ namespace HPGMissionCompanion
             readyCheck.CheckedChanged += delegate { Ctx.Settings.ReadyAnnounce = readyCheck.Checked; if (!suppress) MarkDirty(); };
             new ToolTip().SetToolTip(readyCheck, "When the program starts minimized and the simulator is running, the pilot says that the program is ready.");
             advBox.Controls.Add(readyCheck);
+            Button purgeCache = Btn(advBox, "Purge audio cache", 444, 46, 126, 24);
+            new ToolTip().SetToolTip(purgeCache, "Deletes cached generated speech and dialect translations in audio\\cache.");
+            purgeCache.Click += delegate
+            {
+                string cacheDir = Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache");
+                int fileCount = 0;
+                long totalBytes = 0;
+                if (Directory.Exists(cacheDir))
+                {
+                    try
+                    {
+                        foreach (string f in Directory.GetFiles(cacheDir, "*", SearchOption.AllDirectories))
+                        {
+                            try
+                            {
+                                FileInfo fi = new FileInfo(f);
+                                totalBytes += fi.Length;
+                                fileCount++;
+                            }
+                            catch (Exception) { }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+                if (fileCount == 0)
+                {
+                    MessageBox.Show("The audio cache is currently empty.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                string sizeStr = totalBytes >= 1048576 ? (totalBytes / 1048576.0).ToString("0.1", CultureInfo.InvariantCulture) + " MB" : ((totalBytes + 1023) / 1024) + " KB";
+                DialogResult res = MessageBox.Show(
+                    "Purge audio cache (" + fileCount + " file" + (fileCount == 1 ? "" : "s") + ", " + sizeStr + ")?\n\nThis deletes all synthesized audio and dialect translations in audio\\cache.",
+                    Text,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (res != DialogResult.Yes) return;
+                long freed;
+                int deleted = Synth.PurgeCache(out freed);
+                string freedStr = freed >= 1048576 ? (freed / 1048576.0).ToString("0.1", CultureInfo.InvariantCulture) + " MB" : ((freed + 1023) / 1024) + " KB";
+                AppendLog("[CACHE] Purged audio cache: " + deleted + " files (" + freedStr + ") deleted");
+                MessageBox.Show("Audio cache purged (" + deleted + " file" + (deleted == 1 ? "" : "s") + ", " + freedStr + " freed).", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+
             Button openLogs = Btn(advBox, "Open log folder", 578, 46, 120, 24);
             openLogs.Click += delegate
             {

@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -54,6 +55,15 @@ namespace HPGMissionCompanion
             if (portArg != null && int.TryParse(portArg, out port)) Ctx.Settings.Port = port;
             string audioArg = Option(args, "--audio");
             Ctx.AudioDir = audioArg != null ? audioArg : (string.IsNullOrEmpty(Ctx.Settings.AudioFolder) ? Path.Combine(Ctx.BaseDir, "audio") : Ctx.Settings.AudioFolder);
+
+            if (Has(args, "--purge-cache"))
+            {
+                long bytes;
+                int count = Synth.PurgeCache(out bytes);
+                string sizeStr = bytes >= 1048576 ? (bytes / 1048576.0).ToString("0.1", CultureInfo.InvariantCulture) + " MB" : ((bytes + 1023) / 1024) + " KB";
+                Console.WriteLine("Purged audio cache: " + count + " file(s), " + sizeStr + " freed.");
+                return 0;
+            }
 
             if (autostartTest != null && simRoot != null)
             {
