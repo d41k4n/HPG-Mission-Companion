@@ -31,13 +31,19 @@ endlocal & set RC=%ERRORLEVEL%
 goto :eof
 
 :copydll
-if exist "C:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" (
-  copy /y "C:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
-  goto :eof
+for %%D in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+  if exist "%%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" (
+    echo Copying SimConnect.dll from %%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll
+    copy /y "%%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
+    goto :eof
+  )
 )
-if exist "C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" (
-  copy /y "C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
-  goto :eof
+for %%D in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+  if exist "%%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" (
+    echo Copying SimConnect.dll from %%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll
+    copy /y "%%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
+    goto :eof
+  )
 )
 echo WARNING: MSFS SDK not found, SimConnect.dll was not copied
 goto :eof
