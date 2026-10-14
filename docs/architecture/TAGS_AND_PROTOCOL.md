@@ -27,7 +27,7 @@ Tags are written in angle brackets, or in square brackets with the same meaning.
 | `<vol:60>` (also `<volume:..>`) | volume 0 to 100 of the text; the gain is the volume times the master volume of the Volume tab; without the tag 100 |
 | `<radio>`, `<radio:on>`, `<radio:off>` | radio call on or off: beep of the user, radio hiss of the user, band filter, squelch tail; without the tag the voice is clean |
 | `<ics>`, `<ics:off>` | the wired intercom of the helicopter: a click, no beep, the intercom hiss of the user, no squelch tail |
-| `<radio:ext>` | a call on an external radio (dispatcher, hospital): double beep, radio hiss of the user + 10, squelch tail |
+| `<radio:ext>` | a call on an external radio (dispatcher, hospital): double beep, external radio hiss of the user, squelch tail |
 | `<zone:far>`, `<zone:near>` | a voice heard from inside that comes from 30 to 100 m away: very low (-20 dB); `near` cancels it. The program adds it itself from `L:HMC_ZONE_*` |
 | `<beep:double>` | optional beep type of the radio effect for the text: `none`, `click`, `beep`, `double`, `chirp` (or 0-4); without it the type chosen in the Radio effect tab |
 | `<radio:chirp>` | shortcut: radio on with that beep type |

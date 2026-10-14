@@ -31,7 +31,7 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
   <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
   <radio:chirp>            shortcut: radio on with that beep type
   <ics> / <ics:off>        the wired intercom of the helicopter: a click, no beep, the intercom hiss of the Radio effect tab, no squelch tail
-  <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, radio hiss + 10, squelch tail
+  <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, external radio hiss, squelch tail
   <zone:far>               a voice that comes from 30 to 100 m away, heard very low (the program adds it from the zone variables)
   <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language
   <defaultactor:11>        from now on every text without an actor tag is spoken by actor 11 (the HEMS mission sends it once, for its checklists); <defaultactor:off> ends it

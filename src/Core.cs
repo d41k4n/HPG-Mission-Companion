@@ -25,6 +25,7 @@ namespace HPGMissionCompanion
     {
         public int NoiseLevel = 20;        // 0-100, hiss under the speech (intercom)
         public int RadioNoiseLevel = 30;   // 0-100, hiss under radio calls
+        public int ExtRadioNoiseLevel = 35; // 0-100, hiss under external radio calls
         public string Beep = "Beep";       // None, Click, Beep, Double beep, Chirp
         public int BeepLevel = 50;         // 0-100
         public bool Tail = true;           // squelch burst when the transmission ends
@@ -209,6 +210,7 @@ namespace HPGMissionCompanion
             if (Radio == null) Radio = new RadioSettings();
             Radio.NoiseLevel = Math.Max(0, Math.Min(100, Radio.NoiseLevel));
             Radio.RadioNoiseLevel = Math.Max(0, Math.Min(100, Radio.RadioNoiseLevel));
+            Radio.ExtRadioNoiseLevel = Math.Max(0, Math.Min(100, Radio.ExtRadioNoiseLevel));
             Radio.BeepLevel = Math.Max(0, Math.Min(100, Radio.BeepLevel));
             if (string.IsNullOrEmpty(Radio.Beep)) Radio.Beep = "Beep";
             if (string.IsNullOrEmpty(Radio.Quality)) Radio.Quality = "Aviation";

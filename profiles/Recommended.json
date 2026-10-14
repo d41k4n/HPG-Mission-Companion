@@ -7,6 +7,7 @@
   "Radio": {
     "NoiseLevel": 15,
     "RadioNoiseLevel": 25,
+    "ExtRadioNoiseLevel": 30,
     "Beep": "Click",
     "BeepLevel": 75,
     "Tail": true,
