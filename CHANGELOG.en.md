@@ -2,6 +2,9 @@
 
 - Voice pack EN 13: the tips of the crew about the functions of the mission (user request of 2026-10-14), 44 new messages TIP.<topic>.1 to 4 for eleven topics (saves, mission list presets, settings profiles, crew health, kit weights, quick links, debug snapshots, medical options, failures, crew chatter, how to switch the tips off) in the groups tip<topic>: six options each (neutral and complete, friendlier, playful), none silent and not futile, because the mission decides with its own setting CREW TIPS (mission 169.53), independent from CREW CHATTER. The program changes nothing in the code of the tags: the messages are spoken like the others, with the options limited by L:HMC_CHAT_MAX. The texts that start the messages are in tools/variants-EN/tips.json. Scenario tests/tips-lines.txt (--expand --lines).
 
+### Changes in this fork
+- German voice pack (`voicepacks/DE.xml` v2): all mission messages, choices and the new crew tips (`TIP.*`, matching EN v13) translated and checked; minor text tweaks.
+
 ## Release 0.23
 
 - A reduced crew: a text message of a seat that the flight does not have (L:HMC_CREW_EXIST, for example HEMS1 and HEMS2 with 3 crew; tester report 2026-10-14, the PAX1 lines spoken by actor 4 with 3 crew) is said by a crew member who is there, with that member's voice: HEMS1 to doctor, HEMS2, copilot, pilot; HEMS2 to HEMS1, doctor, copilot, pilot; doctor to HEMS1, HEMS2, copilot, pilot; copilot to pilot, doctor, HEMS1, HEMS2; a member who cannot speak (L:HMC_CREW_MUTE) is skipped, and nobody left means the line is not said (log: is not in this crew). The messages that are only a wav file and a crew with L:HMC_CREW_EXIST not published are not changed. Scenario tests/crew-standin-lines.txt (--expand --lines).

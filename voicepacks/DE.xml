@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="1" basever="12" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="2" basever="13" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -3590,7 +3590,7 @@
       <o>Checkliste nach dem Triebwerksstart, Teil zwei!</o>
     </message>
     <message key="CHK.afterengstartckl2.02" text="1" actor="11" trigger="checklist afterengstartckl2">
-      <o>AP1 und AP2 aktivieren und Backup durchführen!</o>
+      <o>AP1,AP2 und Backup aktivieren!</o>
     </message>
     <message key="CHK.afterengstartckl2.03" text="1" actor="11" trigger="checklist afterengstartckl2">
       <o>Prüfen Sie auf dem FNDAFCS-Streifen, ob 3 grüne Rechtecke angezeigt werden!</o>
@@ -5528,4 +5528,356 @@
       <o>Fahrzeug: {0} {1}.</o>
     </message>
   <!-- MISSION TEXTS END -->
+    <message key="TIP.SAV.1" actor="2" radio="auto" group="tipsav" seq="1" new="1" trigger="tip of the crew: saves of the mission">
+      <o>Tipp für den Piloten: Sie können die Mission über die Einsatzseite speichern. Öffnen Sie die Quicklinks, dann Mission speichern oder neu laden.</o>
+      <o>Tipp für den Piloten: Sie können die Mission über die Einsatzseite speichern. Öffnen Sie die Quicklinks, dann Mission speichern oder neu laden.</o>
+      <o>Übrigens, wussten Sie, dass das Tablet die ganze Mission speichern kann? Quicklinks, dann Mission speichern oder neu laden.</o>
+      <o>Übrigens, wussten Sie, dass das Tablet die ganze Mission speichern kann? Quicklinks, dann Mission speichern oder neu laden.</o>
+      <o>Hey Chef, das Tablet hat eine Speicherfunktion. Quicklinks, Mission speichern oder neu laden. Nur so als Tipp.</o>
+      <o>Psst, Chef. In den Quicklinks versteckt sich eine Speicherfunktion. Mission speichern oder neu laden. Sehr praktisch, wenn der Kaffee kalt wird.</o>
+    </message>
+    <message key="TIP.SAV.2" actor="3" radio="auto" group="tipsav" seq="2" new="1">
+      <o>Es gibt drei Speicherplätze und ein automatisches Speichern. Geben Sie zuerst einen Namen ein, der Name ist Pflicht.</o>
+      <o>Es gibt drei Speicherplätze und ein automatisches Speichern. Geben Sie zuerst einen Namen ein, der Name ist Pflicht.</o>
+      <o>Drei Speicherplätze plus automatische Speicherung. Sie müssen zuerst einen Namen eingeben, sonst wird nicht gespeichert.</o>
+      <o>Drei Speicherplätze plus automatische Speicherung. Sie müssen zuerst einen Namen eingeben, sonst wird nicht gespeichert.</o>
+      <o>Drei Speicherplätze plus automatische Speicherung. Und es braucht unbedingt einen Namen, da ist das System sehr strikt.</o>
+      <o>Drei Speicherplätze und ein automatische Speicherung. Geben Sie jeweils einen netten Namen, anonyme Missionen mag das System nicht.</o>
+    </message>
+    <message key="TIP.SAV.3" actor="2" radio="auto" group="tipsav" seq="3" new="1">
+      <o>Achtung: Das Speichern ist deaktiviert, sobald Boden- oder Windenoperationen begonnen haben. Vorher oder nachher speichern.</o>
+      <o>Achtung: Das Speichern ist deaktiviert, sobald Boden- oder Windenoperationen begonnen haben. Vorher oder nachher speichern.</o>
+      <o>Ein Haken: Sobald die Boden- oder Windenarbeit läuft, geht kein Speichern. Machen Sie es vorher oder wenn alles erledigt ist.</o>
+      <o>Ein Haken: Sobald die Boden- oder Windenarbeit läuft, geht kein Speichern. Machen Sie es vorher oder wenn alles erledigt ist.</o>
+      <o>Ein Haken: Wenn wir am Patienten oder an der Winde arbeiten, ist Speichern gesperrt. Also vorher oder nachher.</o>
+      <o>Und kein Speichern mitten in der Action. Nicht, während wir an der Winde hängen oder beim Patienten sind. Bitte vorher oder nachher.</o>
+    </message>
+    <message key="TIP.SAV.4" actor="3" radio="auto" group="tipsav" seq="4" new="1">
+      <o>Und falls ein Flug schiefgeht: Letzte angenommene Mission neu laden lädt den zuletzt angenommenen Einsatz erneut.</o>
+      <o>Und falls ein Flug schiefgeht: Letzte angenommene Mission neu laden lädt den zuletzt angenommenen Einsatz erneut.</o>
+      <o>Und wenn ein Flug mal danebengeht, gibt es noch Letzte angenommene Mission neu laden.</o>
+      <o>Und wenn ein Flug mal danebengeht, gibt es noch Letzte angenommene Mission neu laden.</o>
+      <o>Und wenn alles schiefgeht, hilft Letzte angenommene Mission neu laden. Wir erwähnen es auch nie wieder.</o>
+      <o>Und falls Sie die Kufen verbiegen: Letzte angenommene Mission neu laden. Wir tun alle so, als wäre nichts passiert.</o>
+    </message>
+    <message key="TIP.MSL.1" actor="2" radio="auto" group="tipmsl" seq="1" new="1" trigger="tip of the crew: mission list presets">
+      <o>Noch ein Tipp: Die Missionsliste hat Voreinstellungen. Ein Standardprofil und die Profile 1 bis 5.</o>
+      <o>Noch ein Tipp: Die Missionsliste hat Voreinstellungen. Ein Standardprofil und die Profile 1 bis 5.</o>
+      <o>Wussten Sie schon, dass die Missionsliste Voreinstellungen hat? Standard und die Voreinstellungen 1 bis 5.</o>
+      <o>Wussten Sie schon, dass die Missionsliste Voreinstellungen hat? Standard und die Voreinstellungen 1 bis 5.</o>
+      <o>Chef, haben Sie die Voreinstellungen der Missionsliste gesehen? Standard und Profile 1 bis 5.</o>
+      <o>Interessante Sache: Die Missionsliste hat Voreinstellungen. Standard plus fünf weitere. Notfälle bestellen wie von der Speisekarte.</o>
+    </message>
+    <message key="TIP.MSL.2" actor="3" radio="auto" group="tipmsl" seq="2" new="1">
+      <o>In jeder Voreinstellung bestimmen Sie, welche Einsätze zufällig erscheinen. Sie können nach Typ filtern, etwa Verkehrsunfälle, Notfälle oder Suchaktionen.</o>
+      <o>In jeder Voreinstellung bestimmen Sie, welche Einsätze zufällig erscheinen. Sie können nach Typ filtern, etwa Verkehrsunfälle, Notfälle oder Suchaktionen.</o>
+      <o>Jede Voreinstellung legt fest, welche Missionen zufällig kommen. Sie können nach Typ filtern und jede Mission aktivieren oder deaktivieren.</o>
+      <o>Jede Voreinstellung legt fest, welche Missionen zufällig kommen. Sie können nach Typ filtern und jede Mission aktivieren oder deaktivieren.</o>
+      <o>In jedem Preset schalten Sie Missionen ein und aus. Keine Lust auf Verkehrsunfälle? Einfach abschalten.</o>
+      <o>Sie können Missionen an- und ausknipsen. Keine Lust auf Autounfälle? Weg damit. Nur Bergrettung? Geht klar.</o>
+    </message>
+    <message key="TIP.MSL.3" actor="2" radio="auto" group="tipmsl" seq="3" new="1">
+      <o>Das Standard-Preset gilt für jede Lackierung. Die Presets 1 bis 5 können mit einer bestimmten Lackierung verknüpft werden.</o>
+      <o>Das Standard-Preset gilt für jede Lackierung. Die Presets 1 bis 5 können mit einer bestimmten Lackierung verknüpft werden.</o>
+      <o>Das Standard-Preset gilt für alle Lackierungen. Presets 1 bis 5 lassen sich an eine bestimmte Lackierung binden.</o>
+      <o>Das Standard-Preset gilt für alle Lackierungen. Presets 1 bis 5 lassen sich an eine bestimmte Lackierung binden.</o>
+      <o>Standard gilt für alle Lackierungen. Presets 1 bis 5 gehören fest zu einer Lackierung, so hat jeder Heli seine eigene Liste.</o>
+      <o>Standard passt für jede Lackierung. Presets 1 bis 5 gehören zu einer Lackierung, damit jeder Heli seinen eigenen Geschmack bei Notfällen hat.</o>
+    </message>
+    <message key="TIP.MSL.4" actor="3" radio="auto" group="tipmsl" seq="4" new="1">
+      <o>Und eine manuell aktivierte oder deaktivierte Mission behält Ihre Auswahl auch beim Wechsel des Presets.</o>
+      <o>Und eine manuell aktivierte oder deaktivierte Mission behält Ihre Auswahl auch beim Wechsel des Presets.</o>
+      <o>Und von Hand geschaltete Missionen bleiben so, wie Sie sie verlassen haben, wenn Sie das Preset wechseln.</o>
+      <o>Und von Hand geschaltete Missionen bleiben so, wie Sie sie verlassen haben, wenn Sie das Preset wechseln.</o>
+      <o>Und was Sie manuell umschalten, bleibt erhalten, selbst beim Preset-Wechsel. Respekt vor dem Piloten.</o>
+      <o>Ihre manuellen Entscheidungen überleben den Preset-Wechsel. Selten genug, ein Tablet, das wirklich zuhört.</o>
+    </message>
+    <message key="TIP.PRF.1" actor="2" radio="auto" group="tipprf" seq="1" new="1" trigger="tip of the crew: settings profiles">
+      <o>Auf der Technik-Seite und in den Einstellungen gibt es Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
+      <o>Auf der Technik-Seite und in den Einstellungen gibt es Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
+      <o>Wussten Sie, dass die Einstellungen in Profilen vorliegen? Profile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
+      <o>Wussten Sie, dass die Einstellungen in Profilen vorliegen? Profile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
+      <o>Chef, Sie müssen nicht an jeder Option einzeln drehen. Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
+      <o>Warum an fünfzig Reglern drehen, wenn es Profile gibt? Standard, Anfänger, Profi-Pilot, Profi-HEMS. Wählen Sie Ihr Level an Herausforderung.</o>
+    </message>
+    <message key="TIP.PRF.2" actor="3" radio="auto" group="tipprf" seq="2" new="1">
+      <o>Es gibt auch sechs benutzerdefinierte Profile von 0 bis 5. Jede Änderung wird sofort im ausgewählten Profil gespeichert.</o>
+      <o>Es gibt auch sechs benutzerdefinierte Profile von 0 bis 5. Jede Änderung wird sofort im ausgewählten Profil gespeichert.</o>
+      <o>Dazu sechs eigene Profile, 0 bis 5 nummeriert. Jede Änderung landet sofort im ausgewählten Profil.</o>
+      <o>Dazu sechs eigene Profile, 0 bis 5 nummeriert. Jede Änderung landet sofort im ausgewählten Profil.</o>
+      <o>Und sechs eigene Profile für Sie. Kein Speicherknopf nötig, Änderungen werden automatisch behalten.</o>
+      <o>Sechs eigene Profile ganz für Sie allein. Es speichert jede Änderung von selbst, kein Knopf nötig.</o>
+    </message>
+    <message key="TIP.PRF.3" actor="2" radio="auto" group="tipprf" seq="3" new="1">
+      <o>Ein eigenes Profil kann mit einem Missionslisten-Preset verknüpft werden. Wählen Sie die Liste, laden die Einstellungen mit.</o>
+      <o>Ein eigenes Profil kann mit einem Missionslisten-Preset verknüpft werden. Wählen Sie die Liste, laden die Einstellungen mit.</o>
+      <o>Sie können ein eigenes Profil an ein Missionslisten-Preset binden. Die Liste wählen lädt auch die Einstellungen.</o>
+      <o>Sie können ein eigenes Profil an ein Missionslisten-Preset binden. Die Liste wählen lädt auch die Einstellungen.</o>
+      <o>Noch besser: Eigenes Profil mit Missionsliste verknüpfen, dann lädt die Liste direkt Ihre Einstellungen mit.</o>
+      <o>Koppeln Sie ein Profil an eine Missionsliste und es folgt ihr auf Schritt und Tritt. Liste wählen, Einstellungen sind da.</o>
+    </message>
+    <message key="TIP.PRF.4" actor="3" radio="auto" group="tipprf" seq="4" new="1">
+      <o>Und Aktuelle Konfiguration in Datei speichern legt eine unabhängige Sicherheitskopie Ihrer Einstellungen an.</o>
+      <o>Und Aktuelle Konfiguration in Datei speichern legt eine unabhängige Sicherheitskopie Ihrer Einstellungen an.</o>
+      <o>Und Aktuelle Konfiguration in Datei speichern erstellt eine separate Sicherheitskopie, für alle Fälle.</o>
+      <o>Und Aktuelle Konfiguration in Datei speichern erstellt eine separate Sicherheitskopie, für alle Fälle.</o>
+      <o>Es gibt einen Sicherheitskopie-Knopf: Aktuelle Konfiguration in Datei speichern. Nutzen Sie ihn vor Experimenten.</o>
+      <o>Und ein Sicherheitskopie-Knopf: Aktuelle Konfiguration in Datei speichern. Für den Tag, an dem Sie alles verstellen.</o>
+    </message>
+    <message key="TIP.CRW.1" actor="3" radio="auto" group="tipcrw" seq="1" new="1" trigger="tip of the crew: crew health">
+      <o>Ein Hinweis zu uns: In den Einstellungen unter Flughilfen kann die Besatzungs-Gesundheitssimulation aktiv oder deaktiviert sein.</o>
+      <o>Ein Hinweis zu uns: In den Einstellungen unter Flughilfen kann die Besatzungs-Gesundheitssimulation aktiv oder deaktiviert sein.</o>
+      <o>Ein Wort zu uns, Chef. In den Einstellungen bei Flughilfen können Sie die Besatzungs-Gesundheitssimulation ein- oder ausschalten.</o>
+      <o>Ein Wort zu uns, Chef. In den Einstellungen bei Flughilfen können Sie die Besatzungs-Gesundheitssimulation ein- oder ausschalten.</o>
+      <o>Chef, wussten Sie, dass wir verletzt werden können? Einstellungen, Flughilfen, Besatzungs-Gesundheit. Ihre Entscheidung.</o>
+      <o>Chef, wussten Sie, dass wir zerbrechlich sind? Einstellungen, Flughilfen, Besatzungs-Gesundheit. Aktiv oder aus, seien Sie sanft zu uns.</o>
+    </message>
+    <message key="TIP.CRW.2" actor="2" radio="auto" group="tipcrw" seq="2" new="1">
+      <o>Wenn aktiv, verletzen harte Landungen und Abstürze die Besatzung. Die Lebenspunkte jedes Mitglieds stehen auf der Einsatzseite.</o>
+      <o>Wenn aktiv, verletzen harte Landungen und Abstürze die Besatzung. Die Lebenspunkte jedes Mitglieds stehen auf der Einsatzseite.</o>
+      <o>Ist sie aktiv, schadet eine harte Landung unserer Gesundheit, und unser Lebenswert steht auf der Einsatzseite.</o>
+      <o>Ist sie aktiv, schadet eine harte Landung unserer Gesundheit, und unser Lebenswert steht auf der Einsatzseite.</o>
+      <o>Aktiv bedeutet: Harte Schläge tun richtig weh. Unsere Lebenspunkte stehen auf der Einsatzseite, schauen Sie ruhig mal nach.</o>
+      <o>Aktiv heißt: Der Bodenkontakt tut weh. Unsere Lebenspunkte stehen auf der Einsatzseite. Meiner ist übrigens tadellos.</o>
+    </message>
+    <message key="TIP.CRW.3" actor="3" radio="auto" group="tipcrw" seq="3" new="1">
+      <o>Wird jemand von uns kritisch, erscheint eine Abfrage: Zum Krankenhaus umkehren oder die Mission fortsetzen.</o>
+      <o>Wird jemand von uns kritisch, erscheint eine Abfrage: Zum Krankenhaus umkehren oder die Mission fortsetzen.</o>
+      <o>Wenn einer von uns kritisch wird, werden Sie gefragt: Umkehren oder weitermachen.</o>
+      <o>Wenn einer von uns kritisch wird, werden Sie gefragt: Umkehren oder weitermachen.</o>
+      <o>Wird jemand kritisch, entscheiden Sie: Umkehren oder weiterfliegen. Bitte seien Sie barmherzig.</o>
+      <o>Geht es einem von uns an den Kragen, wählen Sie: Umkehren oder weiter. Wählen Sie Umkehren. Wählen Sie Umkehren.</o>
+    </message>
+    <message key="TIP.CRW.4" actor="2" radio="auto" group="tipcrw" seq="4" new="1">
+      <o>Die Crewstärke, drei, vier oder fünf Mitglieder, steht auch in den Einstellungen. Beim Einsteigen wird sie gesperrt.</o>
+      <o>Die Crewstärke, drei, vier oder fünf Mitglieder, steht auch in den Einstellungen. Beim Einsteigen wird sie gesperrt.</o>
+      <o>Die Crewgröße finden Sie auch in den Einstellungen: drei, vier oder fünf. Während des Einsteigens ist sie gesperrt.</o>
+      <o>Die Crewgröße finden Sie auch in den Einstellungen: drei, vier oder fünf. Während des Einsteigens ist sie gesperrt.</o>
+      <o>Sie bestimmen, wie viele wir sind: drei, vier oder fünf. Vor dem Einstieg, nicht danach.</o>
+      <o>Sie entscheiden, wie viele mitfliegen: drei, vier oder fünf. Wählen Sie weise, der Kaffee reicht nicht ewig.</o>
+    </message>
+    <message key="TIP.KIT.1" actor="2" radio="auto" group="tipkit" seq="1" new="1" trigger="tip of the crew: weight of the installed kits">
+      <o>Tipp: Die Technik-Seite hat eine Option, Gewicht der installierten Kits. Standardmäßig ist sie aus.</o>
+      <o>Tipp: Die Technik-Seite hat eine Option, Gewicht der installierten Kits. Standardmäßig ist sie aus.</o>
+      <o>Wussten Sie, dass die Technik-Seite das Gewicht installierter Kits berechnen kann? Standardmäßig ist das aus.</o>
+      <o>Wussten Sie, dass die Technik-Seite das Gewicht installierter Kits berechnen kann? Standardmäßig ist das aus.</o>
+      <o>Chef, die Technik-Seite kann unsere Anbauten wiegen. Standardmäßig ist es aus, der Heli denkt also, sie wiegen nichts.</o>
+      <o>Chef, ab Werk denkt der Heli, unsere Ausrüstung wiegt nichts. Ein schöner Traum. Lässt sich auf der Technik-Seite ändern.</o>
+    </message>
+    <message key="TIP.KIT.2" actor="3" radio="auto" group="tipkit" seq="2" new="1">
+      <o>Eingeschaltet wird das geschätzte Gewicht von Winde, Suchscheinwerfer, Schwimmern, Kufen, Radom, Filter, Klimaanlage und Avionik addiert.</o>
+      <o>Eingeschaltet wird das geschätzte Gewicht von Winde, Suchscheinwerfer, Schwimmern, Kufen, Radom, Filter, Klimaanlage und Avionik addiert.</o>
+      <o>Wenn aktiv, zählt die geschätzte Masse jedes Kits: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima und Avionik.</o>
+      <o>Wenn aktiv, zählt die geschätzte Masse jedes Kits: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima und Avionik.</o>
+      <o>Aktivieren Sie es, und Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klimaanlage und Avionik zählen zum Gewicht.</o>
+      <o>Schalten Sie es ein und alles zählt: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima, Avionik. Eine lange Einkaufsliste.</o>
+    </message>
+    <message key="TIP.KIT.3" actor="2" radio="auto" group="tipkit" seq="3" new="1">
+      <o>Personen zählen immer: Die Ladestationen folgen der Sitzbelegung und dem Patienten auf der Trage.</o>
+      <o>Personen zählen immer: Die Ladestationen folgen der Sitzbelegung und dem Patienten auf der Trage.</o>
+      <o>Personen zählen sowieso immer. Die Ladestationen folgen den Sitzen und dem Patienten auf der Trage.</o>
+      <o>Personen zählen sowieso immer. Die Ladestationen folgen den Sitzen und dem Patienten auf der Trage.</o>
+      <o>Personen wiegen auch bei deaktivierter Option. Die Stationen folgen den belegten Sitzen und der Trage.</o>
+      <o>Wir wiegen immer was, mit oder ohne Kits. Die Stationen wissen genau, wer wo sitzt und wer auf der Trage liegt.</o>
+    </message>
+    <message key="TIP.KIT.4" actor="3" radio="auto" group="tipkit" seq="4" new="1">
+      <o>Bei Windenarbeit bleibt das Gewicht am Seil, solange die Person hängt, und verschwindet bei Bodenkontakt.</o>
+      <o>Bei Windenarbeit bleibt das Gewicht am Seil, solange die Person hängt, und verschwindet bei Bodenkontakt.</o>
+      <o>An der Winde bleibt das Gewicht am Kabel, bis die Person den Boden berührt.</o>
+      <o>An der Winde bleibt das Gewicht am Kabel, bis die Person den Boden berührt.</o>
+      <o>An der Winde bleibt das Personengewicht am Haken, bis die Füße den Boden berühren. Physik eben.</o>
+      <o>An der Winde zieht das Gewicht, bis die Stiefel den Boden berühren. Danach ist es das Problem des Bodens.</o>
+    </message>
+    <message key="TIP.QLK.1" actor="2" radio="auto" group="tipqlk" seq="1" new="1" trigger="tip of the crew: quick links of the dispatch page">
+      <o>Tipp zur Einsatzseite: Die Zeile Quicklinks klappt eine Liste von Seiten auf. Anklicken zum Anzeigen.</o>
+      <o>Tipp zur Einsatzseite: Die Zeile Quicklinks klappt eine Liste von Seiten auf. Anklicken zum Anzeigen.</o>
+      <o>Haben Sie die Quicklinks auf der Einsatzseite bemerkt? Sie sind eingeklappt. Klicken zum Ausklappen.</o>
+      <o>Haben Sie die Quicklinks auf der Einsatzseite bemerkt? Sie sind eingeklappt. Klicken zum Ausklappen.</o>
+      <o>Chef, die Einsatzseite verbirgt nützliche Links. Suchen Sie nach Quicklinks und klicken Sie darauf.</o>
+      <o>Chef, die Einsatzseite versteckt Links vor Ihnen. Quicklinks anklicken, und schon tauchen sie auf wie von Zauberhand.</o>
+    </message>
+    <message key="TIP.QLK.2" actor="3" radio="auto" group="tipqlk" seq="2" new="1">
+      <o>Darin finden sich die Checklisten-Seite, die Einsatzsteuerung, die medizinische Diagnose und Mission speichern oder neu laden.</o>
+      <o>Darin finden sich die Checklisten-Seite, die Einsatzsteuerung, die medizinische Diagnose und Mission speichern oder neu laden.</o>
+      <o>Dort finden Sie Checklisten, die Einsatzsteuerung, die medizinische Diagnoseseite und Mission speichern oder neu laden.</o>
+      <o>Dort finden Sie Checklisten, die Einsatzsteuerung, die medizinische Diagnoseseite und Mission speichern oder neu laden.</o>
+      <o>Darin finden Sie Checklisten, Einsatzsteuerung, medizinische Diagnoseseite und die Speicherseite.</o>
+      <o>Drinnen gibt es: Checklisten, Einsatzsteuerung, medizinische Diagnose und die Speicherseite. Alles, was die coolen Piloten kennen.</o>
+    </message>
+    <message key="TIP.QLK.3" actor="2" radio="auto" group="tipqlk" seq="3" new="1">
+      <o>Der Link für die Technik-Seite und Bodenoperationen erscheint nur, wenn der Hubschrauber am Boden steht.</o>
+      <o>Der Link für die Technik-Seite und Bodenoperationen erscheint nur, wenn der Hubschrauber am Boden steht.</o>
+      <o>Der Link zur Technik-Seite erscheint nur, wenn wir am Boden sind.</o>
+      <o>Der Link zur Technik-Seite erscheint nur, wenn wir am Boden sind.</o>
+      <o>Die Technik-Seite taucht nur auf, wenn wir am Boden stehen. In der Luft ziert sie sich.</o>
+      <o>Die Technik-Seite zeigt sich nur am Boden. In der Luft macht sie sich rar, genau wie ich auf Feiern.</o>
+    </message>
+    <message key="TIP.QLK.4" actor="3" radio="auto" group="tipqlk" seq="4" new="1">
+      <o>Der Link zur medizinischen Diagnose ist dort auch. Bei manueller Behandlung bleibt er auch bei eingeklappten Quicklinks sichtbar.</o>
+      <o>Der Link zur medizinischen Diagnose ist dort auch. Bei manueller Behandlung bleibt er auch bei eingeklappten Quicklinks sichtbar.</o>
+      <o>Und im manuellen Behandlungsmodus bleibt die Diagnoseseite sichtbar, selbst wenn die Quicklinks eingeklappt sind.</o>
+      <o>Und im manuellen Behandlungsmodus bleibt die Diagnoseseite sichtbar, selbst wenn die Quicklinks eingeklappt sind.</o>
+      <o>Bei manueller Behandlung ist der Link zur Medizintechnik immer sichtbar, auch wenn der Rest eingeklappt ist.</o>
+      <o>Bei manueller Behandlung versteckt sich der Medizin-Link nie. Er weiß eben, dass wir ihn brauchen.</o>
+    </message>
+    <message key="TIP.DBG.1" actor="2" radio="auto" group="tipdbg" seq="1" new="1" trigger="tip of the crew: debug snapshots">
+      <o>Tipp für die Fehlersuche: Das Debug-Center auf dem Tablet hat einen Button Schnappschuss aufnehmen.</o>
+      <o>Tipp für die Fehlersuche: Das Debug-Center auf dem Tablet hat einen Button Schnappschuss aufnehmen.</o>
+      <o>Wenn etwas nicht stimmt, öffnen Sie das Debug-Center. Dort gibt es Schnappschuss aufnehmen.</o>
+      <o>Wenn etwas nicht stimmt, öffnen Sie das Debug-Center. Dort gibt es Schnappschuss aufnehmen.</o>
+      <o>Chef, falls die Mission spinnt: Debug-Center öffnen und Schnappschuss aufnehmen drücken, bevor Sie weitermachen.</o>
+      <o>Mission benimmt sich seltsam? Keine Panik. Debug-Center, Schnappschuss aufnehmen. Erst Beweise sichern, dann fluchen.</o>
+    </message>
+    <message key="TIP.DBG.2" actor="3" radio="auto" group="tipdbg" seq="2" new="1">
+      <o>Er speichert die Mission, die Route, den Besatzung-Status, die Rotor-Werte und die Patienteninformationen.</o>
+      <o>Er speichert die Mission, die Route, den Besatzung-Status, die Rotor-Werte und die Patienteninformationen.</o>
+      <o>Er zeichnet die Mission, die Route, den Status der Besatzung, den Rotor und die Patienten auf.</o>
+      <o>Er zeichnet die Mission, die Route, den Status der Besatzung, den Rotor und die Patienten auf.</o>
+      <o>Er hält Mission, Route, Besatzung, Rotor und Patienten fest, alles auf einen Streich.</o>
+      <o>Mission, Route, Besatzung, Rotor und Patienten in einem Rutsch. Wie eine Patientenakte für den ganzen Flug.</o>
+    </message>
+    <message key="TIP.DBG.3" actor="2" radio="auto" group="tipdbg" seq="3" new="1">
+      <o>Die Mission schreibt auch automatische Schnappschüsse, beginnend mit table R and E debug, und behält die vorherige Mission.</o>
+      <o>Die Mission schreibt auch automatische Schnappschüsse, beginnend mit table R and E debug, und behält die vorherige Mission.</o>
+      <o>Es gibt auch automatische Snapshots in Dateien mit table R and E debug, und die Vor-Mission wird ebenfalls behalten.</o>
+      <o>Es gibt auch automatische Snapshots in Dateien mit table R and E debug, und die Vor-Mission wird ebenfalls behalten.</o>
+      <o>Und das System erstellt selbst Schnappschüsse mit table R and E debug, plus die vorherige Mission.</o>
+      <o>Und es knipst Schnappschüsse ganz von selbst: Dateien mit table R and E debug. Behält sogar die alte Mission. Sehr ordentlich.</o>
+    </message>
+    <message key="TIP.DBG.4" actor="3" radio="auto" group="tipdbg" seq="4" new="1">
+      <o>Sie können den Arbeitsordner im Mission Companion unter Werkzeuge öffnen und die Dateien auf Discord mit kurzer Beschreibung teilen.</o>
+      <o>Sie können den Arbeitsordner im Mission Companion unter Werkzeuge öffnen und die Dateien auf Discord mit kurzer Beschreibung teilen.</o>
+      <o>Öffnen Sie den Arbeitsordner im Companion unter Werkzeuge und posten Sie die Dateien auf Discord mit ein paar Worten dazu.</o>
+      <o>Öffnen Sie den Arbeitsordner im Companion unter Werkzeuge und posten Sie die Dateien auf Discord mit ein paar Worten dazu.</o>
+      <o>Arbeitsordner im Companion unter Werkzeuge öffnen und die Dateien auf Discord posten, mit einer kurzen Notiz.</o>
+      <o>Arbeitsordner im Companion unter Werkzeuge öffnen und die Dateien auf Discord werfen. Die Entwickler freuen sich über Tatortberichte.</o>
+    </message>
+    <message key="TIP.MED.1" actor="3" radio="auto" group="tipmed" seq="1" new="1" trigger="tip of the crew: medical options">
+      <o>Tipp für den medizinischen Bereich: In den Einstellungen bietet Medizinische Optionen automatische oder manuelle Behandlung.</o>
+      <o>Tipp für den medizinischen Bereich: In den Einstellungen bietet Medizinische Optionen automatische oder manuelle Behandlung.</o>
+      <o>Medizinischer Tipp: Einstellungen, Medizinische Optionen. Der Behandlungsmodus kann automatisch oder manuell sein.</o>
+      <o>Medizinischer Tipp: Einstellungen, Medizinische Optionen. Der Behandlungsmodus kann automatisch oder manuell sein.</o>
+      <o>Chef, wenn Sie Arzt spielen wollen: Einstellungen, Medizinische Optionen. Behandlung automatisch oder manuell.</o>
+      <o>Chef, falls Sie selbst den Kittel anziehen wollen: Einstellungen, Medizinische Optionen, Modus manuell. Aber nicht der Kasse melden.</o>
+    </message>
+    <message key="TIP.MED.2" actor="2" radio="auto" group="tipmed" seq="2" new="1">
+      <o>Im manuellen Modus wählen Sie pro Phase eine Prozedur für jeden Patienten, und die automatischen Timer sind aus.</o>
+      <o>Im manuellen Modus wählen Sie pro Phase eine Prozedur für jeden Patienten, und die automatischen Timer sind aus.</o>
+      <o>Manuell wählen Sie eine Prozedur je Phase für jeden Patienten, und die automatischen Timer sind deaktiviert.</o>
+      <o>Manuell wählen Sie eine Prozedur je Phase für jeden Patienten, und die automatischen Timer sind deaktiviert.</o>
+      <o>Im manuellen Modus wählen Sie eine Maßnahme je Phase. Keine Automatik-Timer, liegt alles bei Ihnen.</o>
+      <o>Manuell wählen Sie jede Maßnahme pro Phase selbst, und niemand drängelt. Außer vielleicht der Patient.</o>
+    </message>
+    <message key="TIP.MED.3" actor="3" radio="auto" group="tipmed" seq="3" new="1">
+      <o>Sie können auch die durchschnittliche Behandlungszeit einstellen, von ultraschnell bis langsam.</o>
+      <o>Sie können auch die durchschnittliche Behandlungszeit einstellen, von ultraschnell bis langsam.</o>
+      <o>Sie können einstellen, wie lange Behandlungen dauern: von ultraschnell bis langsam.</o>
+      <o>Sie können einstellen, wie lange Behandlungen dauern: von ultraschnell bis langsam.</o>
+      <o>Sie legen fest, wie lang Behandlungen dauern, von ultraschnell bis langsam. Langsam für Genießer.</o>
+      <o>Die Behandlungszeit reicht von ultraschnell bis langsam. Langsam ist perfekt für eine ausgiebige Kaffeepause.</o>
+    </message>
+    <message key="TIP.MED.4" actor="2" radio="auto" group="tipmed" seq="4" new="1">
+      <o>Und Sie können ein mechanisches Reanimationssystem deklarieren, das Herzdruckmassage während des Fluges erlaubt.</o>
+      <o>Und Sie können ein mechanisches Reanimationssystem deklarieren, das Herzdruckmassage während des Fluges erlaubt.</o>
+      <o>Und es gibt die Option für eine Reanimationshilfe, damit wir Herzdruckmassage im Flug durchführen können.</o>
+      <o>Und es gibt die Option für eine Reanimationshilfe, damit wir Herzdruckmassage im Flug durchführen können.</o>
+      <o>Mit der Reanimationshilfe an Bord können wir die Herzdruckmassage auch in der Luft fortsetzen.</o>
+      <o>Mit der Reanimationshilfe an Bord drückt die Maschine im Flug ganz von allein. Die wird nie müde.</o>
+    </message>
+    <message key="TIP.FLR.1" actor="2" radio="auto" group="tipflr" seq="1" new="1" trigger="tip of the crew: helicopter failures">
+      <o>Tipp: Hubschrauberausfälle können in den Einstellungen unter Flughilfen aktiviert oder deaktiviert werden.</o>
+      <o>Tipp: Hubschrauberausfälle können in den Einstellungen unter Flughilfen aktiviert oder deaktiviert werden.</o>
+      <o>Wussten Sie, dass Hubschrauberausfälle schaltbar sind? Einstellungen, Flughilfen.</o>
+      <o>Wussten Sie, dass Hubschrauberausfälle schaltbar sind? Einstellungen, Flughilfen.</o>
+      <o>Chef, falls der Hubschrauber zicken soll: Einstellungen, Flughilfen, Ausfälle aktivieren.</o>
+      <o>Chef, falls Sie Nervenkitzel brauchen: Einstellungen, Flughilfen, Ausfälle aktivieren. Wir weinen dann leise mit.</o>
+    </message>
+    <message key="TIP.FLR.2" actor="3" radio="auto" group="tipflr" seq="2" new="1">
+      <o>Harte Stöße können Ausfälle auslösen, von leichten wie dem Autopiloten bis zu Triebwerksausfall oder Triebwerksbrand.</o>
+      <o>Harte Stöße können Ausfälle auslösen, von leichten wie dem Autopiloten bis zu Triebwerksausfall oder Triebwerksbrand.</o>
+      <o>Ein harter Aufprall kann Defekte verursachen: Autopilot bis hin zu Treibstoffproblemen, Triebwerksausfall oder Triebwerksbrand.</o>
+      <o>Ein harter Aufprall kann Defekte verursachen: Autopilot bis hin zu Treibstoffproblemen, Triebwerksausfall oder Triebwerksbrand.</o>
+      <o>Ein harter Schlag verursacht Schäden: vom Autopiloten bis zum brennenden Triebwerk.</o>
+      <o>Ein harter Schlag macht Dinge kaputt: vom Autopiloten bis zum Feueralarm im Triebwerk. Seien Sie sanft zu den Kufen.</o>
+    </message>
+    <message key="TIP.FLR.3" actor="2" radio="auto" group="tipflr" seq="3" new="1">
+      <o>Ein Button Ausfälle zurücksetzen neben der Einstellung behebt die aktiven Fehler.</o>
+      <o>Ein Button Ausfälle zurücksetzen neben der Einstellung behebt die aktiven Fehler.</o>
+      <o>Und der Button Ausfälle zurücksetzen repariert sofort alles, was gerade defekt ist.</o>
+      <o>Und der Button Ausfälle zurücksetzen repariert sofort alles, was gerade defekt ist.</o>
+      <o>Und wenn es zu viel wird: Ausfälle zurücksetzen neben der Option repariert alles Aktive.</o>
+      <o>Wenn es Ihnen reicht: Ausfälle zurücksetzen repariert alles auf Knopfdruck. Ein Mechaniker würde heulen.</o>
+    </message>
+    <message key="TIP.FLR.4" actor="3" radio="auto" group="tipflr" seq="4" new="1">
+      <o>Die Ausfalleinstellung wird beim Missionsstart erneut eingelesen.</o>
+      <o>Die Ausfalleinstellung wird beim Missionsstart erneut eingelesen.</o>
+      <o>Gut zu wissen: Die Ausfalloption wird zu Beginn der Mission neu eingelesen.</o>
+      <o>Gut zu wissen: Die Ausfalloption wird zu Beginn der Mission neu eingelesen.</o>
+      <o>Und die Ausfalleinstellung wird beim Missionsstart neu gelesen, also überlegen Sie es sich vor dem Start.</o>
+      <o>Gut zu wissen: Die Ausfälle werden zum Missionsstart neu gelesen. Bedenken Sie das, bevor Sie Abenteuer bestellen.</o>
+    </message>
+    <message key="TIP.CHT.1" actor="2" radio="auto" group="tipcht" seq="1" new="1" trigger="tip of the crew: crew chatter">
+      <o>Wenn wir zu viel reden: Die Option Besatzung-Geplauder ist in den Audio-Optionen: Voll, Reduziert oder Minimal.</o>
+      <o>Wenn wir zu viel reden: Die Option Besatzung-Geplauder ist in den Audio-Optionen: Voll, Reduziert oder Minimal.</o>
+      <o>Wenn wir Ihnen zu viel quatschen: Einstellungen, Audio-Optionen, Besatzung-Geplauder: Voll, Reduziert oder Minimal.</o>
+      <o>Wenn wir Ihnen zu viel quatschen: Einstellungen, Audio-Optionen, Besatzung-Geplauder: Voll, Reduziert oder Minimal.</o>
+      <o>Chef, wenn wir Ihnen ein Kotelett ans Ohr labern: Einstellungen, Audio, Besatzung-Geplauder. Voll, Reduziert oder Minimal.</o>
+      <o>Chef, wenn wir Sie in den Wahnsinn quatschen: Einstellungen, Audio, Besatzung-Geplauder. Voll, Reduziert oder Minimal.</o>
+    </message>
+    <message key="TIP.CHT.2" actor="3" radio="auto" group="tipcht" seq="2" new="1">
+      <o>Voll enthält Smalltalk und lockere Formulierungen. Reduziert behält professionelle Sprache ohne Smalltalk.</o>
+      <o>Voll enthält Smalltalk und lockere Formulierungen. Reduziert behält professionelle Sprache ohne Smalltalk.</o>
+      <o>Voll bietet Smalltalk und Gesprächigkeit. Reduziert bleibt professionell, ganz ohne Smalltalk.</o>
+      <o>Voll bietet Smalltalk und Gesprächigkeit. Reduziert bleibt professionell, ganz ohne Smalltalk.</o>
+      <o>Voll bedeutet Geplauder und lockere Sprüche. Reduziert ist rein professionell, kein Smalltalk.</o>
+      <o>Voll bedeutet Witze, Plauderei und lockere Sprüche. Reduziert ist streng dienstlich, kein Smalltalk, kein Spaß.</o>
+    </message>
+    <message key="TIP.CHT.3" actor="1" radio="auto" group="tipcht" seq="3" new="1">
+      <o>Minimal behält nur die kürzesten Formulierungen bei.</o>
+      <o>Minimal behält nur die kürzesten Formulierungen bei.</o>
+      <o>Und Minimal ist der kürzeste Funk, den wir haben.</o>
+      <o>Und Minimal ist der kürzeste Funk, den wir haben.</o>
+      <o>Und Minimal beschränkt sich auf das absolute Minimum.</o>
+      <o>Und Minimal ist nur das Nötigste. Da hören Sie von mir nicht mal ein Guten Morgen.</o>
+    </message>
+    <message key="TIP.CHT.4" actor="2" radio="auto" group="tipcht" seq="4" new="1">
+      <o>Die Einstellung wird in Profilen gespeichert, Sie können also ein gesprächiges und ein ruhiges Profil haben.</o>
+      <o>Die Einstellung wird in Profilen gespeichert, Sie können also ein gesprächiges und ein ruhiges Profil haben.</o>
+      <o>Sie wird auch in den Profilen gespeichert: Ein Profil kann gesprächig sein, ein anderes leise.</o>
+      <o>Sie wird auch in den Profilen gespeichert: Ein Profil kann gesprächig sein, ein anderes leise.</o>
+      <o>Und sie liegt in den Profilen, Sie können also ein Plauder-Profil und ein Flüster-Profil anlegen.</o>
+      <o>Und es speichert sich in den Profilen. Ein Plauder-Profil für sonnige Tage, ein Schweige-Profil für Montage.</o>
+    </message>
+    <message key="TIP.TOF.1" actor="3" radio="auto" group="tiptof" seq="1" new="1" trigger="tip of the crew: switching the tips off">
+      <o>Übrigens haben diese Tipps einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug haben, schalten Sie sie ab.</o>
+      <o>Übrigens haben diese Tipps einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug haben, schalten Sie sie ab.</o>
+      <o>Diese Tipps haben einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug gehört haben: Einfach abschalten.</o>
+      <o>Diese Tipps haben einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug gehört haben: Einfach abschalten.</o>
+      <o>Chef, wenn diese Tipps Ihnen auf die Nerven gehen: Sie haben einen eigenen Schalter. Wir sind auch nicht beleidigt. Kaum.</o>
+      <o>Chef, wenn Sie unsere Ratschläge satt haben: Eigener Schalter. Wir schmollen dann ganz leise vor uns hin.</o>
+    </message>
+    <message key="TIP.TOF.2" actor="2" radio="auto" group="tiptof" seq="2" new="1">
+      <o>In den Einstellungen unter Audio-Optionen, Besatzungs-Tipps: Tipps aus wählen. Die Unterhaltung richtet sich nach dem Besatzungs-Geplauder.</o>
+      <o>In den Einstellungen unter Audio-Optionen, Besatzungs-Tipps: Tipps aus wählen. Die Unterhaltung richtet sich nach dem Besatzungs-Geplauder.</o>
+      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung folgt dem Besatzungs-Geplauder.</o>
+      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung folgt dem Besatzungs-Geplauder.</o>
+      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung ist eine andere Sache, dafür gibt es das Geplauder.</o>
+      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus, und die Belehrungen enden. Die Witze regelt das Geplauder.</o>
+    </message>
+    <message key="TIP.TOF.3" actor="3" radio="auto" group="tiptof" seq="3" new="1">
+      <o>Es geht auch umgekehrt: Tipps behalten und das Besatzung-Geplauder auf Reduziert stellen, ganz ohne Smalltalk.</o>
+      <o>Es geht auch umgekehrt: Tipps behalten und das Besatzung-Geplauder auf Reduziert stellen, ganz ohne Smalltalk.</o>
+      <o>Und umgekehrt: Behalten Sie die Tipps und stellen Sie das Geplauder auf Reduziert, um den Smalltalk loszuwerden.</o>
+      <o>Und umgekehrt: Behalten Sie die Tipps und stellen Sie das Geplauder auf Reduziert, um den Smalltalk loszuwerden.</o>
+      <o>Und auch umgekehrt: Tipps anlassen und den Smalltalk abstellen, indem Sie das Geplauder auf Reduziert setzen.</o>
+      <o>Oder umgekehrt: Alle Vorträge, keine Witze, mit dem Geplauder auf Reduziert. Streng nach Vorschrift.</o>
+    </message>
+    <message key="TIP.TOF.4" actor="1" radio="auto" group="tiptof" seq="4" new="1">
+      <o>Die Einstellung für Besatzungs-Tipps wird ebenfalls in Profilen gespeichert, jedes Profil kann seine eigene Wahl haben.</o>
+      <o>Die Einstellung für Besatzungs-Tipps wird ebenfalls in Profilen gespeichert, jedes Profil kann seine eigene Wahl haben.</o>
+      <o>Und sie wird in Profilen abgelegt, jedes Profil kann also seine eigene Einstellung haben.</o>
+      <o>Und sie wird in Profilen abgelegt, jedes Profil kann also seine eigene Einstellung haben.</o>
+      <o>Sie lebt auch in den Profilen: Ein Profil weiß alles, das nächste genießt die Stille.</o>
+      <o>Und sie wohnt in den Profilen: Ein Profil wird zum Besserwisser, das andere zum Schweigekloster.</o>
+    </message>
 </voicepack>
