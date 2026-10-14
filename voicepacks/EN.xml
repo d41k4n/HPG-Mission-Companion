@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="12" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="13" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -5528,4 +5528,356 @@
       <o>Vehicle: {0} {1}.</o>
     </message>
   <!-- MISSION TEXTS END -->
+    <message key="TIP.SAV.1" actor="2" radio="auto" group="tipsav" seq="1" new="1" trigger="tip of the crew: saves of the mission">
+      <o>Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.</o>
+      <o>Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.</o>
+      <o>By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.</o>
+      <o>By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.</o>
+      <o>Hey boss, the tablet has a save function. Quick links, Save or reload a mission. Just saying.</o>
+      <o>Psst, boss. There is a save function hiding in the Quick links. Save or reload a mission. Very handy when the coffee gets cold.</o>
+    </message>
+    <message key="TIP.SAV.2" actor="3" radio="auto" group="tipsav" seq="2" new="1">
+      <o>There are three slots, plus an autosave. Give the save a name first, the name is mandatory.</o>
+      <o>There are three slots, plus an autosave. Give the save a name first, the name is mandatory.</o>
+      <o>Three slots and an autosave. You have to type a name first, otherwise it will not save.</o>
+      <o>Three slots and an autosave. You have to type a name first, otherwise it will not save.</o>
+      <o>Three slots plus an autosave. And it wants a name, it is picky like that.</o>
+      <o>Three slots plus an autosave. Give it a nice name, it refuses anonymous missions.</o>
+    </message>
+    <message key="TIP.SAV.3" actor="2" radio="auto" group="tipsav" seq="3" new="1">
+      <o>Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.</o>
+      <o>Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.</o>
+      <o>One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.</o>
+      <o>One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.</o>
+      <o>One catch: while we work on the patient or on the hoist, saving is off. Do it before, or after.</o>
+      <o>And no saving in the middle of the action. Not while we are on the hoist or around the patient. Before or after, please.</o>
+    </message>
+    <message key="TIP.SAV.4" actor="3" radio="auto" group="tipsav" seq="4" new="1">
+      <o>And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.</o>
+      <o>And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.</o>
+      <o>And if a flight goes badly, there is also Reload last accepted mission.</o>
+      <o>And if a flight goes badly, there is also Reload last accepted mission.</o>
+      <o>And if it all goes wrong, Reload last accepted mission is your friend. We will never mention it.</o>
+      <o>And if you bend the skids, Reload last accepted mission. We will all pretend it never happened.</o>
+    </message>
+    <message key="TIP.MSL.1" actor="2" radio="auto" group="tipmsl" seq="1" new="1" trigger="tip of the crew: mission list presets">
+      <o>Another tip: the mission list has presets. A default one, and presets 1 to 5.</o>
+      <o>Another tip: the mission list has presets. A default one, and presets 1 to 5.</o>
+      <o>Did you know the mission list has presets? A default one, and presets 1 to 5.</o>
+      <o>Did you know the mission list has presets? A default one, and presets 1 to 5.</o>
+      <o>Boss, have you seen the mission list presets? Default, and then preset 1 to 5.</o>
+      <o>Fun fact: the mission list comes with presets. Default plus five more. Order your emergencies like from a menu.</o>
+    </message>
+    <message key="TIP.MSL.2" actor="3" radio="auto" group="tipmsl" seq="2" new="1">
+      <o>In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.</o>
+      <o>In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.</o>
+      <o>Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.</o>
+      <o>Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.</o>
+      <o>In every preset you switch missions on and off. Not in the mood for road accidents? Switch them off.</o>
+      <o>You can switch missions on and off. Tired of road accidents? Gone. Only mountain rescues? Done.</o>
+    </message>
+    <message key="TIP.MSL.3" actor="2" radio="auto" group="tipmsl" seq="3" new="1">
+      <o>The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.</o>
+      <o>The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.</o>
+      <o>The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.</o>
+      <o>The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.</o>
+      <o>Default is for every livery. Presets 1 to 5 can belong to one livery, so each helicopter gets its own list.</o>
+      <o>Default works for every livery. Presets 1 to 5 can belong to one livery, so each helicopter has its own taste in emergencies.</o>
+    </message>
+    <message key="TIP.MSL.4" actor="3" radio="auto" group="tipmsl" seq="4" new="1">
+      <o>And a mission you enabled or disabled by hand keeps your choice when you change preset.</o>
+      <o>And a mission you enabled or disabled by hand keeps your choice when you change preset.</o>
+      <o>And the missions you switched on or off by hand stay as you left them when you change preset.</o>
+      <o>And the missions you switched on or off by hand stay as you left them when you change preset.</o>
+      <o>And what you switched by hand stays that way, even when you change preset. Respect for the pilot.</o>
+      <o>And your manual choices survive the change of preset. Rare thing, a tablet that listens.</o>
+    </message>
+    <message key="TIP.PRF.1" actor="2" radio="auto" group="tipprf" seq="1" new="1" trigger="tip of the crew: settings profiles">
+      <o>On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>Boss, you do not have to fiddle with every option. User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>Why tweak fifty options when there are profiles? Default, Rookie, Expert pilot, Expert HEMS. Pick your level of suffering.</o>
+    </message>
+    <message key="TIP.PRF.2" actor="3" radio="auto" group="tipprf" seq="2" new="1">
+      <o>There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.</o>
+      <o>There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.</o>
+      <o>And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.</o>
+      <o>And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.</o>
+      <o>And six custom profiles of your own. No save button, it keeps every change by itself.</o>
+      <o>Six custom profiles, all yours to ruin. It saves every change by itself, no button needed.</o>
+    </message>
+    <message key="TIP.PRF.3" actor="2" radio="auto" group="tipprf" seq="3" new="1">
+      <o>A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.</o>
+      <o>A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.</o>
+      <o>You can link a custom profile to a mission list preset, so choosing the list loads your settings too.</o>
+      <o>You can link a custom profile to a mission list preset, so choosing the list loads your settings too.</o>
+      <o>Even better: link a custom profile to a mission list preset, and choosing the list loads the settings as well.</o>
+      <o>Link a custom profile to a mission list and it follows it around like a puppy. Choose the list, the settings come along.</o>
+    </message>
+    <message key="TIP.PRF.4" actor="3" radio="auto" group="tipprf" seq="4" new="1">
+      <o>And Save actual config to file keeps one independent backup of your settings.</o>
+      <o>And Save actual config to file keeps one independent backup of your settings.</o>
+      <o>And Save actual config to file makes a separate backup, just in case.</o>
+      <o>And Save actual config to file makes a separate backup, just in case.</o>
+      <o>And there is a backup button, Save actual config to file. Use it before you start experimenting.</o>
+      <o>And a backup button, Save actual config to file, for the day you break everything.</o>
+    </message>
+    <message key="TIP.CRW.1" actor="3" radio="auto" group="tipcrw" seq="1" new="1" trigger="tip of the crew: crew health">
+      <o>A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.</o>
+      <o>A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.</o>
+      <o>A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.</o>
+      <o>A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.</o>
+      <o>Boss, did you know we can get hurt? Settings, Flight assists, Crew health simulation. Your call.</o>
+      <o>Boss, did you know we are breakable? Settings, Flight assists, Crew health simulation. Active or disabled, be kind.</o>
+    </message>
+    <message key="TIP.CRW.2" actor="2" radio="auto" group="tipcrw" seq="2" new="1">
+      <o>With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.</o>
+      <o>With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.</o>
+      <o>With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.</o>
+      <o>With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.</o>
+      <o>Active means a hard landing really hurts us. Our Life Scores are on the dispatch page, go and have a look.</o>
+      <o>Active means the ground hurts for real. Our Life Scores are on the dispatch page. Mine is excellent, by the way.</o>
+    </message>
+    <message key="TIP.CRW.3" actor="3" radio="auto" group="tipcrw" seq="3" new="1">
+      <o>If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.</o>
+      <o>If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.</o>
+      <o>If one of us becomes critical, you will be asked to divert or to continue.</o>
+      <o>If one of us becomes critical, you will be asked to divert or to continue.</o>
+      <o>If one of us goes critical, you decide: divert or continue. Please be generous.</o>
+      <o>If one of us goes critical you choose: divert or continue. Choose divert. Choose divert. Choose divert.</o>
+    </message>
+    <message key="TIP.CRW.4" actor="2" radio="auto" group="tipcrw" seq="4" new="1">
+      <o>The number of crew, three, four or five, is in the settings too. It is locked during the boarding.</o>
+      <o>The number of crew, three, four or five, is in the settings too. It is locked during the boarding.</o>
+      <o>The crew size is in the settings too: three, four or five. It locks during the boarding.</o>
+      <o>The crew size is in the settings too: three, four or five. It locks during the boarding.</o>
+      <o>And you pick how many of us there are, three, four or five. Before the boarding, not after.</o>
+      <o>And you decide how many of us fly with you, three, four or five. Choose wisely, the coffee is limited.</o>
+    </message>
+    <message key="TIP.KIT.1" actor="2" radio="auto" group="tipkit" seq="1" new="1" trigger="tip of the crew: weight of the installed kits">
+      <o>Tip: the technical page has an option, Weight of the installed kits. It is off by default.</o>
+      <o>Tip: the technical page has an option, Weight of the installed kits. It is off by default.</o>
+      <o>Did you know the technical page can count the weight of the installed kits? It is off by default.</o>
+      <o>Did you know the technical page can count the weight of the installed kits? It is off by default.</o>
+      <o>Boss, the technical page can weigh the kits we carry. It is off by default, so the helicopter thinks they are free.</o>
+      <o>Boss, by default the helicopter thinks our kits weigh nothing. A lovely thought. You can change it on the technical page.</o>
+    </message>
+    <message key="TIP.KIT.2" actor="3" radio="auto" group="tipkit" seq="2" new="1">
+      <o>With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.</o>
+      <o>With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.</o>
+      <o>Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.</o>
+      <o>Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.</o>
+      <o>Switch it on and it adds up the hoist, the searchlight, the floats, the skids, the radome, the filter, the air conditioning and the avionics.</o>
+      <o>Switch it on and it adds up everything bolted on: hoist, searchlight, floats, skids, radome, filter, air conditioning, avionics. A long shopping list.</o>
+    </message>
+    <message key="TIP.KIT.3" actor="2" radio="auto" group="tipkit" seq="3" new="1">
+      <o>The people always count: the stations follow who is on the seats and the patient on the stretcher.</o>
+      <o>The people always count: the stations follow who is on the seats and the patient on the stretcher.</o>
+      <o>People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.</o>
+      <o>People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.</o>
+      <o>People count even with the option off. The stations follow who is on the seats and who is on the stretcher.</o>
+      <o>We always count, kits or no kits. The stations know who sits where, and who is lying on the stretcher.</o>
+    </message>
+    <message key="TIP.KIT.4" actor="3" radio="auto" group="tipkit" seq="4" new="1">
+      <o>During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.</o>
+      <o>During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.</o>
+      <o>And on the hoist, the weight stays on the cable until the person touches the ground.</o>
+      <o>And on the hoist, the weight stays on the cable until the person touches the ground.</o>
+      <o>On the hoist, the weight of the person stays until their feet touch the ground. Physics, imagine that.</o>
+      <o>On the hoist, the weight stays until the boots touch the ground. After that, it is the ground problem.</o>
+    </message>
+    <message key="TIP.QLK.1" actor="2" radio="auto" group="tipqlk" seq="1" new="1" trigger="tip of the crew: quick links of the dispatch page">
+      <o>Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.</o>
+      <o>Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.</o>
+      <o>Did you notice the Quick links on the dispatch page? They are folded. Click to show them.</o>
+      <o>Did you notice the Quick links on the dispatch page? They are folded. Click to show them.</o>
+      <o>Boss, the dispatch page hides a list of links. Look for Quick links and click it.</o>
+      <o>Boss, the dispatch page is hiding links from you. Quick links, click, and they appear like magic.</o>
+    </message>
+    <message key="TIP.QLK.2" actor="3" radio="auto" group="tipqlk" seq="2" new="1">
+      <o>Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.</o>
+      <o>Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.</o>
+      <o>Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.</o>
+      <o>Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.</o>
+      <o>Inside you find the checklists, the dispatch control, the medical diagnostic page and the save page.</o>
+      <o>Inside: checklists, dispatch control, the medical diagnostic page and the save page. Everything the cool pilots know about.</o>
+    </message>
+    <message key="TIP.QLK.3" actor="2" radio="auto" group="tipqlk" seq="3" new="1">
+      <o>The technical page and ground operations link shows up only when the helicopter is on the ground.</o>
+      <o>The technical page and ground operations link shows up only when the helicopter is on the ground.</o>
+      <o>The technical page link appears only when we are on the ground.</o>
+      <o>The technical page link appears only when we are on the ground.</o>
+      <o>The technical page shows up only when we are on the ground. In the air it plays hard to get.</o>
+      <o>The technical page link appears only when we are on the ground. In the air it plays hard to get, like me at parties.</o>
+    </message>
+    <message key="TIP.QLK.4" actor="3" radio="auto" group="tipqlk" seq="4" new="1">
+      <o>The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.</o>
+      <o>The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.</o>
+      <o>And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.</o>
+      <o>And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.</o>
+      <o>And with manual treatment on, the medical page link is always there, even when everything else is folded.</o>
+      <o>And with manual treatment on, the medical page link never hides. It knows we need it.</o>
+    </message>
+    <message key="TIP.DBG.1" actor="2" radio="auto" group="tipdbg" seq="1" new="1" trigger="tip of the crew: debug snapshots">
+      <o>Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.</o>
+      <o>Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.</o>
+      <o>If something looks wrong, open the Debug center. There is a Capture snapshot button.</o>
+      <o>If something looks wrong, open the Debug center. There is a Capture snapshot button.</o>
+      <o>Boss, if the mission goes weird, open the Debug center and press Capture snapshot before you do anything else.</o>
+      <o>Mission acting up? Do not panic. Debug center, Capture snapshot. Evidence first, tears later.</o>
+    </message>
+    <message key="TIP.DBG.2" actor="3" radio="auto" group="tipdbg" seq="2" new="1">
+      <o>It saves the mission, the route, the crew progress, the rotor progress and the patient information.</o>
+      <o>It saves the mission, the route, the crew progress, the rotor progress and the patient information.</o>
+      <o>It records the mission, the route, how the crew is doing, the rotor and the patients.</o>
+      <o>It records the mission, the route, how the crew is doing, the rotor and the patients.</o>
+      <o>It records the mission, the route, the crew, the rotor and the patients, all in one go.</o>
+      <o>Mission, route, crew, rotor and patients, all in one snapshot. Like a medical chart for the whole flight.</o>
+    </message>
+    <message key="TIP.DBG.3" actor="2" radio="auto" group="tipdbg" seq="3" new="1">
+      <o>The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.</o>
+      <o>The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.</o>
+      <o>It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.</o>
+      <o>It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.</o>
+      <o>And it writes automatic snapshots by itself, files starting with table R and E debug, plus the previous mission.</o>
+      <o>And it takes snapshots by itself, files starting with table R and E debug. It even keeps the previous mission. A very organised machine.</o>
+    </message>
+    <message key="TIP.DBG.4" actor="3" radio="auto" group="tipdbg" seq="4" new="1">
+      <o>You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>Open the work folder from the Mission Companion, Tools tab, and send those files on Discord with a line about what happened.</o>
+      <o>Open the work folder from the Mission Companion, Tools tab, and throw those files on Discord with a line about the crime scene. The developers love that.</o>
+    </message>
+    <message key="TIP.MED.1" actor="3" radio="auto" group="tipmed" seq="1" new="1" trigger="tip of the crew: medical options">
+      <o>Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.</o>
+      <o>Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.</o>
+      <o>Medical tip: settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>Medical tip: settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>Boss, if you want to play doctor, settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>Boss, if you want to play doctor, settings, Medical options, treatment mode, manual. Do not tell the insurance.</o>
+    </message>
+    <message key="TIP.MED.2" actor="2" radio="auto" group="tipmed" seq="2" new="1">
+      <o>In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.</o>
+      <o>In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.</o>
+      <o>In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.</o>
+      <o>In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.</o>
+      <o>In manual you pick one procedure per phase for every patient. No automatic timers, it is all on you.</o>
+      <o>In manual you pick the procedure for every phase and every patient, and nobody rushes you. Except the patient.</o>
+    </message>
+    <message key="TIP.MED.3" actor="3" radio="auto" group="tipmed" seq="3" new="1">
+      <o>You can also set the average visit time, from ultrafast to slow.</o>
+      <o>You can also set the average visit time, from ultrafast to slow.</o>
+      <o>You can also set how long the visits take, from ultrafast to slow.</o>
+      <o>You can also set how long the visits take, from ultrafast to slow.</o>
+      <o>You also set how long the visits take, from ultrafast to slow. Slow if you like to enjoy the view.</o>
+      <o>And the visit time goes from ultrafast to slow. Slow is for people who like a long coffee break.</o>
+    </message>
+    <message key="TIP.MED.4" actor="2" radio="auto" group="tipmed" seq="4" new="1">
+      <o>And you can declare a mechanical CPR system on board, which allows CPR while airborne.</o>
+      <o>And you can declare a mechanical CPR system on board, which allows CPR while airborne.</o>
+      <o>And there is the option for a mechanical CPR system, so we can do CPR while flying.</o>
+      <o>And there is the option for a mechanical CPR system, so we can do CPR while flying.</o>
+      <o>And if you install the mechanical CPR system, we can keep the compressions going in the air.</o>
+      <o>And with the mechanical CPR system installed, the machine does the compressions in flight. It never gets tired.</o>
+    </message>
+    <message key="TIP.FLR.1" actor="2" radio="auto" group="tipflr" seq="1" new="1" trigger="tip of the crew: helicopter failures">
+      <o>Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.</o>
+      <o>Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.</o>
+      <o>Did you know helicopter failures can be switched on or off? Settings, Flight assists.</o>
+      <o>Did you know helicopter failures can be switched on or off? Settings, Flight assists.</o>
+      <o>Boss, if you want the helicopter to misbehave, settings, Flight assists, Helicopter failures, enabled.</o>
+      <o>Boss, if you miss the excitement, settings, Flight assists, Helicopter failures, enabled. We will be the ones crying.</o>
+    </message>
+    <message key="TIP.FLR.2" actor="3" radio="auto" group="tipflr" seq="2" new="1">
+      <o>A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.</o>
+      <o>A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.</o>
+      <o>A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.</o>
+      <o>A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.</o>
+      <o>A hard knock can cause failures, light ones like the autopilot, heavy ones like an engine failure or an engine fire.</o>
+      <o>A hard knock can break things, from the autopilot all the way to engine failure and engine fire. Be gentle with the skids.</o>
+    </message>
+    <message key="TIP.FLR.3" actor="2" radio="auto" group="tipflr" seq="3" new="1">
+      <o>A Reset failures button next to the failure setting clears the active failures.</o>
+      <o>A Reset failures button next to the failure setting clears the active failures.</o>
+      <o>And a Reset failures button, next to the failure setting, repairs whatever is active.</o>
+      <o>And a Reset failures button, next to the failure setting, repairs whatever is active.</o>
+      <o>And if it gets too much, the Reset failures button next to the setting repairs what is active.</o>
+      <o>And when you have had enough, the Reset failures button fixes everything. A mechanic would cry.</o>
+    </message>
+    <message key="TIP.FLR.4" actor="3" radio="auto" group="tipflr" seq="4" new="1">
+      <o>The failures setting is read again at the mission start.</o>
+      <o>The failures setting is read again at the mission start.</o>
+      <o>Good to know: the failures setting is read again at the mission start.</o>
+      <o>Good to know: the failures setting is read again at the mission start.</o>
+      <o>And the failures setting is read again at the mission start, so think about it before you start.</o>
+      <o>Good to know: the failures setting is read again at the mission start. Keep it in mind before you ask for excitement.</o>
+    </message>
+    <message key="TIP.CHT.1" actor="2" radio="auto" group="tipcht" seq="1" new="1" trigger="tip of the crew: crew chatter">
+      <o>If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.</o>
+      <o>If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.</o>
+      <o>If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.</o>
+      <o>If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.</o>
+      <o>Boss, if we are chatting too much, settings, Audio options, Crew chatter. Full, reduced or minimal.</o>
+      <o>Boss, if we are driving you mad with our chatter, settings, Audio options, Crew chatter. Full, reduced or minimal.</o>
+    </message>
+    <message key="TIP.CHT.2" actor="3" radio="auto" group="tipcht" seq="2" new="1">
+      <o>Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.</o>
+      <o>Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.</o>
+      <o>Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.</o>
+      <o>Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.</o>
+      <o>Full is the small talk and the chatty wording. Reduced is strictly professional, no small talk.</o>
+      <o>Full is chat, jokes and colloquial wording. Reduced is strictly professional, no small talk, no fun.</o>
+    </message>
+    <message key="TIP.CHT.3" actor="1" radio="auto" group="tipcht" seq="3" new="1">
+      <o>Minimal keeps only the shortest wording.</o>
+      <o>Minimal keeps only the shortest wording.</o>
+      <o>And minimal is the shortest wording we have.</o>
+      <o>And minimal is the shortest wording we have.</o>
+      <o>And minimal is just the bare words, the strict minimum.</o>
+      <o>And minimal is the bare words only. You will not even hear me say good morning.</o>
+    </message>
+    <message key="TIP.CHT.4" actor="2" radio="auto" group="tipcht" seq="4" new="1">
+      <o>The setting is kept in the profiles, so you can have a talkative profile and a quiet one.</o>
+      <o>The setting is kept in the profiles, so you can have a talkative profile and a quiet one.</o>
+      <o>The setting is kept in the profiles too, so one profile can be chatty and another quiet.</o>
+      <o>The setting is kept in the profiles too, so one profile can be chatty and another quiet.</o>
+      <o>And it is kept in the profiles, so you can have a chatty profile and a quiet one.</o>
+      <o>And it is kept in the profiles, so you can keep a chatty profile for sunny days and a silent one for Mondays.</o>
+    </message>
+    <message key="TIP.TOF.1" actor="3" radio="auto" group="tiptof" seq="1" new="1" trigger="tip of the crew: switching the tips off">
+      <o>By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.</o>
+      <o>By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.</o>
+      <o>These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.</o>
+      <o>These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.</o>
+      <o>Boss, if these tips get on your nerves, they have their own switch. We will not be offended. Much.</o>
+      <o>Boss, if you are sick of our tips, they have a switch of their own. We will sulk quietly, but we will manage.</o>
+    </message>
+    <message key="TIP.TOF.2" actor="2" radio="auto" group="tiptof" seq="2" new="1">
+      <o>In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.</o>
+      <o>In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.</o>
+      <o>Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.</o>
+      <o>Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.</o>
+      <o>Settings, Audio options, Crew tips, tips off. The small talk is another matter, that is the Crew chatter.</o>
+      <o>Settings, Audio options, Crew tips, tips off, and the lectures stop. The jokes are the business of the Crew chatter.</o>
+    </message>
+    <message key="TIP.TOF.3" actor="3" radio="auto" group="tiptof" seq="3" new="1">
+      <o>It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.</o>
+      <o>It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.</o>
+      <o>And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.</o>
+      <o>And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.</o>
+      <o>And the other way round too. Keep the tips and drop the small talk with the Crew chatter on reduced.</o>
+      <o>Or the other way round: all the lectures and no jokes, with the Crew chatter on reduced. Strictly business.</o>
+    </message>
+    <message key="TIP.TOF.4" actor="1" radio="auto" group="tiptof" seq="4" new="1">
+      <o>The Crew tips setting is kept in the profiles too, so each profile can have its own.</o>
+      <o>The Crew tips setting is kept in the profiles too, so each profile can have its own.</o>
+      <o>And it is kept in the profiles, so each profile can have its own choice.</o>
+      <o>And it is kept in the profiles, so each profile can have its own choice.</o>
+      <o>And it lives in the profiles too, so you can have a profile that knows everything and a profile that wants silence.</o>
+      <o>And it lives in the profiles, so one profile can be a know-it-all and another one a monk.</o>
+    </message>
 </voicepack>

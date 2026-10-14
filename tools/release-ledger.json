@@ -1,8 +1,8 @@
 {
-    "sha256":  "F1E8D5FFE050E37C692E51E4AAEB1206A1165CC3166A073B9DF7A77BD078FCFE",
-    "installerSha256":  "E02B3090B8B31EA80CFE79CFCC03CA07A1C58DF25FC1D0425022791606589B9A",
+    "sha256":  "80E4D4C275DB5A103E201D3429787A6B653FCE8ADAD06ECFEEDEF862783B5693",
+    "installerSha256":  "FE29DF0B341E977CA827D37EEE677F72971C6777784BFA30CED15335048F685A",
     "deliveredOn":  "2026-10-14",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.23",
-    "note":  "Release 0.23: a seat the flight does not have is spoken by a crew member who is there (text messages only), control tag \u003cmission:ID\u003e. Static check PASS; --expand scenario tests/crew-standin-lines.txt run with the built program. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.24",
+    "note":  "Release 0.24: voice pack EN 13 with the tips of the crew (44 messages TIP.*), for mission 169.53. Static check PASS; --expand scenarios tests/tips-lines.txt and tests/crew-standin-lines.txt run with the built program. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
