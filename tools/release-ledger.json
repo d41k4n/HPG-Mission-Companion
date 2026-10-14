@@ -1,8 +1,8 @@
 {
-    "sha256":  "AC1861F65938B9133B40A2A2DBEBF81D30946992D1D33EEE4092B0983E29AFFA",
-    "installerSha256":  "02B6AEDF9EC041184F1F65DECCF0C251C5619695971F26C961F9B6B37D5B58BA",
-    "deliveredOn":  "2026-10-13",
+    "sha256":  "F1E8D5FFE050E37C692E51E4AAEB1206A1165CC3166A073B9DF7A77BD078FCFE",
+    "installerSha256":  "E02B3090B8B31EA80CFE79CFCC03CA07A1C58DF25FC1D0425022791606589B9A",
+    "deliveredOn":  "2026-10-14",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.22",
-    "note":  "Release 0.22: Google Drive removed (the mission, the program and the voice pack are read from GitHub only; MissionUrl, --mission-url and the Drive reader are gone). Static check PASS; smoke test of --check-updates with the real settings file. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.23",
+    "note":  "Release 0.23: a seat the flight does not have is spoken by a crew member who is there (text messages only), control tag \u003cmission:ID\u003e. Static check PASS; --expand scenario tests/crew-standin-lines.txt run with the built program. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
