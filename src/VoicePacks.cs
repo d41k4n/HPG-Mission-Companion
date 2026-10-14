@@ -391,7 +391,7 @@ namespace HPGMissionCompanion
     internal static class Say
     {
         const string Rest = "(?:\\s*[:=]\\s*([^<>\\[\\]]{0,400}))?";
-        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|mission|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HolderRx = new Regex("\\{(@?[A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
@@ -490,6 +490,7 @@ namespace HPGMissionCompanion
                     string kind = m.Groups[1].Value.ToLowerInvariant();
                     string arg = m.Groups[2].Success ? m.Groups[2].Value.Trim() : "";
                     if (kind == "pack") ParsePack(arg, notes);
+                    else if (kind == "mission") ParseMission(arg);
                     else if (kind == "defaultactor") ParseDefaultActor(arg, notes);
                     else if (kind == "names") ParseNames(arg);
                     else if (kind == "variety") ParseVariety(arg, notes);
@@ -546,6 +547,19 @@ namespace HPGMissionCompanion
         }
 
         // ---- state tags ----
+        // <mission:RE>: the identity of the mission that speaks (RE = Random & Everywhere). Only kept and logged for now; a pack may later say which mission it is for.
+        static string missionId = "";
+        public static string MissionId { get { return missionId; } }
+
+        static void ParseMission(string arg)
+        {
+            arg = Regex.Replace(arg == null ? "" : arg.Trim(), "[^A-Za-z0-9_.-]", "");
+            if (arg.Length > 16) arg = arg.Substring(0, 16);
+            if (arg == missionId) return;
+            missionId = arg;
+            Ctx.Log("[INFO] Mission: " + (arg.Length > 0 ? arg : "(none)"));
+        }
+
         static void ParsePack(string arg, List<string> notes)
         {
             string name = arg; int ver = 0;
@@ -886,6 +900,17 @@ namespace HPGMissionCompanion
                 if (sx.Length == 0) sx = TechSexOf(msg);
                 actor = sx == "f" ? 7 : 6;      // a message with options for the two technicians is spoken by the technician of the scene: Technician male (6) or female (7)
             }
+            if (actor >= 1 && actor <= 5 && crewExist != 0 && (crewExist & (1 << (actor - 1))) == 0)       // a seat the crew of this flight does not have (3 crew: no HEMS1, no HEMS2)
+            {
+                int stand = StandIn(actor);
+                if (stand == 0)
+                {
+                    Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " is not in this crew and nobody else can say it");
+                    return "";
+                }
+                Ctx.Log("[SAY] " + msg.Key + ": " + Actors.Names[actor - 1] + " is not in this crew, " + Actors.Names[stand - 1] + " says it");
+                actor = stand;
+            }
             if (actor >= 1 && actor <= 5 && (muteMask & (1 << (actor - 1))) != 0)       // the dead and the badly hurt do not speak
             {
                 Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " cannot speak (L:HMC_CREW_MUTE)");
@@ -914,6 +939,18 @@ namespace HPGMissionCompanion
             }
             Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " (" + pack.Name + " v" + pack.Version + ")");
             return tags.ToString() + body;
+        }
+
+        // A message of a seat that this crew does not have (L:HMC_CREW_EXIST published, the bit missing) is said by a crew member who is there, with the voice of
+        // that member (user, 2026-10-14: the Daikan report, PAX1 lines with 3 crew). Rear seats go to the rear crew first, then the cockpit; a member who cannot
+        // speak (L:HMC_CREW_MUTE) is skipped; 0 when nobody can. Only the texts of the packs: the messages that are a wav file (no options) are not touched.
+        static readonly int[][] StandIns = { null, new int[] { }, new int[] { 1, 3, 4, 5 }, new int[] { 4, 5, 2, 1 }, new int[] { 3, 5, 2, 1 }, new int[] { 4, 3, 2, 1 } };
+
+        static int StandIn(int actor)
+        {
+            foreach (int a in StandIns[actor])
+                if ((crewExist & (1 << (a - 1))) != 0 && (muteMask & (1 << (a - 1))) == 0) return a;
+            return 0;
         }
 
         // ---- how a line is heard (the rules of the user, 2026-10-11) ----
