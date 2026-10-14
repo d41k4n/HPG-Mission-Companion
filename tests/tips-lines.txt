@@ -1,0 +1,6 @@
+@settings variety=random bridge=EN
+<pack:EN:13>
+<say:TIP.TOF.2>
+<say:TIP.CHT.3>
+<say:TIP.KIT.2>
+<say:TIP.DBG.4>

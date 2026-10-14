@@ -1,8 +1,8 @@
 {
-    "sha256":  "AC1861F65938B9133B40A2A2DBEBF81D30946992D1D33EEE4092B0983E29AFFA",
-    "installerSha256":  "02B6AEDF9EC041184F1F65DECCF0C251C5619695971F26C961F9B6B37D5B58BA",
-    "deliveredOn":  "2026-10-13",
+    "sha256":  "80E4D4C275DB5A103E201D3429787A6B653FCE8ADAD06ECFEEDEF862783B5693",
+    "installerSha256":  "FE29DF0B341E977CA827D37EEE677F72971C6777784BFA30CED15335048F685A",
+    "deliveredOn":  "2026-10-14",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.22",
-    "note":  "Release 0.22: Google Drive removed (the mission, the program and the voice pack are read from GitHub only; MissionUrl, --mission-url and the Drive reader are gone). Static check PASS; smoke test of --check-updates with the real settings file. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.24",
+    "note":  "Release 0.24: voice pack EN 13 with the tips of the crew (44 messages TIP.*), for mission 169.53. Static check PASS; --expand scenarios tests/tips-lines.txt and tests/crew-standin-lines.txt run with the built program. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

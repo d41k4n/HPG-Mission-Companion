@@ -84,6 +84,7 @@ Sound-only messages: a pack message with sfx="1" has no text, only a wav name; t
 Every pack has a whole version number that rises at every change of its texts. The mission declares what it needs at the start (or when the voice option is chosen):
 
   {"speak":"<pack:EN:1>"}          pack EN, at least version 1
+  {"speak":"<mission:RE>"}         the identity of the mission (R&E here); the program keeps it and shows it in the log, other missions use their own short id
 
 The program compares and tells the mission through simulator variables (SimConnect, it needs the MSFS SDK SimConnect.dll beside the program):
 

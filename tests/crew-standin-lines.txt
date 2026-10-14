@@ -1,0 +1,17 @@
+@settings variety=random bridge=EN
+<mission:RE>
+@watch L:HMC_CTX_VALID 1
+@watch L:HMC_CREW_EXIST 7
+@watch L:HMC_CREW_PRESENT 7
+<say:PAX1.1:1>
+@watch L:HMC_CREW_EXIST 31
+@watch L:HMC_CREW_PRESENT 31
+<say:PAX1.1:1>
+@watch L:HMC_CREW_EXIST 7
+@watch L:HMC_CREW_MUTE 4
+<say:PAX1.1:1>
+@watch L:HMC_CREW_EXIST 1
+@watch L:HMC_CREW_MUTE 0
+<say:PAX1.1:1>
+@watch L:HMC_CREW_EXIST 0
+<say:PAX1.1:1>

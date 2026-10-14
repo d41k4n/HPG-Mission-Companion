@@ -1,0 +1,630 @@
+{
+  "_comment": "Pack EN 13: tips of the crew about functions of the mission (user request of 2026-10-14), ten conversations of four lines, TIP.<topic>.1 to 4. They are not marked futile (no silent option, a tip is never wasted): the mission tells them only with CREW CHATTER FULL (voice calm); options 1 and 2 are the neutral wording with the whole information, 3 and 4 friendlier, 5 and 6 more playful. The menu names are those of the tablet.",
+  "TIP.SAV.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipsav",
+    "seq": 1,
+    "trigger": "tip of the crew: saves of the mission",
+    "o": [
+      "Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.",
+      "Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.",
+      "By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.",
+      "By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.",
+      "Hey boss, the tablet has a save function. Quick links, Save or reload a mission. Just saying.",
+      "Psst, boss. There is a save function hiding in the Quick links. Save or reload a mission. Very handy when the coffee gets cold."
+    ]
+  },
+  "TIP.SAV.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipsav",
+    "seq": 2,
+    "o": [
+      "There are three slots, plus an autosave. Give the save a name first, the name is mandatory.",
+      "There are three slots, plus an autosave. Give the save a name first, the name is mandatory.",
+      "Three slots and an autosave. You have to type a name first, otherwise it will not save.",
+      "Three slots and an autosave. You have to type a name first, otherwise it will not save.",
+      "Three slots plus an autosave. And it wants a name, it is picky like that.",
+      "Three slots plus an autosave. Give it a nice name, it refuses anonymous missions."
+    ]
+  },
+  "TIP.SAV.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipsav",
+    "seq": 3,
+    "o": [
+      "Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.",
+      "Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.",
+      "One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.",
+      "One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.",
+      "One catch: while we work on the patient or on the hoist, saving is off. Do it before, or after.",
+      "And no saving in the middle of the action. Not while we are on the hoist or around the patient. Before or after, please."
+    ]
+  },
+  "TIP.SAV.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipsav",
+    "seq": 4,
+    "o": [
+      "And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.",
+      "And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.",
+      "And if a flight goes badly, there is also Reload last accepted mission.",
+      "And if a flight goes badly, there is also Reload last accepted mission.",
+      "And if it all goes wrong, Reload last accepted mission is your friend. We will never mention it.",
+      "And if you bend the skids, Reload last accepted mission. We will all pretend it never happened."
+    ]
+  },
+  "TIP.MSL.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipmsl",
+    "seq": 1,
+    "trigger": "tip of the crew: mission list presets",
+    "o": [
+      "Another tip: the mission list has presets. A default one, and presets 1 to 5.",
+      "Another tip: the mission list has presets. A default one, and presets 1 to 5.",
+      "Did you know the mission list has presets? A default one, and presets 1 to 5.",
+      "Did you know the mission list has presets? A default one, and presets 1 to 5.",
+      "Boss, have you seen the mission list presets? Default, and then preset 1 to 5.",
+      "Fun fact: the mission list comes with presets. Default plus five more. Order your emergencies like from a menu."
+    ]
+  },
+  "TIP.MSL.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipmsl",
+    "seq": 2,
+    "o": [
+      "In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.",
+      "In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.",
+      "Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.",
+      "Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.",
+      "In every preset you switch missions on and off. Not in the mood for road accidents? Switch them off.",
+      "You can switch missions on and off. Tired of road accidents? Gone. Only mountain rescues? Done."
+    ]
+  },
+  "TIP.MSL.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipmsl",
+    "seq": 3,
+    "o": [
+      "The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.",
+      "The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.",
+      "The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.",
+      "The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.",
+      "Default is for every livery. Presets 1 to 5 can belong to one livery, so each helicopter gets its own list.",
+      "Default works for every livery. Presets 1 to 5 can belong to one livery, so each helicopter has its own taste in emergencies."
+    ]
+  },
+  "TIP.MSL.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipmsl",
+    "seq": 4,
+    "o": [
+      "And a mission you enabled or disabled by hand keeps your choice when you change preset.",
+      "And a mission you enabled or disabled by hand keeps your choice when you change preset.",
+      "And the missions you switched on or off by hand stay as you left them when you change preset.",
+      "And the missions you switched on or off by hand stay as you left them when you change preset.",
+      "And what you switched by hand stays that way, even when you change preset. Respect for the pilot.",
+      "And your manual choices survive the change of preset. Rare thing, a tablet that listens."
+    ]
+  },
+  "TIP.PRF.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipprf",
+    "seq": 1,
+    "trigger": "tip of the crew: settings profiles",
+    "o": [
+      "On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.",
+      "On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.",
+      "Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.",
+      "Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.",
+      "Boss, you do not have to fiddle with every option. User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.",
+      "Why tweak fifty options when there are profiles? Default, Rookie, Expert pilot, Expert HEMS. Pick your level of suffering."
+    ]
+  },
+  "TIP.PRF.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipprf",
+    "seq": 2,
+    "o": [
+      "There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.",
+      "There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.",
+      "And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.",
+      "And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.",
+      "And six custom profiles of your own. No save button, it keeps every change by itself.",
+      "Six custom profiles, all yours to ruin. It saves every change by itself, no button needed."
+    ]
+  },
+  "TIP.PRF.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipprf",
+    "seq": 3,
+    "o": [
+      "A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.",
+      "A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.",
+      "You can link a custom profile to a mission list preset, so choosing the list loads your settings too.",
+      "You can link a custom profile to a mission list preset, so choosing the list loads your settings too.",
+      "Even better: link a custom profile to a mission list preset, and choosing the list loads the settings as well.",
+      "Link a custom profile to a mission list and it follows it around like a puppy. Choose the list, the settings come along."
+    ]
+  },
+  "TIP.PRF.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipprf",
+    "seq": 4,
+    "o": [
+      "And Save actual config to file keeps one independent backup of your settings.",
+      "And Save actual config to file keeps one independent backup of your settings.",
+      "And Save actual config to file makes a separate backup, just in case.",
+      "And Save actual config to file makes a separate backup, just in case.",
+      "And there is a backup button, Save actual config to file. Use it before you start experimenting.",
+      "And a backup button, Save actual config to file, for the day you break everything."
+    ]
+  },
+  "TIP.CRW.1": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipcrw",
+    "seq": 1,
+    "trigger": "tip of the crew: crew health",
+    "o": [
+      "A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.",
+      "A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.",
+      "A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.",
+      "A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.",
+      "Boss, did you know we can get hurt? Settings, Flight assists, Crew health simulation. Your call.",
+      "Boss, did you know we are breakable? Settings, Flight assists, Crew health simulation. Active or disabled, be kind."
+    ]
+  },
+  "TIP.CRW.2": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipcrw",
+    "seq": 2,
+    "o": [
+      "With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.",
+      "With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.",
+      "With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.",
+      "With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.",
+      "Active means a hard landing really hurts us. Our Life Scores are on the dispatch page, go and have a look.",
+      "Active means the ground hurts for real. Our Life Scores are on the dispatch page. Mine is excellent, by the way."
+    ]
+  },
+  "TIP.CRW.3": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipcrw",
+    "seq": 3,
+    "o": [
+      "If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.",
+      "If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.",
+      "If one of us becomes critical, you will be asked to divert or to continue.",
+      "If one of us becomes critical, you will be asked to divert or to continue.",
+      "If one of us goes critical, you decide: divert or continue. Please be generous.",
+      "If one of us goes critical you choose: divert or continue. Choose divert. Choose divert. Choose divert."
+    ]
+  },
+  "TIP.CRW.4": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipcrw",
+    "seq": 4,
+    "o": [
+      "The number of crew, three, four or five, is in the settings too. It is locked during the boarding.",
+      "The number of crew, three, four or five, is in the settings too. It is locked during the boarding.",
+      "The crew size is in the settings too: three, four or five. It locks during the boarding.",
+      "The crew size is in the settings too: three, four or five. It locks during the boarding.",
+      "And you pick how many of us there are, three, four or five. Before the boarding, not after.",
+      "And you decide how many of us fly with you, three, four or five. Choose wisely, the coffee is limited."
+    ]
+  },
+  "TIP.KIT.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipkit",
+    "seq": 1,
+    "trigger": "tip of the crew: weight of the installed kits",
+    "o": [
+      "Tip: the technical page has an option, Weight of the installed kits. It is off by default.",
+      "Tip: the technical page has an option, Weight of the installed kits. It is off by default.",
+      "Did you know the technical page can count the weight of the installed kits? It is off by default.",
+      "Did you know the technical page can count the weight of the installed kits? It is off by default.",
+      "Boss, the technical page can weigh the kits we carry. It is off by default, so the helicopter thinks they are free.",
+      "Boss, by default the helicopter thinks our kits weigh nothing. A lovely thought. You can change it on the technical page."
+    ]
+  },
+  "TIP.KIT.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipkit",
+    "seq": 2,
+    "o": [
+      "With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.",
+      "With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.",
+      "Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.",
+      "Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.",
+      "Switch it on and it adds up the hoist, the searchlight, the floats, the skids, the radome, the filter, the air conditioning and the avionics.",
+      "Switch it on and it adds up everything bolted on: hoist, searchlight, floats, skids, radome, filter, air conditioning, avionics. A long shopping list."
+    ]
+  },
+  "TIP.KIT.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipkit",
+    "seq": 3,
+    "o": [
+      "The people always count: the stations follow who is on the seats and the patient on the stretcher.",
+      "The people always count: the stations follow who is on the seats and the patient on the stretcher.",
+      "People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.",
+      "People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.",
+      "People count even with the option off. The stations follow who is on the seats and who is on the stretcher.",
+      "We always count, kits or no kits. The stations know who sits where, and who is lying on the stretcher."
+    ]
+  },
+  "TIP.KIT.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipkit",
+    "seq": 4,
+    "o": [
+      "During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.",
+      "During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.",
+      "And on the hoist, the weight stays on the cable until the person touches the ground.",
+      "And on the hoist, the weight stays on the cable until the person touches the ground.",
+      "On the hoist, the weight of the person stays until their feet touch the ground. Physics, imagine that.",
+      "On the hoist, the weight stays until the boots touch the ground. After that, it is the ground problem."
+    ]
+  },
+  "TIP.QLK.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipqlk",
+    "seq": 1,
+    "trigger": "tip of the crew: quick links of the dispatch page",
+    "o": [
+      "Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.",
+      "Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.",
+      "Did you notice the Quick links on the dispatch page? They are folded. Click to show them.",
+      "Did you notice the Quick links on the dispatch page? They are folded. Click to show them.",
+      "Boss, the dispatch page hides a list of links. Look for Quick links and click it.",
+      "Boss, the dispatch page is hiding links from you. Quick links, click, and they appear like magic."
+    ]
+  },
+  "TIP.QLK.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipqlk",
+    "seq": 2,
+    "o": [
+      "Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.",
+      "Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.",
+      "Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.",
+      "Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.",
+      "Inside you find the checklists, the dispatch control, the medical diagnostic page and the save page.",
+      "Inside: checklists, dispatch control, the medical diagnostic page and the save page. Everything the cool pilots know about."
+    ]
+  },
+  "TIP.QLK.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipqlk",
+    "seq": 3,
+    "o": [
+      "The technical page and ground operations link shows up only when the helicopter is on the ground.",
+      "The technical page and ground operations link shows up only when the helicopter is on the ground.",
+      "The technical page link appears only when we are on the ground.",
+      "The technical page link appears only when we are on the ground.",
+      "The technical page shows up only when we are on the ground. In the air it plays hard to get.",
+      "The technical page link appears only when we are on the ground. In the air it plays hard to get, like me at parties."
+    ]
+  },
+  "TIP.QLK.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipqlk",
+    "seq": 4,
+    "o": [
+      "The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.",
+      "The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.",
+      "And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.",
+      "And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.",
+      "And with manual treatment on, the medical page link is always there, even when everything else is folded.",
+      "And with manual treatment on, the medical page link never hides. It knows we need it."
+    ]
+  },
+  "TIP.DBG.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipdbg",
+    "seq": 1,
+    "trigger": "tip of the crew: debug snapshots",
+    "o": [
+      "Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.",
+      "Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.",
+      "If something looks wrong, open the Debug center. There is a Capture snapshot button.",
+      "If something looks wrong, open the Debug center. There is a Capture snapshot button.",
+      "Boss, if the mission goes weird, open the Debug center and press Capture snapshot before you do anything else.",
+      "Mission acting up? Do not panic. Debug center, Capture snapshot. Evidence first, tears later."
+    ]
+  },
+  "TIP.DBG.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipdbg",
+    "seq": 2,
+    "o": [
+      "It saves the mission, the route, the crew progress, the rotor progress and the patient information.",
+      "It saves the mission, the route, the crew progress, the rotor progress and the patient information.",
+      "It records the mission, the route, how the crew is doing, the rotor and the patients.",
+      "It records the mission, the route, how the crew is doing, the rotor and the patients.",
+      "It records the mission, the route, the crew, the rotor and the patients, all in one go.",
+      "Mission, route, crew, rotor and patients, all in one snapshot. Like a medical chart for the whole flight."
+    ]
+  },
+  "TIP.DBG.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipdbg",
+    "seq": 3,
+    "o": [
+      "The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.",
+      "The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.",
+      "It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.",
+      "It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.",
+      "And it writes automatic snapshots by itself, files starting with table R and E debug, plus the previous mission.",
+      "And it takes snapshots by itself, files starting with table R and E debug. It even keeps the previous mission. A very organised machine."
+    ]
+  },
+  "TIP.DBG.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipdbg",
+    "seq": 4,
+    "o": [
+      "You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.",
+      "You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.",
+      "Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.",
+      "Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.",
+      "Open the work folder from the Mission Companion, Tools tab, and send those files on Discord with a line about what happened.",
+      "Open the work folder from the Mission Companion, Tools tab, and throw those files on Discord with a line about the crime scene. The developers love that."
+    ]
+  },
+  "TIP.MED.1": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipmed",
+    "seq": 1,
+    "trigger": "tip of the crew: medical options",
+    "o": [
+      "Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.",
+      "Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.",
+      "Medical tip: settings, Medical options. The treatment mode can be automatic or manual.",
+      "Medical tip: settings, Medical options. The treatment mode can be automatic or manual.",
+      "Boss, if you want to play doctor, settings, Medical options. The treatment mode can be automatic or manual.",
+      "Boss, if you want to play doctor, settings, Medical options, treatment mode, manual. Do not tell the insurance."
+    ]
+  },
+  "TIP.MED.2": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipmed",
+    "seq": 2,
+    "o": [
+      "In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.",
+      "In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.",
+      "In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.",
+      "In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.",
+      "In manual you pick one procedure per phase for every patient. No automatic timers, it is all on you.",
+      "In manual you pick the procedure for every phase and every patient, and nobody rushes you. Except the patient."
+    ]
+  },
+  "TIP.MED.3": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipmed",
+    "seq": 3,
+    "o": [
+      "You can also set the average visit time, from ultrafast to slow.",
+      "You can also set the average visit time, from ultrafast to slow.",
+      "You can also set how long the visits take, from ultrafast to slow.",
+      "You can also set how long the visits take, from ultrafast to slow.",
+      "You also set how long the visits take, from ultrafast to slow. Slow if you like to enjoy the view.",
+      "And the visit time goes from ultrafast to slow. Slow is for people who like a long coffee break."
+    ]
+  },
+  "TIP.MED.4": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipmed",
+    "seq": 4,
+    "o": [
+      "And you can declare a mechanical CPR system on board, which allows CPR while airborne.",
+      "And you can declare a mechanical CPR system on board, which allows CPR while airborne.",
+      "And there is the option for a mechanical CPR system, so we can do CPR while flying.",
+      "And there is the option for a mechanical CPR system, so we can do CPR while flying.",
+      "And if you install the mechanical CPR system, we can keep the compressions going in the air.",
+      "And with the mechanical CPR system installed, the machine does the compressions in flight. It never gets tired."
+    ]
+  },
+  "TIP.FLR.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipflr",
+    "seq": 1,
+    "trigger": "tip of the crew: helicopter failures",
+    "o": [
+      "Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.",
+      "Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.",
+      "Did you know helicopter failures can be switched on or off? Settings, Flight assists.",
+      "Did you know helicopter failures can be switched on or off? Settings, Flight assists.",
+      "Boss, if you want the helicopter to misbehave, settings, Flight assists, Helicopter failures, enabled.",
+      "Boss, if you miss the excitement, settings, Flight assists, Helicopter failures, enabled. We will be the ones crying."
+    ]
+  },
+  "TIP.FLR.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipflr",
+    "seq": 2,
+    "o": [
+      "A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.",
+      "A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.",
+      "A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.",
+      "A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.",
+      "A hard knock can cause failures, light ones like the autopilot, heavy ones like an engine failure or an engine fire.",
+      "A hard knock can break things, from the autopilot all the way to engine failure and engine fire. Be gentle with the skids."
+    ]
+  },
+  "TIP.FLR.3": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipflr",
+    "seq": 3,
+    "o": [
+      "A Reset failures button next to the failure setting clears the active failures.",
+      "A Reset failures button next to the failure setting clears the active failures.",
+      "And a Reset failures button, next to the failure setting, repairs whatever is active.",
+      "And a Reset failures button, next to the failure setting, repairs whatever is active.",
+      "And if it gets too much, the Reset failures button next to the setting repairs what is active.",
+      "And when you have had enough, the Reset failures button fixes everything. A mechanic would cry."
+    ]
+  },
+  "TIP.FLR.4": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipflr",
+    "seq": 4,
+    "o": [
+      "The failures setting is read again at the mission start.",
+      "The failures setting is read again at the mission start.",
+      "Good to know: the failures setting is read again at the mission start.",
+      "Good to know: the failures setting is read again at the mission start.",
+      "And the failures setting is read again at the mission start, so think about it before you start.",
+      "Good to know: the failures setting is read again at the mission start. Keep it in mind before you ask for excitement."
+    ]
+  },
+  "TIP.CHT.1": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipcht",
+    "seq": 1,
+    "trigger": "tip of the crew: crew chatter",
+    "o": [
+      "If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.",
+      "If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.",
+      "If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.",
+      "If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.",
+      "Boss, if we are chatting too much, settings, Audio options, Crew chatter. Full, reduced or minimal.",
+      "Boss, if we are driving you mad with our chatter, settings, Audio options, Crew chatter. Full, reduced or minimal."
+    ]
+  },
+  "TIP.CHT.2": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tipcht",
+    "seq": 2,
+    "o": [
+      "Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.",
+      "Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.",
+      "Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.",
+      "Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.",
+      "Full is the small talk and the chatty wording. Reduced is strictly professional, no small talk.",
+      "Full is chat, jokes and colloquial wording. Reduced is strictly professional, no small talk, no fun."
+    ]
+  },
+  "TIP.CHT.3": {
+    "actor": 1,
+    "radio": "auto",
+    "group": "tipcht",
+    "seq": 3,
+    "o": [
+      "Minimal keeps only the shortest wording.",
+      "Minimal keeps only the shortest wording.",
+      "And minimal is the shortest wording we have.",
+      "And minimal is the shortest wording we have.",
+      "And minimal is just the bare words, the strict minimum.",
+      "And minimal is the bare words only. You will not even hear me say good morning."
+    ]
+  },
+  "TIP.CHT.4": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tipcht",
+    "seq": 4,
+    "o": [
+      "The setting is kept in the profiles, so you can have a talkative profile and a quiet one.",
+      "The setting is kept in the profiles, so you can have a talkative profile and a quiet one.",
+      "The setting is kept in the profiles too, so one profile can be chatty and another quiet.",
+      "The setting is kept in the profiles too, so one profile can be chatty and another quiet.",
+      "And it is kept in the profiles, so you can have a chatty profile and a quiet one.",
+      "And it is kept in the profiles, so you can keep a chatty profile for sunny days and a silent one for Mondays."
+    ]
+  },
+  "TIP.TOF.1": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tiptof",
+    "seq": 1,
+    "trigger": "tip of the crew: switching the tips off",
+    "o": [
+      "By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.",
+      "By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.",
+      "These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.",
+      "These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.",
+      "Boss, if these tips get on your nerves, they have their own switch. We will not be offended. Much.",
+      "Boss, if you are sick of our tips, they have a switch of their own. We will sulk quietly, but we will manage."
+    ]
+  },
+  "TIP.TOF.2": {
+    "actor": 2,
+    "radio": "auto",
+    "group": "tiptof",
+    "seq": 2,
+    "o": [
+      "In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.",
+      "In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.",
+      "Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.",
+      "Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.",
+      "Settings, Audio options, Crew tips, tips off. The small talk is another matter, that is the Crew chatter.",
+      "Settings, Audio options, Crew tips, tips off, and the lectures stop. The jokes are the business of the Crew chatter."
+    ]
+  },
+  "TIP.TOF.3": {
+    "actor": 3,
+    "radio": "auto",
+    "group": "tiptof",
+    "seq": 3,
+    "o": [
+      "It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.",
+      "It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.",
+      "And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.",
+      "And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.",
+      "And the other way round too. Keep the tips and drop the small talk with the Crew chatter on reduced.",
+      "Or the other way round: all the lectures and no jokes, with the Crew chatter on reduced. Strictly business."
+    ]
+  },
+  "TIP.TOF.4": {
+    "actor": 1,
+    "radio": "auto",
+    "group": "tiptof",
+    "seq": 4,
+    "o": [
+      "The Crew tips setting is kept in the profiles too, so each profile can have its own.",
+      "The Crew tips setting is kept in the profiles too, so each profile can have its own.",
+      "And it is kept in the profiles, so each profile can have its own choice.",
+      "And it is kept in the profiles, so each profile can have its own choice.",
+      "And it lives in the profiles too, so you can have a profile that knows everything and a profile that wants silence.",
+      "And it lives in the profiles, so one profile can be a know-it-all and another one a monk."
+    ]
+  }
+}
