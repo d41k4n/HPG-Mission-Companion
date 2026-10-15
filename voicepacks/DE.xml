@@ -273,12 +273,12 @@
       <o>Heute eine Verlegung, Leute. Machen wir es so ruhig und angenehm wie möglich.</o>
     </message>
     <message key="CPL.1" actor="2" radio="auto" lvar="L:CPL{VCP}1" wav="AND.cpl.all.engine.started.successfully.wav" sleep="0">
-      <o>Alle Triebwerke erfolgreich gestartet.</o>
-      <o>Beide Triebwerke erfolgreich angelassen.</o>
-      <o>Beide Triebwerke laufen.</o>
-      <o>Triebwerke laufen, alles bestens.</o>
-      <o>Beide Triebwerke sind hochgefahren und laufen.</o>
-      <o>Beide Triebwerke laufen schön ruhig.</o>
+      <o>Alle erfolgreich gestartet.</o>
+      <o>Beide erfolgreich angelassen.</o>
+      <o>Beide laufen.</o>
+      <o>Beide laufen, alles bestens.</o>
+      <o>Beide sind hochgefahren und laufen.</o>
+      <o>Beide laufen schön ruhig.</o>
     </message>
     <message key="CPL.2" actor="2" radio="auto" lvar="L:CPL{VCP}2" wav="AND.cpl.all.good.wav" sleep="0">
       <o>Okay, alles in Ordnung.</o>
@@ -289,20 +289,20 @@
       <o>Alles gut, kein Problem.</o>
     </message>
     <message key="CPL.3" actor="2" radio="auto" lvar="L:CPL{VCP}3" wav="AND.cpl.area.clear.ready.to.engine.1.wav" sleep="0">
-      <o>Bereich frei. Bereit zum Anlassen von Triebwerk eins.</o>
-      <o>Der Bereich ist frei. Bereit für Triebwerk-eins-Start.</o>
-      <o>Bereich frei, wir können Triebwerk eins anlassen.</o>
-      <o>Rundum frei. Triebwerk eins starten, wenn du bereit bist.</o>
-      <o>Alles frei, bereit für Start Triebwerk eins.</o>
-      <o>Rundum alles frei, starten wir Triebwerk eins.</o>
+      <o>Bereich frei. Bereit zum Anlassen von Nummer eins.</o>
+      <o>Der Bereich ist frei. Bereit zum Start von Nummer eins.</o>
+      <o>Bereich frei, wir können Nummer eins anlassen.</o>
+      <o>Rundum frei. Nummer eins starten, wenn du bereit bist.</o>
+      <o>Alles frei, bereit für Start Nummer eins.</o>
+      <o>Rundum alles frei, starten wir Nummer eins.</o>
     </message>
     <message key="CPL.4" actor="2" radio="auto" lvar="L:CPL{VCP}4" wav="AND.cpl.area.clear.ready.to.engine.2.wav" sleep="0">
-      <o>Bereich frei. Bereit zum Anlassen von Triebwerk zwei.</o>
-      <o>Der Bereich ist frei. Bereit für Triebwerk-zwei-Start.</o>
-      <o>Bereich frei, wir können Triebwerk zwei anlassen.</o>
-      <o>Rundum frei. Triebwerk zwei starten, wenn du bereit bist.</o>
-      <o>Alles frei, bereit für Start Triebwerk zwei.</o>
-      <o>Rundum alles frei, starten wir Triebwerk zwei.</o>
+      <o>Bereich frei. Bereit zum Anlassen von Nummer zwei.</o>
+      <o>Der Bereich ist frei. Bereit für Nummer-zwei-Start.</o>
+      <o>Bereich frei, wir können Nummer zwei anlassen.</o>
+      <o>Rundum frei. Nummer zwei starten, wenn du bereit bist.</o>
+      <o>Alles frei, bereit für Start Nummer zwei.</o>
+      <o>Rundum alles frei, starten wir Nummer zwei.</o>
     </message>
     <message key="CPL.5" actor="2" radio="auto" lvar="L:CPL{VCP}5" wav="AND.cpl.comm.chk.wav" sleep="2" tight="1">
       <o>Copilot hier, Funkprobe.</o>
@@ -313,12 +313,12 @@
       <o>Funkprobe vom Copiloten, bin ich zu hören?</o>
     </message>
     <message key="CPL.6" actor="2" radio="auto" lvar="L:CPL{VCP}6" wav="AND.cpl.engine.clear.wav" sleep="0">
-      <o>Triebwerksbereich frei.</o>
-      <o>Triebwerk frei.</o>
-      <o>Der Triebwerksbereich ist frei.</o>
-      <o>Bereich um das Triebwerk frei.</o>
-      <o>Niemand am Triebwerk, Bereich ist frei.</o>
-      <o>Rund ums Triebwerk alles frei, weiter.</o>
+      <o>Bereich ist frei, klar zum Start.</o>
+      <o>Alles frei, klar zum Start.</o>
+      <o>Der Bereich ist frei, klar zum Start.</o>
+      <o>Bereich frei, wir sind startklar.</o>
+      <o>Bereich ist frei, bereit zum Start</o>
+      <o>Bereich frei, alles klar zum Start.</o>
     </message>
     <message key="CPL.7" actor="2" radio="auto" lvar="L:CPL{VCP}7" wav="AND.cpl.engine.fire.wav" sleep="0">
       <o>Triebwerksbrand. Triebwerk abstellen.</o>
@@ -329,11 +329,11 @@
       <o>Brand im Triebwerk, abschalten, schnell!</o>
     </message>
     <message key="CPL.8" actor="2" radio="auto" lvar="L:CPL{VCP}8" wav="AND.cpl.engine.started.succ.moving.to.other.wav" sleep="0">
-      <o>Triebwerk erfolgreich angelassen. Weiter mit dem anderen Triebwerk.</o>
-      <o>Triebwerk gestartet. Wechsel zum anderen Triebwerk.</o>
-      <o>Erstes Triebwerk läuft. Jetzt das andere.</o>
-      <o>Ein Triebwerk läuft. Weiter mit dem nächsten.</o>
-      <o>Eins läuft, machen wir das andere.</o>
+      <o>Start erfolgreich. Weiter.</o>
+      <o>Gut gestartet. Jetzt das nächste.</o>
+      <o>Triebwerk läuft. Jetzt das andere.</o>
+      <o>Läuft. Weiter mit dem nächsten.</o>
+      <o>Guter Start. Das nächste jetzt.</o>
       <o>Das läuft, jetzt das nächste.</o>
     </message>
     <message key="CPL.9" actor="2" radio="auto" lvar="L:CPL{VCP}9" wav="AND.cpl.failure.wav" sleep="0">
@@ -345,12 +345,12 @@
       <o>Wir haben einen Ausfall, und das sieht nicht gut aus.</o>
     </message>
     <message key="CPL.10" actor="2" radio="auto" lvar="L:CPL{VCP}10" wav="AND.cpl.holdon.performing.leak.checks.wav" sleep="0">
-      <o>Bitte warten. Dichtheitsprüfung läuft.</o>
-      <o>Einen Moment, prüfe auf Lecks.</o>
-      <o>Standby, Leckprüfung läuft.</o>
-      <o>Kurz warten, ich mache die Dichtheitskontrolle.</o>
-      <o>Sekunde noch, prüfe auf Lecks.</o>
-      <o>Gib mir einen Moment, ich prüfe auf Undichtigkeiten.</o>
+      <o>Aussen-Check, bitte warten.</o>
+      <o>Aussen-Check, einen Moment bitte.</o>
+      <o>Bitte warten, ich mache die Aussen-Kontrolle.</o>
+      <o>Aussen-Kontrolle, kurz warten.</o>
+      <o>Aussen-Kontrolle, Moment bitte.</o>
+      <o>Augenblick, ich mache die Aussen-Kontrolle.</o>
     </message>
     <message key="CPL.11" actor="2" radio="auto" lvar="L:CPL{VCP}11" wav="AND.cpl.prepare.for.gnd.op.wav" sleep="0">
       <o>Crew, bereitmachen für Bodeneinsatz.</o>
@@ -369,20 +369,20 @@
       <o>Crew, Winde steht an, macht euch bereit.</o>
     </message>
     <message key="CPL.13" actor="2" radio="auto" lvar="L:CPL{VCP}13" wav="AND.cpl.preparing.for.engine.1.2.wav" sleep="0">
-      <o>Vorbereitung für Anlasssequenz: Triebwerk eins, dann zwei.</o>
-      <o>Anlassreihenfolge: Triebwerk eins, dann Triebwerk zwei.</o>
-      <o>Ich bereite die Anlasssequenz vor, zuerst Triebwerk eins.</o>
-      <o>Startsequenz bereit: Triebwerk eins, dann zwei.</o>
+      <o>Vorbereitung für Anlasssequenz: Nummer eins, dann zwei.</o>
+      <o>Anlassreihenfolge: Nummer eins, dann Nummer zwei.</o>
+      <o>Ich bereite die Anlasssequenz vor, zuerst Nummer eins.</o>
+      <o>Startsequenz bereit: Nummer eins, dann zwei.</o>
       <o>Bereit zum Anlassen: erst die Eins, dann die Zwei.</o>
-      <o>Okay, erst Triebwerk eins, danach zwei.</o>
+      <o>Okay, erst Nummer eins, danach zwei.</o>
     </message>
     <message key="CPL.14" actor="2" radio="auto" lvar="L:CPL{VCP}14" wav="AND.cpl.preparing.for.engine.2.1.wav" sleep="0">
-      <o>Vorbereitung für Anlasssequenz: Triebwerk zwei, dann eins.</o>
-      <o>Anlassreihenfolge: Triebwerk zwei, dann Triebwerk eins.</o>
-      <o>Ich bereite die Anlasssequenz vor, zuerst Triebwerk zwei.</o>
-      <o>Startsequenz bereit: Triebwerk zwei, dann eins.</o>
+      <o>Vorbereitung für Anlasssequenz: Nummer zwei, dann eins.</o>
+      <o>Anlassreihenfolge: Nummer zwei, dann Nummer eins.</o>
+      <o>Ich bereite die Anlasssequenz vor, zuerst Nummer zwei.</o>
+      <o>Startsequenz bereit: Nummer zwei, dann eins.</o>
       <o>Bereit zum Anlassen: erst die Zwei, dann die Eins.</o>
-      <o>Okay, erst Triebwerk zwei, danach eins.</o>
+      <o>Okay, erst Nummer zwei, danach eins.</o>
     </message>
     <message key="CPL.15" actor="2" radio="auto" lvar="L:CPL{VCP}15" wav="AND.cpl.rearcrew.ready.to.start.op.wav" sleep="0">
       <o>Heli in Position. Crew, Freigabe für Einsatzbeginn.</o>
@@ -417,12 +417,12 @@
       <o>Alles sicher, ihr könnt anfangen.</o>
     </message>
     <message key="CPL.19" actor="2" radio="auto" lvar="L:CPL{VCP}19" wav="AND.cpl.skid.ldg.wav" sleep="0">
-      <o>Crew, bereitmachen für Kufenlandung.</o>
-      <o>Crew, fertigmachen für Teilaufsetzen auf Kufen.</o>
-      <o>Kabine, als Nächstes ein Kufenlandemanöver. Vorbereiten.</o>
-      <o>Crew, wir gehen in eine Kufenlandung.</o>
-      <o>Leute hinten, bereitmachen für ein Aufsetzen mit Kufen.</o>
-      <o>Kabine, Kufenlandung steht an, macht euch fertig.</o>
+      <o>Crew, bereitmachen für Kufen-Landung.</o>
+      <o>Alle, fertigmachen für Kufen-Landung.</o>
+      <o>Kabine, klarmachen für Kufen-Landung.</o>
+      <o>Crew, wir gehen in eine Kufen-Landung.</o>
+      <o>Alle, bereitmachen für Kufen-Landung.</o>
+      <o>Kabine, Kufen-Landung steht an, macht euch bereit.</o>
     </message>
     <message key="CPL.20" actor="2" radio="auto" lvar="L:CPL{VCP}20" wav="AND.cpl.t.ambulance.is.arriving.wav" sleep="3.5">
       <o>Rettungswagen trifft ein.</o>
@@ -433,12 +433,12 @@
       <o>Der Rettungswagen kommt genau jetzt an.</o>
     </message>
     <message key="CPL.21" actor="2" radio="auto" lvar="L:CPL{VCP}21" wav="AND.cpl.t.ambulance.is.still.far.wav" sleep="60">
-      <o>Rettungswagen ist noch weit entfernt.</o>
-      <o>Der Rettungswagen ist noch weit weg.</o>
-      <o>Rettungswagen hat noch ein ganzes Stück vor sich.</o>
+      <o>Der Rettungswagen ist noch weit entfernt.</o>
+      <o>Der RTW ist noch weit weg.</o>
+      <o>Der Rettungswagen hat noch ein ganzes Stück vor sich.</o>
       <o>Der Rettungswagen ist noch nicht in der Nähe.</o>
       <o>Der RTW ist noch eine ganze Ecke entfernt.</o>
-      <o>Noch kein RTW in Sicht, der ist noch weit weg.</o>
+      <o>Noch kein RTW in Sicht. Der braucht wohl noch ein bisschen länger.</o>
     </message>
     <message key="CPL.22" actor="2" radio="auto" lvar="L:CPL{VCP}22" wav="AND.cpl.t.crew.prepare.op.wav" sleep="0">
       <o>Ganze Besatzung, bereitmachen für den Einsatz.</o>
@@ -457,9 +457,9 @@
       <o>Hallo.</o>
     </message>
     <message key="CPL.24" actor="2" radio="auto" lvar="L:CPL{VCP}24" wav="AND.cpl.t.landing.spot.medical.crew.present.wav" sleep="0">
-      <o>Landeplatz in Sicht. Medizinisches Team steht am Landebereich bereit.</o>
+      <o>Landeplatz in Sicht. Ein medizinisches Team steht am Landebereich bereit.</o>
       <o>Landeplatz in Sicht, und das medizinische Personal wartet dort.</o>
-      <o>Ich habe den Landeplatz in Sicht. Medizinisches Team wartet im Landebereich.</o>
+      <o>Ich habe den Landeplatz in Sicht. Ein medizinisches Team wartet im Landebereich.</o>
       <o>Landeplatz in Sicht. Das medizinische Team steht bereit.</o>
       <o>Ich sehe den Platz. Das medizinische Team wartet bereits.</o>
       <o>Da ist der Platz, das medizinische Team wartet auf uns.</o>
@@ -1349,28 +1349,28 @@
       <o>Verdammt, Triebwerksbrand! Crew, wir haben ein Feuer im Triebwerk!</o>
     </message>
     <message key="HW.5" actor="2" radio="auto" lvar="L:{VCP}HW5" wav="AND.HW5.wav" sleep="0">
-      <o>Kopilot bestätigt Brand an Triebwerk zwei.</o>
-      <o>Kopilot bestätigt, Triebwerk zwei brennt.</o>
-      <o>Feuer Triebwerk zwei vom Kopiloten bestätigt.</o>
+      <o>Kopilot bestätigt Brand an Nummer zwei.</o>
+      <o>Kopilot bestätigt, Nummer zwei brennt.</o>
+      <o>Feuer Nummer zwei vom Kopiloten bestätigt.</o>
       <o>Hier Kopilot, Triebwerksbrand zwei bestätigt.</o>
-      <o>Ich bestätige, Triebwerk zwei steht in Flammen.</o>
-      <o>Bestätigt, Triebwerk zwei brennt!</o>
+      <o>Ich bestätige, Nummer zwei steht in Flammen.</o>
+      <o>Bestätigt, Nummer zwei brennt!</o>
     </message>
     <message key="HW.6" actor="2" radio="auto" lvar="L:{VCP}HW6" wav="AND.HW6.wav" sleep="2">
-      <o>Brand Triebwerk zwei bestätigt.</o>
-      <o>Triebwerk zwei bestätigt.</o>
-      <o>Bestätigt, Feuer Triebwerk zwei.</o>
-      <o>Triebwerk zwei brennt, bestätigt.</o>
-      <o>Es ist Triebwerk zwei, bestätigt.</o>
-      <o>Ja, Triebwerk zwei, bestätigt!</o>
+      <o>Brand Nummer zwei bestätigt.</o>
+      <o>Nummer zwei bestätigt.</o>
+      <o>Bestätigt, Feuer Nummer zwei.</o>
+      <o>Nummer zwei brennt, bestätigt.</o>
+      <o>Es ist Nummer zwei, bestätigt.</o>
+      <o>Ja, Nummer zwei, bestätigt!</o>
     </message>
     <message key="HW.7" actor="1" radio="auto" lvar="L:{VCP}HW7" wav="AND.HW7.wav" sleep="0">
-      <o>Brand Triebwerk zwei. Feuerlöschflasche eins auslösen; Besatzung, Evakuierung vorbereiten.</o>
-      <o>Feuer Triebwerk zwei. Löschflasche eins wird ausgelöst. Crew, Notausstieg vorbereiten.</o>
+      <o>Brand Nummer zwei. Feuerlöschflasche eins auslösen; Besatzung, Evakuierung vorbereiten.</o>
+      <o>Feuer Nummer zwei. Löschflasche eins wird ausgelöst. Crew, Notausstieg vorbereiten.</o>
       <o>Triebwerksbrand zwei. Flasche eins ausgelöst. Besatzung, Evakuierung vorbereiten.</o>
-      <o>Brand an Triebwerk zwei, löse Flasche eins aus. Alle auf sofortiges Verlassen vorbereiten.</o>
-      <o>Feuer Triebwerk zwei! Flasche eins geht raus. Crew, bereitmachen zum schnellen Aussteigen!</o>
-      <o>Triebwerk zwei brennt! Löschflasche eins, jetzt! Crew, macht euch bereit, die Maschine zu verlassen!</o>
+      <o>Brand an Nummer zwei, löse Flasche eins aus. Alle auf sofortiges Verlassen vorbereiten.</o>
+      <o>Feuer Nummer zwei! Flasche eins geht raus. Crew, bereitmachen zum schnellen Aussteigen!</o>
+      <o>Nummer zwei brennt! Löschflasche eins, jetzt! Crew, macht euch bereit, die Maschine zu verlassen!</o>
     </message>
     <message key="HW.8" actor="1" radio="auto" lvar="L:{VCP}HW8" wav="AND.HW8.wav" sleep="0">
       <o>Das Feuer ist aus, aber wir haben mehrere Systemausfälle. Fraglich, ob wir wieder abheben können.</o>
@@ -2701,12 +2701,12 @@
       <o>Die Feuerwehr hat da vorn eine Gefahrenlage, wartet mit dem Landen.</o>
     </message>
     <message key="PAX3.36" actor="3" radio="auto" lvar="L:PAX3{VCP}36" wav="AND.ops.ground.operations.delayed.wav" sleep="0" trigger="ops_progress_warning becomes 1 after 120 seconds without progress; tablet shows the orange Dispatch warning.">
-      <o>Einsatzmaßnahmen am Boden verzögern sich. Aktuellen Status auf der Dispatch-Seite prüfen.</o>
-      <o>Bodenmaßnahmen sind verzögert. Bitte Status auf der Leitstellenseite prüfen.</o>
-      <o>Bodenoperationen dauern länger. Siehe Dispatch-Seite für Details.</o>
-      <o>Die Versorgung am Boden nimmt mehr Zeit in Anspruch. Schau auf die Dispatch-Seite.</o>
-      <o>Die Maßnahmen am Boden dauern länger als geplant. Dispatch-Seite prüfen.</o>
-      <o>Am Boden dauert es länger als gedacht. Schaut mal auf die Dispatch-Seite.</o>
+      <o>Einsatzmaßnahmen am Boden verzögern sich. Aktuellen Status auf der Einsatz-Seite prüfen.</o>
+      <o>Bodenmaßnahmen sind verzögert. Bitte Status auf der Einsatz-Seite prüfen.</o>
+      <o>Bodenoperationen dauern länger. Siehe Einsatz-Seite für Details.</o>
+      <o>Die Versorgung am Boden nimmt mehr Zeit in Anspruch. Schau auf die Einsatz-Seite.</o>
+      <o>Die Maßnahmen am Boden dauern länger als geplant. Einsatz-Seite prüfen.</o>
+      <o>Am Boden dauert es länger als gedacht. Schaut mal auf die Einsatz-Seite.</o>
     </message>
     <message key="PAX3.37" actor="3" radio="auto" lvar="L:PAX3{VCP}37" wav="AND.medical.additional.patients.on.scene.wav" trigger="Patient 2 or 3 remains active, or secondary rescue begins.">
       <o>Weitere Patienten verbleiben an der Einsatzstelle. Disposition vor dem Abflug abwarten.</o>
@@ -3070,7 +3070,7 @@
     </message>
     <message key="PLT.50" actor="1" radio="auto" group="brief" seq="5" lvar="L:PLT{VCP}50" sleep="0.4" new="1">
       <o>Gut. Wir starten, sobald wir bereit sind.</o>
-      <o>Danke. Starten Sie, sobald die Checkliste abgearbeitet ist.</o>
+      <o>Danke. Starten Sie, sobald die Checkliste durch ist.</o>
       <o>Sehr gut. Lasst uns hingehen und ihnen helfen.</o>
       <o>Okay, lasst uns alle sicher nach Hause bringen.</o>
       <o>Okay, dann lasst uns ihnen helfen.</o>
@@ -3698,7 +3698,7 @@
       <o>Checkliste vor dem Start.</o>
     </message>
     <message key="CHK.beforetockl.02" text="1" actor="11" trigger="checklist beforetockl">
-      <o>Hauptschalter für Triebwerk eins und zwei. Flugbetrieb, Schutzvorrichtungen geschlossen.</o>
+      <o>Hauptschalter für Nummer eins und zwei. Flugbetrieb, Schutzvorrichtungen geschlossen.</o>
     </message>
     <message key="CHK.beforetockl.03" text="1" actor="11" trigger="checklist beforetockl">
       <o>Rotordrehzahl. Nenndrehzahl im Flugmodus.</o>
@@ -4127,7 +4127,7 @@
       <o>Instrumententafel. Not-Aus-Schalter eins und zwei: gesichert!</o>
     </message>
     <message key="CHK.interior2ckl.06" text="1" actor="11" trigger="checklist interior2ckl">
-      <o>Hauptschalter für Triebwerk eins und zwei: aus!</o>
+      <o>Hauptschalter für Nummer eins und zwei: aus!</o>
     </message>
     <message key="CHK.interior2ckl.07" text="1" actor="11" trigger="checklist interior2ckl">
       <o>FADEC-Not-Aus-Schalter eins und zwei: Aus und bewacht!</o>
@@ -4592,7 +4592,7 @@
       <o>Alle Verbraucher: aus, außer dem Antikollisionsschalter für die Außenbeleuchtung!</o>
     </message>
     <message key="CHK.shutdownckl.07" text="1" actor="11" trigger="checklist shutdownckl">
-      <o>Hauptschalter für Triebwerk eins und zwei: aus!</o>
+      <o>Hauptschalter für Nummer eins und zwei: aus!</o>
     </message>
     <message key="CHK.shutdownckl.08" text="1" actor="11" trigger="checklist shutdownckl">
       <o>T O T und N 1: Abnahme überwachen!</o>
