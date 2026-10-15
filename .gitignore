@@ -11,6 +11,7 @@
 *.dll
 *.pdb
 *.wav
+!assets/squelch-tail/*.wav
 *.onnx
 *.zip
 *.log

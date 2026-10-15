@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -198,12 +199,14 @@ namespace HPGMissionCompanion
             int lead = (int)(0.06 * sr);
             int gap = beep.Length > 0 ? (int)(0.09 * sr) : (int)(0.10 * sr);
             int hissTail = (int)(0.10 * sr);
-            int squelch = rs.Tail ? (int)(0.12 * sr) : 0;
             int speechStart = lead + beep.Length + gap;
             int hissEnd = speechStart + speech.Length + hissTail;
-            float[] outd = new float[hissEnd + squelch];
 
             double noiseRms = 0.25 * Math.Pow(rs.NoiseLevel / 100.0, 1.5);
+            float[] burst = rs.Tail ? GetSquelchTail(sr, noiseRms) : null;
+            int squelch = burst != null ? burst.Length : 0;
+            float[] outd = new float[hissEnd + squelch];
+
             if (noiseRms > 0)
             {
                 float[] noise = MakeNoise(hissEnd, sr, noiseRms);
@@ -220,12 +223,144 @@ namespace HPGMissionCompanion
             for (int i = 0; i < speech.Length; i++) outd[speechStart + i] += speech[i];
             if (squelch > 0)
             {
-                double tailRms = Math.Max(0.05, noiseRms * 2.5);
-                float[] burst = MakeNoise(squelch, sr, tailRms);
-                for (int i = 0; i < squelch; i++)
+                for (int i = 0; i < burst.Length; i++) outd[hissEnd + i] += burst[i];
+            }
+            return outd;
+        }
+
+        static readonly object squelchSync = new object();
+        static List<Pcm> squelchSnippets = null;
+        static readonly Random squelchRng = new Random();
+
+        static float[] GetSquelchTail(int targetRate, double noiseRms)
+        {
+            Pcm snippet = null;
+            lock (squelchSync)
+            {
+                if (squelchSnippets == null) squelchSnippets = LoadSquelchSnippets();
+                if (squelchSnippets.Count > 0)
                 {
-                    double env = Math.Exp(-5.0 * i / squelch);
-                    outd[hissEnd + i] += (float)(burst[i] * env);
+                    int idx = squelchRng.Next(squelchSnippets.Count);
+                    snippet = squelchSnippets[idx];
+                }
+            }
+            if (snippet != null)
+            {
+                float[] burst = Resample(snippet.Data, snippet.Rate, targetRate);
+                int fade = Math.Min(burst.Length / 4, (int)(0.002 * targetRate));
+                if (fade > 1)
+                {
+                    for (int i = 0; i < fade; i++) burst[i] *= (float)(i / (double)fade);
+                    for (int i = 0; i < fade; i++) burst[burst.Length - 1 - i] *= (float)(i / (double)fade);
+                }
+                return burst;
+            }
+            int fallbackLen = (int)(0.12 * targetRate);
+            double tailRms = Math.Max(0.05, noiseRms * 2.5);
+            float[] fb = MakeNoise(fallbackLen, targetRate, tailRms);
+            for (int i = 0; i < fallbackLen; i++) fb[i] = (float)(fb[i] * Math.Exp(-5.0 * i / fallbackLen));
+            return fb;
+        }
+
+        static List<Pcm> LoadSquelchSnippets()
+        {
+            List<Pcm> list = new List<Pcm>();
+
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string[] searchDirs = new string[]
+            {
+                Path.Combine(baseDir, "assets", "squelch-tail"),
+                Path.Combine(baseDir, "..", "assets", "squelch-tail"),
+                Path.Combine("assets", "squelch-tail"),
+                Path.Combine(baseDir, "squelch-tail"),
+                Path.Combine(baseDir, "assets"),
+                Path.Combine(baseDir, "..", "assets"),
+                "assets",
+                baseDir
+            };
+            foreach (string dir in searchDirs)
+            {
+                try
+                {
+                    if (Directory.Exists(dir))
+                    {
+                        string filter = dir.EndsWith("squelch-tail", StringComparison.OrdinalIgnoreCase) ? "*.wav" : "squelch_tail_*.wav";
+                        string[] files = Directory.GetFiles(dir, filter);
+                        if (files.Length > 0)
+                        {
+                            Array.Sort(files, StringComparer.OrdinalIgnoreCase);
+                            foreach (string f in files)
+                            {
+                                byte[] bytes = File.ReadAllBytes(f);
+                                Pcm p = Decode(bytes);
+                                if (p != null && p.Data != null && p.Data.Length > 0) list.Add(p);
+                            }
+                            if (list.Count > 0) return list;
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
+
+            try
+            {
+                Assembly asm = typeof(AudioFx).Assembly;
+                List<string> resNames = new List<string>();
+                foreach (string n in asm.GetManifestResourceNames())
+                {
+                    string fn = Path.GetFileName(n);
+                    if (fn.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) &&
+                        (fn.StartsWith("squelch", StringComparison.OrdinalIgnoreCase) || n.IndexOf("squelch", StringComparison.OrdinalIgnoreCase) >= 0))
+                    {
+                        resNames.Add(n);
+                    }
+                }
+                resNames.Sort(StringComparer.OrdinalIgnoreCase);
+                foreach (string res in resNames)
+                {
+                    using (Stream s = asm.GetManifestResourceStream(res))
+                    {
+                        if (s != null)
+                        {
+                            byte[] bytes = new byte[s.Length];
+                            int read = 0;
+                            while (read < bytes.Length)
+                            {
+                                int n = s.Read(bytes, read, bytes.Length - read);
+                                if (n <= 0) break;
+                                read += n;
+                            }
+                            Pcm p = Decode(bytes);
+                            if (p != null && p.Data != null && p.Data.Length > 0) list.Add(p);
+                        }
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            return list;
+        }
+
+        static float[] Resample(float[] input, int inRate, int outRate)
+        {
+            if (input == null || input.Length == 0) return new float[0];
+            if (inRate == outRate) return (float[])input.Clone();
+            int outLen = (int)Math.Round((long)input.Length * outRate / (double)inRate);
+            if (outLen <= 0) return new float[0];
+            float[] outd = new float[outLen];
+            double ratio = inRate / (double)outRate;
+            for (int i = 0; i < outLen; i++)
+            {
+                double srcPos = i * ratio;
+                int idx = (int)srcPos;
+                if (idx >= input.Length - 1)
+                {
+                    outd[i] = input[input.Length - 1];
+                }
+                else
+                {
+                    double frac = srcPos - idx;
+                    outd[i] = (float)(input[idx] + frac * (input[idx + 1] - input[idx]));
                 }
             }
             return outd;
