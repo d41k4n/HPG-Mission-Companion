@@ -402,9 +402,9 @@ namespace HPGMissionCompanion
             else if (type == "Chirp") Tone(list, sr, 700, 1500, 0.150, amp);
             else if (type == "Click")
             {
-                Random rng = new Random(77);
-                int n = (int)(0.030 * sr);
-                for (int i = 0; i < n; i++) list.Add((float)((rng.NextDouble() * 2 - 1) * Math.Exp(-6.0 * i / n) * amp * 1.4));
+                float[] burst = GetSquelchTail(sr, 0.1);
+                float k = (float)level;
+                for (int i = 0; i < burst.Length; i++) list.Add(burst[i] * k);
             }
             return list.ToArray();
         }

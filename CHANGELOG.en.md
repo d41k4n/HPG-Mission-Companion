@@ -4,7 +4,7 @@
 
 ### Changes in this fork
 - German voice pack (`voicepacks/DE.xml` v2): all mission messages, choices and the new crew tips (`TIP.*`, matching EN v13) translated and checked; minor text tweaks.
-- Radio squelch tail effect: replaced synthetic noise burst with authentic ATC transmission recordings (`assets/squelch-tail/`). One of 10 recorded snippets is selected randomly and automatically resampled to the target voice sample rate with micro-fading to prevent boundary clicks.
+- Radio squelch tail and intercom effects: replaced synthetic noise bursts (squelch tail and intercom click) with authentic ATC transmission recordings (`assets/squelch-tail/`). One of 10 recorded snippets is selected randomly and automatically resampled to the target voice sample rate with micro-fading to prevent boundary clicks.
 
 ## Release 0.23
 
