@@ -5529,355 +5529,355 @@
     </message>
   <!-- MISSION TEXTS END -->
     <message key="TIP.SAV.1" actor="2" radio="auto" group="tipsav" seq="1" new="1" trigger="tip of the crew: saves of the mission">
-      <o>Tipp für den Piloten: Sie können die Mission über die Einsatzseite speichern. Öffnen Sie die Quicklinks, dann Mission speichern oder neu laden.</o>
-      <o>Tipp für den Piloten: Sie können die Mission über die Einsatzseite speichern. Öffnen Sie die Quicklinks, dann Mission speichern oder neu laden.</o>
-      <o>Übrigens, wussten Sie, dass das Tablet die ganze Mission speichern kann? Quicklinks, dann Mission speichern oder neu laden.</o>
-      <o>Übrigens, wussten Sie, dass das Tablet die ganze Mission speichern kann? Quicklinks, dann Mission speichern oder neu laden.</o>
-      <o>Hey Chef, das Tablet hat eine Speicherfunktion. Quicklinks, Mission speichern oder neu laden. Nur so als Tipp.</o>
-      <o>Psst, Chef. In den Quicklinks versteckt sich eine Speicherfunktion. Mission speichern oder neu laden. Sehr praktisch, wenn der Kaffee kalt wird.</o>
+      <o>[lang:EN]Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.</o>
+      <o>[lang:EN]Tip for the pilot: you can save the mission from the dispatch page. Open the Quick links, then Save or reload a mission.</o>
+      <o>[lang:EN]By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.</o>
+      <o>[lang:EN]By the way, did you know the tablet can save the whole mission? Quick links, then Save or reload a mission.</o>
+      <o>[lang:EN]Hey boss, the tablet has a save function. Quick links, Save or reload a mission. Just saying.</o>
+      <o>[lang:EN]Psst, boss. There is a save function hiding in the Quick links. Save or reload a mission. Very handy when the coffee gets cold.</o>
     </message>
     <message key="TIP.SAV.2" actor="3" radio="auto" group="tipsav" seq="2" new="1">
-      <o>Es gibt drei Speicherplätze und ein automatisches Speichern. Geben Sie zuerst einen Namen ein, der Name ist Pflicht.</o>
-      <o>Es gibt drei Speicherplätze und ein automatisches Speichern. Geben Sie zuerst einen Namen ein, der Name ist Pflicht.</o>
-      <o>Drei Speicherplätze plus automatische Speicherung. Sie müssen zuerst einen Namen eingeben, sonst wird nicht gespeichert.</o>
-      <o>Drei Speicherplätze plus automatische Speicherung. Sie müssen zuerst einen Namen eingeben, sonst wird nicht gespeichert.</o>
-      <o>Drei Speicherplätze plus automatische Speicherung. Und es braucht unbedingt einen Namen, da ist das System sehr strikt.</o>
-      <o>Drei Speicherplätze und ein automatische Speicherung. Geben Sie jeweils einen netten Namen, anonyme Missionen mag das System nicht.</o>
+      <o>[lang:EN]There are three slots, plus an autosave. Give the save a name first, the name is mandatory.</o>
+      <o>[lang:EN]There are three slots, plus an autosave. Give the save a name first, the name is mandatory.</o>
+      <o>[lang:EN]Three slots and an autosave. You have to type a name first, otherwise it will not save.</o>
+      <o>[lang:EN]Three slots and an autosave. You have to type a name first, otherwise it will not save.</o>
+      <o>[lang:EN]Three slots plus an autosave. And it wants a name, it is picky like that.</o>
+      <o>[lang:EN]Three slots plus an autosave. Give it a nice name, it refuses anonymous missions.</o>
     </message>
     <message key="TIP.SAV.3" actor="2" radio="auto" group="tipsav" seq="3" new="1">
-      <o>Achtung: Das Speichern ist deaktiviert, sobald Boden- oder Windenoperationen begonnen haben. Vorher oder nachher speichern.</o>
-      <o>Achtung: Das Speichern ist deaktiviert, sobald Boden- oder Windenoperationen begonnen haben. Vorher oder nachher speichern.</o>
-      <o>Ein Haken: Sobald die Boden- oder Windenarbeit läuft, geht kein Speichern. Machen Sie es vorher oder wenn alles erledigt ist.</o>
-      <o>Ein Haken: Sobald die Boden- oder Windenarbeit läuft, geht kein Speichern. Machen Sie es vorher oder wenn alles erledigt ist.</o>
-      <o>Ein Haken: Wenn wir am Patienten oder an der Winde arbeiten, ist Speichern gesperrt. Also vorher oder nachher.</o>
-      <o>Und kein Speichern mitten in der Action. Nicht, während wir an der Winde hängen oder beim Patienten sind. Bitte vorher oder nachher.</o>
+      <o>[lang:EN]Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.</o>
+      <o>[lang:EN]Careful, saving is disabled once the ground or hoist operations have started. Save before, or after they are complete.</o>
+      <o>[lang:EN]One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.</o>
+      <o>[lang:EN]One catch: once the ground or hoist work has started you cannot save. Do it before, or when it is all done.</o>
+      <o>[lang:EN]One catch: while we work on the patient or on the hoist, saving is off. Do it before, or after.</o>
+      <o>[lang:EN]And no saving in the middle of the action. Not while we are on the hoist or around the patient. Before or after, please.</o>
     </message>
     <message key="TIP.SAV.4" actor="3" radio="auto" group="tipsav" seq="4" new="1">
-      <o>Und falls ein Flug schiefgeht: Letzte angenommene Mission neu laden lädt den zuletzt angenommenen Einsatz erneut.</o>
-      <o>Und falls ein Flug schiefgeht: Letzte angenommene Mission neu laden lädt den zuletzt angenommenen Einsatz erneut.</o>
-      <o>Und wenn ein Flug mal danebengeht, gibt es noch Letzte angenommene Mission neu laden.</o>
-      <o>Und wenn ein Flug mal danebengeht, gibt es noch Letzte angenommene Mission neu laden.</o>
-      <o>Und wenn alles schiefgeht, hilft Letzte angenommene Mission neu laden. Wir erwähnen es auch nie wieder.</o>
-      <o>Und falls Sie die Kufen verbiegen: Letzte angenommene Mission neu laden. Wir tun alle so, als wäre nichts passiert.</o>
+      <o>[lang:EN]And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.</o>
+      <o>[lang:EN]And if a flight goes badly, Reload last accepted mission loads the last dispatch you accepted again.</o>
+      <o>[lang:EN]And if a flight goes badly, there is also Reload last accepted mission.</o>
+      <o>[lang:EN]And if a flight goes badly, there is also Reload last accepted mission.</o>
+      <o>[lang:EN]And if it all goes wrong, Reload last accepted mission is your friend. We will never mention it.</o>
+      <o>[lang:EN]And if you bend the skids, Reload last accepted mission. We will all pretend it never happened.</o>
     </message>
     <message key="TIP.MSL.1" actor="2" radio="auto" group="tipmsl" seq="1" new="1" trigger="tip of the crew: mission list presets">
-      <o>Noch ein Tipp: Die Missionsliste hat Voreinstellungen. Ein Standardprofil und die Profile 1 bis 5.</o>
-      <o>Noch ein Tipp: Die Missionsliste hat Voreinstellungen. Ein Standardprofil und die Profile 1 bis 5.</o>
-      <o>Wussten Sie schon, dass die Missionsliste Voreinstellungen hat? Standard und die Voreinstellungen 1 bis 5.</o>
-      <o>Wussten Sie schon, dass die Missionsliste Voreinstellungen hat? Standard und die Voreinstellungen 1 bis 5.</o>
-      <o>Chef, haben Sie die Voreinstellungen der Missionsliste gesehen? Standard und Profile 1 bis 5.</o>
-      <o>Interessante Sache: Die Missionsliste hat Voreinstellungen. Standard plus fünf weitere. Notfälle bestellen wie von der Speisekarte.</o>
+      <o>[lang:EN]Another tip: the mission list has presets. A default one, and presets 1 to 5.</o>
+      <o>[lang:EN]Another tip: the mission list has presets. A default one, and presets 1 to 5.</o>
+      <o>[lang:EN]Did you know the mission list has presets? A default one, and presets 1 to 5.</o>
+      <o>[lang:EN]Did you know the mission list has presets? A default one, and presets 1 to 5.</o>
+      <o>[lang:EN]Boss, have you seen the mission list presets? Default, and then preset 1 to 5.</o>
+      <o>[lang:EN]Fun fact: the mission list comes with presets. Default plus five more. Order your emergencies like from a menu.</o>
     </message>
     <message key="TIP.MSL.2" actor="3" radio="auto" group="tipmsl" seq="2" new="1">
-      <o>In jeder Voreinstellung bestimmen Sie, welche Einsätze zufällig erscheinen. Sie können nach Typ filtern, etwa Verkehrsunfälle, Notfälle oder Suchaktionen.</o>
-      <o>In jeder Voreinstellung bestimmen Sie, welche Einsätze zufällig erscheinen. Sie können nach Typ filtern, etwa Verkehrsunfälle, Notfälle oder Suchaktionen.</o>
-      <o>Jede Voreinstellung legt fest, welche Missionen zufällig kommen. Sie können nach Typ filtern und jede Mission aktivieren oder deaktivieren.</o>
-      <o>Jede Voreinstellung legt fest, welche Missionen zufällig kommen. Sie können nach Typ filtern und jede Mission aktivieren oder deaktivieren.</o>
-      <o>In jedem Preset schalten Sie Missionen ein und aus. Keine Lust auf Verkehrsunfälle? Einfach abschalten.</o>
-      <o>Sie können Missionen an- und ausknipsen. Keine Lust auf Autounfälle? Weg damit. Nur Bergrettung? Geht klar.</o>
+      <o>[lang:EN]In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.</o>
+      <o>[lang:EN]In each preset you decide which missions can come up at random. You can filter the list by type, like road accidents, medical emergencies or search and rescue.</o>
+      <o>[lang:EN]Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.</o>
+      <o>[lang:EN]Each preset says which missions can come up at random. You can filter the list by type, and enable or disable each mission.</o>
+      <o>[lang:EN]In every preset you switch missions on and off. Not in the mood for road accidents? Switch them off.</o>
+      <o>[lang:EN]You can switch missions on and off. Tired of road accidents? Gone. Only mountain rescues? Done.</o>
     </message>
     <message key="TIP.MSL.3" actor="2" radio="auto" group="tipmsl" seq="3" new="1">
-      <o>Das Standard-Preset gilt für jede Lackierung. Die Presets 1 bis 5 können mit einer bestimmten Lackierung verknüpft werden.</o>
-      <o>Das Standard-Preset gilt für jede Lackierung. Die Presets 1 bis 5 können mit einer bestimmten Lackierung verknüpft werden.</o>
-      <o>Das Standard-Preset gilt für alle Lackierungen. Presets 1 bis 5 lassen sich an eine bestimmte Lackierung binden.</o>
-      <o>Das Standard-Preset gilt für alle Lackierungen. Presets 1 bis 5 lassen sich an eine bestimmte Lackierung binden.</o>
-      <o>Standard gilt für alle Lackierungen. Presets 1 bis 5 gehören fest zu einer Lackierung, so hat jeder Heli seine eigene Liste.</o>
-      <o>Standard passt für jede Lackierung. Presets 1 bis 5 gehören zu einer Lackierung, damit jeder Heli seinen eigenen Geschmack bei Notfällen hat.</o>
+      <o>[lang:EN]The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.</o>
+      <o>[lang:EN]The default preset applies to every livery. Presets 1 to 5 can be linked to one specific livery.</o>
+      <o>[lang:EN]The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.</o>
+      <o>[lang:EN]The default preset is for all liveries. Presets 1 to 5 can be tied to one livery.</o>
+      <o>[lang:EN]Default is for every livery. Presets 1 to 5 can belong to one livery, so each helicopter gets its own list.</o>
+      <o>[lang:EN]Default works for every livery. Presets 1 to 5 can belong to one livery, so each helicopter has its own taste in emergencies.</o>
     </message>
     <message key="TIP.MSL.4" actor="3" radio="auto" group="tipmsl" seq="4" new="1">
-      <o>Und eine manuell aktivierte oder deaktivierte Mission behält Ihre Auswahl auch beim Wechsel des Presets.</o>
-      <o>Und eine manuell aktivierte oder deaktivierte Mission behält Ihre Auswahl auch beim Wechsel des Presets.</o>
-      <o>Und von Hand geschaltete Missionen bleiben so, wie Sie sie verlassen haben, wenn Sie das Preset wechseln.</o>
-      <o>Und von Hand geschaltete Missionen bleiben so, wie Sie sie verlassen haben, wenn Sie das Preset wechseln.</o>
-      <o>Und was Sie manuell umschalten, bleibt erhalten, selbst beim Preset-Wechsel. Respekt vor dem Piloten.</o>
-      <o>Ihre manuellen Entscheidungen überleben den Preset-Wechsel. Selten genug, ein Tablet, das wirklich zuhört.</o>
+      <o>[lang:EN]And a mission you enabled or disabled by hand keeps your choice when you change preset.</o>
+      <o>[lang:EN]And a mission you enabled or disabled by hand keeps your choice when you change preset.</o>
+      <o>[lang:EN]And the missions you switched on or off by hand stay as you left them when you change preset.</o>
+      <o>[lang:EN]And the missions you switched on or off by hand stay as you left them when you change preset.</o>
+      <o>[lang:EN]And what you switched by hand stays that way, even when you change preset. Respect for the pilot.</o>
+      <o>[lang:EN]And your manual choices survive the change of preset. Rare thing, a tablet that listens.</o>
     </message>
     <message key="TIP.PRF.1" actor="2" radio="auto" group="tipprf" seq="1" new="1" trigger="tip of the crew: settings profiles">
-      <o>Auf der Technik-Seite und in den Einstellungen gibt es Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
-      <o>Auf der Technik-Seite und in den Einstellungen gibt es Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
-      <o>Wussten Sie, dass die Einstellungen in Profilen vorliegen? Profile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
-      <o>Wussten Sie, dass die Einstellungen in Profilen vorliegen? Profile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
-      <o>Chef, Sie müssen nicht an jeder Option einzeln drehen. Benutzerprofile: Standard, Anfänger, Erfahrener Pilot und Erfahrener HEMS.</o>
-      <o>Warum an fünfzig Reglern drehen, wenn es Profile gibt? Standard, Anfänger, Profi-Pilot, Profi-HEMS. Wählen Sie Ihr Level an Herausforderung.</o>
+      <o>[lang:EN]On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>[lang:EN]On the technical page and in the settings there are the user settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>[lang:EN]Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>[lang:EN]Did you know the settings come in profiles? User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>[lang:EN]Boss, you do not have to fiddle with every option. User settings profiles: Default, Rookie, Expert pilot and Expert HEMS.</o>
+      <o>[lang:EN]Why tweak fifty options when there are profiles? Default, Rookie, Expert pilot, Expert HEMS. Pick your level of suffering.</o>
     </message>
     <message key="TIP.PRF.2" actor="3" radio="auto" group="tipprf" seq="2" new="1">
-      <o>Es gibt auch sechs benutzerdefinierte Profile von 0 bis 5. Jede Änderung wird sofort im ausgewählten Profil gespeichert.</o>
-      <o>Es gibt auch sechs benutzerdefinierte Profile von 0 bis 5. Jede Änderung wird sofort im ausgewählten Profil gespeichert.</o>
-      <o>Dazu sechs eigene Profile, 0 bis 5 nummeriert. Jede Änderung landet sofort im ausgewählten Profil.</o>
-      <o>Dazu sechs eigene Profile, 0 bis 5 nummeriert. Jede Änderung landet sofort im ausgewählten Profil.</o>
-      <o>Und sechs eigene Profile für Sie. Kein Speicherknopf nötig, Änderungen werden automatisch behalten.</o>
-      <o>Sechs eigene Profile ganz für Sie allein. Es speichert jede Änderung von selbst, kein Knopf nötig.</o>
+      <o>[lang:EN]There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.</o>
+      <o>[lang:EN]There are also six custom profiles, numbered 0 to 5. Every change is saved in the selected one at once.</o>
+      <o>[lang:EN]And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.</o>
+      <o>[lang:EN]And six custom profiles, numbered 0 to 5. Every change goes into the selected one straight away.</o>
+      <o>[lang:EN]And six custom profiles of your own. No save button, it keeps every change by itself.</o>
+      <o>[lang:EN]Six custom profiles, all yours to ruin. It saves every change by itself, no button needed.</o>
     </message>
     <message key="TIP.PRF.3" actor="2" radio="auto" group="tipprf" seq="3" new="1">
-      <o>Ein eigenes Profil kann mit einem Missionslisten-Preset verknüpft werden. Wählen Sie die Liste, laden die Einstellungen mit.</o>
-      <o>Ein eigenes Profil kann mit einem Missionslisten-Preset verknüpft werden. Wählen Sie die Liste, laden die Einstellungen mit.</o>
-      <o>Sie können ein eigenes Profil an ein Missionslisten-Preset binden. Die Liste wählen lädt auch die Einstellungen.</o>
-      <o>Sie können ein eigenes Profil an ein Missionslisten-Preset binden. Die Liste wählen lädt auch die Einstellungen.</o>
-      <o>Noch besser: Eigenes Profil mit Missionsliste verknüpfen, dann lädt die Liste direkt Ihre Einstellungen mit.</o>
-      <o>Koppeln Sie ein Profil an eine Missionsliste und es folgt ihr auf Schritt und Tritt. Liste wählen, Einstellungen sind da.</o>
+      <o>[lang:EN]A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.</o>
+      <o>[lang:EN]A custom profile can be linked to a saved mission list preset. When you choose that list, the settings load with it.</o>
+      <o>[lang:EN]You can link a custom profile to a mission list preset, so choosing the list loads your settings too.</o>
+      <o>[lang:EN]You can link a custom profile to a mission list preset, so choosing the list loads your settings too.</o>
+      <o>[lang:EN]Even better: link a custom profile to a mission list preset, and choosing the list loads the settings as well.</o>
+      <o>[lang:EN]Link a custom profile to a mission list and it follows it around like a puppy. Choose the list, the settings come along.</o>
     </message>
     <message key="TIP.PRF.4" actor="3" radio="auto" group="tipprf" seq="4" new="1">
-      <o>Und Aktuelle Konfiguration in Datei speichern legt eine unabhängige Sicherheitskopie Ihrer Einstellungen an.</o>
-      <o>Und Aktuelle Konfiguration in Datei speichern legt eine unabhängige Sicherheitskopie Ihrer Einstellungen an.</o>
-      <o>Und Aktuelle Konfiguration in Datei speichern erstellt eine separate Sicherheitskopie, für alle Fälle.</o>
-      <o>Und Aktuelle Konfiguration in Datei speichern erstellt eine separate Sicherheitskopie, für alle Fälle.</o>
-      <o>Es gibt einen Sicherheitskopie-Knopf: Aktuelle Konfiguration in Datei speichern. Nutzen Sie ihn vor Experimenten.</o>
-      <o>Und ein Sicherheitskopie-Knopf: Aktuelle Konfiguration in Datei speichern. Für den Tag, an dem Sie alles verstellen.</o>
+      <o>[lang:EN]And Save actual config to file keeps one independent backup of your settings.</o>
+      <o>[lang:EN]And Save actual config to file keeps one independent backup of your settings.</o>
+      <o>[lang:EN]And Save actual config to file makes a separate backup, just in case.</o>
+      <o>[lang:EN]And Save actual config to file makes a separate backup, just in case.</o>
+      <o>[lang:EN]And there is a backup button, Save actual config to file. Use it before you start experimenting.</o>
+      <o>[lang:EN]And a backup button, Save actual config to file, for the day you break everything.</o>
     </message>
     <message key="TIP.CRW.1" actor="3" radio="auto" group="tipcrw" seq="1" new="1" trigger="tip of the crew: crew health">
-      <o>Ein Hinweis zu uns: In den Einstellungen unter Flughilfen kann die Besatzungs-Gesundheitssimulation aktiv oder deaktiviert sein.</o>
-      <o>Ein Hinweis zu uns: In den Einstellungen unter Flughilfen kann die Besatzungs-Gesundheitssimulation aktiv oder deaktiviert sein.</o>
-      <o>Ein Wort zu uns, Chef. In den Einstellungen bei Flughilfen können Sie die Besatzungs-Gesundheitssimulation ein- oder ausschalten.</o>
-      <o>Ein Wort zu uns, Chef. In den Einstellungen bei Flughilfen können Sie die Besatzungs-Gesundheitssimulation ein- oder ausschalten.</o>
-      <o>Chef, wussten Sie, dass wir verletzt werden können? Einstellungen, Flughilfen, Besatzungs-Gesundheit. Ihre Entscheidung.</o>
-      <o>Chef, wussten Sie, dass wir zerbrechlich sind? Einstellungen, Flughilfen, Besatzungs-Gesundheit. Aktiv oder aus, seien Sie sanft zu uns.</o>
+      <o>[lang:EN]A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.</o>
+      <o>[lang:EN]A reminder about us: in the settings, under Flight assists, the Crew health simulation can be active or disabled.</o>
+      <o>[lang:EN]A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.</o>
+      <o>[lang:EN]A word about us, boss. In the settings, Flight assists, you can switch the crew health simulation on or off.</o>
+      <o>[lang:EN]Boss, did you know we can get hurt? Settings, Flight assists, Crew health simulation. Your call.</o>
+      <o>[lang:EN]Boss, did you know we are breakable? Settings, Flight assists, Crew health simulation. Active or disabled, be kind.</o>
     </message>
     <message key="TIP.CRW.2" actor="2" radio="auto" group="tipcrw" seq="2" new="1">
-      <o>Wenn aktiv, verletzen harte Landungen und Abstürze die Besatzung. Die Lebenspunkte jedes Mitglieds stehen auf der Einsatzseite.</o>
-      <o>Wenn aktiv, verletzen harte Landungen und Abstürze die Besatzung. Die Lebenspunkte jedes Mitglieds stehen auf der Einsatzseite.</o>
-      <o>Ist sie aktiv, schadet eine harte Landung unserer Gesundheit, und unser Lebenswert steht auf der Einsatzseite.</o>
-      <o>Ist sie aktiv, schadet eine harte Landung unserer Gesundheit, und unser Lebenswert steht auf der Einsatzseite.</o>
-      <o>Aktiv bedeutet: Harte Schläge tun richtig weh. Unsere Lebenspunkte stehen auf der Einsatzseite, schauen Sie ruhig mal nach.</o>
-      <o>Aktiv heißt: Der Bodenkontakt tut weh. Unsere Lebenspunkte stehen auf der Einsatzseite. Meiner ist übrigens tadellos.</o>
+      <o>[lang:EN]With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.</o>
+      <o>[lang:EN]With it active, hard landings and crashes hurt the crew, and the Life Score of each of us is on the dispatch page.</o>
+      <o>[lang:EN]With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.</o>
+      <o>[lang:EN]With it active, a hard landing can hurt us, and our Life Scores are on the dispatch page.</o>
+      <o>[lang:EN]Active means a hard landing really hurts us. Our Life Scores are on the dispatch page, go and have a look.</o>
+      <o>[lang:EN]Active means the ground hurts for real. Our Life Scores are on the dispatch page. Mine is excellent, by the way.</o>
     </message>
     <message key="TIP.CRW.3" actor="3" radio="auto" group="tipcrw" seq="3" new="1">
-      <o>Wird jemand von uns kritisch, erscheint eine Abfrage: Zum Krankenhaus umkehren oder die Mission fortsetzen.</o>
-      <o>Wird jemand von uns kritisch, erscheint eine Abfrage: Zum Krankenhaus umkehren oder die Mission fortsetzen.</o>
-      <o>Wenn einer von uns kritisch wird, werden Sie gefragt: Umkehren oder weitermachen.</o>
-      <o>Wenn einer von uns kritisch wird, werden Sie gefragt: Umkehren oder weitermachen.</o>
-      <o>Wird jemand kritisch, entscheiden Sie: Umkehren oder weiterfliegen. Bitte seien Sie barmherzig.</o>
-      <o>Geht es einem von uns an den Kragen, wählen Sie: Umkehren oder weiter. Wählen Sie Umkehren. Wählen Sie Umkehren.</o>
+      <o>[lang:EN]If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.</o>
+      <o>[lang:EN]If one of us becomes critical, a question appears: divert to the hospital, or continue the mission.</o>
+      <o>[lang:EN]If one of us becomes critical, you will be asked to divert or to continue.</o>
+      <o>[lang:EN]If one of us becomes critical, you will be asked to divert or to continue.</o>
+      <o>[lang:EN]If one of us goes critical, you decide: divert or continue. Please be generous.</o>
+      <o>[lang:EN]If one of us goes critical you choose: divert or continue. Choose divert. Choose divert. Choose divert.</o>
     </message>
     <message key="TIP.CRW.4" actor="2" radio="auto" group="tipcrw" seq="4" new="1">
-      <o>Die Crewstärke, drei, vier oder fünf Mitglieder, steht auch in den Einstellungen. Beim Einsteigen wird sie gesperrt.</o>
-      <o>Die Crewstärke, drei, vier oder fünf Mitglieder, steht auch in den Einstellungen. Beim Einsteigen wird sie gesperrt.</o>
-      <o>Die Crewgröße finden Sie auch in den Einstellungen: drei, vier oder fünf. Während des Einsteigens ist sie gesperrt.</o>
-      <o>Die Crewgröße finden Sie auch in den Einstellungen: drei, vier oder fünf. Während des Einsteigens ist sie gesperrt.</o>
-      <o>Sie bestimmen, wie viele wir sind: drei, vier oder fünf. Vor dem Einstieg, nicht danach.</o>
-      <o>Sie entscheiden, wie viele mitfliegen: drei, vier oder fünf. Wählen Sie weise, der Kaffee reicht nicht ewig.</o>
+      <o>[lang:EN]The number of crew, three, four or five, is in the settings too. It is locked during the boarding.</o>
+      <o>[lang:EN]The number of crew, three, four or five, is in the settings too. It is locked during the boarding.</o>
+      <o>[lang:EN]The crew size is in the settings too: three, four or five. It locks during the boarding.</o>
+      <o>[lang:EN]The crew size is in the settings too: three, four or five. It locks during the boarding.</o>
+      <o>[lang:EN]And you pick how many of us there are, three, four or five. Before the boarding, not after.</o>
+      <o>[lang:EN]And you decide how many of us fly with you, three, four or five. Choose wisely, the coffee is limited.</o>
     </message>
     <message key="TIP.KIT.1" actor="2" radio="auto" group="tipkit" seq="1" new="1" trigger="tip of the crew: weight of the installed kits">
-      <o>Tipp: Die Technik-Seite hat eine Option, Gewicht der installierten Kits. Standardmäßig ist sie aus.</o>
-      <o>Tipp: Die Technik-Seite hat eine Option, Gewicht der installierten Kits. Standardmäßig ist sie aus.</o>
-      <o>Wussten Sie, dass die Technik-Seite das Gewicht installierter Kits berechnen kann? Standardmäßig ist das aus.</o>
-      <o>Wussten Sie, dass die Technik-Seite das Gewicht installierter Kits berechnen kann? Standardmäßig ist das aus.</o>
-      <o>Chef, die Technik-Seite kann unsere Anbauten wiegen. Standardmäßig ist es aus, der Heli denkt also, sie wiegen nichts.</o>
-      <o>Chef, ab Werk denkt der Heli, unsere Ausrüstung wiegt nichts. Ein schöner Traum. Lässt sich auf der Technik-Seite ändern.</o>
+      <o>[lang:EN]Tip: the technical page has an option, Weight of the installed kits. It is off by default.</o>
+      <o>[lang:EN]Tip: the technical page has an option, Weight of the installed kits. It is off by default.</o>
+      <o>[lang:EN]Did you know the technical page can count the weight of the installed kits? It is off by default.</o>
+      <o>[lang:EN]Did you know the technical page can count the weight of the installed kits? It is off by default.</o>
+      <o>[lang:EN]Boss, the technical page can weigh the kits we carry. It is off by default, so the helicopter thinks they are free.</o>
+      <o>[lang:EN]Boss, by default the helicopter thinks our kits weigh nothing. A lovely thought. You can change it on the technical page.</o>
     </message>
     <message key="TIP.KIT.2" actor="3" radio="auto" group="tipkit" seq="2" new="1">
-      <o>Eingeschaltet wird das geschätzte Gewicht von Winde, Suchscheinwerfer, Schwimmern, Kufen, Radom, Filter, Klimaanlage und Avionik addiert.</o>
-      <o>Eingeschaltet wird das geschätzte Gewicht von Winde, Suchscheinwerfer, Schwimmern, Kufen, Radom, Filter, Klimaanlage und Avionik addiert.</o>
-      <o>Wenn aktiv, zählt die geschätzte Masse jedes Kits: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima und Avionik.</o>
-      <o>Wenn aktiv, zählt die geschätzte Masse jedes Kits: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima und Avionik.</o>
-      <o>Aktivieren Sie es, und Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klimaanlage und Avionik zählen zum Gewicht.</o>
-      <o>Schalten Sie es ein und alles zählt: Winde, Scheinwerfer, Schwimmer, Kufen, Radom, Filter, Klima, Avionik. Eine lange Einkaufsliste.</o>
+      <o>[lang:EN]With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.</o>
+      <o>[lang:EN]With it on, the estimated mass of the hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics is added to the payload stations.</o>
+      <o>[lang:EN]Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.</o>
+      <o>[lang:EN]Switched on, it adds the estimated mass of every installed kit: hoist, searchlight, floats, skids, radome, filter, air conditioning and avionics.</o>
+      <o>[lang:EN]Switch it on and it adds up the hoist, the searchlight, the floats, the skids, the radome, the filter, the air conditioning and the avionics.</o>
+      <o>[lang:EN]Switch it on and it adds up everything bolted on: hoist, searchlight, floats, skids, radome, filter, air conditioning, avionics. A long shopping list.</o>
     </message>
     <message key="TIP.KIT.3" actor="2" radio="auto" group="tipkit" seq="3" new="1">
-      <o>Personen zählen immer: Die Ladestationen folgen der Sitzbelegung und dem Patienten auf der Trage.</o>
-      <o>Personen zählen immer: Die Ladestationen folgen der Sitzbelegung und dem Patienten auf der Trage.</o>
-      <o>Personen zählen sowieso immer. Die Ladestationen folgen den Sitzen und dem Patienten auf der Trage.</o>
-      <o>Personen zählen sowieso immer. Die Ladestationen folgen den Sitzen und dem Patienten auf der Trage.</o>
-      <o>Personen wiegen auch bei deaktivierter Option. Die Stationen folgen den belegten Sitzen und der Trage.</o>
-      <o>Wir wiegen immer was, mit oder ohne Kits. Die Stationen wissen genau, wer wo sitzt und wer auf der Trage liegt.</o>
+      <o>[lang:EN]The people always count: the stations follow who is on the seats and the patient on the stretcher.</o>
+      <o>[lang:EN]The people always count: the stations follow who is on the seats and the patient on the stretcher.</o>
+      <o>[lang:EN]People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.</o>
+      <o>[lang:EN]People always count anyway. The payload stations follow who sits where, and the patient on the stretcher too.</o>
+      <o>[lang:EN]People count even with the option off. The stations follow who is on the seats and who is on the stretcher.</o>
+      <o>[lang:EN]We always count, kits or no kits. The stations know who sits where, and who is lying on the stretcher.</o>
     </message>
     <message key="TIP.KIT.4" actor="3" radio="auto" group="tipkit" seq="4" new="1">
-      <o>Bei Windenarbeit bleibt das Gewicht am Seil, solange die Person hängt, und verschwindet bei Bodenkontakt.</o>
-      <o>Bei Windenarbeit bleibt das Gewicht am Seil, solange die Person hängt, und verschwindet bei Bodenkontakt.</o>
-      <o>An der Winde bleibt das Gewicht am Kabel, bis die Person den Boden berührt.</o>
-      <o>An der Winde bleibt das Gewicht am Kabel, bis die Person den Boden berührt.</o>
-      <o>An der Winde bleibt das Personengewicht am Haken, bis die Füße den Boden berühren. Physik eben.</o>
-      <o>An der Winde zieht das Gewicht, bis die Stiefel den Boden berühren. Danach ist es das Problem des Bodens.</o>
+      <o>[lang:EN]During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.</o>
+      <o>[lang:EN]During hoist work the weight stays while a person hangs on the cable, and goes when they touch the ground.</o>
+      <o>[lang:EN]And on the hoist, the weight stays on the cable until the person touches the ground.</o>
+      <o>[lang:EN]And on the hoist, the weight stays on the cable until the person touches the ground.</o>
+      <o>[lang:EN]On the hoist, the weight of the person stays until their feet touch the ground. Physics, imagine that.</o>
+      <o>[lang:EN]On the hoist, the weight stays until the boots touch the ground. After that, it is the ground problem.</o>
     </message>
     <message key="TIP.QLK.1" actor="2" radio="auto" group="tipqlk" seq="1" new="1" trigger="tip of the crew: quick links of the dispatch page">
-      <o>Tipp zur Einsatzseite: Die Zeile Quicklinks klappt eine Liste von Seiten auf. Anklicken zum Anzeigen.</o>
-      <o>Tipp zur Einsatzseite: Die Zeile Quicklinks klappt eine Liste von Seiten auf. Anklicken zum Anzeigen.</o>
-      <o>Haben Sie die Quicklinks auf der Einsatzseite bemerkt? Sie sind eingeklappt. Klicken zum Ausklappen.</o>
-      <o>Haben Sie die Quicklinks auf der Einsatzseite bemerkt? Sie sind eingeklappt. Klicken zum Ausklappen.</o>
-      <o>Chef, die Einsatzseite verbirgt nützliche Links. Suchen Sie nach Quicklinks und klicken Sie darauf.</o>
-      <o>Chef, die Einsatzseite versteckt Links vor Ihnen. Quicklinks anklicken, und schon tauchen sie auf wie von Zauberhand.</o>
+      <o>[lang:EN]Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.</o>
+      <o>[lang:EN]Tip for the dispatch page: the Quick links line folds a list of pages. Click it to show them.</o>
+      <o>[lang:EN]Did you notice the Quick links on the dispatch page? They are folded. Click to show them.</o>
+      <o>[lang:EN]Did you notice the Quick links on the dispatch page? They are folded. Click to show them.</o>
+      <o>[lang:EN]Boss, the dispatch page hides a list of links. Look for Quick links and click it.</o>
+      <o>[lang:EN]Boss, the dispatch page is hiding links from you. Quick links, click, and they appear like magic.</o>
     </message>
     <message key="TIP.QLK.2" actor="3" radio="auto" group="tipqlk" seq="2" new="1">
-      <o>Darin finden sich die Checklisten-Seite, die Einsatzsteuerung, die medizinische Diagnose und Mission speichern oder neu laden.</o>
-      <o>Darin finden sich die Checklisten-Seite, die Einsatzsteuerung, die medizinische Diagnose und Mission speichern oder neu laden.</o>
-      <o>Dort finden Sie Checklisten, die Einsatzsteuerung, die medizinische Diagnoseseite und Mission speichern oder neu laden.</o>
-      <o>Dort finden Sie Checklisten, die Einsatzsteuerung, die medizinische Diagnoseseite und Mission speichern oder neu laden.</o>
-      <o>Darin finden Sie Checklisten, Einsatzsteuerung, medizinische Diagnoseseite und die Speicherseite.</o>
-      <o>Drinnen gibt es: Checklisten, Einsatzsteuerung, medizinische Diagnose und die Speicherseite. Alles, was die coolen Piloten kennen.</o>
+      <o>[lang:EN]Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.</o>
+      <o>[lang:EN]Inside there are the checklists page, the dispatch control page, the medical diagnostic page and the save and reload page.</o>
+      <o>[lang:EN]Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.</o>
+      <o>[lang:EN]Inside you find the checklists, the dispatch control, the medical diagnostic page, and Save or reload a mission.</o>
+      <o>[lang:EN]Inside you find the checklists, the dispatch control, the medical diagnostic page and the save page.</o>
+      <o>[lang:EN]Inside: checklists, dispatch control, the medical diagnostic page and the save page. Everything the cool pilots know about.</o>
     </message>
     <message key="TIP.QLK.3" actor="2" radio="auto" group="tipqlk" seq="3" new="1">
-      <o>Der Link für die Technik-Seite und Bodenoperationen erscheint nur, wenn der Hubschrauber am Boden steht.</o>
-      <o>Der Link für die Technik-Seite und Bodenoperationen erscheint nur, wenn der Hubschrauber am Boden steht.</o>
-      <o>Der Link zur Technik-Seite erscheint nur, wenn wir am Boden sind.</o>
-      <o>Der Link zur Technik-Seite erscheint nur, wenn wir am Boden sind.</o>
-      <o>Die Technik-Seite taucht nur auf, wenn wir am Boden stehen. In der Luft ziert sie sich.</o>
-      <o>Die Technik-Seite zeigt sich nur am Boden. In der Luft macht sie sich rar, genau wie ich auf Feiern.</o>
+      <o>[lang:EN]The technical page and ground operations link shows up only when the helicopter is on the ground.</o>
+      <o>[lang:EN]The technical page and ground operations link shows up only when the helicopter is on the ground.</o>
+      <o>[lang:EN]The technical page link appears only when we are on the ground.</o>
+      <o>[lang:EN]The technical page link appears only when we are on the ground.</o>
+      <o>[lang:EN]The technical page shows up only when we are on the ground. In the air it plays hard to get.</o>
+      <o>[lang:EN]The technical page link appears only when we are on the ground. In the air it plays hard to get, like me at parties.</o>
     </message>
     <message key="TIP.QLK.4" actor="3" radio="auto" group="tipqlk" seq="4" new="1">
-      <o>Der Link zur medizinischen Diagnose ist dort auch. Bei manueller Behandlung bleibt er auch bei eingeklappten Quicklinks sichtbar.</o>
-      <o>Der Link zur medizinischen Diagnose ist dort auch. Bei manueller Behandlung bleibt er auch bei eingeklappten Quicklinks sichtbar.</o>
-      <o>Und im manuellen Behandlungsmodus bleibt die Diagnoseseite sichtbar, selbst wenn die Quicklinks eingeklappt sind.</o>
-      <o>Und im manuellen Behandlungsmodus bleibt die Diagnoseseite sichtbar, selbst wenn die Quicklinks eingeklappt sind.</o>
-      <o>Bei manueller Behandlung ist der Link zur Medizintechnik immer sichtbar, auch wenn der Rest eingeklappt ist.</o>
-      <o>Bei manueller Behandlung versteckt sich der Medizin-Link nie. Er weiß eben, dass wir ihn brauchen.</o>
+      <o>[lang:EN]The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.</o>
+      <o>[lang:EN]The medical diagnostic page link is there too. With the manual treatment mode it stays visible even with the Quick links folded.</o>
+      <o>[lang:EN]And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.</o>
+      <o>[lang:EN]And in manual treatment mode the medical diagnostic page link stays visible, even when the Quick links are folded.</o>
+      <o>[lang:EN]And with manual treatment on, the medical page link is always there, even when everything else is folded.</o>
+      <o>[lang:EN]And with manual treatment on, the medical page link never hides. It knows we need it.</o>
     </message>
     <message key="TIP.DBG.1" actor="2" radio="auto" group="tipdbg" seq="1" new="1" trigger="tip of the crew: debug snapshots">
-      <o>Tipp für die Fehlersuche: Das Debug-Center auf dem Tablet hat einen Button Schnappschuss aufnehmen.</o>
-      <o>Tipp für die Fehlersuche: Das Debug-Center auf dem Tablet hat einen Button Schnappschuss aufnehmen.</o>
-      <o>Wenn etwas nicht stimmt, öffnen Sie das Debug-Center. Dort gibt es Schnappschuss aufnehmen.</o>
-      <o>Wenn etwas nicht stimmt, öffnen Sie das Debug-Center. Dort gibt es Schnappschuss aufnehmen.</o>
-      <o>Chef, falls die Mission spinnt: Debug-Center öffnen und Schnappschuss aufnehmen drücken, bevor Sie weitermachen.</o>
-      <o>Mission benimmt sich seltsam? Keine Panik. Debug-Center, Schnappschuss aufnehmen. Erst Beweise sichern, dann fluchen.</o>
+      <o>[lang:EN]Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.</o>
+      <o>[lang:EN]Tip for bug hunting: the Debug center on the tablet has a Capture snapshot button.</o>
+      <o>[lang:EN]If something looks wrong, open the Debug center. There is a Capture snapshot button.</o>
+      <o>[lang:EN]If something looks wrong, open the Debug center. There is a Capture snapshot button.</o>
+      <o>[lang:EN]Boss, if the mission goes weird, open the Debug center and press Capture snapshot before you do anything else.</o>
+      <o>[lang:EN]Mission acting up? Do not panic. Debug center, Capture snapshot. Evidence first, tears later.</o>
     </message>
     <message key="TIP.DBG.2" actor="3" radio="auto" group="tipdbg" seq="2" new="1">
-      <o>Er speichert die Mission, die Route, den Besatzung-Status, die Rotor-Werte und die Patienteninformationen.</o>
-      <o>Er speichert die Mission, die Route, den Besatzung-Status, die Rotor-Werte und die Patienteninformationen.</o>
-      <o>Er zeichnet die Mission, die Route, den Status der Besatzung, den Rotor und die Patienten auf.</o>
-      <o>Er zeichnet die Mission, die Route, den Status der Besatzung, den Rotor und die Patienten auf.</o>
-      <o>Er hält Mission, Route, Besatzung, Rotor und Patienten fest, alles auf einen Streich.</o>
-      <o>Mission, Route, Besatzung, Rotor und Patienten in einem Rutsch. Wie eine Patientenakte für den ganzen Flug.</o>
+      <o>[lang:EN]It saves the mission, the route, the crew progress, the rotor progress and the patient information.</o>
+      <o>[lang:EN]It saves the mission, the route, the crew progress, the rotor progress and the patient information.</o>
+      <o>[lang:EN]It records the mission, the route, how the crew is doing, the rotor and the patients.</o>
+      <o>[lang:EN]It records the mission, the route, how the crew is doing, the rotor and the patients.</o>
+      <o>[lang:EN]It records the mission, the route, the crew, the rotor and the patients, all in one go.</o>
+      <o>[lang:EN]Mission, route, crew, rotor and patients, all in one snapshot. Like a medical chart for the whole flight.</o>
     </message>
     <message key="TIP.DBG.3" actor="2" radio="auto" group="tipdbg" seq="3" new="1">
-      <o>Die Mission schreibt auch automatische Schnappschüsse, beginnend mit table R and E debug, und behält die vorherige Mission.</o>
-      <o>Die Mission schreibt auch automatische Schnappschüsse, beginnend mit table R and E debug, und behält die vorherige Mission.</o>
-      <o>Es gibt auch automatische Snapshots in Dateien mit table R and E debug, und die Vor-Mission wird ebenfalls behalten.</o>
-      <o>Es gibt auch automatische Snapshots in Dateien mit table R and E debug, und die Vor-Mission wird ebenfalls behalten.</o>
-      <o>Und das System erstellt selbst Schnappschüsse mit table R and E debug, plus die vorherige Mission.</o>
-      <o>Und es knipst Schnappschüsse ganz von selbst: Dateien mit table R and E debug. Behält sogar die alte Mission. Sehr ordentlich.</o>
+      <o>[lang:EN]The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.</o>
+      <o>[lang:EN]The mission also writes automatic snapshots, in files whose names start with table R and E debug, and it keeps a copy of the previous mission.</o>
+      <o>[lang:EN]It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.</o>
+      <o>[lang:EN]It also writes automatic snapshots, files that start with table R and E debug, and it keeps the previous mission too.</o>
+      <o>[lang:EN]And it writes automatic snapshots by itself, files starting with table R and E debug, plus the previous mission.</o>
+      <o>[lang:EN]And it takes snapshots by itself, files starting with table R and E debug. It even keeps the previous mission. A very organised machine.</o>
     </message>
     <message key="TIP.DBG.4" actor="3" radio="auto" group="tipdbg" seq="4" new="1">
-      <o>Sie können den Arbeitsordner im Mission Companion unter Werkzeuge öffnen und die Dateien auf Discord mit kurzer Beschreibung teilen.</o>
-      <o>Sie können den Arbeitsordner im Mission Companion unter Werkzeuge öffnen und die Dateien auf Discord mit kurzer Beschreibung teilen.</o>
-      <o>Öffnen Sie den Arbeitsordner im Companion unter Werkzeuge und posten Sie die Dateien auf Discord mit ein paar Worten dazu.</o>
-      <o>Öffnen Sie den Arbeitsordner im Companion unter Werkzeuge und posten Sie die Dateien auf Discord mit ein paar Worten dazu.</o>
-      <o>Arbeitsordner im Companion unter Werkzeuge öffnen und die Dateien auf Discord posten, mit einer kurzen Notiz.</o>
-      <o>Arbeitsordner im Companion unter Werkzeuge öffnen und die Dateien auf Discord werfen. Die Entwickler freuen sich über Tatortberichte.</o>
+      <o>[lang:EN]You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>[lang:EN]You can open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>[lang:EN]Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>[lang:EN]Open the work folder from the Mission Companion, Tools tab, and post those files on Discord with a few words about what happened.</o>
+      <o>[lang:EN]Open the work folder from the Mission Companion, Tools tab, and send those files on Discord with a line about what happened.</o>
+      <o>[lang:EN]Open the work folder from the Mission Companion, Tools tab, and throw those files on Discord with a line about the crime scene. The developers love that.</o>
     </message>
     <message key="TIP.MED.1" actor="3" radio="auto" group="tipmed" seq="1" new="1" trigger="tip of the crew: medical options">
-      <o>Tipp für den medizinischen Bereich: In den Einstellungen bietet Medizinische Optionen automatische oder manuelle Behandlung.</o>
-      <o>Tipp für den medizinischen Bereich: In den Einstellungen bietet Medizinische Optionen automatische oder manuelle Behandlung.</o>
-      <o>Medizinischer Tipp: Einstellungen, Medizinische Optionen. Der Behandlungsmodus kann automatisch oder manuell sein.</o>
-      <o>Medizinischer Tipp: Einstellungen, Medizinische Optionen. Der Behandlungsmodus kann automatisch oder manuell sein.</o>
-      <o>Chef, wenn Sie Arzt spielen wollen: Einstellungen, Medizinische Optionen. Behandlung automatisch oder manuell.</o>
-      <o>Chef, falls Sie selbst den Kittel anziehen wollen: Einstellungen, Medizinische Optionen, Modus manuell. Aber nicht der Kasse melden.</o>
+      <o>[lang:EN]Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.</o>
+      <o>[lang:EN]Tip for the medical side: in the settings, Medical options has the patient clinical treatment mode, automatic or manual.</o>
+      <o>[lang:EN]Medical tip: settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>[lang:EN]Medical tip: settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>[lang:EN]Boss, if you want to play doctor, settings, Medical options. The treatment mode can be automatic or manual.</o>
+      <o>[lang:EN]Boss, if you want to play doctor, settings, Medical options, treatment mode, manual. Do not tell the insurance.</o>
     </message>
     <message key="TIP.MED.2" actor="2" radio="auto" group="tipmed" seq="2" new="1">
-      <o>Im manuellen Modus wählen Sie pro Phase eine Prozedur für jeden Patienten, und die automatischen Timer sind aus.</o>
-      <o>Im manuellen Modus wählen Sie pro Phase eine Prozedur für jeden Patienten, und die automatischen Timer sind aus.</o>
-      <o>Manuell wählen Sie eine Prozedur je Phase für jeden Patienten, und die automatischen Timer sind deaktiviert.</o>
-      <o>Manuell wählen Sie eine Prozedur je Phase für jeden Patienten, und die automatischen Timer sind deaktiviert.</o>
-      <o>Im manuellen Modus wählen Sie eine Maßnahme je Phase. Keine Automatik-Timer, liegt alles bei Ihnen.</o>
-      <o>Manuell wählen Sie jede Maßnahme pro Phase selbst, und niemand drängelt. Außer vielleicht der Patient.</o>
+      <o>[lang:EN]In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.</o>
+      <o>[lang:EN]In manual mode you choose one procedure per phase for every patient, and the automatic visit timers are off.</o>
+      <o>[lang:EN]In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.</o>
+      <o>[lang:EN]In manual mode you pick one procedure for each phase and each patient, and the automatic timers are off.</o>
+      <o>[lang:EN]In manual you pick one procedure per phase for every patient. No automatic timers, it is all on you.</o>
+      <o>[lang:EN]In manual you pick the procedure for every phase and every patient, and nobody rushes you. Except the patient.</o>
     </message>
     <message key="TIP.MED.3" actor="3" radio="auto" group="tipmed" seq="3" new="1">
-      <o>Sie können auch die durchschnittliche Behandlungszeit einstellen, von ultraschnell bis langsam.</o>
-      <o>Sie können auch die durchschnittliche Behandlungszeit einstellen, von ultraschnell bis langsam.</o>
-      <o>Sie können einstellen, wie lange Behandlungen dauern: von ultraschnell bis langsam.</o>
-      <o>Sie können einstellen, wie lange Behandlungen dauern: von ultraschnell bis langsam.</o>
-      <o>Sie legen fest, wie lang Behandlungen dauern, von ultraschnell bis langsam. Langsam für Genießer.</o>
-      <o>Die Behandlungszeit reicht von ultraschnell bis langsam. Langsam ist perfekt für eine ausgiebige Kaffeepause.</o>
+      <o>[lang:EN]You can also set the average visit time, from ultrafast to slow.</o>
+      <o>[lang:EN]You can also set the average visit time, from ultrafast to slow.</o>
+      <o>[lang:EN]You can also set how long the visits take, from ultrafast to slow.</o>
+      <o>[lang:EN]You can also set how long the visits take, from ultrafast to slow.</o>
+      <o>[lang:EN]You also set how long the visits take, from ultrafast to slow. Slow if you like to enjoy the view.</o>
+      <o>[lang:EN]And the visit time goes from ultrafast to slow. Slow is for people who like a long coffee break.</o>
     </message>
     <message key="TIP.MED.4" actor="2" radio="auto" group="tipmed" seq="4" new="1">
-      <o>Und Sie können ein mechanisches Reanimationssystem deklarieren, das Herzdruckmassage während des Fluges erlaubt.</o>
-      <o>Und Sie können ein mechanisches Reanimationssystem deklarieren, das Herzdruckmassage während des Fluges erlaubt.</o>
-      <o>Und es gibt die Option für eine Reanimationshilfe, damit wir Herzdruckmassage im Flug durchführen können.</o>
-      <o>Und es gibt die Option für eine Reanimationshilfe, damit wir Herzdruckmassage im Flug durchführen können.</o>
-      <o>Mit der Reanimationshilfe an Bord können wir die Herzdruckmassage auch in der Luft fortsetzen.</o>
-      <o>Mit der Reanimationshilfe an Bord drückt die Maschine im Flug ganz von allein. Die wird nie müde.</o>
+      <o>[lang:EN]And you can declare a mechanical CPR system on board, which allows CPR while airborne.</o>
+      <o>[lang:EN]And you can declare a mechanical CPR system on board, which allows CPR while airborne.</o>
+      <o>[lang:EN]And there is the option for a mechanical CPR system, so we can do CPR while flying.</o>
+      <o>[lang:EN]And there is the option for a mechanical CPR system, so we can do CPR while flying.</o>
+      <o>[lang:EN]And if you install the mechanical CPR system, we can keep the compressions going in the air.</o>
+      <o>[lang:EN]And with the mechanical CPR system installed, the machine does the compressions in flight. It never gets tired.</o>
     </message>
     <message key="TIP.FLR.1" actor="2" radio="auto" group="tipflr" seq="1" new="1" trigger="tip of the crew: helicopter failures">
-      <o>Tipp: Hubschrauberausfälle können in den Einstellungen unter Flughilfen aktiviert oder deaktiviert werden.</o>
-      <o>Tipp: Hubschrauberausfälle können in den Einstellungen unter Flughilfen aktiviert oder deaktiviert werden.</o>
-      <o>Wussten Sie, dass Hubschrauberausfälle schaltbar sind? Einstellungen, Flughilfen.</o>
-      <o>Wussten Sie, dass Hubschrauberausfälle schaltbar sind? Einstellungen, Flughilfen.</o>
-      <o>Chef, falls der Hubschrauber zicken soll: Einstellungen, Flughilfen, Ausfälle aktivieren.</o>
-      <o>Chef, falls Sie Nervenkitzel brauchen: Einstellungen, Flughilfen, Ausfälle aktivieren. Wir weinen dann leise mit.</o>
+      <o>[lang:EN]Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.</o>
+      <o>[lang:EN]Tip: helicopter failures can be enabled or disabled in the settings, under Flight assists.</o>
+      <o>[lang:EN]Did you know helicopter failures can be switched on or off? Settings, Flight assists.</o>
+      <o>[lang:EN]Did you know helicopter failures can be switched on or off? Settings, Flight assists.</o>
+      <o>[lang:EN]Boss, if you want the helicopter to misbehave, settings, Flight assists, Helicopter failures, enabled.</o>
+      <o>[lang:EN]Boss, if you miss the excitement, settings, Flight assists, Helicopter failures, enabled. We will be the ones crying.</o>
     </message>
     <message key="TIP.FLR.2" actor="3" radio="auto" group="tipflr" seq="2" new="1">
-      <o>Harte Stöße können Ausfälle auslösen, von leichten wie dem Autopiloten bis zu Triebwerksausfall oder Triebwerksbrand.</o>
-      <o>Harte Stöße können Ausfälle auslösen, von leichten wie dem Autopiloten bis zu Triebwerksausfall oder Triebwerksbrand.</o>
-      <o>Ein harter Aufprall kann Defekte verursachen: Autopilot bis hin zu Treibstoffproblemen, Triebwerksausfall oder Triebwerksbrand.</o>
-      <o>Ein harter Aufprall kann Defekte verursachen: Autopilot bis hin zu Treibstoffproblemen, Triebwerksausfall oder Triebwerksbrand.</o>
-      <o>Ein harter Schlag verursacht Schäden: vom Autopiloten bis zum brennenden Triebwerk.</o>
-      <o>Ein harter Schlag macht Dinge kaputt: vom Autopiloten bis zum Feueralarm im Triebwerk. Seien Sie sanft zu den Kufen.</o>
+      <o>[lang:EN]A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.</o>
+      <o>[lang:EN]A hard crash can cause failures, from light ones like the autopilot to heavy ones like fuel problems, an engine failure or an engine fire.</o>
+      <o>[lang:EN]A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.</o>
+      <o>[lang:EN]A hard crash can cause failures, from light ones like the autopilot to heavy ones like an engine failure or an engine fire.</o>
+      <o>[lang:EN]A hard knock can cause failures, light ones like the autopilot, heavy ones like an engine failure or an engine fire.</o>
+      <o>[lang:EN]A hard knock can break things, from the autopilot all the way to engine failure and engine fire. Be gentle with the skids.</o>
     </message>
     <message key="TIP.FLR.3" actor="2" radio="auto" group="tipflr" seq="3" new="1">
-      <o>Ein Button Ausfälle zurücksetzen neben der Einstellung behebt die aktiven Fehler.</o>
-      <o>Ein Button Ausfälle zurücksetzen neben der Einstellung behebt die aktiven Fehler.</o>
-      <o>Und der Button Ausfälle zurücksetzen repariert sofort alles, was gerade defekt ist.</o>
-      <o>Und der Button Ausfälle zurücksetzen repariert sofort alles, was gerade defekt ist.</o>
-      <o>Und wenn es zu viel wird: Ausfälle zurücksetzen neben der Option repariert alles Aktive.</o>
-      <o>Wenn es Ihnen reicht: Ausfälle zurücksetzen repariert alles auf Knopfdruck. Ein Mechaniker würde heulen.</o>
+      <o>[lang:EN]A Reset failures button next to the failure setting clears the active failures.</o>
+      <o>[lang:EN]A Reset failures button next to the failure setting clears the active failures.</o>
+      <o>[lang:EN]And a Reset failures button, next to the failure setting, repairs whatever is active.</o>
+      <o>[lang:EN]And a Reset failures button, next to the failure setting, repairs whatever is active.</o>
+      <o>[lang:EN]And if it gets too much, the Reset failures button next to the setting repairs what is active.</o>
+      <o>[lang:EN]And when you have had enough, the Reset failures button fixes everything. A mechanic would cry.</o>
     </message>
     <message key="TIP.FLR.4" actor="3" radio="auto" group="tipflr" seq="4" new="1">
-      <o>Die Ausfalleinstellung wird beim Missionsstart erneut eingelesen.</o>
-      <o>Die Ausfalleinstellung wird beim Missionsstart erneut eingelesen.</o>
-      <o>Gut zu wissen: Die Ausfalloption wird zu Beginn der Mission neu eingelesen.</o>
-      <o>Gut zu wissen: Die Ausfalloption wird zu Beginn der Mission neu eingelesen.</o>
-      <o>Und die Ausfalleinstellung wird beim Missionsstart neu gelesen, also überlegen Sie es sich vor dem Start.</o>
-      <o>Gut zu wissen: Die Ausfälle werden zum Missionsstart neu gelesen. Bedenken Sie das, bevor Sie Abenteuer bestellen.</o>
+      <o>[lang:EN]The failures setting is read again at the mission start.</o>
+      <o>[lang:EN]The failures setting is read again at the mission start.</o>
+      <o>[lang:EN]Good to know: the failures setting is read again at the mission start.</o>
+      <o>[lang:EN]Good to know: the failures setting is read again at the mission start.</o>
+      <o>[lang:EN]And the failures setting is read again at the mission start, so think about it before you start.</o>
+      <o>[lang:EN]Good to know: the failures setting is read again at the mission start. Keep it in mind before you ask for excitement.</o>
     </message>
     <message key="TIP.CHT.1" actor="2" radio="auto" group="tipcht" seq="1" new="1" trigger="tip of the crew: crew chatter">
-      <o>Wenn wir zu viel reden: Die Option Besatzung-Geplauder ist in den Audio-Optionen: Voll, Reduziert oder Minimal.</o>
-      <o>Wenn wir zu viel reden: Die Option Besatzung-Geplauder ist in den Audio-Optionen: Voll, Reduziert oder Minimal.</o>
-      <o>Wenn wir Ihnen zu viel quatschen: Einstellungen, Audio-Optionen, Besatzung-Geplauder: Voll, Reduziert oder Minimal.</o>
-      <o>Wenn wir Ihnen zu viel quatschen: Einstellungen, Audio-Optionen, Besatzung-Geplauder: Voll, Reduziert oder Minimal.</o>
-      <o>Chef, wenn wir Ihnen ein Kotelett ans Ohr labern: Einstellungen, Audio, Besatzung-Geplauder. Voll, Reduziert oder Minimal.</o>
-      <o>Chef, wenn wir Sie in den Wahnsinn quatschen: Einstellungen, Audio, Besatzung-Geplauder. Voll, Reduziert oder Minimal.</o>
+      <o>[lang:EN]If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.</o>
+      <o>[lang:EN]If we talk too much, the Crew chatter setting is in the settings, under Audio options: full, reduced or minimal.</o>
+      <o>[lang:EN]If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.</o>
+      <o>[lang:EN]If we talk too much for you, settings, Audio options, Crew chatter: full, reduced or minimal.</o>
+      <o>[lang:EN]Boss, if we are chatting too much, settings, Audio options, Crew chatter. Full, reduced or minimal.</o>
+      <o>[lang:EN]Boss, if we are driving you mad with our chatter, settings, Audio options, Crew chatter. Full, reduced or minimal.</o>
     </message>
     <message key="TIP.CHT.2" actor="3" radio="auto" group="tipcht" seq="2" new="1">
-      <o>Voll enthält Smalltalk und lockere Formulierungen. Reduziert behält professionelle Sprache ohne Smalltalk.</o>
-      <o>Voll enthält Smalltalk und lockere Formulierungen. Reduziert behält professionelle Sprache ohne Smalltalk.</o>
-      <o>Voll bietet Smalltalk und Gesprächigkeit. Reduziert bleibt professionell, ganz ohne Smalltalk.</o>
-      <o>Voll bietet Smalltalk und Gesprächigkeit. Reduziert bleibt professionell, ganz ohne Smalltalk.</o>
-      <o>Voll bedeutet Geplauder und lockere Sprüche. Reduziert ist rein professionell, kein Smalltalk.</o>
-      <o>Voll bedeutet Witze, Plauderei und lockere Sprüche. Reduziert ist streng dienstlich, kein Smalltalk, kein Spaß.</o>
+      <o>[lang:EN]Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.</o>
+      <o>[lang:EN]Full has small talk and the most colloquial wording. Reduced keeps the professional wording and no small talk.</o>
+      <o>[lang:EN]Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.</o>
+      <o>[lang:EN]Full has the small talk and the chattiest wording. Reduced is professional, with no small talk.</o>
+      <o>[lang:EN]Full is the small talk and the chatty wording. Reduced is strictly professional, no small talk.</o>
+      <o>[lang:EN]Full is chat, jokes and colloquial wording. Reduced is strictly professional, no small talk, no fun.</o>
     </message>
     <message key="TIP.CHT.3" actor="1" radio="auto" group="tipcht" seq="3" new="1">
-      <o>Minimal behält nur die kürzesten Formulierungen bei.</o>
-      <o>Minimal behält nur die kürzesten Formulierungen bei.</o>
-      <o>Und Minimal ist der kürzeste Funk, den wir haben.</o>
-      <o>Und Minimal ist der kürzeste Funk, den wir haben.</o>
-      <o>Und Minimal beschränkt sich auf das absolute Minimum.</o>
-      <o>Und Minimal ist nur das Nötigste. Da hören Sie von mir nicht mal ein Guten Morgen.</o>
+      <o>[lang:EN]Minimal keeps only the shortest wording.</o>
+      <o>[lang:EN]Minimal keeps only the shortest wording.</o>
+      <o>[lang:EN]And minimal is the shortest wording we have.</o>
+      <o>[lang:EN]And minimal is the shortest wording we have.</o>
+      <o>[lang:EN]And minimal is just the bare words, the strict minimum.</o>
+      <o>[lang:EN]And minimal is the bare words only. You will not even hear me say good morning.</o>
     </message>
     <message key="TIP.CHT.4" actor="2" radio="auto" group="tipcht" seq="4" new="1">
-      <o>Die Einstellung wird in Profilen gespeichert, Sie können also ein gesprächiges und ein ruhiges Profil haben.</o>
-      <o>Die Einstellung wird in Profilen gespeichert, Sie können also ein gesprächiges und ein ruhiges Profil haben.</o>
-      <o>Sie wird auch in den Profilen gespeichert: Ein Profil kann gesprächig sein, ein anderes leise.</o>
-      <o>Sie wird auch in den Profilen gespeichert: Ein Profil kann gesprächig sein, ein anderes leise.</o>
-      <o>Und sie liegt in den Profilen, Sie können also ein Plauder-Profil und ein Flüster-Profil anlegen.</o>
-      <o>Und es speichert sich in den Profilen. Ein Plauder-Profil für sonnige Tage, ein Schweige-Profil für Montage.</o>
+      <o>[lang:EN]The setting is kept in the profiles, so you can have a talkative profile and a quiet one.</o>
+      <o>[lang:EN]The setting is kept in the profiles, so you can have a talkative profile and a quiet one.</o>
+      <o>[lang:EN]The setting is kept in the profiles too, so one profile can be chatty and another quiet.</o>
+      <o>[lang:EN]The setting is kept in the profiles too, so one profile can be chatty and another quiet.</o>
+      <o>[lang:EN]And it is kept in the profiles, so you can have a chatty profile and a quiet one.</o>
+      <o>[lang:EN]And it is kept in the profiles, so you can keep a chatty profile for sunny days and a silent one for Mondays.</o>
     </message>
     <message key="TIP.TOF.1" actor="3" radio="auto" group="tiptof" seq="1" new="1" trigger="tip of the crew: switching the tips off">
-      <o>Übrigens haben diese Tipps einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug haben, schalten Sie sie ab.</o>
-      <o>Übrigens haben diese Tipps einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug haben, schalten Sie sie ab.</o>
-      <o>Diese Tipps haben einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug gehört haben: Einfach abschalten.</o>
-      <o>Diese Tipps haben einen eigenen Schalter, unabhängig vom Geplauder. Wenn Sie genug gehört haben: Einfach abschalten.</o>
-      <o>Chef, wenn diese Tipps Ihnen auf die Nerven gehen: Sie haben einen eigenen Schalter. Wir sind auch nicht beleidigt. Kaum.</o>
-      <o>Chef, wenn Sie unsere Ratschläge satt haben: Eigener Schalter. Wir schmollen dann ganz leise vor uns hin.</o>
+      <o>[lang:EN]By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.</o>
+      <o>[lang:EN]By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.</o>
+      <o>[lang:EN]These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.</o>
+      <o>[lang:EN]These tips have a switch of their own, apart from the chatter. If you have had enough of them, you can turn them off.</o>
+      <o>[lang:EN]Boss, if these tips get on your nerves, they have their own switch. We will not be offended. Much.</o>
+      <o>[lang:EN]Boss, if you are sick of our tips, they have a switch of their own. We will sulk quietly, but we will manage.</o>
     </message>
     <message key="TIP.TOF.2" actor="2" radio="auto" group="tiptof" seq="2" new="1">
-      <o>In den Einstellungen unter Audio-Optionen, Besatzungs-Tipps: Tipps aus wählen. Die Unterhaltung richtet sich nach dem Besatzungs-Geplauder.</o>
-      <o>In den Einstellungen unter Audio-Optionen, Besatzungs-Tipps: Tipps aus wählen. Die Unterhaltung richtet sich nach dem Besatzungs-Geplauder.</o>
-      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung folgt dem Besatzungs-Geplauder.</o>
-      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung folgt dem Besatzungs-Geplauder.</o>
-      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus. Die Unterhaltung ist eine andere Sache, dafür gibt es das Geplauder.</o>
-      <o>Einstellungen, Audio-Optionen, Besatzungs-Tipps: Tipps aus, und die Belehrungen enden. Die Witze regelt das Geplauder.</o>
+      <o>[lang:EN]In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.</o>
+      <o>[lang:EN]In the settings, Audio options, Crew tips: choose tips off. The small talk stays as the Crew chatter setting says.</o>
+      <o>[lang:EN]Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.</o>
+      <o>[lang:EN]Settings, Audio options, Crew tips: tips off. The small talk follows the Crew chatter setting.</o>
+      <o>[lang:EN]Settings, Audio options, Crew tips, tips off. The small talk is another matter, that is the Crew chatter.</o>
+      <o>[lang:EN]Settings, Audio options, Crew tips, tips off, and the lectures stop. The jokes are the business of the Crew chatter.</o>
     </message>
     <message key="TIP.TOF.3" actor="3" radio="auto" group="tiptof" seq="3" new="1">
-      <o>Es geht auch umgekehrt: Tipps behalten und das Besatzung-Geplauder auf Reduziert stellen, ganz ohne Smalltalk.</o>
-      <o>Es geht auch umgekehrt: Tipps behalten und das Besatzung-Geplauder auf Reduziert stellen, ganz ohne Smalltalk.</o>
-      <o>Und umgekehrt: Behalten Sie die Tipps und stellen Sie das Geplauder auf Reduziert, um den Smalltalk loszuwerden.</o>
-      <o>Und umgekehrt: Behalten Sie die Tipps und stellen Sie das Geplauder auf Reduziert, um den Smalltalk loszuwerden.</o>
-      <o>Und auch umgekehrt: Tipps anlassen und den Smalltalk abstellen, indem Sie das Geplauder auf Reduziert setzen.</o>
-      <o>Oder umgekehrt: Alle Vorträge, keine Witze, mit dem Geplauder auf Reduziert. Streng nach Vorschrift.</o>
+      <o>[lang:EN]It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.</o>
+      <o>[lang:EN]It works the other way round too: you can keep the tips and set the Crew chatter to reduced, with no small talk.</o>
+      <o>[lang:EN]And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.</o>
+      <o>[lang:EN]And the other way round: keep the tips, and set the Crew chatter to reduced to lose the small talk.</o>
+      <o>[lang:EN]And the other way round too. Keep the tips and drop the small talk with the Crew chatter on reduced.</o>
+      <o>[lang:EN]Or the other way round: all the lectures and no jokes, with the Crew chatter on reduced. Strictly business.</o>
     </message>
     <message key="TIP.TOF.4" actor="1" radio="auto" group="tiptof" seq="4" new="1">
-      <o>Die Einstellung für Besatzungs-Tipps wird ebenfalls in Profilen gespeichert, jedes Profil kann seine eigene Wahl haben.</o>
-      <o>Die Einstellung für Besatzungs-Tipps wird ebenfalls in Profilen gespeichert, jedes Profil kann seine eigene Wahl haben.</o>
-      <o>Und sie wird in Profilen abgelegt, jedes Profil kann also seine eigene Einstellung haben.</o>
-      <o>Und sie wird in Profilen abgelegt, jedes Profil kann also seine eigene Einstellung haben.</o>
-      <o>Sie lebt auch in den Profilen: Ein Profil weiß alles, das nächste genießt die Stille.</o>
-      <o>Und sie wohnt in den Profilen: Ein Profil wird zum Besserwisser, das andere zum Schweigekloster.</o>
+      <o>[lang:EN]The Crew tips setting is kept in the profiles too, so each profile can have its own.</o>
+      <o>[lang:EN]The Crew tips setting is kept in the profiles too, so each profile can have its own.</o>
+      <o>[lang:EN]And it is kept in the profiles, so each profile can have its own choice.</o>
+      <o>[lang:EN]And it is kept in the profiles, so each profile can have its own choice.</o>
+      <o>[lang:EN]And it lives in the profiles too, so you can have a profile that knows everything and a profile that wants silence.</o>
+      <o>[lang:EN]And it lives in the profiles, so one profile can be a know-it-all and another one a monk.</o>
     </message>
 </voicepack>
