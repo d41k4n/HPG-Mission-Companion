@@ -87,7 +87,7 @@ namespace HPGMissionCompanion
             new LangInfo("EN", "English", "en", "Hello, this is {0}. Ready for the mission."),
             new LangInfo("FR", "Francais", "fr", "Bonjour, ici {0}. Pret pour la mission."),
             new LangInfo("IT", "Italiano", "it", "Ciao, sono {0}. Pronto per la missione."),
-            new LangInfo("DE", "Deutsch", "de", "Hallo, hier ist {0}. Bereit fuer die Mission.")
+            new LangInfo("DE", "Deutsch", "de", "Hallo, hier ist {0}. Bereit f\u00fcr die Mission.")
         };
 
         public static LangInfo ByCode(string code)
