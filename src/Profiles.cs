@@ -31,6 +31,8 @@ namespace HPGMissionCompanion
         public string BridgePack = "";
         public string Variety = "random";
         public string Names = "functions";
+        public string CallSignMode = "airline";          // airline | custom
+        public string CallSign = "";                      // the custom name (kept only in a personal file)
         public Dictionary<string, string> CrewNames = new Dictionary<string, string>();     // empty: the names of this PC are kept
         public bool StartWithSim = false;
         public bool ExitWithSim = true;
@@ -188,6 +190,7 @@ namespace HPGMissionCompanion
             p.AudioOut.HeadsetLevel = s.AudioOut.HeadsetLevel; p.AudioOut.ExternalLevel = s.AudioOut.ExternalLevel; p.AudioOut.NotifyLevel = s.AudioOut.NotifyLevel;
             p.UseMissionVolumes = s.UseMissionVolumes; p.AttenCamInside = s.AttenCamInside; p.AttenCamOutside = s.AttenCamOutside;
             p.BridgePack = s.BridgePack; p.Variety = s.Variety; p.Names = s.Names;
+            p.CallSignMode = s.CallSignMode; p.CallSign = personal ? s.CallSign : "";
             p.CrewNames = new Dictionary<string, string>();
             if (personal) foreach (KeyValuePair<string, string> kv in s.CrewNames) p.CrewNames[kv.Key] = kv.Value;
             p.StartWithSim = s.StartWithSim; p.ExitWithSim = s.ExitWithSim; p.StartMinimized = s.StartMinimized; p.ReadyAnnounce = s.ReadyAnnounce;
@@ -197,7 +200,7 @@ namespace HPGMissionCompanion
             foreach (KeyValuePair<string, LangSetting> kv in s.Languages)
             {
                 LangSetting ls = new LangSetting();
-                foreach (ActorSetting a in kv.Value.Actors) { ActorSetting c = new ActorSetting(); c.Voice = a.Voice; c.Speed = a.Speed; ls.Actors.Add(c); }
+                foreach (ActorSetting a in kv.Value.Actors) ls.Actors.Add(a.Copy());
                 p.Languages[kv.Key] = ls;
             }
             Normalize(p);
@@ -213,6 +216,8 @@ namespace HPGMissionCompanion
             s.AudioOut.HeadsetLevel = p.AudioOut.HeadsetLevel; s.AudioOut.ExternalLevel = p.AudioOut.ExternalLevel; s.AudioOut.NotifyLevel = p.AudioOut.NotifyLevel;
             s.UseMissionVolumes = p.UseMissionVolumes; s.AttenCamInside = p.AttenCamInside; s.AttenCamOutside = p.AttenCamOutside;
             s.BridgePack = p.BridgePack; s.Variety = p.Variety; s.Names = p.Names;
+            s.CallSignMode = p.CallSignMode == "custom" ? "custom" : "airline";
+            if (!string.IsNullOrEmpty(p.CallSign)) s.CallSign = p.CallSign;
             if (p.CrewNames.Count > 0)
             {
                 s.CrewNames = new Dictionary<string, string>();
@@ -225,7 +230,7 @@ namespace HPGMissionCompanion
             foreach (KeyValuePair<string, LangSetting> kv in p.Languages)
             {
                 LangSetting ls = new LangSetting();
-                foreach (ActorSetting a in kv.Value.Actors) { ActorSetting c = new ActorSetting(); c.Voice = a.Voice; c.Speed = a.Speed; ls.Actors.Add(c); }
+                foreach (ActorSetting a in kv.Value.Actors) ls.Actors.Add(a.Copy());
                 s.Languages[kv.Key] = ls;
                 notes.Add("voices and speeds of the language " + kv.Key);
             }
@@ -241,11 +246,18 @@ namespace HPGMissionCompanion
             foreach (LangSetting ls in p.Languages.Values)
                 foreach (ActorSetting a in ls.Actors)
                 {
-                    if (a == null || a.Voice == null || !a.Voice.StartsWith("piper:", StringComparison.Ordinal)) continue;
-                    string key = a.Voice.Substring(6);
-                    int colon = key.IndexOf(':');
-                    if (colon > 0) key = key.Substring(0, colon);
-                    if (!keys.Contains(key)) keys.Add(key);
+                    if (a == null) continue;
+                    List<string> ids = new List<string>();
+                    if (a.Voice != null) ids.Add(a.Voice);
+                    if (a.Pool != null) ids.AddRange(a.Pool);
+                    foreach (string id in ids)
+                    {
+                        if (id == null || !id.StartsWith("piper:", StringComparison.Ordinal)) continue;
+                        string key = id.Substring(6);
+                        int colon = key.IndexOf(':');
+                        if (colon > 0) key = key.Substring(0, colon);
+                        if (!keys.Contains(key)) keys.Add(key);
+                    }
                 }
             return keys;
         }

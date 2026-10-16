@@ -158,6 +158,7 @@ namespace HPGMissionCompanion
         readonly TrackBar[] speedBar = new TrackBar[Actors.Count];
         readonly Label[] speedLabel = new Label[Actors.Count];
         readonly Button[] testButton = new Button[Actors.Count];
+        readonly Button[] poolButton = new Button[Actors.Count];       // "Voices..." of the actors whose voice can be drawn (dispatcher, ground unit, heli rescuer)
         readonly TextBox[] nameBox = new TextBox[7];       // the names of the crew and the technicians (actors 1-7), used when the crew names are not random
         static readonly string[] NameRoles = { "PLT", "CPL", "PAX3", "PAX1", "PAX2", "TECHM", "TECHF" };      // role of actor 1..7
 
@@ -1116,6 +1117,11 @@ namespace HPGMissionCompanion
                 }
                 voiceBox[i].SelectedIndexChanged += delegate { OnVoiceChanged(index); };
                 page.Controls.Add(voiceBox[i]);
+                if (Actors.CanDraw(i + 1))
+                {
+                    poolButton[i] = Btn(page, "Voices...", 376, y + 1, 90, 26);
+                    poolButton[i].Click += delegate { EditPool(index); };
+                }
 
                 speedBar[i] = new TrackBar();
                 speedBar[i].Minimum = 5;
@@ -1135,11 +1141,20 @@ namespace HPGMissionCompanion
             }
             int yc = 102 + Actors.Count * 38 + 6;
             Lbl(page, "Call sign of the helicopter", 10, yc + 5, 160, 20);
-            TextBox callBox = new TextBox();
-            callBox.Location = new Point(176, yc + 2);
-            callBox.Size = new Size(194, 24);
+            callModeBox = new ComboBox();
+            callModeBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            callModeBox.Location = new Point(176, yc + 2);
+            callModeBox.Size = new Size(194, 24);
+            callModeBox.Items.Add("Airline of the aircraft (aircraft.cfg)");
+            callModeBox.Items.Add("Custom name");
+            callModeBox.SelectedIndex = Ctx.Settings.CallSignMode == "custom" ? 1 : 0;
+            page.Controls.Add(callModeBox);
+            callBox = new TextBox();
+            callBox.Location = new Point(376, yc + 2);
+            callBox.Size = new Size(190, 24);
             callBox.MaxLength = 30;
             callBox.Text = Ctx.Settings.CallSign ?? "";
+            callBox.Enabled = Ctx.Settings.CallSignMode == "custom";
             callBox.TextChanged += delegate
             {
                 if (suppress) return;
@@ -1147,10 +1162,21 @@ namespace HPGMissionCompanion
                 MarkDirty();
                 Say.ApplyCallSign();
             };
+            callModeBox.SelectedIndexChanged += delegate
+            {
+                if (suppress) return;
+                Ctx.Settings.CallSignMode = callModeBox.SelectedIndex == 1 ? "custom" : "airline";
+                callBox.Enabled = callModeBox.SelectedIndex == 1;
+                MarkDirty();
+                Say.ApplyCallSign();
+            };
             page.Controls.Add(callBox);
-            Lbl(page, "Used where a text says {@HEMS}, for example when the dispatcher calls you. Empty: the airline and the flight number that the livery sets for the aircraft (Pelikan 3), else the tail number spelled, else HEMS.", 376, yc + 2, 340, 34).ForeColor = SystemColors.GrayText;
+            Lbl(page, "Said where a text uses {@HEMS}, for example when the dispatcher calls you. Airline: the atc_airline of the aircraft.cfg of the livery (Pelikan 3); empty, it says HEMS.", 572, yc - 2, 150, 48).ForeColor = SystemColors.GrayText;
             Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role (Pilot, Copilot, Doc ...). Names are ignored while the crew names are random (Voice packs tab). To install additional voice packs, choose the Piper voices tab.", 10, yc + 44, 706, 34).ForeColor = SystemColors.GrayText;
         }
+
+        ComboBox callModeBox;
+        TextBox callBox;
 
         LangInfo CurrentLang() { return (LangInfo)langBox.SelectedItem; }
 
@@ -1170,10 +1196,12 @@ namespace HPGMissionCompanion
             {
                 ActorSetting a = Ctx.Settings.Get(li.Code, i + 1);
                 voiceBox[i].Items.Clear();
+                if (Actors.CanDraw(i + 1)) voiceBox[i].Items.Add(RandomItem);
                 foreach (VoiceInfo v in fam) voiceBox[i].Items.Add(v);
                 VoiceInfo sel = VoiceLibrary.ById(fam, a.Voice);
                 if (sel == null && fam.Count > 0) sel = fam[i % fam.Count];
-                voiceBox[i].SelectedItem = sel;
+                if (a.Random && Actors.CanDraw(i + 1)) voiceBox[i].SelectedItem = RandomItem; else voiceBox[i].SelectedItem = sel;
+                if (poolButton[i] != null) poolButton[i].Visible = a.Random && Actors.CanDraw(i + 1);
                 voiceBox[i].Enabled = fam.Count > 0;
                 int sv = (int)Math.Round(a.Speed * 10);
                 speedBar[i].Value = Math.Max(speedBar[i].Minimum, Math.Min(speedBar[i].Maximum, sv));
@@ -1187,10 +1215,67 @@ namespace HPGMissionCompanion
         void OnVoiceChanged(int i)
         {
             if (suppress) return;
+            ActorSetting a = Ctx.Settings.Get(CurrentLang().Code, i + 1);
+            if (voiceBox[i].SelectedItem is string)       // the item "Random voice"
+            {
+                a.Random = true;
+                if (poolButton[i] != null) poolButton[i].Visible = true;
+                VoiceDraw.Reset();
+                MarkDirty();
+                return;
+            }
             VoiceInfo v = voiceBox[i].SelectedItem as VoiceInfo;
             if (v == null) return;
-            Ctx.Settings.Get(CurrentLang().Code, i + 1).Voice = v.Id;
+            a.Random = false;
+            a.Voice = v.Id;
+            if (poolButton[i] != null) poolButton[i].Visible = false;
+            VoiceDraw.Reset();
             MarkDirty();
+        }
+
+        const string RandomItem = "Random voice (see Voices...)";
+
+        // the voices a random actor may take: a list with a check mark for each voice of the language; nothing checked or everything checked = every voice
+        void EditPool(int i)
+        {
+            LangInfo li = CurrentLang();
+            if (li == null) return;
+            List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
+            ActorSetting a = Ctx.Settings.Get(li.Code, i + 1);
+            using (Form f = new Form())
+            {
+                f.Text = "Voices for " + Actors.Names[i] + " (" + li.Name + ")";
+                f.StartPosition = FormStartPosition.CenterParent;
+                f.FormBorderStyle = FormBorderStyle.FixedDialog;
+                f.MaximizeBox = false; f.MinimizeBox = false;
+                f.ClientSize = new Size(480, 420);
+                Label hint = new Label();
+                hint.Text = "The voice is drawn among the checked voices at every new shift (dispatcher) or dispatch (ground unit, heli rescuer). The actors that are drawn never get the same voice.";
+                hint.Location = new Point(10, 8); hint.Size = new Size(460, 40);
+                f.Controls.Add(hint);
+                CheckedListBox list = new CheckedListBox();
+                list.CheckOnClick = true;
+                list.Location = new Point(10, 52); list.Size = new Size(460, 310);
+                foreach (VoiceInfo v in fam) list.Items.Add(v, a.Pool == null || a.Pool.Count == 0 || a.Pool.Contains(v.Id));
+                f.Controls.Add(list);
+                Button all = new Button(); all.Text = "All"; all.Location = new Point(10, 372); all.Size = new Size(70, 30);
+                all.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, true); };
+                f.Controls.Add(all);
+                Button none = new Button(); none.Text = "None"; none.Location = new Point(86, 372); none.Size = new Size(70, 30);
+                none.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, false); };
+                f.Controls.Add(none);
+                Button ok = new Button(); ok.Text = "OK"; ok.DialogResult = DialogResult.OK; ok.Location = new Point(310, 372); ok.Size = new Size(76, 30);
+                f.Controls.Add(ok);
+                Button cancel = new Button(); cancel.Text = "Cancel"; cancel.DialogResult = DialogResult.Cancel; cancel.Location = new Point(394, 372); cancel.Size = new Size(76, 30);
+                f.Controls.Add(cancel);
+                f.AcceptButton = ok; f.CancelButton = cancel;
+                if (f.ShowDialog(this) != DialogResult.OK) return;
+                List<string> ids = new List<string>();
+                for (int k = 0; k < list.Items.Count; k++) if (list.GetItemChecked(k)) ids.Add(((VoiceInfo)list.Items[k]).Id);
+                a.Pool = (ids.Count == 0 || ids.Count == fam.Count) ? null : ids;
+                VoiceDraw.Reset();
+                MarkDirty();
+            }
         }
 
         void OnSpeedChanged(int i)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="14" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="15" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -453,7 +453,7 @@
       <o>Okay guys, get ready for operations.</o>
       <o>Alright, crew, let's get ready.</o>
     </message>
-    <message key="CPL.23" actor="2" radio="auto" lvar="L:CPL{VCP}23" wav="AND.cpl.t.goodmorning.frank.wav" sleep="0" futile="1">
+    <message key="CPL.23" actor="2" radio="auto" lvar="L:CPL{VCP}23" wav="AND.cpl.t.goodmorning.frank.wav" sleep="0" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Good morning, {@TECH}.</o>
@@ -1849,7 +1849,7 @@
       <o>Ahead.</o>
       <o>Ahead a bit.</o>
     </message>
-    <message key="PAX1.37" actor="4" radio="auto" lvar="L:{VCP}37" wav="AND.pax1.t.hi.frank.wav" sleep="0" futile="1">
+    <message key="PAX1.37" actor="4" radio="auto" lvar="L:{VCP}37" wav="AND.pax1.t.hi.frank.wav" sleep="0" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Hey {@TECH}, good morning.</o>
@@ -1857,7 +1857,7 @@
       <o>Morning, {@TECH}.</o>
       <o>Hey, good morning.</o>
     </message>
-    <message key="PAX1.38" actor="4" radio="auto" lvar="L:{VCP}38" wav="AND.pax1.t.hi.sarah.wav" sleep="0" futile="1">
+    <message key="PAX1.38" actor="4" radio="auto" lvar="L:{VCP}38" wav="AND.pax1.t.hi.sarah.wav" sleep="0" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Hi {@TECH}, how are you?</o>
@@ -2385,7 +2385,7 @@
       <o>Paramedic checking in, can you hear me?</o>
       <o>Paramedic here, comm check, can everybody hear me?</o>
     </message>
-    <message key="PAX2.2" actor="5" radio="auto" lvar="L:PAX2{VCP}2" wav="AND.PAX2.hi.frank.wav" futile="1">
+    <message key="PAX2.2" actor="5" radio="auto" lvar="L:PAX2{VCP}2" wav="AND.PAX2.hi.frank.wav" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Hi {@TECH}.</o>
@@ -2393,7 +2393,7 @@
       <o>Hey {@TECH}, good to see you.</o>
       <o>Hi there.</o>
     </message>
-    <message key="PAX2.3" actor="5" radio="auto" lvar="L:PAX2{VCP}3" wav="AND.PAX2.hi.sarah.wav" sleep="4.5" futile="1">
+    <message key="PAX2.3" actor="5" radio="auto" lvar="L:PAX2{VCP}3" wav="AND.PAX2.hi.sarah.wav" sleep="4.5" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Hi {@TECH}, nice to meet you again. Are you free for lunch tomorrow?</o>
@@ -2785,7 +2785,7 @@
       <o>Got it.</o>
       <o>All right.</o>
     </message>
-    <message key="PLT.5" actor="1" radio="auto" lvar="L:PLT{VCP}5" wav="AND.plt.u.hi.sarah.wav" sleep="6">
+    <message key="PLT.5" actor="1" radio="auto" lvar="L:PLT{VCP}5" wav="AND.plt.u.hi.sarah.wav" sleep="6" to="tech">
       <o>Hi {@TECH}, how are you? The helicopter is good, but it needs refuelling.</o>
       <o>Hello {@TECH}. The helicopter is serviceable, but it needs refuelling.</o>
       <o>Good morning. The helicopter is in good order and needs refuelling.</o>
@@ -2817,7 +2817,7 @@
       <o>Thank you very much.</o>
       <o>Thanks a lot.</o>
     </message>
-    <message key="PLT.9" actor="1" radio="auto" lvar="L:PLT{VCP}9" wav="AND.plt.u.tks.frank.wav" sleep="1.5" futile="1">
+    <message key="PLT.9" actor="1" radio="auto" lvar="L:PLT{VCP}9" wav="AND.plt.u.tks.frank.wav" sleep="1.5" futile="1" to="tech">
       <o silent="1"/>
       <o silent="1"/>
       <o>Thank you, {@TECH}.</o>
@@ -2913,7 +2913,7 @@
       <o>We overtorqued the aircraft.</o>
       <o>We pulled too much torque.</o>
     </message>
-    <message key="PLT.21" actor="1" radio="auto" lvar="L:PLT{VCP}21" wav="AND.plt.va.hi.sarah.bad.news.wav" sleep="4" tight="1">
+    <message key="PLT.21" actor="1" radio="auto" lvar="L:PLT{VCP}21" wav="AND.plt.va.hi.sarah.bad.news.wav" sleep="4" tight="1" to="tech">
       <o>Hi {@TECH}, I am sorry, we have some bad news for you.</o>
       <o>Hello {@TECH}. I am sorry, but we have some bad news.</o>
       <o>Hello. I am afraid we have some bad news for you.</o>
@@ -2953,7 +2953,7 @@
       <o>The tail gearbox was jumping around.</o>
       <o>The tail-rotor gearbox readings were all over the place.</o>
     </message>
-    <message key="PLT.26" actor="1" radio="auto" lvar="L:PLT{VCP}26" wav="AND.plt.va.we.had.failures.wav" sleep="3.5" tight="1">
+    <message key="PLT.26" actor="1" radio="auto" lvar="L:PLT{VCP}26" wav="AND.plt.va.we.had.failures.wav" sleep="3.5" tight="1" to="tech">
       <o>We had failures. They are recorded in the technical logbook.</o>
       <o>We had failures; they are written in the technical logbook.</o>
       <o>There were failures, all recorded in the logbook.</o>

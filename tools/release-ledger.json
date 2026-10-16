@@ -1,8 +1,8 @@
 {
-    "sha256":  "D15EADB03C76A3510F40FEFB4A594B3D96FC1C766DEF9A74E1CC1461083CB126",
-    "installerSha256":  "B602BF88D7385B3CD4455EB11B97C3B5264EB9BF984134380F99720E2CB3CA6B",
-    "deliveredOn":  "2026-10-16",
+    "sha256":  "08BBB4D55DFB7798DCE751C68B36CE6307863D18760960027A698E886D118D03",
+    "installerSha256":  "D868449C2B4BAFAB4B5307F8EA967B6F2C5286CE5D52EE54BF6519CD3C710860",
+    "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.25",
-    "note":  "Release 0.25: squelch tail from ten recordings (fork d41k4n 64a54ca), actor 12 Heli rescuer, dispatcher name tag \u003cdsp\u003e and call sign, voice pack EN 14 for mission 169.55. Static check PASS; --expand scenarios tests/tips-lines.txt, tests/crew-standin-lines.txt and tests/dsp-and-callsign-lines.txt run with the built program; the radio effect with the recordings checked by calling AudioFx.Apply (ten recordings, different lengths, folder audio/squelch-tail created). Local release only (not pushed). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.26",
+    "note":  "Release 0.26: voices at random for the dispatcher, ground unit and heli rescuer with pools, call sign by airline of the aircraft.cfg or custom name, no dispatcher or decision lines with the crew away, crew lines to the technician never on the radio, voice pack EN 15, recommended profile = selection of 2026-10-16. Static check PASS; --expand scenarios (tips, crew stand-in, dsp and call sign, voices and away, to-tech) run with the built program; settings and profile round trip checked by reflection. Local release only (not pushed). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

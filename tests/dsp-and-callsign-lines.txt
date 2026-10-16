@@ -26,7 +26,7 @@
 <say:AMB.CAN.DSP>
 <say:HST.ARR.C>
 <say:HRS.DONE>
-@atc I-SLND|PELIKAN|3
+@atc I-SLND|PELIKAN_3|3
 <dsp:2:Munich>
 <say:DSP.RQ>
 @atc I-SLND||

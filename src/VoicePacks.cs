@@ -24,6 +24,7 @@ namespace HPGMissionCompanion
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
         public int Vol = 100;                   // vol="70": the level (0-100) of the wav of a sound-only message, at most; 100 = the file as it is
         public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
+        public bool ToTech;                     // to="tech": a crew line said to the technician of the scene (not to the crew): heard like the technician is (intercom next to the helicopter with the speaker aboard and the battery on, else voice), never as a radio call
         public bool Text;                       // the words of a text that the mission speaks as it is (<text:KEY>English in the mission): the pack replaces the English words, the mission decides who speaks and how
         public List<string> Options = new List<string>();
         public List<string> OptionSex = new List<string>();     // for each option: "" (any technician), "m" or "f" (only when the technician of the scene is male or female); the voice follows: actor 6 or 7
@@ -170,6 +171,7 @@ namespace HPGMissionCompanion
                 if (int.TryParse(e.GetAttribute("vol"), NumberStyles.Integer, CultureInfo.InvariantCulture, out volAttr)) m.Vol = Math.Max(0, Math.Min(100, volAttr));
                 m.Futile = e.GetAttribute("futile") == "1";
                 m.Text = e.GetAttribute("text") == "1";
+                m.ToTech = e.GetAttribute("to").Trim().ToLowerInvariant() == "tech";
                 foreach (XmlNode o in e.SelectNodes("o"))
                 {
                     string t = Regex.Replace(o.InnerText, "\\s+", " ").Trim();
@@ -391,7 +393,7 @@ namespace HPGMissionCompanion
     internal static class Say
     {
         const string Rest = "(?:\\s*[:=]\\s*([^<>\\[\\]]{0,400}))?";
-        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|mission|dsp|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|mission|dsp|voices|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HolderRx = new Regex("\\{(@?[A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
@@ -494,6 +496,7 @@ namespace HPGMissionCompanion
                     if (kind == "pack") ParsePack(arg, notes);
                     else if (kind == "mission") ParseMission(arg);
                     else if (kind == "dsp") ParseDsp(arg);
+                    else if (kind == "voices") ParseVoices(arg);
                     else if (kind == "defaultactor") ParseDefaultActor(arg, notes);
                     else if (kind == "names") ParseNames(arg);
                     else if (kind == "variety") ParseVariety(arg, notes);
@@ -553,6 +556,16 @@ namespace HPGMissionCompanion
         // <mission:RE>: the identity of the mission that speaks (RE = Random & Everywhere). Only kept and logged for now; a pack may later say which mission it is for.
         static string missionId = "";
         public static string MissionId { get { return missionId; } }
+
+        // <voices:shift> a new shift: the drawn voice of the dispatcher changes; <voices:dispatch> a new dispatch: the drawn voices of the ground unit and the heli rescuer
+        // change (<voices:all> both). The draw itself happens at the next line of that actor (VoiceDraw).
+        static void ParseVoices(string arg)
+        {
+            string a = (arg ?? "").Trim().ToLowerInvariant();
+            if (a == "shift" || a == "all") VoiceDraw.Redraw(8);
+            if (a == "dispatch" || a == "all") VoiceDraw.Redraw(9, Actors.HeliRescuer);
+            Ctx.Log("[INFO] New voice draw: " + (a.Length > 0 ? a : "(nothing)"));
+        }
 
         static void ParseMission(string arg)
         {
@@ -632,8 +645,7 @@ namespace HPGMissionCompanion
         // the setting Call sign of the Actors tab wins; empty = what the livery says
         public static void ApplyCallSign()
         {
-            string own = Ctx.Settings.CallSign;
-            if (own != null && own.Trim().Length > 0) { SetCallSign(own); return; }
+            if (Ctx.Settings.CallSignMode == "custom") { SetCallSign(Ctx.Settings.CallSign ?? ""); return; }
             string a, b, c;
             lock (sync) { a = atcId; b = atcAirline; c = atcNumber; }
             SetCallSign(BuildCallSign(a, b, c));
@@ -644,23 +656,13 @@ namespace HPGMissionCompanion
         // airline "PELIKAN" and number "3" -> "Pelikan 3"; no airline: the tail number "I-SLND" spelled; nothing: empty
         public static string BuildCallSign(string atcId, string airline, string number)
         {
-            airline = (airline ?? "").Trim(); number = (number ?? "").Trim(); atcId = (atcId ?? "").Trim();
-            if (airline.Length > 0)
-            {
-                string a = airline.Length > 1 ? char.ToUpperInvariant(airline[0]) + airline.Substring(1).ToLowerInvariant() : airline.ToUpperInvariant();
-                return number.Length > 0 ? a + " " + number : a;
-            }
-            if (atcId.Length > 0 && atcId.Length <= 10)
-            {
-                List<string> parts = new List<string>();
-                foreach (char ch in atcId.ToUpperInvariant())
-                {
-                    if (ch >= 'A' && ch <= 'Z') parts.Add(Nato[ch - 'A']);
-                    else if (ch >= '0' && ch <= '9') parts.Add(ch.ToString());
-                }
-                return string.Join(" ", parts.ToArray());
-            }
-            return "";
+            // the atc_airline of the aircraft.cfg of the livery ("PELIKAN 3" -> "Pelikan 3"); the flight number and the tail number are no longer used (user, 2026-10-16)
+            airline = Regex.Replace((airline ?? "").Trim(), "\\s+", " ");
+            if (airline.Length == 0) return "";
+            string[] words = airline.Split(' ');
+            for (int i = 0; i < words.Length; i++)
+                words[i] = words[i].Length > 1 ? char.ToUpperInvariant(words[i][0]) + words[i].Substring(1).ToLowerInvariant() : words[i].ToUpperInvariant();
+            return string.Join(" ", words);
         }
 
         static void ParsePack(string arg, List<string> notes)
@@ -1019,6 +1021,11 @@ namespace HPGMissionCompanion
                 Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " cannot speak (L:HMC_CREW_MUTE)");
                 return "";
             }
+            if (CrewAway && DispatchLine(msg.Key, actor))
+            {
+                Ctx.Log("[SAY] " + msg.Key + " not said: nobody of the crew is aboard (tablet sound only)");
+                return "";
+            }
             StringBuilder tags = new StringBuilder();
             if (!ActorTagRx.IsMatch(before)) tags.Append("<actor").Append(actor).Append('>');
             if (!RadioTagRx.IsMatch(before))
@@ -1031,7 +1038,7 @@ namespace HPGMissionCompanion
                     case "ics": h = Hear.Ics; break;
                     case "ext": h = !ctxValid || RadioOn || atBase ? Hear.External : Hear.Silent; break;
                     case "ext-near": h = Hear.External; break;
-                    default: h = Decide(actor); break;
+                    default: h = (msg.ToTech || ToTechKeys.Contains(msg.Key)) ? DecideToTech(actor) : Decide(actor); break;
                 }
                 if (h == Hear.Silent)
                 {
@@ -1101,6 +1108,22 @@ namespace HPGMissionCompanion
             return zone == RadioRules.ZoneFar ? Hear.VoiceFar : Hear.Voice;
         }
 
+        // a crew member who talks to the technician of the scene: the technician is next to the helicopter, so it is the intercom when the speaker is aboard (battery on)
+        // and the voice otherwise, at the distance of the technician
+        // the crew lines to the technician in the base pack: a translated pack made before to="tech" existed gets the same treatment
+        static readonly HashSet<string> ToTechKeys = new HashSet<string>(new string[] { "CPL.23", "PAX1.37", "PAX1.38", "PAX2.2", "PAX2.3", "PLT.5", "PLT.9", "PLT.21", "PLT.26" });
+
+        static Hear DecideToTech(int a)
+        {
+            if (!ctxValid) return Hear.None;
+            if (a < 1 || a > 5) return Decide(a);
+            int bit = 1 << (a - 1);
+            if (zoneTech == RadioRules.ZoneNear && (crewMask & bit) != 0 && RadioOn) return Hear.Ics;
+            if (crewMask == 0) return Hear.Voice;
+            if (zoneTech >= RadioRules.ZoneOut) return Hear.Silent;
+            return zoneTech == RadioRules.ZoneFar ? Hear.VoiceFar : Hear.Voice;
+        }
+
         static string TagsFor(Hear h)
         {
             switch (h)
@@ -1112,6 +1135,16 @@ namespace HPGMissionCompanion
                 case Hear.VoiceFar: return "<radio:off><zone:far>";
                 default: return "";
             }
+        }
+
+        // Nobody of the crew is aboard (the pilot, the user, may be): a new dispatch arrives only as the sound of the tablet (user, 2026-10-16). The dispatcher and the
+        // lines of the decision about the dispatch (DSA.*, DSP.RQ, DSP.ANS.*) are not said; they come back as soon as a crew member is aboard again.
+        static bool CrewAway { get { return ctxValid && crewExist != 0 && (crewMask & ~1) == 0; } }
+
+        static bool DispatchLine(string key, int actor)
+        {
+            if (key.StartsWith("DSP.NAME", StringComparison.Ordinal)) return false;
+            return actor == 8 || key.StartsWith("DSA.", StringComparison.Ordinal) || key.StartsWith("DSP.", StringComparison.Ordinal);
         }
 
         static string SilentReason(int actor)
@@ -1131,6 +1164,12 @@ namespace HPGMissionCompanion
                 {
                     Segment s = segs[i];
                     if (s.Actor != 8 || Decide(8) == Hear.None) continue;
+                    if (CrewAway)
+                    {
+                        Ctx.Log("[SAY] dispatcher text not said: nobody of the crew is aboard (tablet sound only)");
+                        segs.RemoveAt(i--);
+                        continue;
+                    }
                     if (Decide(8) == Hear.Silent)
                     {
                         Ctx.Log("[SAY] dispatcher text not heard: " + SilentReason(8));

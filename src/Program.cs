@@ -33,8 +33,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.25.0.0")]
-[assembly: AssemblyFileVersion("0.25.0.0")]
+[assembly: AssemblyVersion("0.26.0.0")]
+[assembly: AssemblyFileVersion("0.26.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -409,7 +409,12 @@ namespace HPGMissionCompanion
                                 if (kv[0] == "variety") Ctx.Settings.Variety = kv[1];
                                 else if (kv[0] == "names") Ctx.Settings.Names = kv[1];
                                 else if (kv[0] == "bridge") Ctx.Settings.BridgePack = kv[1];
-                                else if (kv[0] == "callsign") Ctx.Settings.CallSign = kv[1].Replace('_', ' ');
+                                else if (kv[0] == "callsign") { Ctx.Settings.CallSign = kv[1].Replace('_', ' '); Ctx.Settings.CallSignMode = kv[1].Length > 0 ? "custom" : "airline"; }
+                                else if (kv[0] == "random")      // random=8,9,12: those actors take a drawn voice (the language of the settings)
+                                {
+                                    foreach (string an in kv[1].Split(',')) { int ai; if (int.TryParse(an, out ai) && Actors.CanDraw(ai)) Ctx.Settings.Get(Ctx.Settings.DefaultLanguage, ai).Random = true; }
+                                    VoiceDraw.Reset();
+                                }
                                 else if (kv[0].StartsWith("name.")) Ctx.Settings.CrewNames[kv[0].Substring(5).ToUpperInvariant()] = kv[1];
                             }
                             Ctx.Settings.Normalize();

@@ -1,0 +1,14 @@
+@settings variety=random bridge=EN
+<pack:EN:15>
+@watch L:HMC_CTX_VALID 1
+@watch L:HMC_CREW_EXIST 7
+@watch L:H145_SDK_OH_BATTERY_MASTER 0
+@watch L:HMC_ZONE_TECH 1
+@watch L:HMC_CREW_PRESENT 2
+<say:PLT.9>
+@watch L:HMC_CREW_PRESENT 3
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+<say:PLT.9>
+<say:DSA.ASKP>
+@watch L:HMC_ZONE_TECH 3
+<say:PLT.5>
