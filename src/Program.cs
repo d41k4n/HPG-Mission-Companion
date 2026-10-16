@@ -12,6 +12,7 @@
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
 //   --expand <report> --text "<tagged text>" | --lines <file> [--repeat N] [--seed N]   (lines: @watch NAME VALUE, @settings k=v) what a mission text becomes (voice pack expansion and tags), no audio
+//   --atc-test <report> [--seconds N]   read ATC ID, ATC AIRLINE and ATC FLIGHT NUMBER of the aircraft from the running simulator (call sign test)
 //   --oneclick <report> [--profile <file>] [--no-download]   apply a settings profile (default: the recommended one), download the Piper engine and voices it needs, keep the old settings in backups\settings; the report grows line by line
 //   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
 //   --packs-check <report>   list the voice packs of the voicepacks folder, their problems and what they lack against the base pack EN
@@ -32,8 +33,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.24.0.0")]
-[assembly: AssemblyFileVersion("0.24.0.0")]
+[assembly: AssemblyVersion("0.25.0.0")]
+[assembly: AssemblyFileVersion("0.25.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -236,6 +237,36 @@ namespace HPGMissionCompanion
                 return dll != null ? 0 : 1;
             }
 
+            // --atc-test <report> [--seconds N]: connects to the simulator and writes what ATC ID, ATC AIRLINE and ATC FLIGHT NUMBER of the aircraft contain
+            // (the livery sets them in aircraft.cfg: atc_id, atc_airline, atc_flight_number); tells whether the call sign of the helicopter can be read
+            string atcTest = Option(args, "--atc-test");
+            if (atcTest != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                string dll = SimLink.FindDll();
+                rep.AppendLine("SimConnect.dll: " + (dll ?? "not found"));
+                if (dll != null)
+                {
+                    int secs = 40;
+                    int.TryParse(Option(args, "--seconds") ?? "", out secs);
+                    if (secs < 5) secs = 40;
+                    Ctx.Log = delegate (string s) { rep.AppendLine(s); };
+                    int got = 0;
+                    SimLink.OnAtcStrings = delegate (string id, string airline, string number)
+                    {
+                        got++;
+                        rep.AppendLine("ATC ID='" + id + "' ATC AIRLINE='" + airline + "' ATC FLIGHT NUMBER='" + number + "'");
+                    };
+                    SimLink.Start(delegate { return false; });
+                    Thread.Sleep(secs * 1000);
+                    SimLink.Stop();
+                    rep.AppendLine("status: " + SimLink.Status);
+                    rep.AppendLine("readings: " + got + (got == 0 ? " (no reading: the simulator is not running or the aircraft is not loaded)" : ""));
+                }
+                File.WriteAllText(atcTest, rep.ToString());
+                return dll != null ? 0 : 1;
+            }
+
             // --install-pack <xml> [--report <file>]: install a voice pack into the voicepacks folder (the old version of the same pack goes to voicepacks\obsolete)
             string installPack = Option(args, "--install-pack");
             if (installPack != null)
@@ -364,6 +395,11 @@ namespace HPGMissionCompanion
                             Say.OnWatch(wname, first ? 0 : prev, val, first);
                             watchSeen[wname] = val;
                         }
+                        else if (w[0] == "@atc" && w.Length >= 2)      // "@atc ID|AIRLINE|NUMBER": what the simulator says about the aircraft (underscores are spaces)
+                        {
+                            string[] ap = (w[1] + "||").Replace('_', ' ').Split('|');
+                            Say.OnAtc(ap[0], ap[1], ap[2]);
+                        }
                         else if (w[0] == "@settings")
                         {
                             for (int k = 1; k < w.Length; k++)
@@ -373,6 +409,7 @@ namespace HPGMissionCompanion
                                 if (kv[0] == "variety") Ctx.Settings.Variety = kv[1];
                                 else if (kv[0] == "names") Ctx.Settings.Names = kv[1];
                                 else if (kv[0] == "bridge") Ctx.Settings.BridgePack = kv[1];
+                                else if (kv[0] == "callsign") Ctx.Settings.CallSign = kv[1].Replace('_', ' ');
                                 else if (kv[0].StartsWith("name.")) Ctx.Settings.CrewNames[kv[0].Substring(5).ToUpperInvariant()] = kv[1];
                             }
                             Ctx.Settings.Normalize();

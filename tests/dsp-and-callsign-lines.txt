@@ -1,0 +1,37 @@
+@settings variety=random bridge=EN
+<pack:EN:14>
+<mission:RE>
+<dsp:3:Bolzano>
+<say:DSP.RQ>
+<dsp:0:Berlin>
+<say:DSA.NUDGE>
+<dsp:5:>
+<say:DSA.NUDGE>
+<dsp:7:Anything>
+<say:DSP.RQ>
+<dsp:-1:>
+<say:DSA.NUDGE>
+<dsp:9:Roma_Name>
+<say:DSP.RQ>
+<say:HOS.CALL.P>7
+<say:HRQ.PLT.Q>1
+<say:HRQ.PLT.Q>2
+<say:HRQ.BASE.A>2
+<say:HRQ.BRF.ACC>3
+<say:HRQ.COR.PLT>2
+<say:HRD.BASE.Q>2//H
+<say:HRD.BASE.A>1//B
+<say:HRD.BASE.Q>1//M
+<say:AMB.DEP.DSP>
+<say:AMB.CAN.DSP>
+<say:HST.ARR.C>
+<say:HRS.DONE>
+@atc I-SLND|PELIKAN|3
+<dsp:2:Munich>
+<say:DSP.RQ>
+@atc I-SLND||
+<say:HRQ.PLT.Q>2
+@settings callsign=Rescue_Seven
+<say:HRQ.PLT.Q>1
+@settings callsign=
+<say:HRQ.PLT.Q>1

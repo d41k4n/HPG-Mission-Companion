@@ -391,7 +391,7 @@ namespace HPGMissionCompanion
     internal static class Say
     {
         const string Rest = "(?:\\s*[:=]\\s*([^<>\\[\\]]{0,400}))?";
-        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|mission|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex ControlRx = new Regex("[<\\[]\\s*(say|pack|mission|dsp|names|variety|plain|defaultactor|text)" + Rest + "\\s*[>\\]]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex ActorTagRx = new Regex("[<\\[]\\s*actor\\s*\\d", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex RadioTagRx = new Regex("[<\\[]\\s*radio\\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HolderRx = new Regex("\\{(@?[A-Za-z0-9_]+(?::[0-9]+)?)\\}", RegexOptions.Compiled);
@@ -448,6 +448,8 @@ namespace HPGMissionCompanion
             if (p == null) foreach (VoicePack q in VoicePacks.Packs) if (q.Usable) { p = q; break; }
             SetBridgePack(p != null ? p.Name : "");
             SimLink.OnWatch = OnWatch;
+            SimLink.OnAtcStrings = OnAtc;
+            ApplyCallSign();
             SimLink.SetWatch(WatchNames());
             if (Ctx.Settings.Names == "random") RandomizeNames(); else lock (sync) { ApplyUserNames(); }
         }
@@ -491,6 +493,7 @@ namespace HPGMissionCompanion
                     string arg = m.Groups[2].Success ? m.Groups[2].Value.Trim() : "";
                     if (kind == "pack") ParsePack(arg, notes);
                     else if (kind == "mission") ParseMission(arg);
+                    else if (kind == "dsp") ParseDsp(arg);
                     else if (kind == "defaultactor") ParseDefaultActor(arg, notes);
                     else if (kind == "names") ParseNames(arg);
                     else if (kind == "variety") ParseVariety(arg, notes);
@@ -558,6 +561,106 @@ namespace HPGMissionCompanion
             if (arg == missionId) return;
             missionId = arg;
             Ctx.Log("[INFO] Mission: " + (arg.Length > 0 ? arg : "(none)"));
+        }
+
+        // <dsp:INDEX:CITY>: who the dispatcher is (user request of 2026-10-16). INDEX is the position of the group selected on the CARLS in the static GRPID of the
+        // mission (-1 the manual frequency), CITY the city of the base (empty when the mission did not find it). The words come from the pack: the message
+        // DSP.NAME.<index> ({0} the city) or, without a city, DSP.NAMEX.<index>; {DSP} and {@DSP} in a text become those words. The last tag stays until another comes.
+        static int dspIndex = -2;            // -2 = no tag yet: the old word "dispatch"
+        static string dspCity = "";
+        static string callSign = "";         // the call sign of the helicopter ({@HEMS}); empty = HEMS
+
+        public static int DispatcherIndex { get { return dspIndex; } }
+        public static string DispatcherCity { get { return dspCity; } }
+
+        static void ParseDsp(string arg)
+        {
+            int idx = -1; string city = "";
+            string a = arg == null ? "" : arg.Trim();
+            int c = a.IndexOf(':');
+            string head = c >= 0 ? a.Substring(0, c) : a;
+            if (c >= 0) city = a.Substring(c + 1).Trim();
+            if (!int.TryParse(head.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out idx)) idx = -1;
+            if (Regex.IsMatch(city, "^[A-Za-z0-9_]+_[Nn]ame$")) city = "";        // an unresolved name of the simulator (the query of the mission found nothing)
+            city = Regex.Replace(city, "[<>\\[\\]{}]", " ").Trim();
+            if (city.Length > 40) city = city.Substring(0, 40);
+            if (idx == dspIndex && string.Equals(city, dspCity, StringComparison.Ordinal)) return;
+            dspIndex = idx; dspCity = city;
+            Ctx.Log("[INFO] Dispatcher: group " + idx + (city.Length > 0 ? ", city " + city : ", no city"));
+        }
+
+        // the words for {DSP}: the pack message of the group, the manual frequency (-1) is the Dispatcher, no tag the old "dispatch"
+        static string DispatcherWords(VoicePack pack)
+        {
+            if (dspIndex == -2) return "dispatch";
+            string key = dspIndex < 0 ? "DSP.NAME.MAN" : (dspCity.Length > 0 ? "DSP.NAME." + dspIndex : "DSP.NAMEX." + dspIndex);
+            PackMessage m;
+            if (pack != null && !pack.Messages.TryGetValue(key, out m) && dspIndex >= 0) key = "DSP.NAME." + dspIndex;
+            if (pack != null && pack.Messages.TryGetValue(key, out m) && m.Options.Count > 0)
+            {
+                string t = m.Options[0].Length > 0 ? m.Options[0] : "";
+                if (t.Length > 0) return Fill(t, new string[] { dspCity }, pack, null).Trim();
+            }
+            return dspIndex < 0 ? "Dispatcher" : "dispatch";
+        }
+
+        // the call sign of the helicopter: the setting of the user, else what the livery says (airline and flight number of the aircraft, Pelikan 3), else the tail
+        // number spelled, else HEMS
+        public static void SetCallSign(string s)
+        {
+            s = (s ?? "").Trim();
+            lock (sync) { if (s == callSign) return; callSign = s; }
+            Ctx.Log("[INFO] Call sign of the helicopter: " + (s.Length > 0 ? s : "HEMS"));
+        }
+
+        static string CallSignWords() { return callSign.Length > 0 ? callSign : "HEMS"; }
+
+        static string atcId = "", atcAirline = "", atcNumber = "";
+
+        // what the simulator says about the aircraft (SimLink, every 30 s)
+        internal static void OnAtc(string id, string airline, string number)
+        {
+            lock (sync)
+            {
+                if (id == atcId && airline == atcAirline && number == atcNumber) return;
+                atcId = id; atcAirline = airline; atcNumber = number;
+            }
+            Ctx.Log("[INFO] Aircraft: ATC ID '" + id + "', airline '" + airline + "', flight number '" + number + "'");
+            ApplyCallSign();
+        }
+
+        // the setting Call sign of the Actors tab wins; empty = what the livery says
+        public static void ApplyCallSign()
+        {
+            string own = Ctx.Settings.CallSign;
+            if (own != null && own.Trim().Length > 0) { SetCallSign(own); return; }
+            string a, b, c;
+            lock (sync) { a = atcId; b = atcAirline; c = atcNumber; }
+            SetCallSign(BuildCallSign(a, b, c));
+        }
+
+        static readonly string[] Nato = { "Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "X-ray", "Yankee", "Zulu" };
+
+        // airline "PELIKAN" and number "3" -> "Pelikan 3"; no airline: the tail number "I-SLND" spelled; nothing: empty
+        public static string BuildCallSign(string atcId, string airline, string number)
+        {
+            airline = (airline ?? "").Trim(); number = (number ?? "").Trim(); atcId = (atcId ?? "").Trim();
+            if (airline.Length > 0)
+            {
+                string a = airline.Length > 1 ? char.ToUpperInvariant(airline[0]) + airline.Substring(1).ToLowerInvariant() : airline.ToUpperInvariant();
+                return number.Length > 0 ? a + " " + number : a;
+            }
+            if (atcId.Length > 0 && atcId.Length <= 10)
+            {
+                List<string> parts = new List<string>();
+                foreach (char ch in atcId.ToUpperInvariant())
+                {
+                    if (ch >= 'A' && ch <= 'Z') parts.Add(Nato[ch - 'A']);
+                    else if (ch >= '0' && ch <= '9') parts.Add(ch.ToString());
+                }
+                return string.Join(" ", parts.ToArray());
+            }
+            return "";
         }
 
         static void ParsePack(string arg, List<string> notes)
@@ -991,6 +1094,7 @@ namespace HPGMissionCompanion
             }
             else if (a == 9) zone = zoneGround;
             else if (a == 10) zone = zonePatient;
+            else if (a == Actors.HeliRescuer) return Hear.Voice;      // the heli rescuers talk next to the helicopter (their radio lines say radio="on"): by voice, no zone of the mission (zoneGround measures the ground unit, not them)
             else return Hear.None;
             if (crewMask == 0) return Hear.Voice;
             if (zone >= RadioRules.ZoneOut) return Hear.Silent;
@@ -1089,6 +1193,19 @@ namespace HPGMissionCompanion
         // (VEH_A, VEH_F, VEH_P, AND, IS, ARE) so that a pack of another language can say them its own way.
         static string Helper(string kind, string letters, VoicePack pack, List<string> notes)
         {
+            if (kind == "hr")        // {hr:N}: the argument is 1 or 2, the words come from the names HR_1 and HR_2 of the pack
+            {
+                string key = letters.Trim() == "2" ? "HR_2" : "HR_1", w;
+                if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
+                return key == "HR_2" ? "two heli rescuers" : "one heli rescuer";
+            }
+            if (kind == "place")     // {place:N}: the argument is H (the hospital), B (the base) or M (the meeting point): the names PL_H, PL_B and PL_M
+            {
+                string l = letters.Trim().ToUpperInvariant();
+                string key = l == "H" ? "PL_H" : (l == "B" ? "PL_B" : "PL_M"), w;
+                if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
+                return key == "PL_H" ? "the hospital" : (key == "PL_B" ? "the base" : "the meeting point");
+            }
             List<string> words = new List<string>();
             foreach (char c in letters.ToUpperInvariant())
             {
@@ -1148,6 +1265,8 @@ namespace HPGMissionCompanion
                 bool personal = name.StartsWith("@", StringComparison.Ordinal);
                 if (personal) name = name.Substring(1);
                 int i;
+                if (string.Equals(name, "DSP", StringComparison.OrdinalIgnoreCase)) return DispatcherWords(pack);        // the dispatcher of the CARLS group (<dsp:INDEX:CITY>)
+                if (string.Equals(name, "HEMS", StringComparison.OrdinalIgnoreCase)) return CallSignWords();            // the call sign of the helicopter
                 string roleKey = RoleOf(name);
                 if (roleKey != null) return personal ? PersonalName(roleKey, pack) : JobWord(roleKey, pack);     // {PLT} the job word, {@PLT} the name of the shift
                 if (personal)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -198,12 +199,13 @@ namespace HPGMissionCompanion
             int lead = (int)(0.06 * sr);
             int gap = beep.Length > 0 ? (int)(0.09 * sr) : (int)(0.10 * sr);
             int hissTail = (int)(0.10 * sr);
-            int squelch = rs.Tail ? (int)(0.12 * sr) : 0;
             int speechStart = lead + beep.Length + gap;
             int hissEnd = speechStart + speech.Length + hissTail;
-            float[] outd = new float[hissEnd + squelch];
 
             double noiseRms = 0.25 * Math.Pow(rs.NoiseLevel / 100.0, 1.5);
+            float[] burst = rs.Tail ? GetSquelchTail(sr, noiseRms) : null;
+            int squelch = burst != null ? burst.Length : 0;
+            float[] outd = new float[hissEnd + squelch];
             if (noiseRms > 0)
             {
                 float[] noise = MakeNoise(hissEnd, sr, noiseRms);
@@ -218,15 +220,142 @@ namespace HPGMissionCompanion
             }
             for (int i = 0; i < beep.Length; i++) outd[lead + i] += beep[i];
             for (int i = 0; i < speech.Length; i++) outd[speechStart + i] += speech[i];
-            if (squelch > 0)
+            for (int i = 0; i < squelch; i++) outd[hissEnd + i] += burst[i];
+            return outd;
+        }
+
+        // ---- squelch tail: the click of a real transmission ends -------------------------------
+        // Ten recordings of ATC transmission ends (assets\squelch-tail, embedded in the program; idea and recordings of the fork by d41k4n, commit 64a54ca).
+        // One is drawn at every call (never the same twice in a row) and resampled to the rate of the voice. The user can replace them: wav files in the
+        // folder squelch-tail of the audio folder are used instead (the folder is created with the ten defaults the first time); without any file the
+        // old synthetic burst is used.
+        static readonly object squelchSync = new object();
+        static List<Pcm> squelchSnippets = null;
+        static string squelchSource = null;
+        static int squelchLast = -1;
+        static readonly Random squelchRng = new Random();
+
+        public static string SquelchFolder
+        {
+            get { return string.IsNullOrEmpty(Ctx.AudioDir) ? null : Path.Combine(Ctx.AudioDir, "squelch-tail"); }
+        }
+
+        // forget the loaded recordings (the audio folder changed, or the user edited the folder)
+        public static void ReloadSquelch() { lock (squelchSync) { squelchSnippets = null; squelchLast = -1; } }
+
+        static float[] GetSquelchTail(int targetRate, double noiseRms)
+        {
+            Pcm snippet = null;
+            lock (squelchSync)
             {
-                double tailRms = Math.Max(0.05, noiseRms * 2.5);
-                float[] burst = MakeNoise(squelch, sr, tailRms);
-                for (int i = 0; i < squelch; i++)
+                if (squelchSnippets == null || squelchSource != SquelchFolder) { squelchSource = SquelchFolder; squelchSnippets = LoadSquelchSnippets(); }
+                int n = squelchSnippets.Count;
+                if (n > 0)
                 {
-                    double env = Math.Exp(-5.0 * i / squelch);
-                    outd[hissEnd + i] += (float)(burst[i] * env);
+                    int idx = squelchRng.Next(n);
+                    if (n > 1 && idx == squelchLast) idx = (idx + 1 + squelchRng.Next(n - 1)) % n;
+                    squelchLast = idx;
+                    snippet = squelchSnippets[idx];
                 }
+            }
+            if (snippet != null)
+            {
+                float[] burst = Resample(snippet.Data, snippet.Rate, targetRate);
+                int fade = Math.Min(burst.Length / 4, (int)(0.002 * targetRate));     // micro fades: no click at the edges
+                for (int i = 0; i < fade; i++)
+                {
+                    float k = (float)(i / (double)fade);
+                    burst[i] *= k;
+                    burst[burst.Length - 1 - i] *= k;
+                }
+                return burst;
+            }
+            int len = (int)(0.12 * targetRate);
+            double tailRms = Math.Max(0.05, noiseRms * 2.5);
+            float[] fb = MakeNoise(len, targetRate, tailRms);
+            for (int i = 0; i < len; i++) fb[i] = (float)(fb[i] * Math.Exp(-5.0 * i / len));
+            return fb;
+        }
+
+        static List<Pcm> LoadSquelchSnippets()
+        {
+            List<Pcm> list = new List<Pcm>();
+            Assembly asm = typeof(AudioFx).Assembly;
+            string dir = SquelchFolder;
+            try
+            {
+                if (dir != null)
+                {
+                    if (!Directory.Exists(dir))        // first use: the defaults, so that the user sees them and can replace them
+                    {
+                        Directory.CreateDirectory(dir);
+                        foreach (string res in SquelchResources(asm))
+                        {
+                            using (Stream s = asm.GetManifestResourceStream(res))
+                            using (FileStream o = File.Create(Path.Combine(dir, Path.GetFileName(res))))
+                                if (s != null) s.CopyTo(o);
+                        }
+                    }
+                    string[] files = Directory.GetFiles(dir, "*.wav");
+                    Array.Sort(files, StringComparer.OrdinalIgnoreCase);
+                    foreach (string f in files)
+                    {
+                        try
+                        {
+                            Pcm p = Decode(File.ReadAllBytes(f));
+                            if (p != null && p.Data.Length > 0) list.Add(p);
+                            else if (Ctx.Log != null) Ctx.Log("[WARN] Squelch tail: " + Path.GetFileName(f) + " is not a 16 bit wav, skipped");
+                        }
+                        catch (Exception) { }
+                    }
+                }
+            }
+            catch (Exception) { }
+            if (list.Count == 0)
+            {
+                foreach (string res in SquelchResources(asm))
+                {
+                    try
+                    {
+                        using (Stream s = asm.GetManifestResourceStream(res))
+                        {
+                            if (s == null) continue;
+                            MemoryStream ms = new MemoryStream();
+                            s.CopyTo(ms);
+                            Pcm p = Decode(ms.ToArray());
+                            if (p != null && p.Data.Length > 0) list.Add(p);
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+            return list;
+        }
+
+        static List<string> SquelchResources(Assembly asm)
+        {
+            List<string> names = new List<string>();
+            foreach (string n in asm.GetManifestResourceNames())
+                if (n.StartsWith("squelch_tail_", StringComparison.OrdinalIgnoreCase) && n.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)) names.Add(n);
+            names.Sort(StringComparer.OrdinalIgnoreCase);
+            return names;
+        }
+
+        // linear interpolation to the rate of the voice
+        static float[] Resample(float[] input, int inRate, int outRate)
+        {
+            if (input == null || input.Length == 0) return new float[0];
+            if (inRate == outRate) return (float[])input.Clone();
+            int outLen = (int)Math.Round((long)input.Length * outRate / (double)inRate);
+            if (outLen <= 0) return new float[0];
+            float[] outd = new float[outLen];
+            double ratio = inRate / (double)outRate;
+            for (int i = 0; i < outLen; i++)
+            {
+                double pos = i * ratio;
+                int idx = (int)pos;
+                if (idx >= input.Length - 1) outd[i] = input[input.Length - 1];
+                else outd[i] = (float)(input[idx] + (pos - idx) * (input[idx + 1] - input[idx]));
             }
             return outd;
         }

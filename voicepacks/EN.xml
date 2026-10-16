@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="13" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="14" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -15,6 +15,11 @@
     <name role="AND">and</name>
     <name role="IS">is</name>
     <name role="ARE">are</name>
+    <name role="HR_1">one heli rescuer</name>
+    <name role="HR_2">two heli rescuers</name>
+    <name role="PL_H">the hospital</name>
+    <name role="PL_B">the base</name>
+    <name role="PL_M">the meeting point</name>
   </names>
     <message key="APR.CHF.G" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="ground operation expected">
       <o>Rear crew: stretcher and bag ready, I follow Doc on the ground.</o>
@@ -1237,28 +1242,28 @@
       <o>Everyone okay back there? Report!</o>
     </message>
     <message key="HOS.CALL.D" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a deceased patient aboard">
-      <o>Hospital, HEMS helicopter inbound, ETA about {0} minutes. The patient died during the mission.</o>
-      <o>Hospital, HEMS inbound in about {0} minutes. We have a deceased patient on board.</o>
-      <o>Hospital, HEMS helicopter, ETA {0} minutes, patient deceased in flight.</o>
+      <o>Hospital, {@HEMS} inbound, ETA about {0} minutes. The patient died during the mission.</o>
+      <o>Hospital, {@HEMS} inbound in about {0} minutes. We have a deceased patient on board.</o>
+      <o>Hospital, {@HEMS}, ETA {0} minutes, patient deceased in flight.</o>
       <o>Hospital, we arrive in about {0} minutes. The patient did not survive.</o>
-      <o>Hospital, HEMS inbound, about {0} minutes. We have a deceased patient aboard.</o>
-      <o>Hospital, HEMS here, about {0} minutes out. I am afraid the patient did not make it.</o>
+      <o>Hospital, {@HEMS} inbound, about {0} minutes. We have a deceased patient aboard.</o>
+      <o>Hospital, {@HEMS} here, about {0} minutes out. I am afraid the patient did not make it.</o>
     </message>
     <message key="HOS.CALL.O" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with an organ aboard">
-      <o>Hospital, HEMS helicopter inbound with the organ, ETA about {0} minutes.</o>
+      <o>Hospital, {@HEMS} inbound with the organ, ETA about {0} minutes.</o>
       <o>Hospital, we bring the organ, about {0} minutes out. Please have the team ready.</o>
-      <o>Hospital, HEMS is inbound with the organ, ETA {0} minutes.</o>
+      <o>Hospital, {@HEMS} is inbound with the organ, ETA {0} minutes.</o>
       <o>Hospital, organ on board, we will be with you in about {0} minutes.</o>
-      <o>Hospital, HEMS inbound with the organ, about {0} minutes. Please have the team ready.</o>
-      <o>Hospital, HEMS here with the organ, we are about {0} minutes out.</o>
+      <o>Hospital, {@HEMS} inbound with the organ, about {0} minutes. Please have the team ready.</o>
+      <o>Hospital, {@HEMS} here with the organ, we are about {0} minutes out.</o>
     </message>
     <message key="HOS.CALL.P" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a patient aboard; {0}: minutes to go">
-      <o>Hospital, HEMS helicopter is inbound with one patient, ETA about {0} minutes.</o>
-      <o>Hospital, HEMS inbound with a patient on board, about {0} minutes out.</o>
-      <o>Hospital, we are the HEMS helicopter with one patient, ETA {0} minutes.</o>
-      <o>Hospital, HEMS is inbound, one patient aboard, expect us in about {0} minutes.</o>
-      <o>Hospital, HEMS helicopter inbound with one patient, about {0} minutes.</o>
-      <o>Hospital, HEMS here, one patient aboard, we will be with you in about {0} minutes.</o>
+      <o>Hospital, {@HEMS} is inbound with one patient, ETA about {0} minutes.</o>
+      <o>Hospital, {@HEMS} inbound with a patient on board, about {0} minutes out.</o>
+      <o>Hospital, we are {@HEMS} with one patient, ETA {0} minutes.</o>
+      <o>Hospital, {@HEMS} is inbound, one patient aboard, expect us in about {0} minutes.</o>
+      <o>Hospital, {@HEMS} inbound with one patient, about {0} minutes.</o>
+      <o>Hospital, {@HEMS} here, one patient aboard, we will be with you in about {0} minutes.</o>
     </message>
     <message key="HOS.HND" actor="3" radio="auto" group="hoshnd" seq="2" new="1">
       <o>Doc here. Handover: the patient is stable, treated and monitored. All yours.</o>
@@ -1277,28 +1282,28 @@
       <o>Got it, thank you for bringing it on time. Great job, crew.</o>
     </message>
     <message key="HOS.REPLY" actor="9" radio="ext" group="hos" seq="2" new="1">
-      <o>HEMS, copy. The helipad is clear and the team will be waiting for you.</o>
-      <o>Copy, HEMS. We expect you on the helipad.</o>
-      <o>HEMS, understood. The helipad is ready and we will be there.</o>
+      <o>{@HEMS}, copy. The helipad is clear and the team will be waiting for you.</o>
+      <o>Copy, {@HEMS}. We expect you on the helipad.</o>
+      <o>{@HEMS}, understood. The helipad is ready and we will be there.</o>
       <o>Copy. We wait for you on the helipad.</o>
-      <o>HEMS, copy. The helipad is clear, we wait for you there.</o>
-      <o>Copy, HEMS. We are ready for you on the helipad, see you soon.</o>
+      <o>{@HEMS}, copy. The helipad is clear, we wait for you there.</o>
+      <o>Copy, {@HEMS}. We are ready for you on the helipad, see you soon.</o>
     </message>
     <message key="HOS.REPLY.D" actor="9" radio="ext" group="hos" seq="2" new="1">
-      <o>HEMS, copy. We are sorry. We will wait for you at the helipad.</o>
-      <o>Copy, HEMS. Understood, we will be at the helipad.</o>
-      <o>HEMS, copy. We expect you on the helipad.</o>
+      <o>{@HEMS}, copy. We are sorry. We will wait for you at the helipad.</o>
+      <o>Copy, {@HEMS}. Understood, we will be at the helipad.</o>
+      <o>{@HEMS}, copy. We expect you on the helipad.</o>
       <o>Copy. The team will receive you on the helipad.</o>
-      <o>HEMS, copy. We are very sorry. We wait for you at the helipad.</o>
-      <o>Copy, HEMS. We will be at the helipad, and we are sorry.</o>
+      <o>{@HEMS}, copy. We are very sorry. We wait for you at the helipad.</o>
+      <o>Copy, {@HEMS}. We will be at the helipad, and we are sorry.</o>
     </message>
     <message key="HOS.REPLY.O" actor="9" radio="ext" group="hos" seq="2" new="1">
-      <o>HEMS, copy. The transplant team is ready and waiting at the helipad.</o>
-      <o>Copy, HEMS. We are ready to receive the organ at the helipad.</o>
-      <o>HEMS, understood. The team will be at the helipad when you land.</o>
+      <o>{@HEMS}, copy. The transplant team is ready and waiting at the helipad.</o>
+      <o>Copy, {@HEMS}. We are ready to receive the organ at the helipad.</o>
+      <o>{@HEMS}, understood. The team will be at the helipad when you land.</o>
       <o>Copy. The surgical team is ready for you.</o>
-      <o>HEMS, copy. The team is at the helipad and ready for the organ.</o>
-      <o>Copy, HEMS. The surgical team is waiting for you at the helipad.</o>
+      <o>{@HEMS}, copy. The team is at the helipad and ready for the organ.</o>
+      <o>Copy, {@HEMS}. The surgical team is waiting for you at the helipad.</o>
     </message>
     <message key="HOS.THX" actor="9" radio="ext-near" group="hoshnd" seq="3" new="1" futile="1">
       <o silent="1"/>
@@ -3401,68 +3406,68 @@
       <o>So, captain, do we go for it or back to base first?</o>
     </message>
     <message key="DSA.NUDGE" actor="8" radio="on" new="1" trigger="a minute after the question and the dispatch is still not accepted: the dispatcher asks for an answer">
-      <o>HEMS, dispatch. Are you taking the dispatch? Please confirm on the tablet.</o>
-      <o>Dispatch to HEMS. We are waiting for your answer on the tasking.</o>
-      <o>HEMS, dispatch. Do you copy the tasking? Please confirm if you take it.</o>
-      <o>Dispatch to HEMS. Still waiting for your confirmation on this call.</o>
-      <o>HEMS, dispatch. Can you take the call? We need an answer.</o>
-      <o>HEMS, this is dispatch. I need to know if you take this one.</o>
+      <o>{@HEMS}, {@DSP}. Are you taking the dispatch? Please confirm on the tablet.</o>
+      <o>{@DSP} to {@HEMS}. We are waiting for your answer on the tasking.</o>
+      <o>{@HEMS}, {@DSP}. Do you copy the tasking? Please confirm if you take it.</o>
+      <o>{@DSP} to {@HEMS}. Still waiting for your confirmation on this call.</o>
+      <o>{@HEMS}, {@DSP}. Can you take the call? We need an answer.</o>
+      <o>{@HEMS}, this is {@DSP}. I need to know if you take this one.</o>
     </message>
     <message key="DSA.REASSIGN" actor="8" radio="on" new="1" trigger="a new dispatch arrives while the previous one was not accepted: the dispatcher says it was reassigned">
-      <o>HEMS, dispatch. The previous dispatch has been reassigned to another unit. I have a new one for you.</o>
-      <o>Dispatch to HEMS. I assigned the previous call to another unit. New tasking follows.</o>
-      <o>HEMS, dispatch. Disregard the previous dispatch, another unit took it. New call for you.</o>
-      <o>Dispatch to HEMS. The last one went to another unit. I have a new tasking.</o>
-      <o>HEMS, dispatch. Previous call reassigned, another unit is on it. Here is a new one.</o>
-      <o>HEMS, dispatch. Another unit took the previous call. This is a new one.</o>
+      <o>{@HEMS}, {@DSP}. The previous dispatch has been reassigned to another unit. I have a new one for you.</o>
+      <o>{@DSP} to {@HEMS}. I assigned the previous call to another unit. New tasking follows.</o>
+      <o>{@HEMS}, {@DSP}. Disregard the previous dispatch, another unit took it. New call for you.</o>
+      <o>{@DSP} to {@HEMS}. The last one went to another unit. I have a new tasking.</o>
+      <o>{@HEMS}, {@DSP}. Previous call reassigned, another unit is on it. Here is a new one.</o>
+      <o>{@HEMS}, {@DSP}. Another unit took the previous call. This is a new one.</o>
     </message>
     <message key="DSP.RQ" actor="1" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
-      <o>Dispatch, HEMS. Tasking received. Request any update on the patient and the ground units.</o>
-      <o>Dispatch, HEMS, we copy the tasking. Please advise on the patient's condition and the units on scene.</o>
-      <o>HEMS to dispatch, tasking copied. Do you have any further information for us?</o>
-      <o>Dispatch, HEMS. Got the tasking. Anything new on the patient or the units?</o>
-      <o>Dispatch, HEMS. Copy the tasking, any updates for us before we go?</o>
-      <o>Dispatch, HEMS. Got it. Anything else you can tell us before we lift?</o>
+      <o>{@DSP}, {@HEMS}. Tasking received. Request any update on the patient and the ground units.</o>
+      <o>{@DSP}, {@HEMS}, we copy the tasking. Please advise on the patient's condition and the units on scene.</o>
+      <o>{@HEMS} to {@DSP}, tasking copied. Do you have any further information for us?</o>
+      <o>{@DSP}, {@HEMS}. Got the tasking. Anything new on the patient or the units?</o>
+      <o>{@DSP}, {@HEMS}. Copy the tasking, any updates for us before we go?</o>
+      <o>{@DSP}, {@HEMS}. Got it. Anything else you can tell us before we lift?</o>
     </message>
     <message key="DSP.ANS.ACC" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: accident">
-      <o>HEMS, dispatch. Copy. Casualties are reported at the scene and ground units are being dispatched. I will update you as soon as I have more.</o>
-      <o>HEMS, copy. The caller reports injured people at the scene. Ground units are on their way, and I will relay anything new.</o>
-      <o>HEMS, dispatch. No further details at the moment. Ground units are being tasked, I will keep you updated.</o>
-      <o>HEMS, nothing more from the caller yet. Units are rolling, I will call you with news.</o>
-      <o>Copy HEMS. Nothing new for now, units are on their way. I will shout if I get more.</o>
-      <o>Nothing more yet, HEMS. The ground units are rolling, I will tell you as soon as I hear something.</o>
+      <o>{@HEMS}, {@DSP}. Copy. Casualties are reported at the scene and ground units are being dispatched. I will update you as soon as I have more.</o>
+      <o>{@HEMS}, copy. The caller reports injured people at the scene. Ground units are on their way, and I will relay anything new.</o>
+      <o>{@HEMS}, {@DSP}. No further details at the moment. Ground units are being tasked, I will keep you updated.</o>
+      <o>{@HEMS}, nothing more from the caller yet. Units are rolling, I will call you with news.</o>
+      <o>Copy {@HEMS}. Nothing new for now, units are on their way. I will shout if I get more.</o>
+      <o>Nothing more yet, {@HEMS}. The ground units are rolling, I will tell you as soon as I hear something.</o>
     </message>
     <message key="DSP.ANS.INJ" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: injured only, the pilot chooses landing point and destination">
-      <o>HEMS, dispatch. The casualty is at the reported position. You choose the landing point and the destination, and I will support you on the radio.</o>
-      <o>HEMS, copy. The injured person is at the position in the tasking. The landing point and the destination hospital are up to you.</o>
-      <o>HEMS, dispatch. No ground units are tasked. You decide the landing area and the hospital, call me for anything you need.</o>
-      <o>HEMS, you are on your own for this one. You pick the landing spot and the hospital, call me if you need anything.</o>
-      <o>Copy HEMS. It is your call: landing point and hospital are yours. I am here if you need me.</o>
-      <o>HEMS, this one is all yours. Pick your spot and your hospital, and shout if you need anything.</o>
+      <o>{@HEMS}, {@DSP}. The casualty is at the reported position. You choose the landing point and the destination, and I will support you on the radio.</o>
+      <o>{@HEMS}, copy. The injured person is at the position in the tasking. The landing point and the destination hospital are up to you.</o>
+      <o>{@HEMS}, {@DSP}. No ground units are tasked. You decide the landing area and the hospital, call me for anything you need.</o>
+      <o>{@HEMS}, you are on your own for this one. You pick the landing spot and the hospital, call me if you need anything.</o>
+      <o>Copy {@HEMS}. It is your call: landing point and hospital are yours. I am here if you need me.</o>
+      <o>{@HEMS}, this one is all yours. Pick your spot and your hospital, and shout if you need anything.</o>
     </message>
     <message key="DSP.ANS.SAR" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: search and rescue">
-      <o>HEMS, dispatch. Copy. No further information on the person: the search is based on the last known position. Report as soon as you have contact.</o>
-      <o>HEMS, copy. The last known position is the only information we have. Please report on contact.</o>
-      <o>HEMS, dispatch. Nothing new on the search. Report when you have visual contact.</o>
-      <o>HEMS, nothing more on our side. You have the last known position, call me when you see anything.</o>
-      <o>Copy HEMS. That is all we have, the position is the last known one. Call me when you see them.</o>
-      <o>That is all we know, HEMS. Good luck out there, and call me the moment you find them.</o>
+      <o>{@HEMS}, {@DSP}. Copy. No further information on the person: the search is based on the last known position. Report as soon as you have contact.</o>
+      <o>{@HEMS}, copy. The last known position is the only information we have. Please report on contact.</o>
+      <o>{@HEMS}, {@DSP}. Nothing new on the search. Report when you have visual contact.</o>
+      <o>{@HEMS}, nothing more on our side. You have the last known position, call me when you see anything.</o>
+      <o>Copy {@HEMS}. That is all we have, the position is the last known one. Call me when you see them.</o>
+      <o>That is all we know, {@HEMS}. Good luck out there, and call me the moment you find them.</o>
     </message>
     <message key="DSP.ANS.TRF" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: patient transfer">
-      <o>HEMS, dispatch. Copy. The sending hospital is expecting you and the patient is ready for transfer. The receiving hospital has been informed.</o>
-      <o>HEMS, copy. The patient is prepared at the sending hospital and the destination has been informed of your arrival.</o>
-      <o>HEMS, dispatch. Both hospitals are informed. The patient will be ready when you land.</o>
-      <o>HEMS, both hospitals know you are coming. The patient should be ready when you get there.</o>
-      <o>Copy HEMS. They are waiting for you at the pickup, and the destination knows you are on the way.</o>
-      <o>All set on both ends, HEMS. They are waiting for you at the pickup and the destination is ready.</o>
+      <o>{@HEMS}, {@DSP}. Copy. The sending hospital is expecting you and the patient is ready for transfer. The receiving hospital has been informed.</o>
+      <o>{@HEMS}, copy. The patient is prepared at the sending hospital and the destination has been informed of your arrival.</o>
+      <o>{@HEMS}, {@DSP}. Both hospitals are informed. The patient will be ready when you land.</o>
+      <o>{@HEMS}, both hospitals know you are coming. The patient should be ready when you get there.</o>
+      <o>Copy {@HEMS}. They are waiting for you at the pickup, and the destination knows you are on the way.</o>
+      <o>All set on both ends, {@HEMS}. They are waiting for you at the pickup and the destination is ready.</o>
     </message>
     <message key="DSP.ANS.ORG" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: organ transport">
-      <o>HEMS, dispatch. Copy. The container is ready at the pickup and the receiving team is waiting. Please report your estimated arrival.</o>
-      <o>HEMS, copy. The organ is packed and ready for collection. The transplant team is waiting, report your ETA when you can.</o>
-      <o>HEMS, dispatch. Pickup is ready and the destination is on standby. The time limit is tight, report your ETA.</o>
-      <o>HEMS, the container is ready for you and the transplant team is waiting. Give me your ETA when you can.</o>
-      <o>Copy HEMS. They have the container ready. The destination is waiting, so call me with your ETA.</o>
-      <o>It is all ready for you, HEMS. The team at the destination is waiting, so call me with an ETA.</o>
+      <o>{@HEMS}, {@DSP}. Copy. The container is ready at the pickup and the receiving team is waiting. Please report your estimated arrival.</o>
+      <o>{@HEMS}, copy. The organ is packed and ready for collection. The transplant team is waiting, report your ETA when you can.</o>
+      <o>{@HEMS}, {@DSP}. Pickup is ready and the destination is on standby. The time limit is tight, report your ETA.</o>
+      <o>{@HEMS}, the container is ready for you and the transplant team is waiting. Give me your ETA when you can.</o>
+      <o>Copy {@HEMS}. They have the container ready. The destination is waiting, so call me with your ETA.</o>
+      <o>It is all ready for you, {@HEMS}. The team at the destination is waiting, so call me with an ETA.</o>
     </message>
     <message key="BRF.INT.PLT" actor="1" radio="auto" group="brfint" seq="1" futile="1" new="1" trigger="the crew presents itself on board: the pilot">
       <o silent="1"/>
@@ -5879,5 +5884,302 @@
       <o>And it is kept in the profiles, so each profile can have its own choice.</o>
       <o>And it lives in the profiles too, so you can have a profile that knows everything and a profile that wants silence.</o>
       <o>And it lives in the profiles, so one profile can be a know-it-all and another one a monk.</o>
+    </message>
+    <message key="AMB.DEP.DSP" actor="8" radio="on" group="ambdep" seq="1" new="1" trigger="the ambulance has loaded the patient and leaves for the hospital (the dispatcher tells it)">
+      <o>{@PLT}, {@DSP}. The ambulance has loaded the patient and is on its way to the hospital.</o>
+      <o>{@HEMS}, {@DSP}. Ground unit has the patient aboard and is transporting to the hospital.</o>
+      <o>{@HEMS}, {@DSP}. The ambulance is leaving the scene with the patient, bound for the hospital.</o>
+      <o>{@HEMS}, {@DSP}. Patient loaded on the ambulance, they are heading to the hospital now.</o>
+      <o>{@HEMS}, {@DSP}. The ambulance took the patient and is rolling to the hospital.</o>
+      <o>{@HEMS}, {@DSP}. Good news, the ambulance has the patient and is driving to the hospital.</o>
+    </message>
+    <message key="AMB.CAN.DSP" actor="8" radio="on" group="ambcan" seq="1" new="1" trigger="the dispatch is cancelled because the ground units take every patient">
+      <o>{@HEMS}, {@DSP}. Your dispatch is cancelled, the ambulance takes care of all the patients. Thank you, return to base.</o>
+      <o>{@HEMS}, {@DSP}. Cancel the dispatch, the ground units are transporting everybody. Return to base, thank you.</o>
+      <o>{@HEMS}, {@DSP}. We cancel your tasking: the patients are in the ambulance. You can go back to base.</o>
+      <o>{@HEMS}, {@DSP}. Dispatch cancelled, the ambulance has the patients. Thanks for the availability, return to base.</o>
+      <o>{@HEMS}, {@DSP}. You are released, the ambulance has everything under control. Back to base.</o>
+      <o>{@HEMS}, {@DSP}. Stand down, the ambulance is handling it all. Thanks, and return to base.</o>
+    </message>
+    <message key="HST.ARR.S" actor="3" radio="auto" group="hstarr" seq="1" new="1" trigger="hoist operation: the doctor reaches a stable patient">
+      <o>Doc at the patient. Stable, I start the assessment.</o>
+      <o>Doc at the patient. He looks stable, assessment under way.</o>
+      <o>I am with the patient. Looks stable, starting the check.</o>
+      <o>Patient reached, he seems stable. I begin the assessment.</o>
+      <o>Reached the patient. Stable for now, I am checking him over.</o>
+      <o>At the patient, looks stable. Let me have a proper look.</o>
+    </message>
+    <message key="HST.ARR.M" actor="3" radio="auto" group="hstarr" seq="1" new="1" trigger="hoist operation: the doctor reaches a serious patient">
+      <o>Doc at the patient. Serious condition, I start the assessment.</o>
+      <o>Doc at the patient. He is in a serious state, assessment under way.</o>
+      <o>I am with the patient. Serious, starting the check right away.</o>
+      <o>Patient reached, the condition is serious. I begin the assessment.</o>
+      <o>Reached the patient. This one is serious, I am checking him now.</o>
+      <o>At the patient, and he is not well. Serious, I am on it.</o>
+    </message>
+    <message key="HST.ARR.C" actor="3" radio="auto" group="hstarr" seq="1" new="1" trigger="hoist operation: the doctor reaches a critical patient">
+      <o>Doc at the patient. Critical condition, treatment starts now.</o>
+      <o>Doc at the patient. He is critical, I start the treatment at once.</o>
+      <o>I am with the patient. Critical, no time to lose.</o>
+      <o>Patient reached, he is critical. Starting the treatment immediately.</o>
+      <o>Reached the patient. Critical, I am treating him now.</o>
+      <o>At the patient, and it is critical. Treatment starts right now.</o>
+    </message>
+    <message key="HST.DONE.S" actor="3" radio="auto" group="hstdone" seq="1" new="1" trigger="hoist operation: the doctor finishes the visit of a stable patient">
+      <o>Assessment complete. The patient is stable, ready for the transport.</o>
+      <o>Assessment done. He is stable, we can move him.</o>
+      <o>Check complete, the patient is stable and ready to go.</o>
+      <o>All done here. Stable, ready for the transport.</o>
+      <o>Done with the patient. Stable and ready to move.</o>
+      <o>Finished. He is stable and ready for the ride.</o>
+    </message>
+    <message key="HST.DONE.M" actor="3" radio="auto" group="hstdone" seq="1" new="1" trigger="hoist operation: the doctor finishes the visit of a serious patient">
+      <o>Assessment and treatment complete. Serious but stabilised, ready for the transport.</o>
+      <o>Treatment done. The patient is serious but stabilised, we can move him.</o>
+      <o>Check and treatment complete, still serious, ready to go.</o>
+      <o>All done here. Serious but stable enough for the transport.</o>
+      <o>Done with the patient. Serious, but he can travel.</o>
+      <o>Finished. Still serious, but ready for the ride.</o>
+    </message>
+    <message key="HST.DONE.C" actor="3" radio="auto" group="hstdone" seq="1" new="1" trigger="hoist operation: the doctor finishes the visit of a critical patient">
+      <o>Treatment complete. The patient is critical, we must move now.</o>
+      <o>Treatment done. He is critical, we need to go without delay.</o>
+      <o>Everything I can do here is done. Critical, let us move.</o>
+      <o>All done here. Critical patient, ready for the transport, fast.</o>
+      <o>Done with the patient. Critical, we need to leave now.</o>
+      <o>Finished. He is critical, ready to go, please hurry.</o>
+    </message>
+    <message key="HRS.START" actor="12" radio="on" group="hrs" seq="1" new="1" trigger="the heli rescuer starts to be lowered to secure the area">
+      <o>Heli rescuer on the cable, going down to secure the area.</o>
+      <o>Heli rescuer going down now, I secure the area.</o>
+      <o>On the cable, going down. I will secure the area.</o>
+      <o>Going down to the scene. I will secure the area first.</o>
+      <o>Heli rescuer leaving the cabin, I take care of the scene.</o>
+      <o>Down I go, I will have the scene secure for the crew.</o>
+    </message>
+    <message key="HRS.MID" actor="12" radio="on" group="hrs" seq="2" new="1" trigger="the heli rescuer is half way down">
+      <o>Half way down, the area looks clear.</o>
+      <o>Half way, the area looks clear below.</o>
+      <o>Passing half, no hazards in sight.</o>
+      <o>Half way down, no problems seen below.</o>
+      <o>Half way, all quiet down there.</o>
+      <o>Half way down, nothing to worry about so far.</o>
+    </message>
+    <message key="HRS.DONE" actor="12" radio="on" group="hrs" seq="3" new="1" trigger="the heli rescuer is on the ground and the area is secure">
+      <o>Heli rescuer on the ground. Area secure, all okay.</o>
+      <o>On the ground. The area is secured, everything is okay.</o>
+      <o>Heli rescuer down. Area secure, you can proceed.</o>
+      <o>I am down, the area is secure. All okay for the crew.</o>
+      <o>Down and safe. The area is secure, go ahead.</o>
+      <o>On the ground, area secured. All okay, you are clear to proceed.</o>
+    </message>
+    <message key="HRD.PLT" actor="1" radio="auto" group="hrd" seq="1" new="1" trigger="the heli rescuers have left the helicopter: the pilot thanks them">
+      <o>Thank you for the help. Take care.</o>
+      <o>Thanks for the support. See you next time.</o>
+      <o>Thank you, good work. Take care.</o>
+      <o>Good work, thank you. See you next time.</o>
+      <o>Thanks a lot for the help, take care out there.</o>
+      <o>Great job, thanks. Take care and see you soon.</o>
+    </message>
+    <message key="HRD.HRT" actor="12" radio="auto" group="hrd" seq="2" new="1" trigger="the heli rescuers have left the helicopter: a rescuer answers">
+      <o>Thanks to you. Safe flight.</o>
+      <o>Our pleasure. Safe flight.</o>
+      <o>Thank you too. Fly safe.</o>
+      <o>Any time. Fly safe.</o>
+      <o>Thanks, glad to help. Safe flight.</o>
+      <o>Always a pleasure. Fly safe.</o>
+    </message>
+    <message key="HRD.BASE.Q" actor="1" radio="on" group="hrd" seq="3" new="1" trigger="the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)">
+      <o>Heli rescue base, {@HEMS}. We left {hr:0} at {place:1}.</o>
+      <o>Heli rescue base, {@HEMS}. {hr:0} left at {place:1}.</o>
+      <o>Heli rescue base, {@HEMS}. For your information, we left {hr:0} at {place:1}.</o>
+      <o>Heli rescue base, {@HEMS}. We dropped {hr:0} at {place:1}.</o>
+      <o>Heli rescue base, {@HEMS}. {hr:0} dropped at {place:1}, please note.</o>
+      <o>Heli rescue base, {@HEMS}. Just to let you know, {hr:0} waiting at {place:1}.</o>
+    </message>
+    <message key="HRD.BASE.A" actor="12" radio="ext" group="hrd" seq="4" new="1" trigger="the heli rescue base answers (external radio; args: number, place)">
+      <o>{@HEMS}, heli rescue base. Copy, {hr:0} at {place:1}. Thank you.</o>
+      <o>{@HEMS}, heli rescue base. Copy, {hr:0} left at {place:1}.</o>
+      <o>{@HEMS}, heli rescue base. Roger, {hr:0} at {place:1}. Thanks.</o>
+      <o>{@HEMS}, heli rescue base. Understood, {hr:0} at {place:1}. We will take care of them.</o>
+      <o>{@HEMS}, heli rescue base. Copy that, {hr:0} at {place:1}. Thanks for the lift.</o>
+      <o>{@HEMS}, heli rescue base. Noted, {hr:0} at {place:1}. Thank you, fly safe.</o>
+    </message>
+    <message key="HRQ.PLT.Q" actor="1" radio="on" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
+      <o>Heli rescue base, {@HEMS}. Please provide {hr:0} for the mission. Are they available?</o>
+      <o>Heli rescue base, {@HEMS}. We request {hr:0} for this mission. Are they available?</o>
+      <o>Heli rescue base, {@HEMS}. Can you provide {hr:0} at the meeting point?</o>
+      <o>Heli rescue base, {@HEMS}. We need {hr:0} on this one. Do you have them ready?</o>
+      <o>Heli rescue base, {@HEMS}. Do you have {hr:0} for us?</o>
+      <o>Heli rescue base, {@HEMS}. Any chance of {hr:0} for this mission?</o>
+    </message>
+    <message key="HRQ.BASE.A" actor="12" radio="ext" group="hrq" seq="2" new="1" trigger="the heli rescue base answers that {hr:0} are available (external radio; arg: 1 or 2)">
+      <o>{@HEMS}, heli rescue base. Affirm, {hr:0} available. They are waiting at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. Yes, {hr:0} ready and waiting at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. {hr:0} available, standing by at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. We have {hr:0} for you, ready at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. You got it, {hr:0} waiting for you at the meeting point.</o>
+    </message>
+    <message key="HRQ.BRF.ACC" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
+      <o>Heli rescue base, {@HEMS}. The mission is an accident with {0} injured. Brief the rescuers.</o>
+      <o>Heli rescue base, {@HEMS}. Accident on scene, {0} injured reported. Please brief them.</o>
+      <o>Heli rescue base, {@HEMS}. It is a road accident, about {0} injured. Tell them to be ready.</o>
+      <o>Heli rescue base, {@HEMS}. We go to an accident, {0} injured. Please pass it on.</o>
+      <o>Heli rescue base, {@HEMS}. Accident with {0} injured. Rescuers, get ready.</o>
+      <o>Heli rescue base, {@HEMS}. Heads up: accident, {0} injured. Brief the team.</o>
+    </message>
+    <message key="HRQ.BRF.SAR" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
+      <o>Heli rescue base, {@HEMS}. The mission is a search and rescue, {0} to recover. Brief the rescuers.</o>
+      <o>Heli rescue base, {@HEMS}. Search and rescue, {0} to recover. Please brief them.</o>
+      <o>Heli rescue base, {@HEMS}. It is a search and rescue with {0} persons to recover. Tell them to be ready.</o>
+      <o>Heli rescue base, {@HEMS}. We go to a search and rescue, {0} to recover. Please pass it on.</o>
+      <o>Heli rescue base, {@HEMS}. Search and rescue, {0} persons. Rescuers, get ready.</o>
+      <o>Heli rescue base, {@HEMS}. Heads up: search and rescue, {0} to recover. Brief the team.</o>
+    </message>
+    <message key="HRQ.BRF.TRF" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
+      <o>Heli rescue base, {@HEMS}. The mission is a transfer with {0} patients. Brief the rescuers.</o>
+      <o>Heli rescue base, {@HEMS}. Patient transfer, {0} patients. Please brief them.</o>
+      <o>Heli rescue base, {@HEMS}. It is an inter hospital transfer, {0} patients. Tell them to be ready.</o>
+      <o>Heli rescue base, {@HEMS}. We go for a transfer, {0} patients. Please pass it on.</o>
+      <o>Heli rescue base, {@HEMS}. Transfer with {0} patients. Rescuers, get ready.</o>
+      <o>Heli rescue base, {@HEMS}. Heads up: transfer, {0} patients. Brief the team.</o>
+    </message>
+    <message key="HRQ.BRF.ORG" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
+      <o>Heli rescue base, {@HEMS}. The mission is an organ transport. Brief the rescuers.</o>
+      <o>Heli rescue base, {@HEMS}. Organ transport, time critical. Please brief them.</o>
+      <o>Heli rescue base, {@HEMS}. It is an organ transport, we cannot lose time. Tell them to be ready.</o>
+      <o>Heli rescue base, {@HEMS}. We carry an organ, time is short. Please pass it on.</o>
+      <o>Heli rescue base, {@HEMS}. Organ transport. Rescuers, get ready.</o>
+      <o>Heli rescue base, {@HEMS}. Heads up: organ transport. Brief the team.</o>
+    </message>
+    <message key="HRQ.BRF.INJ" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
+      <o>Heli rescue base, {@HEMS}. The mission has {0} injured. Brief the rescuers.</o>
+      <o>Heli rescue base, {@HEMS}. We have {0} injured. Please brief them.</o>
+      <o>Heli rescue base, {@HEMS}. About {0} injured on scene. Tell them to be ready.</o>
+      <o>Heli rescue base, {@HEMS}. We go to {0} injured. Please pass it on.</o>
+      <o>Heli rescue base, {@HEMS}. {0} injured. Rescuers, get ready.</o>
+      <o>Heli rescue base, {@HEMS}. Heads up: {0} injured. Brief the team.</o>
+    </message>
+    <message key="HRQ.BASE.OK" actor="12" radio="ext" group="hrq" seq="4" new="1" trigger="the heli rescue base acknowledges the brief (external radio)">
+      <o>{@HEMS}, heli rescue base. Copy, the rescuers are informed.</o>
+      <o>{@HEMS}, heli rescue base. Roger, the team is briefed.</o>
+      <o>{@HEMS}, heli rescue base. Understood, they know. See you at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. Copy all, they are briefed.</o>
+      <o>{@HEMS}, heli rescue base. Message received, the rescuers are ready.</o>
+      <o>{@HEMS}, heli rescue base. Copy, we pass it on. Fly safe.</o>
+    </message>
+    <message key="HRQ.COR.PLT" actor="1" radio="on" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
+      <o>Heli rescue base, {@HEMS}. Correction: we need {hr:0}.</o>
+      <o>Heli rescue base, {@HEMS}. Correction, the request is now {hr:0}.</o>
+      <o>Heli rescue base, {@HEMS}. We changed our mind: {hr:0} please.</o>
+      <o>Heli rescue base, {@HEMS}. Update on the request, we need {hr:0}.</o>
+      <o>Heli rescue base, {@HEMS}. Sorry, correction: {hr:0} for this mission.</o>
+      <o>Heli rescue base, {@HEMS}. Change of plans, we will take {hr:0}.</o>
+    </message>
+    <message key="HRQ.COR.A" actor="12" radio="ext" group="hrqc" seq="2" new="1" trigger="the heli rescue base answers the correction (external radio; arg: 1 or 2)">
+      <o>{@HEMS}, heli rescue base. Copy, {hr:0} at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. Roger, {hr:0} then.</o>
+      <o>{@HEMS}, heli rescue base. Understood, {hr:0} will be there.</o>
+      <o>{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.</o>
+      <o>{@HEMS}, heli rescue base. Copy the change, {hr:0}.</o>
+      <o>{@HEMS}, heli rescue base. Noted, {hr:0} ready for you.</o>
+    </message>
+    <message key="HRQ.ARR.PLT" actor="1" radio="auto" group="hrqa" seq="1" new="1" trigger="the helicopter reaches the meeting point of the heli rescuers">
+      <o>Heli rescue base, {@HEMS}. We are at the meeting point.</o>
+      <o>Heli rescue base, {@HEMS}. Meeting point reached, ready to pick them up.</o>
+      <o>Heli rescue base, {@HEMS}. We are arriving at the meeting point.</o>
+      <o>Heli rescue base, {@HEMS}. Over the meeting point now.</o>
+      <o>Heli rescue base, {@HEMS}. At the meeting point, we see them.</o>
+      <o>Heli rescue base, {@HEMS}. We are here, ready for the rescuers.</o>
+    </message>
+    <message key="HRQ.ARR.A" actor="12" radio="ext" group="hrqa" seq="2" new="1" trigger="the heli rescue base answers the arrival (external radio)">
+      <o>{@HEMS}, heli rescue base. Copy, the rescuers are ready to board.</o>
+      <o>{@HEMS}, heli rescue base. Roger, they are ready.</o>
+      <o>{@HEMS}, heli rescue base. Understood, they are boarding now.</o>
+      <o>{@HEMS}, heli rescue base. They are coming to you. Fly safe.</o>
+      <o>{@HEMS}, heli rescue base. Copy, the team is coming over.</o>
+      <o>{@HEMS}, heli rescue base. Welcome, the team is on its way to the helicopter.</o>
+    </message>
+    <message key="DSP.NAME.MAN" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is on the manual frequency (words only, {DSP})">
+      <o>Dispatcher</o>
+    </message>
+    <message key="DSP.NAME.0" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group DRF DSPTCH (words only, {DSP}; {0} the city of the base)">
+      <o>Leitstelle {0}</o>
+    </message>
+    <message key="DSP.NAMEX.0" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group DRF DSPTCH, when the city of the base is not known (words only, {DSP})">
+      <o>Leitstelle</o>
+    </message>
+    <message key="DSP.NAME.1" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group OAMTC DSPC (words only, {DSP}; {0} the city of the base)">
+      <o>Leitstelle {0}</o>
+    </message>
+    <message key="DSP.NAMEX.1" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group OAMTC DSPC, when the city of the base is not known (words only, {DSP})">
+      <o>Leitstelle</o>
+    </message>
+    <message key="DSP.NAME.2" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group ADAC DSPTC (words only, {DSP}; {0} the city of the base)">
+      <o>Leitstelle {0}</o>
+    </message>
+    <message key="DSP.NAMEX.2" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group ADAC DSPTC, when the city of the base is not known (words only, {DSP})">
+      <o>Leitstelle</o>
+    </message>
+    <message key="DSP.NAME.3" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group REGION CTR (words only, {DSP}; {0} the city of the base)">
+      <o>{0} control center</o>
+    </message>
+    <message key="DSP.NAMEX.3" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group REGION CTR, when the city of the base is not known (words only, {DSP})">
+      <o>control center</o>
+    </message>
+    <message key="DSP.NAME.4" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group LOCAL DCTR (words only, {DSP}; {0} the city of the base)">
+      <o>{0} control center</o>
+    </message>
+    <message key="DSP.NAMEX.4" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group LOCAL DCTR, when the city of the base is not known (words only, {DSP})">
+      <o>control center</o>
+    </message>
+    <message key="DSP.NAME.5" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group 911 SVCCTR (words only, {DSP}; {0} the city of the base)">
+      <o>nine one one {0} control</o>
+    </message>
+    <message key="DSP.NAMEX.5" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group 911 SVCCTR, when the city of the base is not known (words only, {DSP})">
+      <o>nine one one control</o>
+    </message>
+    <message key="DSP.NAME.6" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group 112 SVCCTR (words only, {DSP}; {0} the city of the base)">
+      <o>one one two {0} control</o>
+    </message>
+    <message key="DSP.NAMEX.6" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group 112 SVCCTR, when the city of the base is not known (words only, {DSP})">
+      <o>one one two control</o>
+    </message>
+    <message key="DSP.NAME.7" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group AIUT ALPIN (words only, {DSP}; {0} the city of the base)">
+      <o>Centrale Pelikan</o>
+    </message>
+    <message key="DSP.NAME.8" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group SAMU SVCTR (words only, {DSP}; {0} the city of the base)">
+      <o>SAMU seventy five</o>
+    </message>
+    <message key="DSP.NAME.9" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group BABCOCK CT (words only, {DSP}; {0} the city of the base)">
+      <o>centrale {0}</o>
+    </message>
+    <message key="DSP.NAMEX.9" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group BABCOCK CT, when the city of the base is not known (words only, {DSP})">
+      <o>centrale</o>
+    </message>
+    <message key="DSP.NAME.10" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group NORWAAM CT (words only, {DSP}; {0} the city of the base)">
+      <o>A M K {0}</o>
+    </message>
+    <message key="DSP.NAMEX.10" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group NORWAAM CT, when the city of the base is not known (words only, {DSP})">
+      <o>A M K</o>
+    </message>
+    <message key="DSP.NAME.11" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group MPL ONLINE (words only, {DSP}; {0} the city of the base)">
+      <o>Multiplayer Controller</o>
+    </message>
+    <message key="DSP.NAME.12" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group REGA SVCTR (words only, {DSP}; {0} the city of the base)">
+      <o>Rega delta</o>
+    </message>
+    <message key="DSP.NAME.13" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group AIRGRE CTR (words only, {DSP}; {0} the city of the base)">
+      <o>centrale {0}</o>
+    </message>
+    <message key="DSP.NAMEX.13" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group AIRGRE CTR, when the city of the base is not known (words only, {DSP})">
+      <o>centrale</o>
+    </message>
+    <message key="DSP.NAME.14" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group BEROLINA C (words only, {DSP}; {0} the city of the base)">
+      <o>Berolina center</o>
+    </message>
+    <message key="DSP.NAME.15" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group FLORIAN CT (words only, {DSP}; {0} the city of the base)">
+      <o>Florian center</o>
     </message>
 </voicepack>

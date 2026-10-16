@@ -1133,7 +1133,23 @@ namespace HPGMissionCompanion
                 testButton[i] = Btn(page, "Test", 662, y + 1, 56, 26);
                 testButton[i].Click += delegate { TestActor(index); };
             }
-            Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role (Pilot, Copilot, Doc ...). Names are ignored while the crew names are random (Voice packs tab). To install additional voice packs, choose the Piper voices tab.", 10, 102 + Actors.Count * 38 + 10, 706, 34).ForeColor = SystemColors.GrayText;
+            int yc = 102 + Actors.Count * 38 + 6;
+            Lbl(page, "Call sign of the helicopter", 10, yc + 5, 160, 20);
+            TextBox callBox = new TextBox();
+            callBox.Location = new Point(176, yc + 2);
+            callBox.Size = new Size(194, 24);
+            callBox.MaxLength = 30;
+            callBox.Text = Ctx.Settings.CallSign ?? "";
+            callBox.TextChanged += delegate
+            {
+                if (suppress) return;
+                Ctx.Settings.CallSign = callBox.Text.Trim();
+                MarkDirty();
+                Say.ApplyCallSign();
+            };
+            page.Controls.Add(callBox);
+            Lbl(page, "Used where a text says {@HEMS}, for example when the dispatcher calls you. Empty: the airline and the flight number that the livery sets for the aircraft (Pelikan 3), else the tail number spelled, else HEMS.", 376, yc + 2, 340, 34).ForeColor = SystemColors.GrayText;
+            Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role (Pilot, Copilot, Doc ...). Names are ignored while the crew names are random (Voice packs tab). To install additional voice packs, choose the Piper voices tab.", 10, yc + 44, 706, 34).ForeColor = SystemColors.GrayText;
         }
 
         LangInfo CurrentLang() { return (LangInfo)langBox.SelectedItem; }

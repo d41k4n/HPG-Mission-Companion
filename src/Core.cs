@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.24";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.25";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -116,11 +116,13 @@ namespace HPGMissionCompanion
 
     internal static class Actors
     {
-        public const int Count = 11;
+        public const int Count = 12;
+        public const int Checklist = 11;        // the voice of the checklists follows L:VOLUME_CHK; actor 12 (the heli rescuers and their base) came later and follows the crew volume
+        public const int HeliRescuer = 12;
         public static readonly string[] Names = new string[]
         {
             "Pilot", "Copilot", "Doctor", "HEMS1", "HEMS2",
-            "Technician male", "Technician female", "Dispatcher", "Ground unit", "Patient / extra", "Checklist"
+            "Technician male", "Technician female", "Dispatcher", "Ground unit", "Patient / extra", "Checklist", "Heli rescuer"
         };
     }
 
@@ -161,6 +163,7 @@ namespace HPGMissionCompanion
         public string BridgePack = "";          // active pack used by the mission: the pack whose texts are spoken when the mission lines (the LVAR counters, voice code APP) rise; "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
         public string Names = "functions";      // functions | random: names of the crew in the texts (functions: the job roles, or the names typed in the Actors tab)
+        public string CallSign = "";            // the call sign of the helicopter in the texts ({@HEMS}); empty = what the livery says (ATC airline and flight number), else HEMS
         public Dictionary<string, string> CrewNames = new Dictionary<string, string>();   // role (PLT, CPL, PAX3, PAX1, PAX2, TECHM, TECHF) -> name typed by the user; used when Names is "functions"
         public bool UseMissionVolumes = true;   // follow L:VOLUME_CREW and L:VOLUME_CHK of the mission
         public int AttenCamInside = 9;          // dB less for a voice from outside heard while the view is inside the helicopter (0 = off)

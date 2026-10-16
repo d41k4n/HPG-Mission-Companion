@@ -1,0 +1,331 @@
+{
+  "_comment": "Pack EN 14 (user requests of 2026-10-16): the ambulance leaves or the dispatch is cancelled because of it (AMB.*), the voices of the doctor during the hoist operations (HST.*), the heli rescuer during the hoist operations (HRS.*), the farewell to the heli rescuers left at the hospital, the base or the meeting point (HRD.*), the radio call to the heli rescue base before the pick-up (HRQ.*), the names of the dispatcher by group of the CARLS (DSP.NAME.*, see <dsp:INDEX:CITY>). Actor 12 is the Heli rescuer. Arguments: {hr:N} one or two heli rescuers, {place:N} the place (H hospital, B base, M meeting point), {0} a number or the city.",
+  "AMB.DEP.DSP": {
+    "actor": 8, "radio": "on", "group": "ambdep", "seq": 1,
+    "trigger": "the ambulance has loaded the patient and leaves for the hospital (the dispatcher tells it)",
+    "o": [
+      "{@PLT}, {@DSP}. The ambulance has loaded the patient and is on its way to the hospital.",
+      "{@HEMS}, {@DSP}. Ground unit has the patient aboard and is transporting to the hospital.",
+      "{@HEMS}, {@DSP}. The ambulance is leaving the scene with the patient, bound for the hospital.",
+      "{@HEMS}, {@DSP}. Patient loaded on the ambulance, they are heading to the hospital now.",
+      "{@HEMS}, {@DSP}. The ambulance took the patient and is rolling to the hospital.",
+      "{@HEMS}, {@DSP}. Good news, the ambulance has the patient and is driving to the hospital."
+    ]
+  },
+  "AMB.CAN.DSP": {
+    "actor": 8, "radio": "on", "group": "ambcan", "seq": 1,
+    "trigger": "the dispatch is cancelled because the ground units take every patient",
+    "o": [
+      "{@HEMS}, {@DSP}. Your dispatch is cancelled, the ambulance takes care of all the patients. Thank you, return to base.",
+      "{@HEMS}, {@DSP}. Cancel the dispatch, the ground units are transporting everybody. Return to base, thank you.",
+      "{@HEMS}, {@DSP}. We cancel your tasking: the patients are in the ambulance. You can go back to base.",
+      "{@HEMS}, {@DSP}. Dispatch cancelled, the ambulance has the patients. Thanks for the availability, return to base.",
+      "{@HEMS}, {@DSP}. You are released, the ambulance has everything under control. Back to base.",
+      "{@HEMS}, {@DSP}. Stand down, the ambulance is handling it all. Thanks, and return to base."
+    ]
+  },
+
+  "HST.ARR.S": {
+    "actor": 3, "radio": "auto", "group": "hstarr", "seq": 1,
+    "trigger": "hoist operation: the doctor reaches a stable patient",
+    "o": [
+      "Doc at the patient. Stable, I start the assessment.",
+      "Doc at the patient. He looks stable, assessment under way.",
+      "I am with the patient. Looks stable, starting the check.",
+      "Patient reached, he seems stable. I begin the assessment.",
+      "Reached the patient. Stable for now, I am checking him over.",
+      "At the patient, looks stable. Let me have a proper look."
+    ]
+  },
+  "HST.ARR.M": {
+    "actor": 3, "radio": "auto", "group": "hstarr", "seq": 1,
+    "trigger": "hoist operation: the doctor reaches a serious patient",
+    "o": [
+      "Doc at the patient. Serious condition, I start the assessment.",
+      "Doc at the patient. He is in a serious state, assessment under way.",
+      "I am with the patient. Serious, starting the check right away.",
+      "Patient reached, the condition is serious. I begin the assessment.",
+      "Reached the patient. This one is serious, I am checking him now.",
+      "At the patient, and he is not well. Serious, I am on it."
+    ]
+  },
+  "HST.ARR.C": {
+    "actor": 3, "radio": "auto", "group": "hstarr", "seq": 1,
+    "trigger": "hoist operation: the doctor reaches a critical patient",
+    "o": [
+      "Doc at the patient. Critical condition, treatment starts now.",
+      "Doc at the patient. He is critical, I start the treatment at once.",
+      "I am with the patient. Critical, no time to lose.",
+      "Patient reached, he is critical. Starting the treatment immediately.",
+      "Reached the patient. Critical, I am treating him now.",
+      "At the patient, and it is critical. Treatment starts right now."
+    ]
+  },
+  "HST.DONE.S": {
+    "actor": 3, "radio": "auto", "group": "hstdone", "seq": 1,
+    "trigger": "hoist operation: the doctor finishes the visit of a stable patient",
+    "o": [
+      "Assessment complete. The patient is stable, ready for the transport.",
+      "Assessment done. He is stable, we can move him.",
+      "Check complete, the patient is stable and ready to go.",
+      "All done here. Stable, ready for the transport.",
+      "Done with the patient. Stable and ready to move.",
+      "Finished. He is stable and ready for the ride."
+    ]
+  },
+  "HST.DONE.M": {
+    "actor": 3, "radio": "auto", "group": "hstdone", "seq": 1,
+    "trigger": "hoist operation: the doctor finishes the visit of a serious patient",
+    "o": [
+      "Assessment and treatment complete. Serious but stabilised, ready for the transport.",
+      "Treatment done. The patient is serious but stabilised, we can move him.",
+      "Check and treatment complete, still serious, ready to go.",
+      "All done here. Serious but stable enough for the transport.",
+      "Done with the patient. Serious, but he can travel.",
+      "Finished. Still serious, but ready for the ride."
+    ]
+  },
+  "HST.DONE.C": {
+    "actor": 3, "radio": "auto", "group": "hstdone", "seq": 1,
+    "trigger": "hoist operation: the doctor finishes the visit of a critical patient",
+    "o": [
+      "Treatment complete. The patient is critical, we must move now.",
+      "Treatment done. He is critical, we need to go without delay.",
+      "Everything I can do here is done. Critical, let us move.",
+      "All done here. Critical patient, ready for the transport, fast.",
+      "Done with the patient. Critical, we need to leave now.",
+      "Finished. He is critical, ready to go, please hurry."
+    ]
+  },
+
+  "HRS.START": {
+    "actor": 12, "radio": "on", "group": "hrs", "seq": 1,
+    "trigger": "the heli rescuer starts to be lowered to secure the area",
+    "o": [
+      "Heli rescuer on the cable, going down to secure the area.",
+      "Heli rescuer going down now, I secure the area.",
+      "On the cable, going down. I will secure the area.",
+      "Going down to the scene. I will secure the area first.",
+      "Heli rescuer leaving the cabin, I take care of the scene.",
+      "Down I go, I will have the scene secure for the crew."
+    ]
+  },
+  "HRS.MID": {
+    "actor": 12, "radio": "on", "group": "hrs", "seq": 2,
+    "trigger": "the heli rescuer is half way down",
+    "o": [
+      "Half way down, the area looks clear.",
+      "Half way, the area looks clear below.",
+      "Passing half, no hazards in sight.",
+      "Half way down, no problems seen below.",
+      "Half way, all quiet down there.",
+      "Half way down, nothing to worry about so far."
+    ]
+  },
+  "HRS.DONE": {
+    "actor": 12, "radio": "on", "group": "hrs", "seq": 3,
+    "trigger": "the heli rescuer is on the ground and the area is secure",
+    "o": [
+      "Heli rescuer on the ground. Area secure, all okay.",
+      "On the ground. The area is secured, everything is okay.",
+      "Heli rescuer down. Area secure, you can proceed.",
+      "I am down, the area is secure. All okay for the crew.",
+      "Down and safe. The area is secure, go ahead.",
+      "On the ground, area secured. All okay, you are clear to proceed."
+    ]
+  },
+
+  "HRD.PLT": {
+    "actor": 1, "radio": "auto", "group": "hrd", "seq": 1,
+    "trigger": "the heli rescuers have left the helicopter: the pilot thanks them",
+    "o": [
+      "Thank you for the help. Take care.",
+      "Thanks for the support. See you next time.",
+      "Thank you, good work. Take care.",
+      "Good work, thank you. See you next time.",
+      "Thanks a lot for the help, take care out there.",
+      "Great job, thanks. Take care and see you soon."
+    ]
+  },
+  "HRD.HRT": {
+    "actor": 12, "radio": "auto", "group": "hrd", "seq": 2,
+    "trigger": "the heli rescuers have left the helicopter: a rescuer answers",
+    "o": [
+      "Thanks to you. Safe flight.",
+      "Our pleasure. Safe flight.",
+      "Thank you too. Fly safe.",
+      "Any time. Fly safe.",
+      "Thanks, glad to help. Safe flight.",
+      "Always a pleasure. Fly safe."
+    ]
+  },
+  "HRD.BASE.Q": {
+    "actor": 1, "radio": "on", "group": "hrd", "seq": 3,
+    "trigger": "the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)",
+    "o": [
+      "Heli rescue base, HEMS. We left {hr:0} at {place:1}.",
+      "Heli rescue base, {@HEMS}. {hr:0} left at {place:1}.",
+      "Heli rescue base, {@HEMS}. For your information, we left {hr:0} at {place:1}.",
+      "Heli rescue base, {@HEMS}. We dropped {hr:0} at {place:1}.",
+      "Heli rescue base, {@HEMS}. {hr:0} dropped at {place:1}, please note.",
+      "Heli rescue base, {@HEMS}. Just to let you know, {hr:0} waiting at {place:1}."
+    ]
+  },
+  "HRD.BASE.A": {
+    "actor": 12, "radio": "ext", "group": "hrd", "seq": 4,
+    "trigger": "the heli rescue base answers (external radio; args: number, place)",
+    "o": [
+      "{@HEMS}, heli rescue base. Copy, {hr:0} at {place:1}. Thank you.",
+      "{@HEMS}, heli rescue base. Copy, {hr:0} left at {place:1}.",
+      "{@HEMS}, heli rescue base. Roger, {hr:0} at {place:1}. Thanks.",
+      "{@HEMS}, heli rescue base. Understood, {hr:0} at {place:1}. We will take care of them.",
+      "{@HEMS}, heli rescue base. Copy that, {hr:0} at {place:1}. Thanks for the lift.",
+      "{@HEMS}, heli rescue base. Noted, {hr:0} at {place:1}. Thank you, fly safe."
+    ]
+  },
+
+  "HRQ.PLT.Q": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 1,
+    "trigger": "the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)",
+    "o": [
+      "Heli rescue base, HEMS. Please provide {hr:0} for the mission. Are they available?",
+      "Heli rescue base, {@HEMS}. We request {hr:0} for this mission. Are they available?",
+      "Heli rescue base, {@HEMS}. Can you provide {hr:0} at the meeting point?",
+      "Heli rescue base, {@HEMS}. We need {hr:0} on this one. Do you have them ready?",
+      "Heli rescue base, {@HEMS}. Do you have {hr:0} for us?",
+      "Heli rescue base, {@HEMS}. Any chance of {hr:0} for this mission?"
+    ]
+  },
+  "HRQ.BASE.A": {
+    "actor": 12, "radio": "ext", "group": "hrq", "seq": 2,
+    "trigger": "the heli rescue base answers that {hr:0} are available (external radio; arg: 1 or 2)",
+    "o": [
+      "{@HEMS}, heli rescue base. Affirm, {hr:0} available. They are waiting at the meeting point.",
+      "{@HEMS}, heli rescue base. Yes, {hr:0} ready and waiting at the meeting point.",
+      "{@HEMS}, heli rescue base. {hr:0} available, standing by at the meeting point.",
+      "{@HEMS}, heli rescue base. We have {hr:0} for you, ready at the meeting point.",
+      "{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.",
+      "{@HEMS}, heli rescue base. You got it, {hr:0} waiting for you at the meeting point."
+    ]
+  },
+  "HRQ.BRF.ACC": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 3,
+    "trigger": "the pilot briefs the base: accident (arg: number of injured)",
+    "o": [
+      "Heli rescue base, HEMS. The mission is an accident with {0} injured. Brief the rescuers.",
+      "Heli rescue base, {@HEMS}. Accident on scene, {0} injured reported. Please brief them.",
+      "Heli rescue base, {@HEMS}. It is a road accident, about {0} injured. Tell them to be ready.",
+      "Heli rescue base, {@HEMS}. We go to an accident, {0} injured. Please pass it on.",
+      "Heli rescue base, {@HEMS}. Accident with {0} injured. Rescuers, get ready.",
+      "Heli rescue base, {@HEMS}. Heads up: accident, {0} injured. Brief the team."
+    ]
+  },
+  "HRQ.BRF.SAR": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 3,
+    "trigger": "the pilot briefs the base: search and rescue (arg: number of injured)",
+    "o": [
+      "Heli rescue base, HEMS. The mission is a search and rescue, {0} to recover. Brief the rescuers.",
+      "Heli rescue base, {@HEMS}. Search and rescue, {0} to recover. Please brief them.",
+      "Heli rescue base, {@HEMS}. It is a search and rescue with {0} persons to recover. Tell them to be ready.",
+      "Heli rescue base, {@HEMS}. We go to a search and rescue, {0} to recover. Please pass it on.",
+      "Heli rescue base, {@HEMS}. Search and rescue, {0} persons. Rescuers, get ready.",
+      "Heli rescue base, {@HEMS}. Heads up: search and rescue, {0} to recover. Brief the team."
+    ]
+  },
+  "HRQ.BRF.TRF": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 3,
+    "trigger": "the pilot briefs the base: patient transfer (arg: number of patients)",
+    "o": [
+      "Heli rescue base, HEMS. The mission is a transfer with {0} patients. Brief the rescuers.",
+      "Heli rescue base, {@HEMS}. Patient transfer, {0} patients. Please brief them.",
+      "Heli rescue base, {@HEMS}. It is an inter hospital transfer, {0} patients. Tell them to be ready.",
+      "Heli rescue base, {@HEMS}. We go for a transfer, {0} patients. Please pass it on.",
+      "Heli rescue base, {@HEMS}. Transfer with {0} patients. Rescuers, get ready.",
+      "Heli rescue base, {@HEMS}. Heads up: transfer, {0} patients. Brief the team."
+    ]
+  },
+  "HRQ.BRF.ORG": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 3,
+    "trigger": "the pilot briefs the base: organ transport",
+    "o": [
+      "Heli rescue base, HEMS. The mission is an organ transport. Brief the rescuers.",
+      "Heli rescue base, {@HEMS}. Organ transport, time critical. Please brief them.",
+      "Heli rescue base, {@HEMS}. It is an organ transport, we cannot lose time. Tell them to be ready.",
+      "Heli rescue base, {@HEMS}. We carry an organ, time is short. Please pass it on.",
+      "Heli rescue base, {@HEMS}. Organ transport. Rescuers, get ready.",
+      "Heli rescue base, {@HEMS}. Heads up: organ transport. Brief the team."
+    ]
+  },
+  "HRQ.BRF.INJ": {
+    "actor": 1, "radio": "on", "group": "hrq", "seq": 3,
+    "trigger": "the pilot briefs the base: injured person (arg: number of injured)",
+    "o": [
+      "Heli rescue base, HEMS. The mission has {0} injured. Brief the rescuers.",
+      "Heli rescue base, {@HEMS}. We have {0} injured. Please brief them.",
+      "Heli rescue base, {@HEMS}. About {0} injured on scene. Tell them to be ready.",
+      "Heli rescue base, {@HEMS}. We go to {0} injured. Please pass it on.",
+      "Heli rescue base, {@HEMS}. {0} injured. Rescuers, get ready.",
+      "Heli rescue base, {@HEMS}. Heads up: {0} injured. Brief the team."
+    ]
+  },
+  "HRQ.BASE.OK": {
+    "actor": 12, "radio": "ext", "group": "hrq", "seq": 4,
+    "trigger": "the heli rescue base acknowledges the brief (external radio)",
+    "o": [
+      "{@HEMS}, heli rescue base. Copy, the rescuers are informed.",
+      "{@HEMS}, heli rescue base. Roger, the team is briefed.",
+      "{@HEMS}, heli rescue base. Understood, they know. See you at the meeting point.",
+      "{@HEMS}, heli rescue base. Copy all, they are briefed.",
+      "{@HEMS}, heli rescue base. Message received, the rescuers are ready.",
+      "{@HEMS}, heli rescue base. Copy, we pass it on. Fly safe."
+    ]
+  },
+  "HRQ.COR.PLT": {
+    "actor": 1, "radio": "on", "group": "hrqc", "seq": 1,
+    "trigger": "the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)",
+    "o": [
+      "Heli rescue base, HEMS. Correction: we need {hr:0}.",
+      "Heli rescue base, {@HEMS}. Correction, the request is now {hr:0}.",
+      "Heli rescue base, {@HEMS}. We changed our mind: {hr:0} please.",
+      "Heli rescue base, {@HEMS}. Update on the request, we need {hr:0}.",
+      "Heli rescue base, {@HEMS}. Sorry, correction: {hr:0} for this mission.",
+      "Heli rescue base, {@HEMS}. Change of plans, we will take {hr:0}."
+    ]
+  },
+  "HRQ.COR.A": {
+    "actor": 12, "radio": "ext", "group": "hrqc", "seq": 2,
+    "trigger": "the heli rescue base answers the correction (external radio; arg: 1 or 2)",
+    "o": [
+      "{@HEMS}, heli rescue base. Copy, {hr:0} at the meeting point.",
+      "{@HEMS}, heli rescue base. Roger, {hr:0} then.",
+      "{@HEMS}, heli rescue base. Understood, {hr:0} will be there.",
+      "{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.",
+      "{@HEMS}, heli rescue base. Copy the change, {hr:0}.",
+      "{@HEMS}, heli rescue base. Noted, {hr:0} ready for you."
+    ]
+  },
+  "HRQ.ARR.PLT": {
+    "actor": 1, "radio": "auto", "group": "hrqa", "seq": 1,
+    "trigger": "the helicopter reaches the meeting point of the heli rescuers",
+    "o": [
+      "Heli rescue base, HEMS. We are at the meeting point.",
+      "Heli rescue base, {@HEMS}. Meeting point reached, ready to pick them up.",
+      "Heli rescue base, {@HEMS}. We are arriving at the meeting point.",
+      "Heli rescue base, {@HEMS}. Over the meeting point now.",
+      "Heli rescue base, {@HEMS}. At the meeting point, we see them.",
+      "Heli rescue base, {@HEMS}. We are here, ready for the rescuers."
+    ]
+  },
+  "HRQ.ARR.A": {
+    "actor": 12, "radio": "ext", "group": "hrqa", "seq": 2,
+    "trigger": "the heli rescue base answers the arrival (external radio)",
+    "o": [
+      "{@HEMS}, heli rescue base. Copy, the rescuers are ready to board.",
+      "{@HEMS}, heli rescue base. Roger, they are ready.",
+      "{@HEMS}, heli rescue base. Understood, they are boarding now.",
+      "{@HEMS}, heli rescue base. They are coming to you. Fly safe.",
+      "{@HEMS}, heli rescue base. Copy, the team is coming over.",
+      "{@HEMS}, heli rescue base. Welcome, the team is on its way to the helicopter."
+    ]
+  }
+}

@@ -48,6 +48,10 @@ namespace HPGMissionCompanion
         const uint OutputDefineBase = 100;
         const uint ObjectUser = 0;
         const uint DatatypeFloat64 = 4;
+        const uint DatatypeString32 = 6;
+        const uint CallDefineId = 200;       // ATC ID, ATC AIRLINE, ATC FLIGHT NUMBER of the aircraft: the livery sets them in aircraft.cfg (atc_id, atc_airline, atc_flight_number)
+        const uint CallRequestId = 200;
+        public static Action<string, string, string> OnAtcStrings;
         const uint PeriodOnce = 1;
         const int RecvQuit = 3;
         const int RecvException = 1;
@@ -224,6 +228,18 @@ namespace HPGMissionCompanion
             }
         }
 
+        // the k-th string (STRING32, ANSI, ends at the first zero) of a SIMCONNECT_RECV_SIMOBJECT_DATA of the call sign request
+        static string AtcString(IntPtr data, int k)
+        {
+            try
+            {
+                string s = Marshal.PtrToStringAnsi(IntPtr.Add(data, DataOffset + 32 * k), 32) ?? "";
+                int z = s.IndexOf('\0');
+                return (z >= 0 ? s.Substring(0, z) : s).Trim();
+            }
+            catch (Exception) { return ""; }
+        }
+
         static void Sleep(int ms)
         {
             int left = ms;
@@ -267,6 +283,11 @@ namespace HPGMissionCompanion
                     Ctx.Log("[ERROR] SimConnect: cannot watch the variables of group " + (g + 1));
             }
             if (names.Length > 0) Ctx.Log("[INFO] SimConnect: watching " + names.Length + " variables");
+            bool atcDefined = SimConnect_AddToDataDefinition(h, CallDefineId, "ATC ID", null, DatatypeString32, 0f, uint.MaxValue) == 0
+                && SimConnect_AddToDataDefinition(h, CallDefineId, "ATC AIRLINE", null, DatatypeString32, 0f, uint.MaxValue) == 0
+                && SimConnect_AddToDataDefinition(h, CallDefineId, "ATC FLIGHT NUMBER", null, DatatypeString32, 0f, uint.MaxValue) == 0;
+            if (!atcDefined) Ctx.Log("[WARN] SimConnect: cannot define the string variables ATC ID, ATC AIRLINE and ATC FLIGHT NUMBER: the call sign of the helicopter stays HEMS");
+            DateTime nextAtc = DateTime.UtcNow;
             Ctx.Log("[INFO] SimConnect: connected to the simulator");
             SetStatus("SimConnect: connected, " + Variable + " not read yet");
             DateTime nextPing = DateTime.UtcNow;
@@ -288,6 +309,11 @@ namespace HPGMissionCompanion
                     }
                     outDirty = true;     // the simulator can reset the variables (new flight): write them again at every ping
                     if (!inhibit) { lastAnswer = now; SetStatus("SimConnect: connected (audio inhibit option off)"); }
+                }
+                if (atcDefined && now >= nextAtc)
+                {
+                    nextAtc = now.AddSeconds(30);       // the livery can change between two flights: read again every 30 s (a request is cheap)
+                    SimConnect_RequestDataOnSimObject(h, CallRequestId, CallDefineId, ObjectUser, PeriodOnce, 0, 0, 0, 0);
                 }
                 if (inhibit && (now - lastAnswer).TotalSeconds > 30)
                 {
@@ -325,6 +351,12 @@ namespace HPGMissionCompanion
                     if (id == RecvException)
                     {
                         if (exceptionsLogged++ < 8) Ctx.Log("[WARN] SimConnect exception " + Marshal.ReadInt32(data, 12) + " (send id " + Marshal.ReadInt32(data, 16) + ", index " + Marshal.ReadInt32(data, 20) + ")");
+                    }
+                    else if (id == RecvSimObjectData && Marshal.ReadInt32(data, 12) == (int)CallRequestId)
+                    {
+                        string aid = AtcString(data, 0), air = AtcString(data, 1), num = AtcString(data, 2);
+                        Action<string, string, string> cbAtc = OnAtcStrings;
+                        if (cbAtc != null) { try { cbAtc(aid, air, num); } catch (Exception ex) { Ctx.Log("[ERROR] ATC strings: " + ex.Message); } }
                     }
                     else if (id == RecvSimObjectData && Marshal.ReadInt32(data, 12) >= (int)WatchRequestBase && Marshal.ReadInt32(data, 12) < (int)WatchRequestBase + groups)
                     {
