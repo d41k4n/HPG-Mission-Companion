@@ -33,13 +33,16 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.28.0.0")]
-[assembly: AssemblyFileVersion("0.28.0.0")]
+[assembly: AssemblyVersion("0.29.0.0")]
+[assembly: AssemblyFileVersion("0.29.0.0")]
 
 namespace HPGMissionCompanion
 {
     internal static class Program
     {
+        // a second start of the program tells the first one to show its window (the mutex only lets one run)
+        internal static EventWaitHandle ShowEvent;
+
         [STAThread]
         static int Main(string[] args)
         {
@@ -534,7 +537,12 @@ namespace HPGMissionCompanion
             if (Option(args, "--screenshot") == null)         // a screenshot run may happen while the program is running
             {
                 mutex = new Mutex(true, "Local\\HPGMissionCompanion", out createdNew);
-                if (!createdNew) return 0;
+                try { ShowEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "Local\\HPGMissionCompanion.show"); } catch (Exception) { ShowEvent = null; }
+                if (!createdNew)
+                {
+                    try { if (ShowEvent != null) ShowEvent.Set(); } catch (Exception) { }
+                    return 0;
+                }
             }
 
             Application.EnableVisualStyles();

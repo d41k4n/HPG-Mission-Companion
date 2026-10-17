@@ -1,8 +1,8 @@
 {
-    "sha256":  "3BD49393FA5AC22A25E0A96407EAFAE8346CF7DEA7334B6C2C170F1421EBF7E6",
-    "installerSha256":  "3570825B8D56701EAD9A58334497730DAAAF5ECE28855CD42C8FE3C9F868D531",
+    "sha256":  "3E6F504BF0C2954DD82D8ED7EF67F9976450567B164FB56A69FAA75CAF7EE018",
+    "installerSha256":  "1EE673654B2F66EB53F4E3B7972F02EADA7E885EB379FC005F2D00F7A69FF64C",
     "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.28",
-    "note":  "Release 0.28: the 8 notification sounds of the sound-only messages (tablet tones, alarm, dead) are resources of the program and are copied into the audio folder when missing (never replacing a file), and the log and the Service label say who holds the port when it is busy. Static check PASS; --ensure-sounds run on an empty, a partial and a customized folder (sha256 of the copies equal to the release app-sounds), --port-owner run on IPv4 and IPv6 listeners. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.29",
+    "note":  "Release 0.29: the setup closes every copy of the program (any folder, unreadable ones too), waits for the files, restarts elevated when needed and shows its errors; a second start shows the open window; the exit watchdog; the voice service and the link with the simulator start before the tools; voice pack EN 17 with the crew briefing to the heli rescuer (HRB.*) and PAX3.25 said by the heli rescuer. Static check PASS; the final setup was run against a running old copy in another folder, with a short process to wait for and a locked file. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

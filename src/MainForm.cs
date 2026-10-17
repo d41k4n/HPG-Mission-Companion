@@ -626,13 +626,34 @@ namespace HPGMissionCompanion
             FillCatalogList();
             FillPacks();
             UpdateEngineState();
+            // the service and the simulator link first: the mission does not speak while its voice server is away, so after a restart of the program every
+            // second counts; the index, the update check and the tools come after
+            StartServer(true);
+            SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
+            if (Program.ShowEvent != null)
+            {
+                // the window may not exist yet (started minimized): the message goes through the synchronization context of the interface thread
+                System.Threading.SynchronizationContext ui = System.Threading.SynchronizationContext.Current;
+                Thread listen = new Thread(delegate ()
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            Program.ShowEvent.WaitOne();
+                            if (ui != null) ui.Post(delegate { Ctx.Log("[INFO] The program was started a second time: this window is shown"); ShowWindow(); }, null);
+                        }
+                        catch (Exception) { return; }
+                    }
+                });
+                listen.IsBackground = true;
+                listen.Start();
+            }
             ThreadPool.QueueUserWorkItem(delegate { try { int n = AppSounds.EnsureAll(); if (n > 0) Ctx.Log("[INFO] " + n + " notification sound(s) copied into the audio folder"); } catch (Exception ex) { Ctx.Log("[WARN] notification sounds: " + ex.Message); } });
-            StartServer(true);
-            SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
             // started minimized (by the simulator) while the simulator runs: the pilot says that the program is ready
             if (startHidden && Ctx.Settings.ReadyAnnounce && server != null && Tools.SimulatorRunning())
             {
@@ -2875,6 +2896,10 @@ namespace HPGMissionCompanion
                 if (r == DialogResult.Yes) SaveSettings();
             }
             reallyExit = true;
+            // whatever blocks while closing (a native call of the simulator link, a Piper process), the program is gone after four seconds
+            Thread watchdog = new Thread(delegate () { Thread.Sleep(4000); Environment.Exit(0); });
+            watchdog.IsBackground = true;
+            watchdog.Start();
             tick.Stop();
             SimLink.Stop();
             StopServer();
