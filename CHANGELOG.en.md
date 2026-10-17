@@ -4,6 +4,10 @@
 - Port busy: the log (and the Service label) say which program listens on the port (name, PID, path: Tools.PortOwner reads netstat, no translated word), and at the start of the program no question is asked (before, a window opened at every start while another HPG audio service had the port). The voices of the missions in app mode do not need the port. Command line: --port-owner <report> [--port N].
 - Version 0.28.
 
+### Changes in this fork
+- Audio output level test buttons (Volume tab): Headset and External level test buttons now use the localized sample text and voice for the language selected on the Voices tab (matching the Radio tab test buttons), avoiding unintelligible pronunciation when non-English voices are active.
+- Build script (tools\build.cmd): Voice packs in the output folder (%OUT%\voicepacks) are now always overwritten from repository sources on each build, avoiding stale voice packs when testing local edits.
+
 ## Release 0.27
 
 - The voice of the technician follows the technician (report of a user, 2026-10-17): when no voice is chosen for Technician male (6) or Technician female (7) the fallback took a voice from the list by the number of the actor (`fam[(actor - 1) % n]`), so a female technician could be heard with a male Windows voice and the opposite. Resolver.FallbackVoice now prefers a voice whose list entry says female for the actor 7 and male for the actor 6 (Windows voices and the single-speaker Piper voices that the list marks), then the old rule. A technician message with no options for the two sexes (a translated pack made before the sexes) is spoken by the actor of the technician of the scene (L:HMC_TECH_SEX). The [SAY] log line shows the technician actor ("Technician female (actor 7)"). Scenario tests/technician-voice-lines.txt (--expand --lines).
