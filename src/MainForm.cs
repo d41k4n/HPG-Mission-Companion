@@ -2890,8 +2890,8 @@ namespace HPGMissionCompanion
                 "Full list of the licences: THIRD_PARTY.md in the repository.",
                 14, 250, 700, 92);
             Lbl(page, "Contributors", 14, 346, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
-            Lbl(page, "kekkeruuu (GitHub d41k4n): co-author of the missions; the German voice pack, the Swiss German voices, the separate hiss of radio and external radio calls, " +
-                "the squelch-tail recordings, the audio cache tools. Daikan: co-author of the missions, testing and bug reports.",
+            Lbl(page, "Daikan (GitHub d41k4n): co-author of the missions, testing and bug reports; the German voice pack, the Swiss German voices, the separate hiss of radio and external radio calls, " +
+                "the squelch-tail recordings, the audio cache tools. kekkeruuu: co-author of the missions.",
                 14, 366, 700, 32);
 
             Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 402, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);

@@ -56,7 +56,7 @@ Use is free for everyone: you may run the program (a build from the author, or b
 
 ## Contributors
 
-- **kekkeruuu** (GitHub d41k4n): co-author of the missions; German voice pack and translation tools, Swiss German voices (STT4SG), separate hiss of radio and external radio calls, squelch-tail recordings, audio cache tools, SimConnect.dll search on every drive (changelog 0.30 and earlier).
-- **Daikan**: co-author of the missions, testing and bug reports.
+- **Daikan** (GitHub d41k4n): co-author of the missions, testing and bug reports; German voice pack and translation tools, Swiss German voices (STT4SG), separate hiss of radio and external radio calls, squelch-tail recordings, audio cache tools, SimConnect.dll search on every drive (changelog 0.30 and earlier).
+- **kekkeruuu**: co-author of the missions.
 
 Their contributions are integrated with their history in the repository; the licences of the components they brought in are in `THIRD_PARTY.md`.

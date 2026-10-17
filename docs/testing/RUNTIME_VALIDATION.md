@@ -118,7 +118,7 @@ User request of 2026-10-17. Offline: `HPGMissionCompanion.exe --pool-test report
 3. Check some voices, press Copy random to clipboard, paste into a text editor: header, language, one voice a line. Open Voices... of the ground unit (random too), press Paste random from clipboard: the same voices are checked; the line below the list says how many were pasted and how many are not available. OK, Save settings, restart: the pool of the ground unit is kept.
 4. Paste a text that is not a copy, and a copy made in another language: nothing changes and the line says so.
 
-## Fork of kekkeruuu integrated in 0.30 (PENDING)
+## Fork of Daikan integrated in 0.30 (PENDING)
 
 Static: merged without conflicts, `tools/check.js` PASS, DE 4 has the same 1242 keys as EN 17 (no key missing or extra, the placeholders of every option checked against the base pack), the program builds. Runtime, with the simulator or the test missions:
 
