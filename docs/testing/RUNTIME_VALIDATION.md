@@ -127,3 +127,7 @@ Static: merged without conflicts, `tools/check.js` PASS, DE 4 has the same 1242 
 3. Advanced box: Purge audio cache (counts the files, asks, deletes), `HPGMissionCompanion.exe --purge-cache`, and the cache of messages that no longer exist is pruned at start.
 4. Mission in app mode with the pack DE 4: the briefing of the crew to the heli rescuer (`HRB.*`) is spoken in German, the ambulance message at the departure for the hospital (`AMB.DEP.DSP`) is the new text.
 5. About tab: the Contributors section, the note on the STT4SG voices and the guide below it are all readable.
+
+## Port after an update (0.31, PENDING)
+
+Static: `HPGMissionCompanion.exe --port-leak-test <report>` ALL PASS (a child that outlives the service does not keep the port; the ordinary listener does, which shows the test can fail). Runtime: with the program 0.31 running and the service started, update to a newer version from the Updates tab: the new program starts with the service on, no "Port 5997 is busy" line in the log. Updating from 0.30 or older to 0.31 can still show the busy port once (the old program passes the socket to the setup); the setup ends and the program takes the port in the first 4 seconds, otherwise close and open the program once.

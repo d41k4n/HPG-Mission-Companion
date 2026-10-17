@@ -34,8 +34,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.30.0.0")]
-[assembly: AssemblyFileVersion("0.30.0.0")]
+[assembly: AssemblyVersion("0.31.0.0")]
+[assembly: AssemblyFileVersion("0.31.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -400,6 +400,9 @@ namespace HPGMissionCompanion
             // --pool-test <report>: the random voices window driven on a made-up list (sort, used for, copy and paste through the clipboard)
             string poolTestReport = Option(args, "--pool-test");
             if (poolTestReport != null) return PoolSelfTest.Run(poolTestReport);
+            // --port-leak-test <report>: a program started while the service runs must not keep the port after the service stopped
+            string leakReport = Option(args, "--port-leak-test");
+            if (leakReport != null) return Server.LeakTest(leakReport);
             string poolShot = Option(args, "--pool-shot");
             if (poolShot != null) return PoolSelfTest.Shot(poolShot);
             // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)

@@ -20,14 +20,14 @@ using Microsoft.Win32;
 
 [assembly: AssemblyTitle("HPG Mission Companion Setup")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.30.0.0")]
-[assembly: AssemblyFileVersion("0.30.0.0")]
+[assembly: AssemblyVersion("0.31.0.0")]
+[assembly: AssemblyFileVersion("0.31.0.0")]
 
 namespace HpgSetup
 {
     static class Info
     {
-        public const string Version = "0.30";
+        public const string Version = "0.31";
         public const string Name = "HPG Mission Companion";
         public const string Author = "Andrea Daviero";
         public const string ExeName = "HPGMissionCompanion.exe";
@@ -679,7 +679,8 @@ namespace HpgSetup
                 close.Visible = false;
                 if (opt.Launch)
                 {
-                    try { Process.Start(new ProcessStartInfo(exe) { WorkingDirectory = opt.Dir, UseShellExecute = false }); }
+                    // through the shell: the program inherits no handle of the setup (the setup got the port of the old program from the program that started it)
+                    try { Process.Start(new ProcessStartInfo(exe) { WorkingDirectory = opt.Dir, UseShellExecute = true }); }
                     catch (Exception ex) { AddLog("Could not start the program: " + ex.Message); }
                 }
             }
@@ -753,7 +754,8 @@ namespace HpgSetup
                     }
                     if (o.Launch)
                     {
-                        try { Process.Start(new ProcessStartInfo(Path.Combine(o.Dir, Info.ExeName)) { WorkingDirectory = o.Dir, UseShellExecute = false }); }
+                        // through the shell: the program inherits no handle of the setup (see the install window)
+                        try { Process.Start(new ProcessStartInfo(Path.Combine(o.Dir, Info.ExeName)) { WorkingDirectory = o.Dir, UseShellExecute = true }); }
                         catch (Exception) { }
                     }
                     return 0;

@@ -1,8 +1,8 @@
 {
-    "sha256":  "34F6C00534206F56280505CF08B2E4C8BD28F9B593A97DB293666B63AD0171FA",
-    "installerSha256":  "8407BAF8D938502F9E6C1FBA53297041361082379CFB49EFE6B19AB7887C0FC1",
+    "sha256":  "308F10BA7DF7FF8863B6A6E91598F0F2FA8A6CCC11B0A022A67AABEEA65E2744",
+    "installerSha256":  "F0668C03A74ECCED31877BFC6C53B0E95B1C19DA23C0A091EF9C9F5E27829267",
     "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.30",
-    "note":  "Release 0.30: the random voices window (sex, quality, used for, sorting, copy and paste of a pool); the fork of Daikan integrated (German pack DE 4 complete with the crew briefing, Swiss German online voices STT4SG, three hiss sliders, audio cache purge, recorded squelch tails); online voices never taken by the program by itself; About tab with the contributors (kekkeruuu, Daikan) and the licences. Static check PASS, packs check PASS (DE 4 against EN 17), pool self-test ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.31",
+    "note":  "Release 0.31: port 5997 no longer stays busy after an update (the socket of the service is not inheritable, the setup starts the program through the shell; --port-leak-test ALL PASS). Includes everything of 0.30. Static check PASS, packs check PASS, pool self-test ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
