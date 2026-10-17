@@ -256,6 +256,34 @@ namespace HPGMissionCompanion
             return null;
         }
 
+        // the program that listens on a TCP port ("name (PID n, path)"), or "" when it cannot be found: netstat columns, no state word (it is translated)
+        public static string PortOwner(int port)
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo("netstat", "-ano");
+                psi.UseShellExecute = false; psi.RedirectStandardOutput = true; psi.CreateNoWindow = true;
+                using (Process p = Process.Start(psi))
+                {
+                    string text = p.StandardOutput.ReadToEnd();
+                    p.WaitForExit(5000);
+                    foreach (string line in text.Split('\n'))
+                    {
+                        string[] f = line.Split(new char[] { ' ', '\t', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                        // TCP  local  remote  state  pid: a listening socket has an empty remote address (0.0.0.0:0 or [::]:0)
+                        if (f.Length < 5 || f[0] != "TCP" || !f[1].EndsWith(":" + port, StringComparison.Ordinal) || !f[2].EndsWith(":0", StringComparison.Ordinal)) continue;
+                        int pid;
+                        if (!int.TryParse(f[f.Length - 1], out pid)) continue;
+                        string name = "PID " + pid, path = "";
+                        try { using (Process o = Process.GetProcessById(pid)) { name = o.ProcessName; try { path = o.MainModule.FileName; } catch (Exception) { } } } catch (Exception) { }
+                        return name + " (PID " + pid + (path.Length > 0 ? ", " + path : "") + ")";
+                    }
+                }
+            }
+            catch (Exception) { }
+            return "";
+        }
+
         public static bool SimulatorRunning()
         {
             return Process.GetProcessesByName("FlightSimulator").Length > 0 || Process.GetProcessesByName("FlightSimulator2024").Length > 0;

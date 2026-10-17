@@ -138,3 +138,7 @@ The chatter level: the mission publishes `L:HMC_CHAT_MAX` (its setting CREW CHAT
 The pack is edited from `tools/variants-EN/*.json` with `tools/build-variants.js`; `tools/export-xlsx.js` writes the voice messages spreadsheet from it.
 
 Tips of the crew (pack EN 13, the topic CND since EN 16): 48 messages `TIP.<topic>.1` to `4` (twelve topics, groups `tip<topic>`), spoken by the copilot, the doctor and sometimes the pilot, about functions of the mission; they are not futile (six options, none silent) because the mission decides with its own setting CREW TIPS, not with the chatter. The source texts are in `tools/variants-EN/tips.json` (the file was used to add the messages to the XML; the XML is the source of the pack).
+
+## Notification sounds of the sound-only messages
+
+The sound-only messages of the pack (no <o> text: SYS.DISPATCH*, SYS.NEWMSG, the tablet alarm, the dead tone) play a wav file of the audio folder. The 8 files are part of the program (resources `snd.*` of `assets/app-sounds`, the files of the release `app-sounds`): when one is not in the audio folder the program copies it from its resources before playing it, and at the start it does it for all of them. The audio folder of the user stays his: a file that is there is never replaced. A sound that is not among the 8 (an added one) must be in the audio folder.

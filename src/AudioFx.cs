@@ -584,4 +584,60 @@ namespace HPGMissionCompanion
             return haveFmt && dataPos >= 0 && dataLen > 0;
         }
     }
+
+    // The notification sounds of the sound-only messages of the pack (the tablet tones AND.NEW.DISPATCH*, AND.NEW.MSG, the tablet alarm, AND.dead) are part of
+    // the program (resources snd.*, from the release app-sounds). The program looks for each sound in the audio folder and copies it there from its own
+    // resources when it is missing: a new install, an empty or a new audio folder never leaves the mission without its tones (reports of 2026-10-17 and
+    // before: "sound file AND.NEW.MSG.wav is not in the audio folder"). A file that is already there is never replaced.
+    internal static class AppSounds
+    {
+        static readonly object sync = new object();
+
+        public static List<string> Names()
+        {
+            List<string> list = new List<string>();
+            foreach (string r in typeof(AppSounds).Assembly.GetManifestResourceNames()) if (r.StartsWith("snd.", StringComparison.Ordinal)) list.Add(r.Substring(4));
+            return list;
+        }
+
+        // true when the file is there (or has just been copied from the program)
+        public static bool Provide(string path)
+        {
+            if (File.Exists(path)) return true;
+            string name = Path.GetFileName(path);
+            string res = null;
+            foreach (string r in typeof(AppSounds).Assembly.GetManifestResourceNames())
+                if (r.StartsWith("snd.", StringComparison.Ordinal) && string.Equals(r.Substring(4), name, StringComparison.OrdinalIgnoreCase)) { res = r; break; }
+            if (res == null) return false;
+            lock (sync)
+            {
+                if (File.Exists(path)) return true;
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                    string part = path + ".part";
+                    using (Stream s = typeof(AppSounds).Assembly.GetManifestResourceStream(res))
+                    using (FileStream f = File.Create(part)) s.CopyTo(f);
+                    File.Move(part, path);
+                    Ctx.Log("[INFO] sound file " + name + " was missing: copied from the program into " + Path.GetDirectoryName(path));
+                    return true;
+                }
+                catch (Exception ex) { Ctx.Log("[WARN] sound file " + name + " cannot be copied into " + Path.GetDirectoryName(path) + ": " + ex.Message); return false; }
+            }
+        }
+
+        // all of them, at the start and when the audio folder changes; returns how many were copied
+        public static int EnsureAll()
+        {
+            int copied = 0;
+            if (string.IsNullOrEmpty(Ctx.AudioDir)) return 0;
+            foreach (string n in Names())
+            {
+                string p = Path.Combine(Ctx.AudioDir, n);
+                bool had = File.Exists(p);
+                if (Provide(p) && !had) copied++;
+            }
+            return copied;
+        }
+    }
 }

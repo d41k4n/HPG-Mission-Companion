@@ -196,7 +196,7 @@ namespace HPGMissionCompanion
                 {
                     string name = file.Replace("\\", "").Replace("..", "");
                     string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name));
-                    if (!File.Exists(path)) { Ctx.Log("[ERROR] File does not exist: " + name); return; }
+                    if (!AppSounds.Provide(path)) { Ctx.Log("[ERROR] File does not exist: " + name); return; }
                     Ctx.Log("[PLAY] " + name);
                     Ctx.Player.EnqueueFile(path, interrupt);
                 }

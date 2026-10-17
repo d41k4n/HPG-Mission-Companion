@@ -630,6 +630,7 @@ namespace HPGMissionCompanion
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
+            ThreadPool.QueueUserWorkItem(delegate { try { int n = AppSounds.EnsureAll(); if (n > 0) Ctx.Log("[INFO] " + n + " notification sound(s) copied into the audio folder"); } catch (Exception ex) { Ctx.Log("[WARN] notification sounds: " + ex.Message); } });
             StartServer(true);
             SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
             // started minimized (by the simulator) while the simulator runs: the pilot says that the program is ready
@@ -1029,6 +1030,8 @@ namespace HPGMissionCompanion
             }
             catch (SocketException)
             {
+                portBusyNote = Tools.PortOwner(port);
+                AppendLog("[WARN] Port " + port + " is busy" + (portBusyNote.Length > 0 ? ": used by " + portBusyNote : "") + ". The voices of the missions in app mode (SimConnect) do not need the port; only the old text service does.");
                 if (QuietPort) { AppendLog("[WARN] Port " + port + " is busy (picture run: no question asked)"); SetServiceState(false); return; }
                 // right after an update the previous program may still be closing: wait a few seconds before asking
                 bool freed = false;
@@ -1037,19 +1040,21 @@ namespace HPGMissionCompanion
                     Thread.Sleep(500);
                     try { s.Start(port, Ctx.Settings.ListenAll); freed = true; } catch (SocketException) { }
                 }
-                if (freed) { server = s; SetServiceState(true); return; }
+                if (freed) { server = s; portBusyNote = ""; SetServiceState(true); return; }
+                if (automatic) { SetServiceState(false); return; }       // at the start of the program no question: the log and the label say who holds the port
                 List<Process> old = new List<Process>();
                 foreach (string n in new string[] { "HPGMissionAudioService", "HPGMissionAudioOneCore", "HPGMissionAudioLauncher", "HPGVoiceHub" })
                     old.AddRange(Process.GetProcessesByName(n));
                 DialogResult answer = old.Count > 0
-                    ? MessageBox.Show("Port " + port + " is busy: another HPG audio service is running.\nStop it and start this one?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                    : MessageBox.Show("Port " + port + " is busy: another program uses it.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    ? MessageBox.Show("Port " + port + " is busy: another HPG audio service is running" + (portBusyNote.Length > 0 ? " (" + portBusyNote + ")" : "") + ".\nStop it and start this one?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    : MessageBox.Show("Port " + port + " is busy: " + (portBusyNote.Length > 0 ? portBusyNote : "another program") + " uses it.\nClose that program to start this service. The voices of the missions in app mode do not need the port.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 if (answer != DialogResult.Yes) { SetServiceState(false); return; }
                 foreach (Process p in old) { try { p.Kill(); p.WaitForExit(3000); } catch (Exception) { } }
                 try { s.Start(port, Ctx.Settings.ListenAll); }
                 catch (Exception ex) { AppendLog("[ERROR] " + ex.Message); SetServiceState(false); return; }
             }
             server = s;
+            portBusyNote = "";
             SetServiceState(true);
         }
 
@@ -1061,10 +1066,12 @@ namespace HPGMissionCompanion
             SetServiceState(false);
         }
 
+        string portBusyNote = "";        // who holds the port when the service cannot start
+
         void SetServiceState(bool running)
         {
             startStop.Text = running ? "Stop service" : "Start service";
-            serviceLabel.Text = running ? "Service: running on port " + Ctx.Settings.Port : "Service: stopped";
+            serviceLabel.Text = running ? "Service: running on port " + Ctx.Settings.Port : "Service: stopped" + (portBusyNote.Length > 0 ? " (port " + Ctx.Settings.Port + " used by " + portBusyNote.Split(new char[] { '(' })[0].Trim() + ")" : "");
             tray.Text = running ? AppInfo.Name + " - running" : AppInfo.Name + " - stopped";
         }
 

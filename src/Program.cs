@@ -33,8 +33,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.27.0.0")]
-[assembly: AssemblyFileVersion("0.27.0.0")]
+[assembly: AssemblyVersion("0.28.0.0")]
+[assembly: AssemblyFileVersion("0.28.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -357,6 +357,33 @@ namespace HPGMissionCompanion
                 return 0;
             }
 
+            // --ensure-sounds <report> [--audio <folder>]: copies the notification sounds of the program that are missing into the audio folder and lists them
+            string ensureSounds = Option(args, "--ensure-sounds");
+            if (ensureSounds != null)
+            {
+                StringBuilder ens = new StringBuilder();
+                Ctx.Log = delegate (string s) { ens.AppendLine("log: " + s); };
+                ens.AppendLine("audio folder: " + Ctx.AudioDir);
+                int copiedNow = AppSounds.EnsureAll();
+                foreach (string n in AppSounds.Names())
+                {
+                    string p = Path.Combine(Ctx.AudioDir, n);
+                    ens.AppendLine(n + (File.Exists(p) ? " " + new FileInfo(p).Length + " bytes" : " MISSING"));
+                }
+                ens.AppendLine("copied: " + copiedNow);
+                File.WriteAllText(ensureSounds, ens.ToString());
+                return 0;
+            }
+            // --port-owner <report> [--port N]: who listens on the port (default 5997)
+            string portOwnerReport = Option(args, "--port-owner");
+            if (portOwnerReport != null)
+            {
+                int portNo;
+                if (!int.TryParse(Option(args, "--port") ?? "5997", out portNo)) portNo = 5997;
+                string portUser = Tools.PortOwner(portNo);
+                File.WriteAllText(portOwnerReport, "port " + portNo + ": " + (portUser.Length > 0 ? portUser : "nobody") + "\r\n");
+                return 0;
+            }
             // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)
             string expandReport = Option(args, "--expand");
             if (expandReport != null)

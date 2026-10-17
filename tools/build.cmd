@@ -8,6 +8,8 @@ if "%OUT%"=="" set OUT=%~dp0..\bin
 if not exist "%OUT%" mkdir "%OUT%"
 pushd "%~dp0.."
 set RES=/resource:docs\DEVELOPER_GUIDE.md,DEVELOPER_GUIDE.md /resource:profiles\Recommended.json,profile.Recommended.json
+rem the notification sounds of the pack (tablet tones, alarm, dead) are embedded too (AppSounds): the program copies them into the audio folder when they are missing
+for %%F in (assets\app-sounds\*.wav) do set RES=!RES! /resource:"%%F",snd.%%~nxF
 rem the recordings of the squelch tail are embedded in the program (AudioFx)
 for %%F in (assets\squelch-tail\*.wav) do set RES=!RES! /resource:"%%F",%%~nxF
 "%FW%\csc.exe" /nologo /target:winexe /win32icon:assets\app.ico !RES! /out:"%OUT%\HPGMissionCompanion.exe" /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:Microsoft.CSharp.dll /reference:System.Core.dll /reference:System.Xml.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll src\Core.cs src\AudioFx.cs src\Tools.cs src\Engines.cs src\Server.cs src\Install.cs src\Mixer.cs src\Names.cs src\VoicePacks.cs src\SimLink.cs src\Updates.cs src\Profiles.cs src\NotesForm.cs src\MainForm.cs src\Program.cs

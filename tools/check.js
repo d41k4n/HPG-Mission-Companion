@@ -139,7 +139,7 @@ for (const f of [...present.map((n) => path.join('src', n)), 'setup/Setup.cs']) 
 try {
   const tracked = cp.execFileSync('git', ['-C', root, 'ls-files'], { encoding: 'utf8' }).split(/\r?\n/).filter(Boolean);
   const bad = tracked.filter((f) => {
-    if (/^assets\/squelch-tail\/[^/]+\.wav$/i.test(f)) return false;      // the recordings of the squelch tail are part of the program
+    if (/^assets\/(squelch-tail|app-sounds)\/[^/]+\.wav$/i.test(f)) return false;      // the recordings of the squelch tail are part of the program
     return /\.(exe|dll|wav|onnx|zip|pdb)$/i.test(f) || /^(piper|voices|backups|audio|bin|old|voicepacks\/obsolete)\//i.test(f) || /^HPGMissionCompanion\.json$/i.test(f);
   });
   for (const f of bad) errors.push(`${f} must not be tracked (binary or user data)`);
