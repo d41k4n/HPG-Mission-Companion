@@ -1262,54 +1262,24 @@ namespace HPGMissionCompanion
 
         const string RandomItem = "Random voice (see Voices...)";
 
-        // the voices a random actor may take: a list with a check mark for each voice of the language; nothing checked or everything checked = every voice
+        // the voices a random actor may take: a list with a check mark for each voice of the language, its sex and quality, where it is used by other actors,
+        // sortable, with copy and paste of the choices (PoolForm); nothing checked or everything checked = every voice
         void EditPool(int i)
         {
             LangInfo li = CurrentLang();
             if (li == null) return;
             List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
             ActorSetting a = Ctx.Settings.Get(li.Code, i + 1);
-            using (Form f = new Form())
+            string who = Actors.Names[i];
+            using (PoolForm f = new PoolForm("Voices for " + who + " (" + li.Name + ")", li.Code, fam, a.Pool, VoicePool.UsedMap(li.Code, fam), delegate (VoiceInfo v)
             {
-                f.Text = "Voices for " + Actors.Names[i] + " (" + li.Name + ")";
-                f.StartPosition = FormStartPosition.CenterParent;
-                f.FormBorderStyle = FormBorderStyle.FixedDialog;
-                f.MaximizeBox = false; f.MinimizeBox = false;
-                f.ClientSize = new Size(480, 420);
-                Label hint = new Label();
-                hint.Text = "The voice is drawn among the checked voices at every new shift (dispatcher) or dispatch (ground unit, heli rescuer). The actors that are drawn never get the same voice. Select a voice and press Test to hear it.";
-                hint.Location = new Point(10, 8); hint.Size = new Size(460, 40);
-                f.Controls.Add(hint);
-                CheckedListBox list = new CheckedListBox();
-                list.CheckOnClick = true;
-                list.Location = new Point(10, 52); list.Size = new Size(460, 310);
-                foreach (VoiceInfo v in fam) list.Items.Add(v, a.Pool == null || a.Pool.Count == 0 || a.Pool.Contains(v.Id));
-                f.Controls.Add(list);
-                Button all = new Button(); all.Text = "All"; all.Location = new Point(10, 372); all.Size = new Size(70, 30);
-                all.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, true); };
-                f.Controls.Add(all);
-                Button none = new Button(); none.Text = "None"; none.Location = new Point(86, 372); none.Size = new Size(70, 30);
-                none.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, false); };
-                f.Controls.Add(none);
                 // Test: the voice selected in the list (or the first checked one) says a sample sentence, so that the voices of the pool can be heard
-                Button test = new Button(); test.Text = "Test"; test.Location = new Point(162, 372); test.Size = new Size(70, 30);
-                test.Click += delegate
-                {
-                    VoiceInfo v = list.SelectedItem as VoiceInfo;
-                    if (v == null) for (int k = 0; k < list.Items.Count && v == null; k++) if (list.GetItemChecked(k)) v = (VoiceInfo)list.Items[k];
-                    if (v == null || v.Keys == null || v.Keys.Length == 0) return;
-                    string who = Actors.Names[i];
-                    Ctx.Player.EnqueueTest("<" + v.Keys[0] + "><" + li.Code + ">" + string.Format(li.Sample, who));
-                };
-                f.Controls.Add(test);
-                Button ok = new Button(); ok.Text = "OK"; ok.DialogResult = DialogResult.OK; ok.Location = new Point(310, 372); ok.Size = new Size(76, 30);
-                f.Controls.Add(ok);
-                Button cancel = new Button(); cancel.Text = "Cancel"; cancel.DialogResult = DialogResult.Cancel; cancel.Location = new Point(394, 372); cancel.Size = new Size(76, 30);
-                f.Controls.Add(cancel);
-                f.AcceptButton = ok; f.CancelButton = cancel;
+                if (v == null || v.Keys == null || v.Keys.Length == 0) return;
+                Ctx.Player.EnqueueTest("<" + v.Keys[0] + "><" + li.Code + ">" + string.Format(li.Sample, who));
+            }))
+            {
                 if (f.ShowDialog(this) != DialogResult.OK) return;
-                List<string> ids = new List<string>();
-                for (int k = 0; k < list.Items.Count; k++) if (list.GetItemChecked(k)) ids.Add(((VoiceInfo)list.Items[k]).Id);
+                List<string> ids = f.CheckedIds();
                 a.Pool = (ids.Count == 0 || ids.Count == fam.Count) ? null : ids;
                 VoiceDraw.Reset();
                 MarkDirty();

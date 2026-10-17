@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.29
+Version 0.30
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 

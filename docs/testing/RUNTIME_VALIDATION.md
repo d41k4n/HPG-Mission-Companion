@@ -108,3 +108,12 @@ Reports of the testers (update during the use: the old copy stays, port busy). O
 1. Start the program from the autostart of the simulator, press Check for updates (or run the setup by hand) while it runs: after the update only the new copy runs (Task Manager: one HPGMissionCompanion), the service is running on 5997 and the log has no port warning.
 2. Run the simulator as administrator (so that the autostart starts the program with those rights) and run the setup by hand: the Windows question appears once, the old copy is closed, the new one is installed.
 3. After a restart of the program in the middle of a flight: the voices of the crew come back within the first minute (they only return when the mission has found its voice server again: the mission skips every crew line while its voice server is away). Note in the log how long it takes from the service start to the first spoken line.
+
+## The random voices window: sex, quality, used for, sort, copy and paste (0.30, PENDING)
+
+User request of 2026-10-17. Offline: `HPGMissionCompanion.exe --pool-test report.txt` (ALL PASS) and `--pool-shot picture.png` run on a scratch build. With the program running and real voices:
+
+1. Actors and voices tab, set the dispatcher to "Random voice (see Voices...)" and open Voices...: every voice of the language has its sex (Windows voices: from Windows; Piper: known names, else unknown), its quality and, in the column Used, the actors that have it as their fixed voice (change the voice of the Pilot in the tab and open the window again: the Used column follows).
+2. Click each column title: the list is sorted by name, sex, quality, used first; click again: reversed; the checks stay.
+3. Check some voices, press Copy random to clipboard, paste into a text editor: header, language, one voice a line. Open Voices... of the ground unit (random too), press Paste random from clipboard: the same voices are checked; the line below the list says how many were pasted and how many are not available. OK, Save settings, restart: the pool of the ground unit is kept.
+4. Paste a text that is not a copy, and a copy made in another language: nothing changes and the line says so.

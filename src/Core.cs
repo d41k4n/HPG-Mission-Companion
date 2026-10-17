@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.29";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.30";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -382,6 +382,9 @@ namespace HPGMissionCompanion
         public string Family;       // "en", "fr", "it", "de", ...
         public string[] Keys;       // names a mission tag can use
         public int Rank;            // quality, higher is better
+        public string Sex = "";     // "male", "female" or "" when it is not known (the random voices window shows it)
+        public string QualityText = ""; // "x_low", "low", "medium", "high" (Piper) or "Windows"
+        public string Short = "";   // the name in the lists of the random voices window: name (engine, language)
         public string WinId;
         public string ModelPath;
         public string ConfigPath;
@@ -430,6 +433,10 @@ namespace HPGMissionCompanion
                     e.Display = name + " - " + gender.ToLowerInvariant() + " (Windows, " + lang + ")";
                     e.Keys = new string[] { name, id.Substring(id.LastIndexOf('\\') + 1) };
                     e.Rank = 5;
+                    string sexWord = gender.ToLowerInvariant();
+                    e.Sex = sexWord == "male" || sexWord == "female" ? sexWord : "";
+                    e.QualityText = "Windows";
+                    e.Short = name + " (Windows, " + lang + ")";
                     list.Add(e);
                 }
             }
@@ -489,6 +496,8 @@ namespace HPGMissionCompanion
                             VoiceInfo e = NewPiper(key, model, config, length, family, rank);
                             e.Id = "piper:" + key + ":" + kv.Key;
                             e.Speaker = Convert.ToInt32(kv.Value, CultureInfo.InvariantCulture);
+                            e.QualityText = quality;
+                            e.Short = name + " " + kv.Key + " (Piper, " + langCode + ")";
                             e.Display = name + " " + kv.Key + " - " + quality + " (Piper, " + langCode + ")";
                             e.Keys = new string[] { key + ":" + kv.Key, name + ":" + kv.Key, name + " " + kv.Key };
                             list.Add(e);
@@ -498,6 +507,9 @@ namespace HPGMissionCompanion
                     {
                         VoiceInfo e = NewPiper(key, model, config, length, family, rank);
                         e.Id = "piper:" + key;
+                        e.Sex = hint;
+                        e.QualityText = quality;
+                        e.Short = name + " (Piper, " + langCode + ")";
                         e.Display = name + " - " + quality + (hint.Length > 0 ? " - " + hint : "") + " (Piper, " + langCode + ")";
                         e.Keys = new string[] { key, name + "-" + quality, name };
                         list.Add(e);
