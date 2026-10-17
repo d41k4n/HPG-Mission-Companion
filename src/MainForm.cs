@@ -205,6 +205,10 @@ namespace HPGMissionCompanion
         // radio tab
         readonly TrackBar noiseBar = new TrackBar();
         readonly Label noiseLabel = new Label();
+        readonly TrackBar radioNoiseBar = new TrackBar();
+        readonly Label radioNoiseLabel = new Label();
+        readonly TrackBar extRadioNoiseBar = new TrackBar();
+        readonly Label extRadioNoiseLabel = new Label();
         readonly ComboBox beepBox = new ComboBox();
         readonly TrackBar beepBar = new TrackBar();
         readonly Label beepLabel = new Label();
@@ -598,6 +602,7 @@ namespace HPGMissionCompanion
         {
             VoiceLibrary.Refresh();
             VoicePacks.Refresh();
+            Synth.PruneOrphanedCache();
             LoadCatalogFromCache();
             sims = SimAutostart.Detect(simRoot);
             suppress = true;
@@ -834,6 +839,49 @@ namespace HPGMissionCompanion
             readyCheck.CheckedChanged += delegate { Ctx.Settings.ReadyAnnounce = readyCheck.Checked; if (!suppress) MarkDirty(); };
             new ToolTip().SetToolTip(readyCheck, "When the program starts minimized and the simulator is running, the pilot says that the program is ready.");
             advBox.Controls.Add(readyCheck);
+            Button purgeCache = Btn(advBox, "Purge audio cache", 444, 46, 126, 24);
+            new ToolTip().SetToolTip(purgeCache, "Deletes cached generated speech and dialect translations in audio\\cache.");
+            purgeCache.Click += delegate
+            {
+                string cacheDir = Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache");
+                int fileCount = 0;
+                long totalBytes = 0;
+                if (Directory.Exists(cacheDir))
+                {
+                    try
+                    {
+                        foreach (string f in Directory.GetFiles(cacheDir, "*", SearchOption.AllDirectories))
+                        {
+                            try
+                            {
+                                FileInfo fi = new FileInfo(f);
+                                totalBytes += fi.Length;
+                                fileCount++;
+                            }
+                            catch (Exception) { }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+                if (fileCount == 0)
+                {
+                    MessageBox.Show("The audio cache is currently empty.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                string sizeStr = totalBytes >= 1048576 ? (totalBytes / 1048576.0).ToString("0.1", CultureInfo.InvariantCulture) + " MB" : ((totalBytes + 1023) / 1024) + " KB";
+                DialogResult res = MessageBox.Show(
+                    "Purge audio cache (" + fileCount + " file" + (fileCount == 1 ? "" : "s") + ", " + sizeStr + ")?\n\nThis deletes all synthesized audio and dialect translations in audio\\cache.",
+                    Text,
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (res != DialogResult.Yes) return;
+                long freed;
+                int deleted = Synth.PurgeCache(out freed);
+                string freedStr = freed >= 1048576 ? (freed / 1048576.0).ToString("0.1", CultureInfo.InvariantCulture) + " MB" : ((freed + 1023) / 1024) + " KB";
+                AppendLog("[CACHE] Purged audio cache: " + deleted + " files (" + freedStr + ") deleted");
+                MessageBox.Show("Audio cache purged (" + deleted + " file" + (deleted == 1 ? "" : "s") + ", " + freedStr + " freed).", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+
             Button openLogs = Btn(advBox, "Open log folder", 578, 46, 120, 24);
             openLogs.Click += delegate
             {
@@ -1218,6 +1266,7 @@ namespace HPGMissionCompanion
             LangInfo li = CurrentLang();
             if (li == null) return;
             List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
+            List<VoiceInfo> auto = VoiceLibrary.AutoOfFamily(Ctx.Voices, li.Family);
             suppress = true;
             for (int i = 0; i < Actors.Count; i++)
             {
@@ -1226,7 +1275,7 @@ namespace HPGMissionCompanion
                 if (Actors.CanDraw(i + 1)) voiceBox[i].Items.Add(RandomItem);
                 foreach (VoiceInfo v in fam) voiceBox[i].Items.Add(v);
                 VoiceInfo sel = VoiceLibrary.ById(fam, a.Voice);
-                if (sel == null && fam.Count > 0) sel = fam[i % fam.Count];
+                if (sel == null && auto.Count > 0) sel = auto[i % auto.Count];     // the voice the program takes for it (never an online voice)
                 if (a.Random && Actors.CanDraw(i + 1)) voiceBox[i].SelectedItem = RandomItem; else voiceBox[i].SelectedItem = sel;
                 if (poolButton[i] != null) poolButton[i].Visible = a.Random && Actors.CanDraw(i + 1);
                 voiceBox[i].Enabled = fam.Count > 0;
@@ -1903,27 +1952,52 @@ namespace HPGMissionCompanion
         void BuildRadioTab()
         {
             TabPage page = new TabPage("Radio effect");
+            page.AutoScroll = true;
             tabs.TabPages.Add(page);
             RadioSettings rs = Ctx.Settings.Radio;
-            Lbl(page, "Three sounds. The intercom (ICS) of the helicopter: a click and the hiss set here. A radio call (<radio>): the beep set here, the hiss + 10, a band filter like a radio speaker " +
-                "and a short squelch burst at the end. A call on an external radio (<radio:ext>, the dispatcher and the hospital): a double beep and the hiss + 20. Without a tag the voice is clean. " +
-                "These values are the same for every voice.", 10, 12, 706, 62);
+            Lbl(page, "Three sounds. The intercom (ICS) of the helicopter: a click and the hiss set here. A radio call (<radio>): the beep and the radio hiss set here, a band filter like a radio speaker " +
+                "and a short squelch burst at the end. A call on an external radio (<radio:ext>, the dispatcher and the hospital): a double beep and the external radio hiss set here. Without a tag the voice is clean. " +
+                "These values are the same for every voice.", 10, 10, 696, 52);
 
-            Lbl(page, "Hiss (intercom):", 10, 82, 0, 0);
+            Lbl(page, "Hiss (intercom):", 10, 80, 0, 0);
             noiseBar.Minimum = 0; noiseBar.Maximum = 100; noiseBar.TickFrequency = 10; noiseBar.LargeChange = 10;
             noiseBar.Value = rs.NoiseLevel;
-            noiseBar.Location = new Point(190, 74);
+            noiseBar.Location = new Point(190, 68);
             noiseBar.Size = new Size(300, 36);
             noiseBar.ValueChanged += delegate { noiseLabel.Text = noiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.NoiseLevel = noiseBar.Value; MarkDirty(); } };
             page.Controls.Add(noiseBar);
             noiseLabel.Text = rs.NoiseLevel + "%";
             noiseLabel.AutoSize = true;
-            noiseLabel.Location = new Point(496, 82);
+            noiseLabel.Location = new Point(496, 80);
             page.Controls.Add(noiseLabel);
 
-            Lbl(page, "Start beep (radio):", 10, 130, 0, 0);
+            Lbl(page, "Hiss (radio):", 10, 132, 0, 0);
+            radioNoiseBar.Minimum = 0; radioNoiseBar.Maximum = 100; radioNoiseBar.TickFrequency = 10; radioNoiseBar.LargeChange = 10;
+            radioNoiseBar.Value = rs.RadioNoiseLevel;
+            radioNoiseBar.Location = new Point(190, 120);
+            radioNoiseBar.Size = new Size(300, 36);
+            radioNoiseBar.ValueChanged += delegate { radioNoiseLabel.Text = radioNoiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.RadioNoiseLevel = radioNoiseBar.Value; MarkDirty(); } };
+            page.Controls.Add(radioNoiseBar);
+            radioNoiseLabel.Text = rs.RadioNoiseLevel + "%";
+            radioNoiseLabel.AutoSize = true;
+            radioNoiseLabel.Location = new Point(496, 132);
+            page.Controls.Add(radioNoiseLabel);
+
+            Lbl(page, "Hiss (external radio):", 10, 184, 0, 0);
+            extRadioNoiseBar.Minimum = 0; extRadioNoiseBar.Maximum = 100; extRadioNoiseBar.TickFrequency = 10; extRadioNoiseBar.LargeChange = 10;
+            extRadioNoiseBar.Value = rs.ExtRadioNoiseLevel;
+            extRadioNoiseBar.Location = new Point(190, 172);
+            extRadioNoiseBar.Size = new Size(300, 36);
+            extRadioNoiseBar.ValueChanged += delegate { extRadioNoiseLabel.Text = extRadioNoiseBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.ExtRadioNoiseLevel = extRadioNoiseBar.Value; MarkDirty(); } };
+            page.Controls.Add(extRadioNoiseBar);
+            extRadioNoiseLabel.Text = rs.ExtRadioNoiseLevel + "%";
+            extRadioNoiseLabel.AutoSize = true;
+            extRadioNoiseLabel.Location = new Point(496, 184);
+            page.Controls.Add(extRadioNoiseLabel);
+
+            Lbl(page, "Start beep (radio):", 10, 228, 0, 0);
             beepBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            beepBox.Location = new Point(190, 126);
+            beepBox.Location = new Point(190, 224);
             beepBox.Width = 160;
             foreach (string b in AudioFx.BeepTypes) beepBox.Items.Add(b);
             beepBox.SelectedItem = rs.Beep;
@@ -1931,54 +2005,54 @@ namespace HPGMissionCompanion
             beepBox.SelectedIndexChanged += delegate { if (!suppress && beepBox.SelectedItem != null) { Ctx.Settings.Radio.Beep = (string)beepBox.SelectedItem; MarkDirty(); } };
             page.Controls.Add(beepBox);
 
-            Lbl(page, "Beep volume:", 10, 174, 0, 0);
+            Lbl(page, "Beep volume:", 10, 266, 0, 0);
             beepBar.Minimum = 0; beepBar.Maximum = 100; beepBar.TickFrequency = 10; beepBar.LargeChange = 10;
             beepBar.Value = rs.BeepLevel;
-            beepBar.Location = new Point(190, 166);
+            beepBar.Location = new Point(190, 254);
             beepBar.Size = new Size(300, 36);
             beepBar.ValueChanged += delegate { beepLabel.Text = beepBar.Value + "%"; if (!suppress) { Ctx.Settings.Radio.BeepLevel = beepBar.Value; MarkDirty(); } };
             page.Controls.Add(beepBar);
             beepLabel.Text = rs.BeepLevel + "%";
             beepLabel.AutoSize = true;
-            beepLabel.Location = new Point(496, 174);
+            beepLabel.Location = new Point(496, 266);
             page.Controls.Add(beepLabel);
 
             tailCheck.Text = "Squelch burst when the transmission ends";
             tailCheck.AutoSize = true;
             tailCheck.Checked = rs.Tail;
-            tailCheck.Location = new Point(10, 218);
+            tailCheck.Location = new Point(10, 306);
             tailCheck.CheckedChanged += delegate { if (!suppress) { Ctx.Settings.Radio.Tail = tailCheck.Checked; MarkDirty(); } };
             page.Controls.Add(tailCheck);
 
-            Lbl(page, "Radio sound:", 10, 254, 0, 0);
+            Lbl(page, "Radio sound:", 10, 336, 0, 0);
             qualityBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            qualityBox.Location = new Point(190, 250);
+            qualityBox.Location = new Point(190, 332);
             qualityBox.Width = 160;
             foreach (string q in AudioFx.Qualities) qualityBox.Items.Add(q);
             qualityBox.SelectedItem = rs.Quality;
             if (qualityBox.SelectedIndex < 0) qualityBox.SelectedItem = "Aviation";
             qualityBox.SelectedIndexChanged += delegate { if (!suppress && qualityBox.SelectedItem != null) { Ctx.Settings.Radio.Quality = (string)qualityBox.SelectedItem; MarkDirty(); } };
             page.Controls.Add(qualityBox);
-            Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 282, 0, 0).ForeColor = SystemColors.GrayText;
+            Lbl(page, "Clean: wide band.  Aviation: narrow band, compressed.  Rough: narrower, distorted.", 190, 360, 0, 0).ForeColor = SystemColors.GrayText;
 
-            Button withRadio = Btn(page, "Radio call", 10, 316, 130, 32);
+            Button withRadio = Btn(page, "Radio call", 10, 384, 130, 30);
             withRadio.Click += delegate { TestRadio("<radio>"); };
-            Button ics = Btn(page, "Intercom (ICS)", 150, 316, 130, 32);
+            Button ics = Btn(page, "Intercom (ICS)", 150, 384, 130, 30);
             ics.Click += delegate { TestRadio("<ics>"); };
-            Button ext = Btn(page, "External radio", 290, 316, 130, 32);
+            Button ext = Btn(page, "External radio", 290, 384, 130, 30);
             ext.Click += delegate { TestRadio("<radio:ext>"); };
-            Button without = Btn(page, "Clean voice", 430, 316, 130, 32);
+            Button without = Btn(page, "Clean voice", 430, 384, 130, 30);
             without.Click += delegate { TestRadio("<radio:off>"); };
 
-            Lbl(page, "In the mission text:", 10, 364, 0, 0);
-            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 384, 0, 0);
-            Lbl(page, "<ics>Pilot to crew, intercom.", 30, 402, 0, 0);
-            Lbl(page, "<radio:ext>Dispatcher call, external radio.", 30, 420, 0, 0);
-            Lbl(page, "<radio:off>Back to the clean voice.     <zone:far>  a voice heard very low (30 to 100 m away).", 30, 438, 0, 0);
-            Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 456, 0, 0);
-            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 474, 0, 0);
+            Lbl(page, "In the mission text:", 10, 422, 0, 0);
+            Lbl(page, "<radio>Pilot to dispatch, ready.", 30, 442, 0, 0);
+            Lbl(page, "<ics>Pilot to crew, intercom.", 30, 459, 0, 0);
+            Lbl(page, "<radio:ext>Dispatcher call, external radio.", 30, 476, 0, 0);
+            Lbl(page, "<radio:off>Back to the clean voice.     <zone:far>  a voice heard very low (30 to 100 m away).", 30, 493, 0, 0);
+            Lbl(page, "<radio><beep:double>Radio call with another beep (none, click, beep, double, chirp).", 30, 510, 0, 0);
+            Lbl(page, "<vol:60><radio>Quieter radio call.", 30, 527, 0, 0);
             Lbl(page, "The beep, the hiss and the filter follow the volume of the text (<vol:..>) and the master volume of the Volume tab. " +
-                "Who hears what (intercom, radio, voice, silence) is decided by the program from the context of the mission, see the guide of the About tab.", 10, 500, 706, 40).ForeColor = SystemColors.GrayText;
+                "Who hears what (intercom, radio, voice, silence) is decided by the program from the context of the mission, see the guide of the About tab.", 10, 548, 696, 40).ForeColor = SystemColors.GrayText;
         }
 
         // ---- volume tab --------------------------------------------------------------------------
@@ -2066,11 +2140,11 @@ namespace HPGMissionCompanion
 
             Lbl(audioOutBox, "Headset: intercom, radio calls, external radio calls and the notifications (also with the helicopter off)", 10, 22, 644, 18);
             ComboBox headsetCombo = AudioDeviceCombo(10, 44, devices, ao.HeadsetDevice, delegate (string n) { Ctx.Settings.AudioOut.HeadsetDevice = n; });
-            AudioLevel(44, 406, 446, 170, ao.HeadsetLevel, delegate (int v) { Ctx.Settings.AudioOut.HeadsetLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><ics>Headset test. Intercom and radio calls are heard here."); });
+            AudioLevel(44, 406, 446, 170, ao.HeadsetLevel, delegate (int v) { Ctx.Settings.AudioOut.HeadsetLevel = v; }, 336, delegate { TestRadio("<ics>"); });
 
             Lbl(audioOutBox, "External: voices in the air (technicians, ground unit, patient, the crew outside the helicopter)", 10, 92, 644, 18);
             ComboBox externalCombo = AudioDeviceCombo(10, 114, devices, ao.ExternalDevice, delegate (string n) { Ctx.Settings.AudioOut.ExternalDevice = n; });
-            AudioLevel(114, 406, 446, 170, ao.ExternalLevel, delegate (int v) { Ctx.Settings.AudioOut.ExternalLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><radio:off>External test. A voice in the air is heard here."); });
+            AudioLevel(114, 406, 446, 170, ao.ExternalLevel, delegate (int v) { Ctx.Settings.AudioOut.ExternalLevel = v; }, 336, delegate { TestRadio("<radio:off>"); });
 
             Lbl(audioOutBox, "Notifications: ringtones, new message tone, tablet alarm. They use the device of the headset, and their own level:", 10, 162, 644, 18);
             AudioLevel(186, 10, 56, 300, ao.NotifyLevel, delegate (int v) { Ctx.Settings.AudioOut.NotifyLevel = v; }, 440, delegate { Ctx.Player.PlayNotificationTest("AND.NEW.MSG.wav"); });
@@ -2811,10 +2885,16 @@ namespace HPGMissionCompanion
             Lbl(page, "Credits and licences", 14, 228, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
             Lbl(page, "Text to speech: the voices installed in Windows, and Piper (github.com/rhasspy/piper, MIT licence) with the voices of the rhasspy/piper-voices " +
                 "repository. Every Piper voice has its own licence: read voices\\piper\\<voice>.MODEL_CARD.txt before using a voice outside your own PC. " +
-                "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program.",
-                14, 250, 700, 100);
+                "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program. " +
+                "The Swiss German voices marked (STT4SG) come from the research demo of FHNW (stt4sg.fhnw.ch, non-commercial licence): they run on a server on the internet, and the text is sent there only when you choose one of those voices. " +
+                "Full list of the licences: THIRD_PARTY.md in the repository.",
+                14, 250, 700, 92);
+            Lbl(page, "Contributors", 14, 346, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "kekkeruuu (GitHub d41k4n): co-author of the missions; the German voice pack, the Swiss German voices, the separate hiss of radio and external radio calls, " +
+                "the squelch-tail recordings, the audio cache tools. Daikan: co-author of the missions, testing and bug reports.",
+                14, 366, 700, 32);
 
-            Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 358, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 402, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
             TextBox guide = new TextBox();
             guide.Multiline = true;
             guide.ReadOnly = true;
@@ -2822,8 +2902,8 @@ namespace HPGMissionCompanion
             guide.WordWrap = true;
             guide.Font = new Font("Consolas", 8.5F);
             guide.BackColor = Color.White;
-            guide.Location = new Point(14, 380);
-            guide.Size = new Size(700, 166);
+            guide.Location = new Point(14, 424);
+            guide.Size = new Size(700, 124);
             guide.Text = LoadGuide();
             guide.Select(0, 0);
             page.Controls.Add(guide);

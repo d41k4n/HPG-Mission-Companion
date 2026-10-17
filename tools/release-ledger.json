@@ -1,8 +1,8 @@
 {
-    "sha256":  "3E6F504BF0C2954DD82D8ED7EF67F9976450567B164FB56A69FAA75CAF7EE018",
-    "installerSha256":  "1EE673654B2F66EB53F4E3B7972F02EADA7E885EB379FC005F2D00F7A69FF64C",
+    "sha256":  "18F556F7FD838799603D06C884DD06A408997C08A659C6E4BCB49C16CA7EBEA8",
+    "installerSha256":  "418FD2D48B82EB8DFC83744357A1E3B9692E98308B526BEC24B4038B198A285D",
     "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.29",
-    "note":  "Release 0.29: the setup closes every copy of the program (any folder, unreadable ones too), waits for the files, restarts elevated when needed and shows its errors; a second start shows the open window; the exit watchdog; the voice service and the link with the simulator start before the tools; voice pack EN 17 with the crew briefing to the heli rescuer (HRB.*) and PAX3.25 said by the heli rescuer. Static check PASS; the final setup was run against a running old copy in another folder, with a short process to wait for and a locked file. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.30",
+    "note":  "Release 0.30: the random voices window (sex, quality, used for, sorting, copy and paste of a pool); the fork of kekkeruuu integrated (German pack DE 4 complete with the crew briefing, Swiss German online voices STT4SG, three hiss sliders, audio cache purge, recorded squelch tails); online voices never taken by the program by itself; About tab with the contributors (kekkeruuu, Daikan) and the licences. Static check PASS, packs check PASS (DE 4 against EN 17), pool self-test ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

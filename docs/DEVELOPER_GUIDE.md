@@ -27,11 +27,11 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
   <Microsoft David>        a voice by name (also <voice:ryan>); it wins over the actor voice. A name that is not installed: the actor voice speaks and the log says so.
   <speed:1.2>              speed, 0.5 to 3 (1 = the speed set for the actor)
   <vol:70>                 volume 0-100 of this text, multiplied by the master volume of the Volume tab. Pass the mission volume with params: "<vol:{0}>" and [VOLUME_CREW].
-  <radio> / <radio:off>    radio effect on / off: start beep, hiss, band filter, squelch tail (Radio effect tab)
+  <radio> / <radio:off>    radio effect on / off: start beep, radio hiss, band filter, squelch tail (Radio effect tab)
   <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
   <radio:chirp>            shortcut: radio on with that beep type
-  <ics> / <ics:off>        the wired intercom of the helicopter: a click, no beep, the hiss of the Radio effect tab, no squelch tail
-  <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, hiss + 20, squelch tail
+  <ics> / <ics:off>        the wired intercom of the helicopter: a click, no beep, the intercom hiss of the Radio effect tab, no squelch tail
+  <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, external radio hiss, squelch tail
   The squelch tail is one of ten recordings of the end of a transmission (assets\squelch-tail, embedded in the program; drawn at random, never the same twice in a row). The wav files of the folder audio\squelch-tail (created with the ten defaults at the first radio call) replace them: add, remove or change files there; with no file the old synthetic burst is used.
   <zone:far>               a voice that comes from 30 to 100 m away, heard very low (the program adds it from the zone variables)
   <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language

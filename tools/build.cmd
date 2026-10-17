@@ -14,10 +14,10 @@ rem the recordings of the squelch tail are embedded in the program (AudioFx)
 for %%F in (assets\squelch-tail\*.wav) do set RES=!RES! /resource:"%%F",%%~nxF
 "%FW%\csc.exe" /nologo /target:winexe /win32icon:assets\app.ico !RES! /out:"%OUT%\HPGMissionCompanion.exe" /reference:System.Windows.Forms.dll /reference:System.Drawing.dll /reference:System.Web.Extensions.dll /reference:Microsoft.CSharp.dll /reference:System.Core.dll /reference:System.Xml.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll src\Core.cs src\AudioFx.cs src\Tools.cs src\Engines.cs src\Server.cs src\Install.cs src\Mixer.cs src\Names.cs src\VoicePacks.cs src\SimLink.cs src\Updates.cs src\Profiles.cs src\NotesForm.cs src\PoolForm.cs src\MainForm.cs src\Program.cs
 set RC=%ERRORLEVEL%
-rem the voice packs of the repository are copied only when the runtime folder does not have them yet (install newer ones with --install-pack or drag and drop, which archive the old version)
+rem the voice packs of the repository are copied into the output folder
 if %RC%==0 if exist "voicepacks\*.xml" (
   if not exist "%OUT%\voicepacks" mkdir "%OUT%\voicepacks"
-  for %%F in (voicepacks\*.xml) do if not exist "%OUT%\voicepacks\%%~nxF" copy /y "%%F" "%OUT%\voicepacks\%%~nxF" >nul
+  for %%F in (voicepacks\*.xml) do copy /y "%%F" "%OUT%\voicepacks\%%~nxF" >nul
 )
 rem SimConnect.dll comes from the MSFS SDK (not stored in the repository); copy it next to the program when the SDK is installed
 if %RC%==0 call :copydll
@@ -36,13 +36,19 @@ endlocal & set RC=%ERRORLEVEL%
 goto :eof
 
 :copydll
-if exist "C:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" (
-  copy /y "C:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
-  goto :eof
+for %%D in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+  if exist "%%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" (
+    echo Copying SimConnect.dll from %%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll
+    copy /y "%%D:\MSFS 2024 SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
+    goto :eof
+  )
 )
-if exist "C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" (
-  copy /y "C:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
-  goto :eof
+for %%D in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+  if exist "%%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" (
+    echo Copying SimConnect.dll from %%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll
+    copy /y "%%D:\MSFS SDK\SimConnect SDK\lib\SimConnect.dll" "%OUT%\SimConnect.dll" >nul
+    goto :eof
+  )
 )
 echo WARNING: MSFS SDK not found, SimConnect.dll was not copied
 goto :eof

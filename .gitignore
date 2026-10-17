@@ -17,3 +17,5 @@
 *.zip
 *.log
 node_modules/
+.agents/rules/default-terminal.md
+.env

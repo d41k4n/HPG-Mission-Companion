@@ -19,12 +19,14 @@ namespace HPGMissionCompanion
         {
             Dictionary<string, string> map = new Dictionary<string, string>();
             if (fam.Count == 0) return map;
+            List<VoiceInfo> auto = fam.FindAll(delegate (VoiceInfo x) { return !VoiceLibrary.IsOnline(x); });       // the voices the program takes by itself
             for (int k = 0; k < Actors.Count; k++)
             {
                 ActorSetting a = Ctx.Settings.Get(langCode, k + 1);
                 if (a.Random && Actors.CanDraw(k + 1)) continue;
                 VoiceInfo v = VoiceLibrary.ById(fam, a.Voice);
-                if (v == null) v = fam[k % fam.Count];
+                if (v == null && auto.Count > 0) v = auto[k % auto.Count];
+                if (v == null) continue;
                 string who = Actors.Names[k];
                 string cur;
                 map[v.Id] = map.TryGetValue(v.Id, out cur) ? cur + ", " + who : who;

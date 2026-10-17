@@ -111,6 +111,9 @@ namespace HPGMissionCompanion
             if (LangInfo.ByCode(p.DefaultLanguage) == null) p.DefaultLanguage = "EN";
             p.MasterVolume = Math.Max(0, Math.Min(100, p.MasterVolume));
             if (p.Radio == null) p.Radio = new RadioSettings();
+            p.Radio.NoiseLevel = Math.Max(0, Math.Min(100, p.Radio.NoiseLevel));
+            p.Radio.RadioNoiseLevel = Math.Max(0, Math.Min(100, p.Radio.RadioNoiseLevel));
+            p.Radio.ExtRadioNoiseLevel = Math.Max(0, Math.Min(100, p.Radio.ExtRadioNoiseLevel));
             if (p.AudioOut == null) p.AudioOut = new AudioOutSettings();
             p.AudioOut.Normalize();
             if (p.CrewNames == null) p.CrewNames = new Dictionary<string, string>();
@@ -185,7 +188,7 @@ namespace HPGMissionCompanion
             p.Name = name; p.Description = description;
             p.DefaultLanguage = s.DefaultLanguage; p.MasterVolume = s.MasterVolume;
             p.Radio = new RadioSettings();
-            p.Radio.NoiseLevel = s.Radio.NoiseLevel; p.Radio.Beep = s.Radio.Beep; p.Radio.BeepLevel = s.Radio.BeepLevel; p.Radio.Tail = s.Radio.Tail; p.Radio.Quality = s.Radio.Quality;
+            p.Radio.NoiseLevel = s.Radio.NoiseLevel; p.Radio.RadioNoiseLevel = s.Radio.RadioNoiseLevel; p.Radio.ExtRadioNoiseLevel = s.Radio.ExtRadioNoiseLevel; p.Radio.Beep = s.Radio.Beep; p.Radio.BeepLevel = s.Radio.BeepLevel; p.Radio.Tail = s.Radio.Tail; p.Radio.Quality = s.Radio.Quality;
             p.AudioOut = new AudioOutSettings();       // the devices are left empty: they belong to this PC
             p.AudioOut.HeadsetLevel = s.AudioOut.HeadsetLevel; p.AudioOut.ExternalLevel = s.AudioOut.ExternalLevel; p.AudioOut.NotifyLevel = s.AudioOut.NotifyLevel;
             p.UseMissionVolumes = s.UseMissionVolumes; p.AttenCamInside = s.AttenCamInside; p.AttenCamOutside = s.AttenCamOutside;
@@ -212,7 +215,7 @@ namespace HPGMissionCompanion
         {
             List<string> notes = new List<string>();
             s.DefaultLanguage = p.DefaultLanguage; s.MasterVolume = p.MasterVolume;
-            s.Radio.NoiseLevel = p.Radio.NoiseLevel; s.Radio.Beep = p.Radio.Beep; s.Radio.BeepLevel = p.Radio.BeepLevel; s.Radio.Tail = p.Radio.Tail; s.Radio.Quality = p.Radio.Quality;
+            s.Radio.NoiseLevel = p.Radio.NoiseLevel; s.Radio.RadioNoiseLevel = p.Radio.RadioNoiseLevel; s.Radio.ExtRadioNoiseLevel = p.Radio.ExtRadioNoiseLevel; s.Radio.Beep = p.Radio.Beep; s.Radio.BeepLevel = p.Radio.BeepLevel; s.Radio.Tail = p.Radio.Tail; s.Radio.Quality = p.Radio.Quality;
             s.AudioOut.HeadsetLevel = p.AudioOut.HeadsetLevel; s.AudioOut.ExternalLevel = p.AudioOut.ExternalLevel; s.AudioOut.NotifyLevel = p.AudioOut.NotifyLevel;
             s.UseMissionVolumes = p.UseMissionVolumes; s.AttenCamInside = p.AttenCamInside; s.AttenCamOutside = p.AttenCamOutside;
             s.BridgePack = p.BridgePack; s.Variety = p.Variety; s.Names = p.Names;

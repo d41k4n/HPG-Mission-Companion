@@ -117,3 +117,13 @@ User request of 2026-10-17. Offline: `HPGMissionCompanion.exe --pool-test report
 2. Click each column title: the list is sorted by name, sex, quality, used first; click again: reversed; the checks stay.
 3. Check some voices, press Copy random to clipboard, paste into a text editor: header, language, one voice a line. Open Voices... of the ground unit (random too), press Paste random from clipboard: the same voices are checked; the line below the list says how many were pasted and how many are not available. OK, Save settings, restart: the pool of the ground unit is kept.
 4. Paste a text that is not a copy, and a copy made in another language: nothing changes and the line says so.
+
+## Fork of kekkeruuu integrated in 0.30 (PENDING)
+
+Static: merged without conflicts, `tools/check.js` PASS, DE 4 has the same 1242 keys as EN 17 (no key missing or extra, the placeholders of every option checked against the base pack), the program builds. Runtime, with the simulator or the test missions:
+
+1. Voices tab, language German: no voice chosen for an actor and a random actor with an empty pool never get a voice marked (STT4SG) (log line [VOICE] drawn for ...); the Actors tab and the random voices window show the same default voice. Choose an STT4SG voice for one actor: it speaks (needs the internet), the file is cached in `audio\cache\stt4sg`.
+2. Radio effect tab: the three hiss sliders (intercom, radio, external radio) change the sound of `<ics>`, `<radio>` and `<radio:ext>`; they are saved and loaded with a profile.
+3. Advanced box: Purge audio cache (counts the files, asks, deletes), `HPGMissionCompanion.exe --purge-cache`, and the cache of messages that no longer exist is pruned at start.
+4. Mission in app mode with the pack DE 4: the briefing of the crew to the heli rescuer (`HRB.*`) is spoken in German, the ambulance message at the departure for the hospital (`AMB.DEP.DSP`) is the new text.
+5. About tab: the Contributors section, the note on the STT4SG voices and the guide below it are all readable.

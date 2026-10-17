@@ -6,8 +6,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Media;
+using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Web.Script.Serialization;
 
 namespace HPGMissionCompanion
 {
@@ -219,6 +222,374 @@ namespace HPGMissionCompanion
         }
     }
 
+    // Online Swiss German TTS (FHNW STT4SG: speecht5 fine-tune over Gradio API) with multi-dialect support and disk caching.
+    internal static class Stt4sgEngine
+    {
+        public const string BaseUrl = "https://stt4sg.fhnw.ch/tts";
+
+        public static readonly string[] Dialects = new string[]
+        {
+            "Aargau",
+            "Basel",
+            "Bern",
+            "Graub\u00fcnden",
+            "Luzern",
+            "St. Gallen",
+            "Valais",
+            "Z\u00fcrich"
+        };
+
+        public static readonly Dictionary<string, string> DialectLabels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Aargau", "Aargau (Aargauerduetsch)" },
+            { "Basel", "Basel (Baseldytsch)" },
+            { "Bern", "Bern (Baernduetsch)" },
+            { "Graub\u00fcnden", "Graubuenden (Buendnerduetsch)" },
+            { "Luzern", "Luzern (Lozaernerduetsch)" },
+            { "St. Gallen", "St. Gallen (Ostschwiizerisch)" },
+            { "Valais", "Valais (Wallisertiitsch)" },
+            { "Z\u00fcrich", "Zuerich (Zueriduetsch)" }
+        };
+
+        static readonly object cacheLock = new object();
+        static readonly Dictionary<string, string> textCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        static bool textCacheLoaded;
+        static bool textCacheLoadFailed;
+
+        public static void ClearCache()
+        {
+            lock (cacheLock)
+            {
+                textCache.Clear();
+                textCacheLoaded = false;
+                textCacheLoadFailed = false;
+            }
+        }
+
+        public static string CacheDir
+        {
+            get { return Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache", "stt4sg"); }
+        }
+
+        static string TranslationsFile
+        {
+            get { return Path.Combine(CacheDir, "translations.json"); }
+        }
+
+        static void EnsureCacheLoaded()
+        {
+            lock (cacheLock)
+            {
+                if (textCacheLoaded) return;
+                textCacheLoaded = true;
+                textCacheLoadFailed = false;
+                try
+                {
+                    if (File.Exists(TranslationsFile))
+                    {
+                        string json = File.ReadAllText(TranslationsFile, Encoding.UTF8);
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        Dictionary<string, object> dict = js.DeserializeObject(json) as Dictionary<string, object>;
+                        if (dict != null)
+                        {
+                            foreach (KeyValuePair<string, object> kv in dict)
+                            {
+                                if (kv.Value != null) textCache[kv.Key] = Convert.ToString(kv.Value);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    textCacheLoadFailed = true;
+                    Ctx.Log("[WARN] STT4SG load text cache: " + ex.Message);
+                }
+            }
+        }
+
+        static void SaveTextCache()
+        {
+            lock (cacheLock)
+            {
+                try
+                {
+                    Directory.CreateDirectory(CacheDir);
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    string json = js.Serialize(textCache);
+                    File.WriteAllText(TranslationsFile, json, Encoding.UTF8);
+                }
+                catch (Exception ex) { Ctx.Log("[WARN] STT4SG save text cache: " + ex.Message); }
+            }
+        }
+
+        static string Hash(string val)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] b = md5.ComputeHash(Encoding.UTF8.GetBytes(val));
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < b.Length; i++) sb.Append(b[i].ToString("x2"));
+                return sb.ToString();
+            }
+        }
+
+        static string SafeDialect(string dialect)
+        {
+            if (string.IsNullOrEmpty(dialect)) return "Bern";
+            foreach (string d in Dialects)
+            {
+                if (string.Equals(d, dialect, StringComparison.OrdinalIgnoreCase)) return d;
+            }
+            return dialect;
+        }
+
+        public static string Translate(string germanText, string dialect)
+        {
+            if (string.IsNullOrEmpty(germanText)) return "";
+            EnsureCacheLoaded();
+            dialect = SafeDialect(dialect);
+            string cacheKey = dialect + "|" + germanText.Trim();
+            lock (cacheLock)
+            {
+                string cached;
+                if (textCache.TryGetValue(cacheKey, out cached) && !string.IsNullOrEmpty(cached)) return cached;
+            }
+
+            try
+            {
+                string sse = CallEndpoint("translate_interface", new object[] { germanText, dialect }, 15000);
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                object[] res = js.DeserializeObject(sse) as object[];
+                if (res != null && res.Length > 0 && res[0] != null)
+                {
+                    string translated = Convert.ToString(res[0]).Trim();
+                    if (translated.Length > 0)
+                    {
+                        lock (cacheLock)
+                        {
+                            textCache[cacheKey] = translated;
+                            SaveTextCache();
+                        }
+                        return translated;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Ctx.Log("[WARN] STT4SG translate (" + dialect + "): " + ex.Message);
+            }
+            return germanText;
+        }
+
+        public static byte[] Synthesize(string swissGermanText, string dialect)
+        {
+            if (string.IsNullOrEmpty(swissGermanText)) return new byte[0];
+            dialect = SafeDialect(dialect);
+            string sse = CallEndpoint("speech_interface", new object[] { swissGermanText, dialect }, 30000);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            object[] res = js.DeserializeObject(sse) as object[];
+            if (res == null || res.Length == 0 || res[0] == null) throw new InvalidOperationException("STT4SG returned invalid audio payload");
+
+            Dictionary<string, object> fileObj = res[0] as Dictionary<string, object>;
+            if (fileObj == null) throw new InvalidOperationException("STT4SG returned invalid file object");
+            string url = Convert.ToString(fileObj["url"]);
+            if (string.IsNullOrEmpty(url))
+            {
+                string path = Convert.ToString(fileObj["path"]);
+                if (!string.IsNullOrEmpty(path)) url = BaseUrl + "/file=" + path;
+            }
+            if (string.IsNullOrEmpty(url)) throw new InvalidOperationException("STT4SG audio URL not found");
+
+            return DownloadWav(url);
+        }
+
+        public static int PruneOrphanedAudioFiles()
+        {
+            lock (cacheLock)
+            {
+                EnsureCacheLoaded();
+                if (textCacheLoadFailed) return 0;
+                if (!Directory.Exists(CacheDir)) return 0;
+
+                HashSet<string> validFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (KeyValuePair<string, string> kv in textCache)
+                {
+                    if (string.IsNullOrEmpty(kv.Key) || kv.Value == null) continue;
+                    int pipe = kv.Key.IndexOf('|');
+                    if (pipe <= 0 || pipe >= kv.Key.Length - 1) continue;
+                    string dialect = SafeDialect(kv.Key.Substring(0, pipe));
+                    string norm = kv.Key.Substring(pipe + 1);
+                    string chText = kv.Value;
+                    string hash = Hash(dialect + "|" + norm + "|" + chText);
+                    string expectedPath = Path.GetFullPath(Path.Combine(Path.Combine(CacheDir, dialect), hash + ".wav"));
+                    validFiles.Add(expectedPath);
+                }
+
+                int pruned = 0;
+                try
+                {
+                    foreach (string dialectDir in Directory.GetDirectories(CacheDir))
+                    {
+                        foreach (string wav in Directory.GetFiles(dialectDir, "*.wav"))
+                        {
+                            string fullWav = Path.GetFullPath(wav);
+                            if (!validFiles.Contains(fullWav))
+                            {
+                                try
+                                {
+                                    File.Delete(wav);
+                                    pruned++;
+                                }
+                                catch (Exception) { }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Ctx.Log("[WARN] STT4SG prune cache: " + ex.Message);
+                }
+
+                if (pruned > 0)
+                {
+                    Ctx.Log("[CACHE] Pruned " + pruned + " orphaned STT4SG audio file(s)");
+                }
+                return pruned;
+            }
+        }
+
+        public static byte[] Render(VoiceInfo v, double speed, string text)
+        {
+            if (string.IsNullOrEmpty(text)) return new byte[0];
+            string dialect = "Bern";
+            if (v != null && !string.IsNullOrEmpty(v.Id) && v.Id.StartsWith("stt4sg:", StringComparison.OrdinalIgnoreCase))
+            {
+                dialect = v.Id.Substring(7);
+            }
+            dialect = SafeDialect(dialect);
+
+            string norm = text.Trim();
+            // Translate first (using memory/disk cache, or Gradio API on miss)
+            string chText = Translate(norm, dialect);
+            string hash = Hash(dialect + "|" + norm + "|" + chText);
+            string dDir = Path.Combine(CacheDir, dialect);
+            string wavFile = Path.Combine(dDir, hash + ".wav");
+
+            if (File.Exists(wavFile))
+            {
+                try
+                {
+                    byte[] cached = File.ReadAllBytes(wavFile);
+                    if (cached.Length > 44) return cached;
+                }
+                catch (Exception) { }
+            }
+
+            // Generate speech audio
+            byte[] wav = Synthesize(chText, dialect);
+            if (wav != null && wav.Length > 44)
+            {
+                try
+                {
+                    Directory.CreateDirectory(dDir);
+                    File.WriteAllBytes(wavFile, wav);
+                }
+                catch (Exception ex) { Ctx.Log("[WARN] STT4SG write cache: " + ex.Message); }
+                return wav;
+            }
+
+            throw new InvalidOperationException("STT4SG audio synthesis failed (empty response)");
+        }
+
+        static HttpWebRequest CreateReq(string url, int timeoutMs)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.UserAgent = "HPGMissionCompanion/0.2";
+            req.Timeout = timeoutMs;
+            req.ReadWriteTimeout = timeoutMs;
+            return req;
+        }
+
+        static string CallEndpoint(string endpoint, object[] args, int timeoutMs)
+        {
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string jsonBody = js.Serialize(new Dictionary<string, object> { { "data", args } });
+            byte[] bodyBytes = Encoding.UTF8.GetBytes(jsonBody);
+
+            string postUrl = BaseUrl + "/call/" + endpoint;
+            HttpWebRequest postReq = CreateReq(postUrl, timeoutMs);
+            postReq.Method = "POST";
+            postReq.ContentType = "application/json";
+            postReq.ContentLength = bodyBytes.Length;
+
+            using (Stream reqStream = postReq.GetRequestStream())
+            {
+                reqStream.Write(bodyBytes, 0, bodyBytes.Length);
+            }
+
+            string eventId;
+            using (WebResponse resp = postReq.GetResponse())
+            using (StreamReader r = new StreamReader(resp.GetResponseStream(), Encoding.UTF8))
+            {
+                string respJson = r.ReadToEnd();
+                Dictionary<string, object> parsed = js.DeserializeObject(respJson) as Dictionary<string, object>;
+                if (parsed == null || !parsed.ContainsKey("event_id")) throw new InvalidOperationException("STT4SG event_id missing in response: " + respJson);
+                eventId = Convert.ToString(parsed["event_id"]);
+            }
+
+            string sseUrl = BaseUrl + "/call/" + endpoint + "/" + eventId;
+            HttpWebRequest sseReq = CreateReq(sseUrl, timeoutMs);
+            sseReq.Method = "GET";
+            sseReq.Accept = "text/event-stream";
+
+            using (WebResponse sseResp = sseReq.GetResponse())
+            using (Stream sseStream = sseResp.GetResponseStream())
+            using (StreamReader r = new StreamReader(sseStream, Encoding.UTF8))
+            {
+                string line;
+                string lastEvent = "";
+                while ((line = r.ReadLine()) != null)
+                {
+                    if (line.StartsWith("event:"))
+                    {
+                        lastEvent = line.Substring(6).Trim();
+                    }
+                    else if (line.StartsWith("data:"))
+                    {
+                        string data = line.Substring(5).Trim();
+                        if (lastEvent == "complete" || lastEvent == "process_completed")
+                        {
+                            return data;
+                        }
+                        else if (lastEvent == "error")
+                        {
+                            throw new InvalidOperationException("STT4SG reported error: " + data);
+                        }
+                    }
+                }
+            }
+
+            throw new InvalidOperationException("STT4SG stream completed without result data");
+        }
+
+        static byte[] DownloadWav(string url)
+        {
+            HttpWebRequest req = CreateReq(url, 30000);
+            using (WebResponse resp = req.GetResponse())
+            using (Stream s = resp.GetResponseStream())
+            using (MemoryStream ms = new MemoryStream())
+            {
+                byte[] buf = new byte[8192];
+                int read;
+                while ((read = s.Read(buf, 0, buf.Length)) > 0)
+                {
+                    ms.Write(buf, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
+    }
+
     internal static class Synth
     {
         static readonly Dictionary<string, byte[]> cache = new Dictionary<string, byte[]>();
@@ -231,6 +602,7 @@ namespace HPGMissionCompanion
             lock (cache) { byte[] hit; if (cache.TryGetValue(key, out hit)) return hit; }
             byte[] wav;
             if (v.Engine == "piper") wav = PiperEngine.Render(v, speed, text);
+            else if (v.Engine == "stt4sg") wav = Stt4sgEngine.Render(v, speed, text);
             else wav = WinRt.Render(v.WinId, speed, text);
             lock (cache)
             {
@@ -246,6 +618,49 @@ namespace HPGMissionCompanion
                 }
             }
             return wav;
+        }
+
+        public static void ClearCache()
+        {
+            lock (cache)
+            {
+                cache.Clear();
+                order.Clear();
+                cacheBytes = 0;
+            }
+        }
+
+        public static int PurgeCache(out long bytesFreed)
+        {
+            bytesFreed = 0;
+            int files = 0;
+            string cacheDir = Path.Combine(Path.Combine(Ctx.BaseDir, "audio"), "cache");
+            if (Directory.Exists(cacheDir))
+            {
+                try
+                {
+                    foreach (string f in Directory.GetFiles(cacheDir, "*", SearchOption.AllDirectories))
+                    {
+                        try
+                        {
+                            FileInfo fi = new FileInfo(f);
+                            bytesFreed += fi.Length;
+                            files++;
+                        }
+                        catch (Exception) { }
+                    }
+                    Directory.Delete(cacheDir, true);
+                }
+                catch (Exception ex) { Ctx.Log("[ERROR] Purge cache: " + ex.Message); }
+            }
+            Stt4sgEngine.ClearCache();
+            ClearCache();
+            return files;
+        }
+
+        public static int PruneOrphanedCache()
+        {
+            return Stt4sgEngine.PruneOrphanedAudioFiles();
         }
     }
 
@@ -419,18 +834,18 @@ namespace HPGMissionCompanion
             PlayBytes(item, fx, null, cat);
         }
 
-        // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the hiss + 10 and the beep of the user (or the one of
-        // the tag); an external radio call the hiss + 20 and a double beep (RadioRules)
+        // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the radio hiss and the beep of the user (or the one of
+        // the tag); an external radio call the external radio hiss and a double beep (RadioRules)
         static RadioSettings FxSettings(Plan p)
         {
             RadioSettings b = Ctx.Settings.Radio;
             RadioSettings rs = new RadioSettings();
-            rs.NoiseLevel = b.NoiseLevel; rs.BeepLevel = b.BeepLevel; rs.Tail = b.Tail; rs.Quality = b.Quality; rs.Beep = b.Beep;
+            rs.NoiseLevel = b.NoiseLevel; rs.RadioNoiseLevel = b.RadioNoiseLevel; rs.ExtRadioNoiseLevel = b.ExtRadioNoiseLevel; rs.BeepLevel = b.BeepLevel; rs.Tail = b.Tail; rs.Quality = b.Quality; rs.Beep = b.Beep;
             if (p.Fx == "ics") { rs.Beep = RadioRules.IcsBeep; rs.Tail = false; }
-            else if (p.Fx == "ext") { rs.Beep = RadioRules.ExternalBeep; rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.ExternalHissExtra); }
+            else if (p.Fx == "ext") { rs.Beep = RadioRules.ExternalBeep; rs.NoiseLevel = b.ExtRadioNoiseLevel; }
             else
             {
-                rs.NoiseLevel = Math.Min(100, b.NoiseLevel + RadioRules.RadioHissExtra);
+                rs.NoiseLevel = b.RadioNoiseLevel;
                 if (p.Beep != null) rs.Beep = p.Beep;
             }
             return rs;

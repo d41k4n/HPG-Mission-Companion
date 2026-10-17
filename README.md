@@ -53,3 +53,10 @@ Static checks pass; the simulator behaviour (tags arriving through the HPG `spea
 ## Licence
 
 Use is free for everyone: you may run the program (a build from the author, or built unchanged from this repository) for any purpose, read the source and fork it on GitHub for reading. Modifying the code, copying or redistributing the program or the code, publishing derivative works, sublicensing or selling needs the explicit written consent of the author, as described in LICENSE. Third-party components keep their own licences (THIRD_PARTY.md).
+
+## Contributors
+
+- **kekkeruuu** (GitHub d41k4n): co-author of the missions; German voice pack and translation tools, Swiss German voices (STT4SG), separate hiss of radio and external radio calls, squelch-tail recordings, audio cache tools, SimConnect.dll search on every drive (changelog 0.30 and earlier).
+- **Daikan**: co-author of the missions, testing and bug reports.
+
+Their contributions are integrated with their history in the repository; the licences of the components they brought in are in `THIRD_PARTY.md`.
