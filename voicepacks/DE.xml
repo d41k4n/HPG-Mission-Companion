@@ -1164,17 +1164,17 @@
     <message key="GRD.PLT.Q" actor="1" radio="auto" group="grdq" seq="1" new="1">
       <o>Arzt, wie sieht es bei euch da unten aus?</o>
       <o>Windenführer, kannst du mir einen Status geben?</o>
-      <o>Wie steht es um den Patienten, Arzt?</o>
+      <o>Notarzt, wie steht es um den Patienten?</o>
       <o>Irgendwelche Neuigkeiten vom Boden, TC?</o>
       <o>Arzt, TC, wie läuft es da unten?</o>
       <o>Wie läuft's bei euch, Leute? Gibt es was Neues?</o>
     </message>
     <message key="GRD.RET.CHF" actor="4" radio="auto" group="grd" seq="2" new="1" trigger="stage final crew return">
-      <o>Die Besatzung ist zurück am Heli. Wir sind gleich bereit.</o>
-      <o>Alle kehren zum Heli zurück, fast fertig.</o>
+      <o>Die Besatzung ist zurück. Wir sind gleich bereit.</o>
+      <o>Alle kehren zurück, fast fertig.</o>
       <o>Letzte Checks, dann machen wir dicht.</o>
       <o>Das Team ist wieder an Bord, wir sind fast fertig.</o>
-      <o>Besatzung ist fast wieder am Heli, letzte Überprüfungen laufen.</o>
+      <o>Besatzung ist fast wieder da, letzte Überprüfungen laufen.</o>
       <o>Wir sind fast zurück, letzte Checks und wir schließen ab.</o>
     </message>
     <message key="GRD.TRT.C" actor="3" radio="auto" group="grd" seq="2" new="1" trigger="stage assessment and treatment, patient critical">
@@ -1210,11 +1210,11 @@
       <o>Der Rettungswagen übernimmt den Patienten, wir übergeben jetzt.</o>
     </message>
     <message key="GRD.WHO.H" actor="3" radio="auto" group="grd" seq="3" new="1" trigger="who transports: the helicopter">
-      <o>Wir transportieren den Patienten mit dem Heli.</o>
-      <o>Der Heli übernimmt den Patiententransport.</o>
+      <o>Wir transportieren den Patienten.</o>
+      <o>Wir übernehmen den Transport.</o>
       <o>Der Patient fliegt bei uns mit.</o>
       <o>Wir nehmen den Patienten an Bord.</o>
-      <o>Der Patient kommt mit uns in den Heli.</o>
+      <o>Der Patient kommt mit uns.</o>
       <o>Der Patient wird geflogen.</o>
     </message>
     <message key="HLD.CPL" actor="2" radio="auto" group="hld" seq="2" new="1">
@@ -1499,11 +1499,11 @@
     </message>
     <message key="OBJ.ACC" actor="8" radio="on" new="1" trigger="the dispatcher reads the objective of an accident mission">
       <o>Einsatzstelle anfliegen, Patienten sichten und Lage rückmelden. Bei Bedarf Transport in die nächstgelegene geeignete Klinik.</o>
-      <o>Einsatzauftrag: Einsatzort anfliegen, Erstversorgung einleiten und Lage melden. Bei Bedarf Transport in nahegelegene Klinik.</o>
-      <o>Einsatzort anfliegen und Lage beurteilen. Patient versorgen und bei Indikation in die nächste Klinik fliegen.</o>
+      <o>Erstversorgung an Ort sicherstellen und Lage melden. Bei Bedarf Transport in die nächstgelegene Klinik.</o>
+      <o>Lage vor Ort beurteilen. Patient versorgen und bei Indikation in die nächste Klinik fliegen.</o>
       <o>Koordinaten anfliegen, Patientenversorgung übernehmen und Lage durchgeben. Falls erforderlich, Kliniktransport durchführen.</o>
-      <o>Zur Einsatzstelle fliegen, Patienten versorgen und Status melden. Bei Transportbedarf in die nächste Klinik einfliegen.</o>
-      <o>Lage vor Ort erkunden, Patienten versorgen und uns auf dem Laufenden halten. Kliniktransport nach Bedarf.</o>
+      <o>Zur Einsatzstelle fliegen, Patienten versorgen und Status melden. Falls nötig in die nächste Klinik einfliegen.</o>
+      <o>Lage vor Ort erkunden, Patienten versorgen und uns auf dem Laufenden halten. Transport nach Bedarf.</o>
     </message>
     <message key="OBJ.INJ" actor="8" radio="on" new="1" trigger="objective of an injured only mission">
       <o>Landeplatz nach eigenem Ermessen wählen, Verunfallten retten und zur gewünschten Zielklinik transportieren.</o>
@@ -1563,15 +1563,15 @@
     </message>
     <message key="PAX1.1" actor="4" radio="auto" lvar="L:{VCP}1" wav="AND.pax1.cabin.preparation.completed.wav" sleep="0">
       <o>Kabinenvorbereitung abgeschlossen.</o>
-      <o>Kabine ist fertig vorbereitet.</o>
+      <o>Die Kabine ist fertig vorbereitet.</o>
       <o>Die Kabine ist einsatzbereit.</o>
-      <o>Kabine ist klar.</o>
-      <o>Kabine ist komplett vorbereitet.</o>
-      <o>Kabine fertig, hier hinten ist alles bereit.</o>
+      <o>Kabine klar.</o>
+      <o>Die Kabine ist bereit.</o>
+      <o>Hinten ist alles bereit.</o>
     </message>
     <message key="PAX1.2" actor="4" radio="auto" lvar="L:{VCP}2" wav="AND.pax1.cabin.preparation.please.wait.wav" sleep="0">
       <o>Kabinenvorbereitung läuft. Bitte warten.</o>
-      <o>Kabine wird noch vorbereitet. Bitte warten.</o>
+      <o>Die Kabine wird noch vorbereitet. Bitte warten.</o>
       <o>Bereite die Kabine vor, bitte warten.</o>
       <o>Kabinenvorbereitung läuft noch, bitte kurz warten.</o>
       <o>Gebt uns einen Moment, wir richten gerade die Kabine her.</o>
@@ -1582,8 +1582,8 @@
       <o>Kabine ist gesichert und bereit zum Abflug.</o>
       <o>Die Kabine ist gesichert. Bereit für den Abflug.</o>
       <o>Kabine klar, wir sind startbereit.</o>
-      <o>Hier hinten ist alles gesichert, abflugbereit.</o>
-      <o>In der Kabine alles fest, wir können starten.</o>
+      <o>Kabine klar.</o>
+      <o>Die Kabine ist bereits, wir können starten.</o>
     </message>
     <message key="PAX1.4" actor="4" radio="auto" lvar="L:{VCP}4" wav="AND.pax1.helicopter.clear.free.to.leave.hover.wav">
       <o>Außenbereich frei, Schwebeflug kann verlassen werden.</o>
@@ -1910,8 +1910,8 @@
       <o>Wir sind ziemlich nah dran.</o>
       <o>Wir sind gut herangekommen.</o>
       <o>Wir sind recht nah dran.</o>
-      <o>Ziemlich nah dran.</o>
-      <o>Ziemlich nah, fast da.</o>
+      <o>Wird sind nah dran.</o>
+      <o>Wir sind fast da.</o>
     </message>
     <message key="PAX1.45" actor="4" radio="auto" lvar="L:{VCP}45" wav="AND.pax1.t.we.are.too.far.wav" sleep="0">
       <o>Wir sind zu weit weg.</o>
@@ -2850,7 +2850,7 @@
       <o>Bis zum nächsten Mal, pass auf dich auf.</o>
     </message>
     <message key="PLT.13" actor="1" radio="auto" lvar="L:PLT{VCP}13" wav="AND.plt.v.TWO.NM.accident.wav" sleep="5">
-      <o>Zwei nautische Meilen bis zum Unfallbereich.</o>
+      <o>Zwei Meilen bis zum Unfallbereich.</o>
       <o>Noch zwei Meilen bis zum Unfallbereich.</o>
       <o>Zwei Meilen vor der Einsatzstelle.</o>
       <o>Fast da, noch zwei Meilen bis zur Unfallstelle.</o>
@@ -2858,7 +2858,7 @@
       <o>Wir sind zwei Meilen vor der Einsatzstelle, macht euch bereit.</o>
     </message>
     <message key="PLT.14" actor="1" radio="auto" lvar="L:PLT{VCP}14" wav="AND.plt.v.TWO.NM.base.wav" sleep="0">
-      <o>Zwei nautische Meilen bis zur Station.</o>
+      <o>Zwei Meilen bis zur Basis.</o>
       <o>Noch zwei Meilen bis zur Basis.</o>
       <o>Zwei Meilen vor der Station.</o>
       <o>Fast zu Hause, noch zwei Meilen bis zur Basis.</o>
