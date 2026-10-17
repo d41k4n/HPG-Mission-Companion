@@ -166,11 +166,11 @@
       <o>Kapiert. Wir passen gut auf den Behälter auf und sichern ihn in der Kabine.</o>
     </message>
     <message key="BRF.ORG.CPL" actor="2" radio="auto" group="brforg" seq="2" new="1">
-      <o>Verstanden. Ich plane die schnellste Route und behalte die Uhr im Auge. Das Ziel wird informiert.</o>
-      <o>Verstanden. Route steht, ich gebe in jeder Phase die verbleibende Zeit durch.</o>
+      <o>Verstanden. Ich plane den schnellsten Flugweg und behalte die Uhr im Auge. Das Ziel wird informiert.</o>
+      <o>Verstanden. Flugweg steht, ich gebe in jeder Phase die verbleibende Zeit durch.</o>
       <o>Copilot verstanden. Direkter Kurs zur Abholung, dann zum Zielkrankenhaus, keine Umwege.</o>
       <o>Kapiert. Ich übernehme die Navigation und die Funksprüche an die Zielklinik.</o>
-      <o>Verstanden. Schnellste Route, und ich behalte die Zeit im Blick.</o>
+      <o>Verstanden. Schnellster Flugweg, und ich behalte die Zeit im Blick.</o>
       <o>Kapiert. Keine Umwege, ich achte auf die Uhr und funke die Klinik an.</o>
     </message>
     <message key="BRF.ORG.DOC" actor="3" radio="auto" group="brforg" seq="3" new="1">
@@ -192,7 +192,7 @@
     <message key="BRF.ORG.PLT" actor="1" radio="auto" group="brforg" seq="1" new="1">
       <o>Organtransport. Hohe Dringlichkeit: Wir holen das Organ ab und liefern es innerhalb des Zeitfensters ab.</o>
       <o>Das ist ein Organtransport, Crew. Die Uhr tickt, also halten wir die Abläufe straff.</o>
-      <o>Organtransport. Abholung, dann die kürzeste sichere Route zum Zielort.</o>
+      <o>Organtransport. Abholung, dann den kürzesten, sicheren Flugweg zum Zielort.</o>
       <o>Wir müssen ein Organ pünktlich abliefern. Zügig und sauber arbeiten, bitte.</o>
       <o>Organtransport, Crew. Höchste Eile geboten, lasst uns keine Zeit verlieren.</o>
       <o>Organtransport, Leute. Die Uhr läuft, arbeiten wir schnell und präzise.</o>
@@ -243,15 +243,15 @@
       <o>Crew bereit. Wir helfen beim Einladen und sichern alles für den Flug.</o>
       <o>Verstanden. Trage, Gurte und Ausrüstung sind bereit. Wir verladen ohne Hektik.</o>
       <o>Crew verstanden. Trage ist bereit, wir laden vorsichtig ein.</o>
-      <o>Kapiert. Trage und Gurte liegen bereit, wir verladen ganz in Ruhe.</o>
+      <o>Alles klar. Trage und Gurte liegen bereit, wir verladen ganz in Ruhe.</o>
     </message>
     <message key="BRF.TRF.CPL" actor="2" radio="auto" group="brftrf" seq="2" new="1">
-      <o>Verstanden. Ich setze die Route zuerst zur Abholung, dann zum Zielort, und prüfe das Wetter für beide Abschnitte.</o>
+      <o>Verstanden. Ich setze den Flugweg zuerst zur Abholung, dann zum Zielort, und prüfe das Wetter für beide Abschnitte.</o>
       <o>Verstanden. Zwei Abschnitte: Abholung und Zielort. Ich bereite Navigation und Funk vor.</o>
       <o>Copilot verstanden. Kurs zur Abholung steht, Zielkurs folgt, sobald der Patient an Bord ist.</o>
-      <o>Kapiert. Ich übernehme die Navigation und verständige das Zielkrankenhaus vorab.</o>
-      <o>Verstanden. Zwei Legs, ich kümmere mich um Kurs und Funk.</o>
-      <o>Kapiert. Erst Route zum Abholort, und ich melde uns rechtzeitig bei der Klinik an.</o>
+      <o>Alles klar. Ich übernehme die Navigation und verständige das Zielkrankenhaus vorab.</o>
+      <o>Verstanden. Zwei Abschnitte, ich kümmere mich um Kurs und Funk.</o>
+      <o>Alles klar. Zuerst zum Abholort, und ich melde uns rechtzeitig bei der Klinik an.</o>
     </message>
     <message key="BRF.TRF.DOC" actor="3" radio="auto" group="brftrf" seq="3" new="1">
       <o>Notarzt verstanden. Ich übernehme die Übergabe vor Ort, prüfe Monitoring und Infusionen und stelle sicher, dass der Patient transportfähig ist.</o>
@@ -259,7 +259,7 @@
       <o>Verstanden. Ich bespreche den Zustand mit dem abgebenden Team und behalte den Patienten im Flug im Auge.</o>
       <o>Verstanden. Übergabe, Stabilisierung, dann Verlegung.</o>
       <o>Arzt verstanden. Erst die Übergabe, dann kontrolliere ich die Transportfähigkeit.</o>
-      <o>Kapiert. Ich spreche mich erst mit dem Team vor Ort ab und stelle sicher, dass der Flug machbar ist.</o>
+      <o>Alles klar. Ich spreche mich erst mit dem Team vor Ort ab und stelle sicher, dass der Flug machbar ist.</o>
     </message>
     <message key="BRF.TRF.END" actor="1" radio="auto" group="brftrf" seq="5" new="1">
       <o>Gut. Sichere Verlegung, Crew. Wir heben ab, sobald die Checklisten durch sind.</o>
@@ -2498,20 +2498,20 @@
       <o>Der Patient ist weit weg, der Rettungswagen kann ihn also zum Treffpunkt auf dem Tablet bringen. Sollen wir uns auf halbem Weg treffen?</o>
     </message>
     <message key="PAX3.10" actor="3" radio="auto" lvar="L:PAX3{VCP}10" wav="AND.pax3.patient.onboard.wav" sleep="0">
-      <o>Der Patient ist an Bord. Vorsichtig fliegen.</o>
-      <o>Patient an Bord. Ruhig fliegen.</o>
-      <o>Der Patient ist eingeladen. Sanft fliegen.</o>
-      <o>Patient ist an Bord, vorsichtig machen.</o>
-      <o>Wir haben den Patienten an Bord, sachte fliegen.</o>
-      <o>Patient ist drin, schön ruhig fliegen.</o>
+      <o>Der Patient ist an Bord..</o>
+      <o>Patient an Bord.</o>
+      <o>Der Patient ist aufgenommen..</o>
+      <o>Patient ist an Bord.</o>
+      <o>Wir haben den Patienten an Bord.</o>
+      <o>Der Patient ist drin.</o>
     </message>
     <message key="PAX3.11" actor="3" radio="auto" lvar="L:PAX3{VCP}11" wav="AND.pax3.patient.safe.wav" sleep="0">
-      <o>Der Patient wurde an das Krankenhaus übergeben und ist versorgt.</o>
-      <o>Der Patient wurde in die Klinik eingeliefert und ist sicher.</o>
-      <o>Patient im Krankenhaus übergeben, Zustand gesichert.</o>
-      <o>Der Patient ist im Krankenhaus und versorgt.</o>
-      <o>Der Patient ist sicher in der Klinik angekommen.</o>
-      <o>Der Patient ist wohlbehalten im Krankenhaus übergeben.</o>
+      <o>Der Patient wurde erfolgreich übergeben.</o>
+      <o>Der Patient wurde in die Klinik eingeliefert und ist in besten Händen.</o>
+      <o>Patientenübergabe abgeschlossen.</o>
+      <o>Patient wurde sicher in der Klinik abgegeben.</o>
+      <o>Der Patient ist nun in Sicherheit.</o>
+      <o>Der Patient ist wohlbehalten im Krankenhaus angekommen.</o>
     </message>
     <message key="PAX3.12" actor="3" radio="auto" lvar="L:PAX3{VCP}12" wav="AND.pax3.police.wav" sleep="0">
       <o>Polizei.</o>
@@ -2522,12 +2522,12 @@
       <o>Polizei.</o>
     </message>
     <message key="PAX3.13" actor="3" radio="auto" lvar="L:PAX3{VCP}13" wav="AND.pax3.qpatient.safe.wav" sleep="0">
-      <o>Der Patient wurde am Krankenhaus ausgeladen.</o>
-      <o>Patient am Krankenhaus ausgeladen.</o>
-      <o>Der Patient ist am Krankenhaus aus dem Heli.</o>
-      <o>Der Patient hat den Heli am Krankenhaus verlassen.</o>
-      <o>Der Patient ist aus dem Heli raus, am Krankenhaus.</o>
-      <o>Der Patient ist aus dem Heli raus und in der Klinik.</o>
+      <o>Der Patient wurde ausgeladen.</o>
+      <o>Patient ausgeladen.</o>
+      <o>Der Patient ist raus.</o>
+      <o>Der Patient hat den Heli verlassen.</o>
+      <o>Der Patient wurde ausgeladen.</o>
+      <o>Der Patient ist von Bord.</o>
     </message>
     <message key="PAX3.14" actor="3" radio="auto" lvar="L:PAX3{VCP}14" wav="AND.pax3.rescue.teams.are.on.the.way.wav">
       <o>Die Rettungskräfte sind auf der Anfahrt.</o>
@@ -2543,7 +2543,7 @@
       <o>Wir treffen als Erste an der Einsatzstelle ein.</o>
       <o>Wir sind zuerst vor Ort.</o>
       <o>Wir sind die Ersten vor Ort.</o>
-      <o>Wir sind First Responder vor Ort, Leute.</o>
+      <o>Wir sind erste vor Ort, Leute.</o>
     </message>
     <message key="PAX3.16" actor="3" radio="auto" lvar="L:PAX3{VCP}16" wav="AND.pax3.we.will.find.ambulance.not.far.away.wav" sleep="0">
       <o>In der Nähe der Unfallstelle steht ein Rettungswagen; er kann den Einsatzort nicht erreichen.</o>
@@ -2628,10 +2628,10 @@
     <message key="PAX3.26" actor="3" radio="auto" lvar="L:PAX3{VCP}26" wav="AND.pax3.weo.welcome.wav" sleep="0" futile="1">
       <o silent="1"/>
       <o silent="1"/>
-      <o>Willkommen an Bord, Heliretter.</o>
-      <o>Willkommen an Bord, Heliretter.</o>
       <o>Willkommen an Bord.</o>
-      <o>Schön, dass du bei uns bist, Heliretter.</o>
+      <o>Willkommen an Bord, Rettungspezialisten.</o>
+      <o>Willkommen an Bord.</o>
+      <o>Schön, dass du bei uns bist.</o>
     </message>
     <message key="PAX3.27" actor="3" radio="auto" lvar="L:PAX3{VCP}27" wav="AND.medical.assessment.in.progress.wav" sleep="0" trigger="Crew visit begins and the tablet starts revealing clinical data.">
       <o>Patientenerstuntersuchung läuft. Bereithalten für die Behandlungsentscheidung.</o>
@@ -2639,7 +2639,7 @@
       <o>Die Sichtung des Patienten läuft. Bereithalten bis zur Therapieentscheidung.</o>
       <o>Ich untersuche den Patienten. Bereithalten für die weiteren Maßnahmen.</o>
       <o>Ich schaue mir den Patienten jetzt an. Bereithalten für die Therapieentscheidung.</o>
-      <o>Patientencheck läuft. Ich gebe Bescheid, sobald über die Therapie entschieden ist.</o>
+      <o>Patient wird untersucht. Ich gebe Bescheid, sobald über die Therapie entschieden ist.</o>
     </message>
     <message key="PAX3.28" actor="3" radio="auto" lvar="L:PAX3{VCP}28" wav="AND.medical.critical.vital.signs.wav" trigger="Critical-vitals indicators turn red, patient deterioration requires an urgent transport decision.">
       <o>Kritische Vitalparameter. Sofortigen Transport vorbereiten.</o>
@@ -3026,20 +3026,20 @@
       <o>Wir hatten viel zu tun und haben einen neuen Auftrag erhalten.</o>
     </message>
     <message key="PLT.44" actor="1" radio="auto" lvar="L:PLT{VCP}44" wav="AND.plt.vab.route.to.drop.pt.wav" sleep="0">
-      <o>Route zum Zielort festgelegt.</o>
-      <o>Die Route zum Absetzpunkt ist festgelegt.</o>
-      <o>Die Route zum Absetzpunkt ist festgelegt.</o>
-      <o>Die Route zum Zielort ist festgelegt.</o>
+      <o>Flugweg zum Zielort festgelegt.</o>
+      <o>Der Flugweg zum Absetzpunkt ist festgelegt.</o>
+      <o>Der Flugweg zum Absetzpunkt ist festgelegt.</o>
+      <o>Der Flugweg zum Zielort ist festgelegt.</o>
       <o>Okay, der Absetzpunkt liegt auf der Route.</o>
-      <o>Die Route zum Absetzpunkt ist fertig.</o>
+      <o>Der Flugweg zum Absetzpunkt ist fertig.</o>
     </message>
     <message key="PLT.45" actor="1" radio="auto" lvar="L:PLT{VCP}45" wav="AND.plt.vab.route.to.pick.up.wav" sleep="0">
-      <o>Route zum Abholpunkt.</o>
-      <o>Die Route zum Abholpunkt ist festgelegt.</o>
-      <o>Die Route für den Abholpunkt ist festgelegt.</o>
-      <o>Die Route zum Abholpunkt ist festgelegt.</o>
+      <o>Flugweg zum Abholpunkt.</o>
+      <o>Der Flugweg zum Abholpunkt ist festgelegt.</o>
+      <o>Der Flugweg für den Abholpunkt ist festgelegt.</o>
+      <o>Der Flugweg zum Abholpunkt ist festgelegt.</o>
       <o>Okay, der Abholpunkt liegt auf der Route.</o>
-      <o>Die Route zum Abholort ist bereit.</o>
+      <o>Der Flugweg zum Abholort ist bereit.</o>
     </message>
     <message key="PLT.46" actor="1" radio="auto" lvar="L:PLT{VCP}46" wav="AND.dispatch.cancelled.await.tasking.wav" sleep="0" trigger="Cancellation criteria end the current dispatch; HEMS must not continue intervention.">
       <o>Einsatz storniert. Folgen Sie den Anweisungen auf dem Tablet und warten Sie auf eine neue Zuweisung.</o>
