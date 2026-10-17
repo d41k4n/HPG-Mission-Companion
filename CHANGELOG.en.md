@@ -1,3 +1,11 @@
+## Release 0.27
+
+- The voice of the technician follows the technician (report of a user, 2026-10-17): when no voice is chosen for Technician male (6) or Technician female (7) the fallback took a voice from the list by the number of the actor (`fam[(actor - 1) % n]`), so a female technician could be heard with a male Windows voice and the opposite. Resolver.FallbackVoice now prefers a voice whose list entry says female for the actor 7 and male for the actor 6 (Windows voices and the single-speaker Piper voices that the list marks), then the old rule. A technician message with no options for the two sexes (a translated pack made before the sexes) is spoken by the actor of the technician of the scene (L:HMC_TECH_SEX). The [SAY] log line shows the technician actor ("Technician female (actor 7)"). Scenario tests/technician-voice-lines.txt (--expand --lines).
+- Actors tab (report of the author, 2026-10-17): the Call sign row (Airline of the aircraft / Custom name and its text box) is now on the top row, next to the language; with twelve actors it was below the visible part of the tab. The rows of the actors are 34 px apart (they were 38).
+- Voices... (the pool of the random voices): a Test button says a sample sentence with the voice selected in the list, or with the first checked one.
+- Voice pack EN 16: the crew tip topic CND (TIP.CND.1 to 4, the setting On conditions missions of the mission 169.57), twelve tip topics.
+- Version 0.27.
+
 ## Release 0.26
 
 - Voices at random for the dispatcher, the ground unit and the heli rescuer (user request of 2026-10-16): in the Actors and voices tab the voice list of those actors has the item Random voice, and the button Voices... opens the list of the voices the draw may use (nothing or everything checked = every voice of the language). The dispatcher gets a new voice at every shift (control tag <voices:shift>), the ground unit and the heli rescuer at every dispatch (<voices:dispatch>), all of them at the connection (<voices:all>). The actors that are drawn never get the same voice (the draw also avoids the voices chosen for the other actors, and the voice an actor had before); only with too few voices the rule is relaxed. The choice (Random, pool) is kept in the settings, in the profile files and in the recommended profile; the one-click setup downloads the Piper voices of the pools too.

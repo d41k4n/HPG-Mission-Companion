@@ -1,8 +1,8 @@
 {
-    "sha256":  "08BBB4D55DFB7798DCE751C68B36CE6307863D18760960027A698E886D118D03",
-    "installerSha256":  "D868449C2B4BAFAB4B5307F8EA967B6F2C5286CE5D52EE54BF6519CD3C710860",
+    "sha256":  "8827013E763468648ED0990FF5848FD9DDCA17977060EDFECC14E8FF8D00C20C",
+    "installerSha256":  "4248DA81FFFE0D13B00FDA3BC1B187B12284475337D13BED6C69969ABA6CDBDD",
     "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.26",
-    "note":  "Release 0.26: voices at random for the dispatcher, ground unit and heli rescuer with pools, call sign by airline of the aircraft.cfg or custom name, no dispatcher or decision lines with the crew away, crew lines to the technician never on the radio, voice pack EN 15, recommended profile = selection of 2026-10-16. Static check PASS; --expand scenarios (tips, crew stand-in, dsp and call sign, voices and away, to-tech) run with the built program; settings and profile round trip checked by reflection. Local release only (not pushed). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.27",
+    "note":  "Release 0.27: the voice of the technician follows the technician (the fallback voice for the actors 6 and 7 is male / female), call sign row visible at the top of the Actors tab, Test button in the random voices window, voice pack EN 16 (crew tip about On conditions missions). Static check PASS; --expand scenarios (technician voices, tips CND, to-tech, voices and away, dsp and call sign) run with the built program. Published with the releases of 0.25 and 0.26 (never published before). Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

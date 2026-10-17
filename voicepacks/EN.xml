@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="15" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="16" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -5852,6 +5852,38 @@
       <o>The setting is kept in the profiles too, so one profile can be chatty and another quiet.</o>
       <o>And it is kept in the profiles, so you can have a chatty profile and a quiet one.</o>
       <o>And it is kept in the profiles, so you can keep a chatty profile for sunny days and a silent one for Mondays.</o>
+    </message>
+    <message key="TIP.CND.1" actor="2" radio="auto" group="tipcnd" seq="1" new="1" trigger="tip of the crew: the option On conditions missions">
+      <o>Did you know the mission can choose calls that make sense for the time and the weather? Look for On conditions missions in the settings.</o>
+      <o>Did you know you can have the random calls fit the time and the weather? The option is called On conditions missions.</o>
+      <o>Boss, there is a setting called On conditions missions. It keeps the random calls realistic.</o>
+      <o>Boss, have you seen On conditions missions in the settings? It keeps the random calls realistic.</o>
+      <o>Boss, want calls that make sense? Turn on On conditions missions in the settings.</o>
+      <o>Boss, there is a setting that stops the dispatcher sending us for silly things. It is called On conditions missions.</o>
+    </message>
+    <message key="TIP.CND.2" actor="3" radio="auto" group="tipcnd" seq="2" new="1">
+      <o>Right. With it on, nobody calls us for a skier in August, a paraglider in a gale or a school accident at midnight.</o>
+      <o>Right. With it on, there is no skier in August, no paraglider in a gale and no school accident in the middle of the night.</o>
+      <o>With it on, no skiers in summer, no paragliders in a gale, no school calls at night.</o>
+      <o>With it on, no skiers in summer, no paragliders in a gale and no schools open at night.</o>
+      <o>No more skiers in August or paragliders in a gale. And the school is closed at night, so we sleep.</o>
+      <o>No more skiers in August and no paragliders in a gale. At night the schools are shut, so we can sleep.</o>
+    </message>
+    <message key="TIP.CND.3" actor="2" radio="auto" group="tipcnd" seq="3" new="1">
+      <o>It looks at the local time, the month and the hemisphere, the wind and the rain or snow. Calls for missing people are never filtered.</o>
+      <o>It checks the local time, the month of your hemisphere, the wind and the rain or snow. Calls for missing people are never filtered.</o>
+      <o>It checks the time, the month, the wind and the rain or snow. The calls for missing people are never filtered.</o>
+      <o>It looks at the time, the month, the wind and the rain or snow. The calls for missing people are not filtered.</o>
+      <o>It looks at the clock, the calendar, the wind and the sky. Lost people can be lost at any time, so those calls are never filtered.</o>
+      <o>It looks at the clock, the calendar, the wind and the sky. People get lost at any hour, so those calls are never filtered.</o>
+    </message>
+    <message key="TIP.CND.4" actor="3" radio="auto" group="tipcnd" seq="4" new="1">
+      <o>And when no call fits, it picks among all of them. You find it in the settings under Dispatch options. In the expert profiles it is already on.</o>
+      <o>And if nothing fits, it draws from every mission. It is in the settings, Dispatch options, and it is on in the expert profiles.</o>
+      <o>If no call fits, it picks among all of them. It is in the Dispatch options of the settings, and on in the expert profiles.</o>
+      <o>If nothing fits, it picks any call. It is in the Dispatch options of the settings, and on in the expert profiles.</o>
+      <o>If nothing fits, we get any call anyway. Find it in the Dispatch options of the settings. The expert profiles already have it on.</o>
+      <o>If nothing fits, we get any call anyway. It is in the Dispatch options of the settings, and the expert profiles have it on.</o>
     </message>
     <message key="TIP.TOF.1" actor="3" radio="auto" group="tiptof" seq="1" new="1" trigger="tip of the crew: switching the tips off">
       <o>By the way, these tips have their own switch, apart from the Crew chatter. If you have heard enough of them, you can turn them off.</o>

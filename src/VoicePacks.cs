@@ -1005,6 +1005,8 @@ namespace HPGMissionCompanion
                 if (sx.Length == 0) sx = TechSexOf(msg);
                 actor = sx == "f" ? 7 : 6;      // a message with options for the two technicians is spoken by the technician of the scene: Technician male (6) or female (7)
             }
+            else if ((actor == 6 || actor == 7) && techSex >= 0)
+                actor = techSex == 1 ? 7 : 6;       // a technician message with no options for the two (a translated pack made before the sexes): the voice still follows the technician of the scene
             if (actor >= 1 && actor <= 5 && crewExist != 0 && (crewExist & (1 << (actor - 1))) == 0)       // a seat the crew of this flight does not have (3 crew: no HEMS1, no HEMS2)
             {
                 int stand = StandIn(actor);
@@ -1047,7 +1049,7 @@ namespace HPGMissionCompanion
                 }
                 tags.Append(TagsFor(h));
             }
-            Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " (" + pack.Name + " v" + pack.Version + ")");
+            Ctx.Log("[SAY] " + msg.Key + " -> option " + (index + 1) + " of " + msg.Options.Count + " (" + pack.Name + " v" + pack.Version + ")" + (actor == 6 || actor == 7 ? ", " + Actors.Names[actor - 1] + " (actor " + actor + ")" : ""));
             return tags.ToString() + body;
         }
 

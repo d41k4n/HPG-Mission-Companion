@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.26";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.27";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -688,6 +688,20 @@ namespace HPGMissionCompanion
 
     internal static class Resolver
     {
+        // No voice chosen for the actor: one of the family by the number of the actor. The technicians are the exception: Technician male (6) takes a male
+        // voice and Technician female (7) a female one when the family has them (the gender is the one the voice list shows), so that the voice always
+        // follows the technician of the scene; without such a voice the rule by number applies.
+        static VoiceInfo FallbackVoice(List<VoiceInfo> fam, int actor)
+        {
+            if (actor == 6 || actor == 7)
+            {
+                string want = actor == 7 ? " - female" : " - male";
+                List<VoiceInfo> match = fam.FindAll(delegate (VoiceInfo x) { return x.Display != null && x.Display.IndexOf(want, StringComparison.OrdinalIgnoreCase) >= 0; });
+                if (match.Count > 0) return match[0];
+            }
+            return fam[(actor - 1) % fam.Count];
+        }
+
         public static Plan Resolve(Segment seg, Settings s, List<VoiceInfo> voices)
         {
             Plan p = new Plan();
@@ -716,7 +730,7 @@ namespace HPGMissionCompanion
                 if (v == null)
                 {
                     List<VoiceInfo> fam = VoiceLibrary.OfFamily(voices, li.Family);
-                    if (fam.Count > 0) v = fam[(p.Actor - 1) % fam.Count];
+                    if (fam.Count > 0) v = FallbackVoice(fam, p.Actor);
                     else if (voices.Count > 0) { v = voices[0]; note += "no " + li.Name + " voice installed; "; }
                 }
             }

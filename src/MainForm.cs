@@ -1088,7 +1088,7 @@ namespace HPGMissionCompanion
             for (int i = 0; i < Actors.Count; i++)
             {
                 int index = i;
-                int y = 102 + i * 38;
+                int y = 102 + i * 34;       // 12 actors: the rows end at 510, inside the visible part of the tab
                 actorLabel[i] = Lbl(page, (i + 1) + "  " + Actors.Names[i], 10, y + 5, 140, 20);
 
                 voiceBox[i] = new ComboBox();
@@ -1129,8 +1129,8 @@ namespace HPGMissionCompanion
                 speedBar[i].Value = 10;
                 speedBar[i].TickFrequency = 5;
                 speedBar[i].LargeChange = 5;
-                speedBar[i].Location = new Point(472, y - 3);
-                speedBar[i].Size = new Size(150, 36);
+                speedBar[i].Location = new Point(472, y - 2);
+                speedBar[i].Size = new Size(150, 32);
                 speedBar[i].ValueChanged += delegate { OnSpeedChanged(index); };
                 page.Controls.Add(speedBar[i]);
 
@@ -1139,19 +1139,19 @@ namespace HPGMissionCompanion
                 testButton[i] = Btn(page, "Test", 662, y + 1, 56, 26);
                 testButton[i].Click += delegate { TestActor(index); };
             }
-            int yc = 102 + Actors.Count * 38 + 6;
-            Lbl(page, "Call sign of the helicopter", 10, yc + 5, 160, 20);
+            int yc = 13;
+            Lbl(page, "Call sign:", 262, yc + 4, 60, 20);
             callModeBox = new ComboBox();
             callModeBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            callModeBox.Location = new Point(176, yc + 2);
-            callModeBox.Size = new Size(194, 24);
+            callModeBox.Location = new Point(326, yc);
+            callModeBox.Size = new Size(200, 24);
             callModeBox.Items.Add("Airline of the aircraft (aircraft.cfg)");
             callModeBox.Items.Add("Custom name");
             callModeBox.SelectedIndex = Ctx.Settings.CallSignMode == "custom" ? 1 : 0;
             page.Controls.Add(callModeBox);
             callBox = new TextBox();
-            callBox.Location = new Point(376, yc + 2);
-            callBox.Size = new Size(190, 24);
+            callBox.Location = new Point(532, yc);
+            callBox.Size = new Size(186, 24);
             callBox.MaxLength = 30;
             callBox.Text = Ctx.Settings.CallSign ?? "";
             callBox.Enabled = Ctx.Settings.CallSignMode == "custom";
@@ -1171,8 +1171,7 @@ namespace HPGMissionCompanion
                 Say.ApplyCallSign();
             };
             page.Controls.Add(callBox);
-            Lbl(page, "Said where a text uses {@HEMS}, for example when the dispatcher calls you. Airline: the atc_airline of the aircraft.cfg of the livery (Pelikan 3); empty, it says HEMS.", 572, yc - 2, 150, 48).ForeColor = SystemColors.GrayText;
-            Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role (Pilot, Copilot, Doc ...). Names are ignored while the crew names are random (Voice packs tab). To install additional voice packs, choose the Piper voices tab.", 10, yc + 44, 706, 34).ForeColor = SystemColors.GrayText;
+            Lbl(page, "A name is spoken where a text uses it ({@PLT}); an empty name keeps the job role. Names are ignored while the crew names are random (Voice packs tab). The call sign is said where a text uses {@HEMS}: the atc_airline of the aircraft.cfg of the livery (Pelikan 3) or the custom name; empty = HEMS.", 10, 514, 706, 32).ForeColor = SystemColors.GrayText;
         }
 
         ComboBox callModeBox;
@@ -1250,7 +1249,7 @@ namespace HPGMissionCompanion
                 f.MaximizeBox = false; f.MinimizeBox = false;
                 f.ClientSize = new Size(480, 420);
                 Label hint = new Label();
-                hint.Text = "The voice is drawn among the checked voices at every new shift (dispatcher) or dispatch (ground unit, heli rescuer). The actors that are drawn never get the same voice.";
+                hint.Text = "The voice is drawn among the checked voices at every new shift (dispatcher) or dispatch (ground unit, heli rescuer). The actors that are drawn never get the same voice. Select a voice and press Test to hear it.";
                 hint.Location = new Point(10, 8); hint.Size = new Size(460, 40);
                 f.Controls.Add(hint);
                 CheckedListBox list = new CheckedListBox();
@@ -1264,6 +1263,17 @@ namespace HPGMissionCompanion
                 Button none = new Button(); none.Text = "None"; none.Location = new Point(86, 372); none.Size = new Size(70, 30);
                 none.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, false); };
                 f.Controls.Add(none);
+                // Test: the voice selected in the list (or the first checked one) says a sample sentence, so that the voices of the pool can be heard
+                Button test = new Button(); test.Text = "Test"; test.Location = new Point(162, 372); test.Size = new Size(70, 30);
+                test.Click += delegate
+                {
+                    VoiceInfo v = list.SelectedItem as VoiceInfo;
+                    if (v == null) for (int k = 0; k < list.Items.Count && v == null; k++) if (list.GetItemChecked(k)) v = (VoiceInfo)list.Items[k];
+                    if (v == null || v.Keys == null || v.Keys.Length == 0) return;
+                    string who = Actors.Names[i];
+                    Ctx.Player.EnqueueTest("<" + v.Keys[0] + "><" + li.Code + ">" + string.Format(li.Sample, who));
+                };
+                f.Controls.Add(test);
                 Button ok = new Button(); ok.Text = "OK"; ok.DialogResult = DialogResult.OK; ok.Location = new Point(310, 372); ok.Size = new Size(76, 30);
                 f.Controls.Add(ok);
                 Button cancel = new Button(); cancel.Text = "Cancel"; cancel.DialogResult = DialogResult.Cancel; cancel.Location = new Point(394, 372); cancel.Size = new Size(76, 30);

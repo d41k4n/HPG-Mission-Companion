@@ -1,5 +1,5 @@
 @settings variety=random bridge=EN
-<pack:EN:15>
+<pack:EN:16>
 @watch L:HMC_CTX_VALID 1
 @watch L:HMC_CREW_EXIST 7
 @watch L:H145_SDK_OH_BATTERY_MASTER 0
