@@ -1,9 +1,16 @@
 {
   "Schema": 1,
   "Name": "Recommended",
-  "Description": "The voices, speeds, radio and options of the author of the program: one voice for each actor (Piper and one Windows voice), the intercom click and the aviation radio, the program started minimized with Microsoft Flight Simulator.",
+  "Description": "The voices, speeds, radio and options of the author of the program (selection of 2026-10-16): one voice for each actor, the intercom click and the aviation radio, the program started minimized with Microsoft Flight Simulator. The call sign of the helicopter is the airline of the aircraft.cfg of the livery.",
   "DefaultLanguage": "EN",
   "MasterVolume": 100,
+  "UseMissionVolumes": true,
+  "AttenCamInside": 9,
+  "AttenCamOutside": 12,
+  "BridgePack": "EN",
+  "Variety": "coherent",
+  "Names": "functions",
+  "CallSignMode": "airline",
   "Radio": {
     "NoiseLevel": 15,
     "RadioNoiseLevel": 25,
@@ -20,12 +27,6 @@
     "ExternalLevel": 100,
     "NotifyLevel": 100
   },
-  "UseMissionVolumes": true,
-  "AttenCamInside": 9,
-  "AttenCamOutside": 12,
-  "BridgePack": "EN",
-  "Variety": "coherent",
-  "Names": "functions",
   "CrewNames": {},
   "StartWithSim": true,
   "ExitWithSim": true,
@@ -49,8 +50,8 @@
           "Speed": 1.2
         },
         {
-          "Voice": "win:HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech_OneCore\\Voices\\Tokens\\MSTTS_V110_enUS_MarkM",
-          "Speed": 1.1
+          "Voice": "piper:en_GB-aru-medium:01",
+          "Speed": 1.5
         },
         {
           "Voice": "piper:en_US-bryce-medium",
@@ -83,6 +84,10 @@
         {
           "Voice": "piper:en_US-l2arctic-medium:ZHAA",
           "Speed": 1
+        },
+        {
+          "Voice": "piper:en_GB-aru-medium:10",
+          "Speed": 1.2
         }
       ]
     }

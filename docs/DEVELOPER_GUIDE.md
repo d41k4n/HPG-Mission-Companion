@@ -32,6 +32,7 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
   <radio:chirp>            shortcut: radio on with that beep type
   <ics> / <ics:off>        the wired intercom of the helicopter: a click, no beep, the intercom hiss of the Radio effect tab, no squelch tail
   <radio:ext>              a call on an external radio (dispatcher, hospital): double beep, external radio hiss, squelch tail
+  The squelch tail is one of ten recordings of the end of a transmission (assets\squelch-tail, embedded in the program; drawn at random, never the same twice in a row). The wav files of the folder audio\squelch-tail (created with the ten defaults at the first radio call) replace them: add, remove or change files there; with no file the old synthetic burst is used.
   <zone:far>               a voice that comes from 30 to 100 m away, heard very low (the program adds it from the zone variables)
   <EN> <FR> <IT> <DE>      language of the text (also <language:it>); it picks the voices of that language
   <defaultactor:11>        from now on every text without an actor tag is spoken by actor 11 (the HEMS mission sends it once, for its checklists); <defaultactor:off> ends it
@@ -84,6 +85,7 @@ Sound-only messages: a pack message with sfx="1" has no text, only a wav name; t
 Every pack has a whole version number that rises at every change of its texts. The mission declares what it needs at the start (or when the voice option is chosen):
 
   {"speak":"<pack:EN:1>"}          pack EN, at least version 1
+  {"speak":"<dsp:3:Bolzano>"}      who the dispatcher is: group index of the mission (GRPID), city of the base; the pack says it with {DSP} (pack EN 14, see docs/architecture/VOICEPACKS.md)
   {"speak":"<mission:RE>"}         the identity of the mission (R&E here); the program keeps it and shows it in the log, other missions use their own short id
 
 The program compares and tells the mission through simulator variables (SimConnect, it needs the MSFS SDK SimConnect.dll beside the program):

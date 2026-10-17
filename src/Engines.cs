@@ -717,7 +717,7 @@ namespace HPGMissionCompanion
                 int wavVol;
                 wavFile = Say.SplitWav(wavFile, out wavVol);
                 string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, wavFile.Replace("\\", "").Replace("..", "")));
-                if (File.Exists(path)) { Ctx.Log("[PLAY] " + wavFile + (wavVol < 100 ? " (level " + wavVol + ")" : "")); EnqueueFile(path, false, wavVol); }
+                if (AppSounds.Provide(path)) { Ctx.Log("[PLAY] " + wavFile + (wavVol < 100 ? " (level " + wavVol + ")" : "")); EnqueueFile(path, false, wavVol); }
                 else Ctx.Log("[WARN] sound file " + wavFile + " is not in the audio folder");
             }
             if (segs.Count == 0) return;
@@ -735,7 +735,7 @@ namespace HPGMissionCompanion
             int vol;
             string name = Say.SplitWav(spec, out vol);
             string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name.Replace("\\", "").Replace("..", "")));
-            if (!File.Exists(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder"); return; }
+            if (!AppSounds.Provide(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder and not in the program"); return; }
             Ctx.Log("[PLAY] " + name + (vol < 100 ? " (level " + vol + ")" : ""));
             Item item = new Item();
             item.IsFile = true;
@@ -752,7 +752,7 @@ namespace HPGMissionCompanion
         public void PlayNotificationTest(string name)
         {
             string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, name));
-            if (!File.Exists(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder"); return; }
+            if (!AppSounds.Provide(path)) { Ctx.Log("[WARN] sound file " + name + " is not in the audio folder and not in the program"); return; }
             Ctx.Log("[PLAY] " + name + " (test)");
             Item item = new Item();
             item.IsFile = true;

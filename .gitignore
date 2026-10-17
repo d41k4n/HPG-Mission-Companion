@@ -12,6 +12,7 @@
 *.pdb
 *.wav
 !assets/squelch-tail/*.wav
+!assets/app-sounds/*.wav
 *.onnx
 *.zip
 *.log

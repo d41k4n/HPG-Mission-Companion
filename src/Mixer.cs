@@ -35,7 +35,7 @@ namespace HPGMissionCompanion
             if (!Ctx.Settings.UseMissionVolumes) return 1.0;
             lock (sync)
             {
-                double v = actor == Actors.Count ? chk : crew;
+                double v = actor == Actors.Checklist ? chk : crew;
                 if (v < 0) return 1.0;
                 return Math.Max(0.0, Math.Min(1.0, v / 100.0));
             }

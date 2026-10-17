@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.24";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.28";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -119,11 +119,15 @@ namespace HPGMissionCompanion
 
     internal static class Actors
     {
-        public const int Count = 11;
+        public const int Count = 12;
+        public const int Checklist = 11;        // the voice of the checklists follows L:VOLUME_CHK; actor 12 (the heli rescuers and their base) came later and follows the crew volume
+        public const int HeliRescuer = 12;
+        // the actors whose voice can be drawn at random (the user's request of 2026-10-16): dispatcher, ground unit and hospital staff, heli rescuer
+        public static bool CanDraw(int actor) { return actor == 8 || actor == 9 || actor == 12; }
         public static readonly string[] Names = new string[]
         {
             "Pilot", "Copilot", "Doctor", "HEMS1", "HEMS2",
-            "Technician male", "Technician female", "Dispatcher", "Ground unit", "Patient / extra", "Checklist"
+            "Technician male", "Technician female", "Dispatcher", "Ground unit", "Patient / extra", "Checklist", "Heli rescuer"
         };
     }
 
@@ -131,6 +135,16 @@ namespace HPGMissionCompanion
     {
         public string Voice;
         public double Speed = 1.0;
+        public bool Random;                 // the voice is drawn (VoiceDraw): only for the actors in Actors.CanDraw
+        public List<string> Pool;           // the voices the draw may use (ids as in Voice); null or empty = every voice of the language
+
+        public ActorSetting Copy()
+        {
+            ActorSetting c = new ActorSetting();
+            c.Voice = Voice; c.Speed = Speed; c.Random = Random;
+            c.Pool = Pool == null ? null : new List<string>(Pool);
+            return c;
+        }
     }
 
     internal sealed class LangSetting
@@ -164,6 +178,8 @@ namespace HPGMissionCompanion
         public string BridgePack = "";          // active pack used by the mission: the pack whose texts are spoken when the mission lines (the LVAR counters, voice code APP) rise; "" = the first pack
         public string Variety = "random";       // random | coherent: how the text option of a message is chosen
         public string Names = "functions";      // functions | random: names of the crew in the texts (functions: the job roles, or the names typed in the Actors tab)
+        public string CallSignMode = "airline"; // airline: the atc_airline of the aircraft.cfg of the livery (Pelikan 3) | custom: the name typed in CallSign
+        public string CallSign = "";            // the custom call sign of the helicopter in the texts ({@HEMS}); the mode custom with an empty name says HEMS
         public Dictionary<string, string> CrewNames = new Dictionary<string, string>();   // role (PLT, CPL, PAX3, PAX1, PAX2, TECHM, TECHF) -> name typed by the user; used when Names is "functions"
         public bool UseMissionVolumes = true;   // follow L:VOLUME_CREW and L:VOLUME_CHK of the mission
         public int AttenCamInside = 9;          // dB less for a voice from outside heard while the view is inside the helicopter (0 = off)
@@ -217,6 +233,8 @@ namespace HPGMissionCompanion
             if (BridgePack == null) BridgePack = "";
             if (Variety != "coherent") Variety = "random";
             if (Names != "random") Names = "functions";
+            if (CallSignMode != "custom") CallSignMode = "airline";
+            if (CallSign == null) CallSign = "";
             if (CrewNames == null) CrewNames = new Dictionary<string, string>();
             AttenCamInside = Math.Max(0, Math.Min(30, AttenCamInside));
             AttenCamOutside = Math.Max(0, Math.Min(30, AttenCamOutside));
@@ -227,7 +245,11 @@ namespace HPGMissionCompanion
                 if (ls.Actors == null) ls.Actors = new List<ActorSetting>();
                 while (ls.Actors.Count < Actors.Count) ls.Actors.Add(new ActorSetting());
                 foreach (ActorSetting a in ls.Actors)
+                {
                     if (a.Speed < 0.5 || a.Speed > 3.0) a.Speed = 1.0;
+                    if (a.Pool != null && a.Pool.Count == 0) a.Pool = null;
+                }
+                for (int ai = 0; ai < ls.Actors.Count; ai++) if (!Actors.CanDraw(ai + 1)) ls.Actors[ai].Random = false;
             }
         }
 
@@ -582,6 +604,97 @@ namespace HPGMissionCompanion
         }
     }
 
+    // The voices drawn at random (the user's request of 2026-10-16). An actor with Random takes one voice of its pool (every voice of the language when the pool
+    // is empty) and keeps it until the mission asks for a new draw (<voices:shift> the dispatcher, <voices:dispatch> the ground unit and the heli rescuer).
+    // The voices of the actors that are drawn are never the same, and they avoid the voices that the other actors have chosen; only when there are not enough
+    // voices the rule is relaxed (first the voices of the chosen actors, then the draws of the others).
+    internal static class VoiceDraw
+    {
+        static readonly object sync = new object();
+        static readonly Dictionary<string, string> current = new Dictionary<string, string>();       // "EN|8" -> the voice id
+        static readonly Dictionary<string, string> previous = new Dictionary<string, string>();      // the voice before the last redraw: a new draw avoids it when it can
+        static readonly Random rng = new Random();
+
+        static string Key(string lang, int actor) { return lang + "|" + actor; }
+
+        // a new draw for these actors at the next use (all the languages)
+        public static void Redraw(params int[] actors)
+        {
+            lock (sync)
+            {
+                List<string> drop = new List<string>();
+                foreach (string k in current.Keys)
+                {
+                    int bar = k.IndexOf('|');
+                    int a;
+                    if (bar > 0 && int.TryParse(k.Substring(bar + 1), out a) && Array.IndexOf(actors, a) >= 0) drop.Add(k);
+                }
+                foreach (string k in drop) { previous[k] = current[k]; current.Remove(k); }
+            }
+        }
+
+        public static void Reset() { lock (sync) { current.Clear(); previous.Clear(); } }
+
+        public static string Current(string lang, int actor)
+        {
+            lock (sync) { string v; return current.TryGetValue(Key(lang, actor), out v) ? v : null; }
+        }
+
+        public static string Pick(Settings s, LangInfo li, int actor, List<VoiceInfo> voices)
+        {
+            lock (sync)
+            {
+                ActorSetting me = s.Get(li.Code, actor);
+                List<VoiceInfo> fam = VoiceLibrary.OfFamily(voices, li.Family);
+                string have;
+                if (current.TryGetValue(Key(li.Code, actor), out have) && VoiceLibrary.ById(fam, have) != null && InPool(me, have)) return have;
+                List<VoiceInfo> cand = new List<VoiceInfo>();
+                foreach (VoiceInfo v in fam) if (InPool(me, v.Id)) cand.Add(v);
+                if (cand.Count == 0) cand = fam;                       // the pool has no installed voice: every voice of the language
+                if (cand.Count == 0) return null;
+                List<string> usedFixed = new List<string>(), usedDrawn = new List<string>();
+                for (int a = 1; a <= Actors.Count; a++)
+                {
+                    if (a == actor) continue;
+                    ActorSetting o = s.Get(li.Code, a);
+                    if (o.Random)
+                    {
+                        string d;
+                        if (current.TryGetValue(Key(li.Code, a), out d)) usedDrawn.Add(d);
+                    }
+                    else if (!string.IsNullOrEmpty(o.Voice)) usedFixed.Add(o.Voice);
+                }
+                List<VoiceInfo> best = Without(cand, usedFixed, usedDrawn);
+                if (best.Count == 0) best = Without(cand, null, usedDrawn);
+                if (best.Count == 0) best = cand;
+                string before;
+                if (previous.TryGetValue(Key(li.Code, actor), out before) && best.Count > 1)
+                {
+                    List<VoiceInfo> other = new List<VoiceInfo>();
+                    foreach (VoiceInfo v in best) if (v.Id != before) other.Add(v);
+                    if (other.Count > 0) best = other;
+                }
+                string pick = best[rng.Next(best.Count)].Id;
+                current[Key(li.Code, actor)] = pick;
+                Ctx.Log("[VOICE] drawn for " + Actors.Names[actor - 1] + " (" + li.Code + "): " + pick);
+                return pick;
+            }
+        }
+
+        static bool InPool(ActorSetting a, string id)
+        {
+            return a.Pool == null || a.Pool.Count == 0 || a.Pool.Contains(id);
+        }
+
+        static List<VoiceInfo> Without(List<VoiceInfo> cand, List<string> a, List<string> b)
+        {
+            List<VoiceInfo> r = new List<VoiceInfo>();
+            foreach (VoiceInfo v in cand)
+                if ((a == null || !a.Contains(v.Id)) && (b == null || !b.Contains(v.Id))) r.Add(v);
+            return r;
+        }
+    }
+
     internal sealed class Plan
     {
         public VoiceInfo Voice;
@@ -598,6 +711,20 @@ namespace HPGMissionCompanion
 
     internal static class Resolver
     {
+        // No voice chosen for the actor: one of the family by the number of the actor. The technicians are the exception: Technician male (6) takes a male
+        // voice and Technician female (7) a female one when the family has them (the gender is the one the voice list shows), so that the voice always
+        // follows the technician of the scene; without such a voice the rule by number applies.
+        static VoiceInfo FallbackVoice(List<VoiceInfo> fam, int actor)
+        {
+            if (actor == 6 || actor == 7)
+            {
+                string want = actor == 7 ? " - female" : " - male";
+                List<VoiceInfo> match = fam.FindAll(delegate (VoiceInfo x) { return x.Display != null && x.Display.IndexOf(want, StringComparison.OrdinalIgnoreCase) >= 0; });
+                if (match.Count > 0) return match[0];
+            }
+            return fam[(actor - 1) % fam.Count];
+        }
+
         public static Plan Resolve(Segment seg, Settings s, List<VoiceInfo> voices)
         {
             Plan p = new Plan();
@@ -621,12 +748,12 @@ namespace HPGMissionCompanion
             bool forced = v != null;
             if (v == null)
             {
-                v = VoiceLibrary.ById(voices, a.Voice);
+                v = VoiceLibrary.ById(voices, a.Random ? VoiceDraw.Pick(s, li, p.Actor, voices) : a.Voice);
                 if (v != null && v.Family != li.Family && !string.IsNullOrEmpty(a.Voice)) { /* kept: the user chose it */ }
                 if (v == null)
                 {
                     List<VoiceInfo> fam = VoiceLibrary.OfFamily(voices, li.Family);
-                    if (fam.Count > 0) v = fam[(p.Actor - 1) % fam.Count];
+                    if (fam.Count > 0) v = FallbackVoice(fam, p.Actor);
                     else if (voices.Count > 0) { v = voices[0]; note += "no " + li.Name + " voice installed; "; }
                 }
             }

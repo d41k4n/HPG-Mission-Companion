@@ -1,8 +1,8 @@
 {
-    "sha256":  "80E4D4C275DB5A103E201D3429787A6B653FCE8ADAD06ECFEEDEF862783B5693",
-    "installerSha256":  "FE29DF0B341E977CA827D37EEE677F72971C6777784BFA30CED15335048F685A",
-    "deliveredOn":  "2026-10-14",
+    "sha256":  "3BD49393FA5AC22A25E0A96407EAFAE8346CF7DEA7334B6C2C170F1421EBF7E6",
+    "installerSha256":  "3570825B8D56701EAD9A58334497730DAAAF5ECE28855CD42C8FE3C9F868D531",
+    "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.24",
-    "note":  "Release 0.24: voice pack EN 13 with the tips of the crew (44 messages TIP.*), for mission 169.53. Static check PASS; --expand scenarios tests/tips-lines.txt and tests/crew-standin-lines.txt run with the built program. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.28",
+    "note":  "Release 0.28: the 8 notification sounds of the sound-only messages (tablet tones, alarm, dead) are resources of the program and are copied into the audio folder when missing (never replacing a file), and the log and the Service label say who holds the port when it is busy. Static check PASS; --ensure-sounds run on an empty, a partial and a customized folder (sha256 of the copies equal to the release app-sounds), --port-owner run on IPv4 and IPv6 listeners. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

@@ -206,7 +206,6 @@ namespace HPGMissionCompanion
             float[] burst = rs.Tail ? GetSquelchTail(sr, noiseRms) : null;
             int squelch = burst != null ? burst.Length : 0;
             float[] outd = new float[hissEnd + squelch];
-
             if (noiseRms > 0)
             {
                 float[] noise = MakeNoise(hissEnd, sr, noiseRms);
@@ -221,126 +220,128 @@ namespace HPGMissionCompanion
             }
             for (int i = 0; i < beep.Length; i++) outd[lead + i] += beep[i];
             for (int i = 0; i < speech.Length; i++) outd[speechStart + i] += speech[i];
-            if (squelch > 0)
-            {
-                for (int i = 0; i < burst.Length; i++) outd[hissEnd + i] += burst[i];
-            }
+            for (int i = 0; i < squelch; i++) outd[hissEnd + i] += burst[i];
             return outd;
         }
 
+        // ---- squelch tail: the click of a real transmission ends -------------------------------
+        // Ten recordings of ATC transmission ends (assets\squelch-tail, embedded in the program; idea and recordings of the fork by d41k4n, commit 64a54ca).
+        // One is drawn at every call (never the same twice in a row) and resampled to the rate of the voice. The user can replace them: wav files in the
+        // folder squelch-tail of the audio folder are used instead (the folder is created with the ten defaults the first time); without any file the
+        // old synthetic burst is used.
         static readonly object squelchSync = new object();
         static List<Pcm> squelchSnippets = null;
+        static string squelchSource = null;
+        static int squelchLast = -1;
         static readonly Random squelchRng = new Random();
+
+        public static string SquelchFolder
+        {
+            get { return string.IsNullOrEmpty(Ctx.AudioDir) ? null : Path.Combine(Ctx.AudioDir, "squelch-tail"); }
+        }
+
+        // forget the loaded recordings (the audio folder changed, or the user edited the folder)
+        public static void ReloadSquelch() { lock (squelchSync) { squelchSnippets = null; squelchLast = -1; } }
 
         static float[] GetSquelchTail(int targetRate, double noiseRms)
         {
             Pcm snippet = null;
             lock (squelchSync)
             {
-                if (squelchSnippets == null) squelchSnippets = LoadSquelchSnippets();
-                if (squelchSnippets.Count > 0)
+                if (squelchSnippets == null || squelchSource != SquelchFolder) { squelchSource = SquelchFolder; squelchSnippets = LoadSquelchSnippets(); }
+                int n = squelchSnippets.Count;
+                if (n > 0)
                 {
-                    int idx = squelchRng.Next(squelchSnippets.Count);
+                    int idx = squelchRng.Next(n);
+                    if (n > 1 && idx == squelchLast) idx = (idx + 1 + squelchRng.Next(n - 1)) % n;
+                    squelchLast = idx;
                     snippet = squelchSnippets[idx];
                 }
             }
             if (snippet != null)
             {
                 float[] burst = Resample(snippet.Data, snippet.Rate, targetRate);
-                int fade = Math.Min(burst.Length / 4, (int)(0.002 * targetRate));
-                if (fade > 1)
+                int fade = Math.Min(burst.Length / 4, (int)(0.002 * targetRate));     // micro fades: no click at the edges
+                for (int i = 0; i < fade; i++)
                 {
-                    for (int i = 0; i < fade; i++) burst[i] *= (float)(i / (double)fade);
-                    for (int i = 0; i < fade; i++) burst[burst.Length - 1 - i] *= (float)(i / (double)fade);
+                    float k = (float)(i / (double)fade);
+                    burst[i] *= k;
+                    burst[burst.Length - 1 - i] *= k;
                 }
                 return burst;
             }
-            int fallbackLen = (int)(0.12 * targetRate);
+            int len = (int)(0.12 * targetRate);
             double tailRms = Math.Max(0.05, noiseRms * 2.5);
-            float[] fb = MakeNoise(fallbackLen, targetRate, tailRms);
-            for (int i = 0; i < fallbackLen; i++) fb[i] = (float)(fb[i] * Math.Exp(-5.0 * i / fallbackLen));
+            float[] fb = MakeNoise(len, targetRate, tailRms);
+            for (int i = 0; i < len; i++) fb[i] = (float)(fb[i] * Math.Exp(-5.0 * i / len));
             return fb;
         }
 
         static List<Pcm> LoadSquelchSnippets()
         {
             List<Pcm> list = new List<Pcm>();
-
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            string[] searchDirs = new string[]
-            {
-                Path.Combine(baseDir, "assets", "squelch-tail"),
-                Path.Combine(baseDir, "..", "assets", "squelch-tail"),
-                Path.Combine("assets", "squelch-tail"),
-                Path.Combine(baseDir, "squelch-tail"),
-                Path.Combine(baseDir, "assets"),
-                Path.Combine(baseDir, "..", "assets"),
-                "assets",
-                baseDir
-            };
-            foreach (string dir in searchDirs)
-            {
-                try
-                {
-                    if (Directory.Exists(dir))
-                    {
-                        string filter = dir.EndsWith("squelch-tail", StringComparison.OrdinalIgnoreCase) ? "*.wav" : "squelch_tail_*.wav";
-                        string[] files = Directory.GetFiles(dir, filter);
-                        if (files.Length > 0)
-                        {
-                            Array.Sort(files, StringComparer.OrdinalIgnoreCase);
-                            foreach (string f in files)
-                            {
-                                byte[] bytes = File.ReadAllBytes(f);
-                                Pcm p = Decode(bytes);
-                                if (p != null && p.Data != null && p.Data.Length > 0) list.Add(p);
-                            }
-                            if (list.Count > 0) return list;
-                        }
-                    }
-                }
-                catch (Exception) { }
-            }
-
+            Assembly asm = typeof(AudioFx).Assembly;
+            string dir = SquelchFolder;
             try
             {
-                Assembly asm = typeof(AudioFx).Assembly;
-                List<string> resNames = new List<string>();
-                foreach (string n in asm.GetManifestResourceNames())
+                if (dir != null)
                 {
-                    string fn = Path.GetFileName(n);
-                    if (fn.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) &&
-                        (fn.StartsWith("squelch", StringComparison.OrdinalIgnoreCase) || n.IndexOf("squelch", StringComparison.OrdinalIgnoreCase) >= 0))
+                    if (!Directory.Exists(dir))        // first use: the defaults, so that the user sees them and can replace them
                     {
-                        resNames.Add(n);
-                    }
-                }
-                resNames.Sort(StringComparer.OrdinalIgnoreCase);
-                foreach (string res in resNames)
-                {
-                    using (Stream s = asm.GetManifestResourceStream(res))
-                    {
-                        if (s != null)
+                        Directory.CreateDirectory(dir);
+                        foreach (string res in SquelchResources(asm))
                         {
-                            byte[] bytes = new byte[s.Length];
-                            int read = 0;
-                            while (read < bytes.Length)
-                            {
-                                int n = s.Read(bytes, read, bytes.Length - read);
-                                if (n <= 0) break;
-                                read += n;
-                            }
-                            Pcm p = Decode(bytes);
-                            if (p != null && p.Data != null && p.Data.Length > 0) list.Add(p);
+                            using (Stream s = asm.GetManifestResourceStream(res))
+                            using (FileStream o = File.Create(Path.Combine(dir, Path.GetFileName(res))))
+                                if (s != null) s.CopyTo(o);
                         }
+                    }
+                    string[] files = Directory.GetFiles(dir, "*.wav");
+                    Array.Sort(files, StringComparer.OrdinalIgnoreCase);
+                    foreach (string f in files)
+                    {
+                        try
+                        {
+                            Pcm p = Decode(File.ReadAllBytes(f));
+                            if (p != null && p.Data.Length > 0) list.Add(p);
+                            else if (Ctx.Log != null) Ctx.Log("[WARN] Squelch tail: " + Path.GetFileName(f) + " is not a 16 bit wav, skipped");
+                        }
+                        catch (Exception) { }
                     }
                 }
             }
             catch (Exception) { }
-
+            if (list.Count == 0)
+            {
+                foreach (string res in SquelchResources(asm))
+                {
+                    try
+                    {
+                        using (Stream s = asm.GetManifestResourceStream(res))
+                        {
+                            if (s == null) continue;
+                            MemoryStream ms = new MemoryStream();
+                            s.CopyTo(ms);
+                            Pcm p = Decode(ms.ToArray());
+                            if (p != null && p.Data.Length > 0) list.Add(p);
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
             return list;
         }
 
+        static List<string> SquelchResources(Assembly asm)
+        {
+            List<string> names = new List<string>();
+            foreach (string n in asm.GetManifestResourceNames())
+                if (n.StartsWith("squelch_tail_", StringComparison.OrdinalIgnoreCase) && n.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)) names.Add(n);
+            names.Sort(StringComparer.OrdinalIgnoreCase);
+            return names;
+        }
+
+        // linear interpolation to the rate of the voice
         static float[] Resample(float[] input, int inRate, int outRate)
         {
             if (input == null || input.Length == 0) return new float[0];
@@ -351,17 +352,10 @@ namespace HPGMissionCompanion
             double ratio = inRate / (double)outRate;
             for (int i = 0; i < outLen; i++)
             {
-                double srcPos = i * ratio;
-                int idx = (int)srcPos;
-                if (idx >= input.Length - 1)
-                {
-                    outd[i] = input[input.Length - 1];
-                }
-                else
-                {
-                    double frac = srcPos - idx;
-                    outd[i] = (float)(input[idx] + frac * (input[idx + 1] - input[idx]));
-                }
+                double pos = i * ratio;
+                int idx = (int)pos;
+                if (idx >= input.Length - 1) outd[i] = input[input.Length - 1];
+                else outd[i] = (float)(input[idx] + (pos - idx) * (input[idx + 1] - input[idx]));
             }
             return outd;
         }
@@ -588,6 +582,62 @@ namespace HPGMissionCompanion
                 pos = body + len + (len & 1);
             }
             return haveFmt && dataPos >= 0 && dataLen > 0;
+        }
+    }
+
+    // The notification sounds of the sound-only messages of the pack (the tablet tones AND.NEW.DISPATCH*, AND.NEW.MSG, the tablet alarm, AND.dead) are part of
+    // the program (resources snd.*, from the release app-sounds). The program looks for each sound in the audio folder and copies it there from its own
+    // resources when it is missing: a new install, an empty or a new audio folder never leaves the mission without its tones (reports of 2026-10-17 and
+    // before: "sound file AND.NEW.MSG.wav is not in the audio folder"). A file that is already there is never replaced.
+    internal static class AppSounds
+    {
+        static readonly object sync = new object();
+
+        public static List<string> Names()
+        {
+            List<string> list = new List<string>();
+            foreach (string r in typeof(AppSounds).Assembly.GetManifestResourceNames()) if (r.StartsWith("snd.", StringComparison.Ordinal)) list.Add(r.Substring(4));
+            return list;
+        }
+
+        // true when the file is there (or has just been copied from the program)
+        public static bool Provide(string path)
+        {
+            if (File.Exists(path)) return true;
+            string name = Path.GetFileName(path);
+            string res = null;
+            foreach (string r in typeof(AppSounds).Assembly.GetManifestResourceNames())
+                if (r.StartsWith("snd.", StringComparison.Ordinal) && string.Equals(r.Substring(4), name, StringComparison.OrdinalIgnoreCase)) { res = r; break; }
+            if (res == null) return false;
+            lock (sync)
+            {
+                if (File.Exists(path)) return true;
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                    string part = path + ".part";
+                    using (Stream s = typeof(AppSounds).Assembly.GetManifestResourceStream(res))
+                    using (FileStream f = File.Create(part)) s.CopyTo(f);
+                    File.Move(part, path);
+                    Ctx.Log("[INFO] sound file " + name + " was missing: copied from the program into " + Path.GetDirectoryName(path));
+                    return true;
+                }
+                catch (Exception ex) { Ctx.Log("[WARN] sound file " + name + " cannot be copied into " + Path.GetDirectoryName(path) + ": " + ex.Message); return false; }
+            }
+        }
+
+        // all of them, at the start and when the audio folder changes; returns how many were copied
+        public static int EnsureAll()
+        {
+            int copied = 0;
+            if (string.IsNullOrEmpty(Ctx.AudioDir)) return 0;
+            foreach (string n in Names())
+            {
+                string p = Path.Combine(Ctx.AudioDir, n);
+                bool had = File.Exists(p);
+                if (Provide(p) && !had) copied++;
+            }
+            return copied;
         }
     }
 }
