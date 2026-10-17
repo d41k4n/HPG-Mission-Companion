@@ -354,7 +354,7 @@
       <o>Aussen-Check, einen Moment bitte.</o>
       <o>Bitte warten, ich mache die Aussen-Kontrolle.</o>
       <o>Aussen-Kontrolle, kurz warten.</o>
-      <o>Aussen-Kontrolle, Moment bitte.</o>
+      <o>Ich mache die Aussen-Kontrolle, bitte warten.</o>
       <o>Augenblick, ich mache die Aussen-Kontrolle.</o>
     </message>
     <message key="CPL.11" actor="2" radio="auto" lvar="L:CPL{VCP}11" wav="AND.cpl.prepare.for.gnd.op.wav" sleep="0">
