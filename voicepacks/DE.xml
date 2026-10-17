@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="3" basever="16" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="4" basever="17" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -2617,13 +2617,13 @@
       <o>Das Organ hält sich nicht gut.</o>
       <o>Das Organ verschlechtert sich von Minute zu Minute.</o>
     </message>
-    <message key="PAX3.25" actor="3" radio="auto" lvar="L:PAX3{VCP}25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
-      <o>Briefing: Bei Ankunft sichere ich die Einsatzstelle. Nach Freigabe stößt die Besatzung für medizinische Maßnahmen hinzu. Am Ende steigt das medizinische Team zuerst ein; bei Windenrettung steigt der Luftretter zuerst ein.</o>
-      <o>Briefing: Ich sichere bei Ankunft die Unfallstelle. Nach Freigabe kommt die Besatzung für die medizinische Versorgung nach. Zum Schluss steigt das Medizin-Team zuerst ein; wenn wir winschen, geht der Flugretter zuerst an Bord.</o>
-      <o>Briefing: Bei Ankunft sichere ich die Einsatzstelle, die Crew folgt nach Freigabe, und das medizinische Team steigt am Ende zuerst ein; bei Windenbergung steigt der Flugretter zuerst ein.</o>
-      <o>Briefing: Ich sichere vor Ort zuerst ab, dann kommt die Crew zur medizinischen Versorgung. Am Ende steigt die medizinische Besatzung zuerst ein, bei Windeneinsatz der Notfallretter zuerst.</o>
-      <o>Hier ist der Ablauf: Ich sichere zuerst die Stelle ab, nach Freigabe kommt die Crew nach, und am Ende steigt die medizinische Besatzung zuerst ein – außer bei Windenrettung, da geht der Luftretter vor.</o>
-      <o>Der Plan: Ich gehe zuerst vor und sichere ab, ihr kommt nach Freigabe dazu, und am Ende boardet das medizinische Personal zuerst, bei Windeneinsatz der Flugretter.</o>
+    <message key="PAX3.25" actor="12" radio="ics" lvar="L:PAX3{VCP}25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
+      <o>Briefing: Bei Ankunft sichere ich die Einsatzstelle. Nach Freigabe stößt die Besatzung für die medizinischen Maßnahmen dazu. Am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenrettung steige ich zuerst ein.</o>
+      <o>Briefing: Ich sichere bei Ankunft die Einsatzstelle. Sobald sie frei ist, kommt die Besatzung für die medizinische Versorgung nach. Am Ende steigt die medizinische Besatzung zuerst ein; wenn wir per Winde bergen, gehe ich zuerst an Bord.</o>
+      <o>Briefing: Bei Ankunft sichere ich die Stelle, die Besatzung folgt nach Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenbergung steige ich zuerst ein.</o>
+      <o>Briefing: Ich sichere bei Ankunft die Stelle, dann kommt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, bei einer Windenbergung ich.</o>
+      <o>Briefing: Ich gehe zuerst raus und sichere die Stelle. Wenn sie frei ist, folgt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, und ich nur bei einer Windenbergung zuerst.</o>
+      <o>Briefing: Ich sichere zuerst die Stelle, die Besatzung kommt nach meiner Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein, außer bei einer Windenbergung, da gehe ich zuerst.</o>
     </message>
     <message key="PAX3.26" actor="3" radio="auto" lvar="L:PAX3{VCP}26" wav="AND.pax3.weo.welcome.wav" sleep="0" futile="1">
       <o silent="1"/>
@@ -5918,15 +5918,15 @@
       <o>[lang:EN]And it lives in the profiles, so one profile can be a know-it-all and another one a monk.</o>
     </message>
 
-    <message key="AMB.DEP.DSP" actor="9" radio="ext" group="amb" seq="1" new="1" trigger="ambulance departed to the scene (external radio)">
-      <o>{@HEMS}, Rettungswagen ist unterwegs zum Einsatzort.</o>
-      <o>{@HEMS}, Rettungsdienst ist ausgerückt, wir fahren an.</o>
-      <o>{@HEMS}, Rettungswagen auf Anfahrt.</o>
-      <o>{@HEMS}, RTW ist unterwegs zum Einsatzort.</o>
-      <o>{@HEMS}, Rettungswagen rollt zum Einsatzort.</o>
-      <o>{@HEMS}, RTW auf dem Weg zur Einsatzstelle.</o>
+    <message key="AMB.DEP.DSP" actor="8" radio="on" group="ambdep" seq="1" new="1" trigger="the ambulance has loaded the patient and leaves for the hospital (the dispatcher tells it)">
+      <o>{@PLT}, {@DSP}. Der Rettungswagen hat den Patienten aufgenommen und ist auf dem Weg ins Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Die Bodeneinheit hat den Patienten an Bord und transportiert ihn ins Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Der Rettungswagen verlässt die Einsatzstelle mit dem Patienten, Ziel Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Patient im Rettungswagen verladen, sie fahren jetzt zum Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Der Rettungswagen hat den Patienten übernommen und rollt zum Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Gute Nachricht, der Rettungswagen hat den Patienten und fährt zum Krankenhaus.</o>
     </message>
-    <message key="AMB.CAN.DSP" actor="8" radio="ext" group="ambc" seq="1" new="1" trigger="dispatcher cancels the dispatch: ambulance transports all patients (external radio)">
+    <message key="AMB.CAN.DSP" actor="8" radio="on" group="ambcan" seq="1" new="1" trigger="the dispatch is cancelled because the ground units take every patient">
       <o>{@HEMS}, {@DSP}. Ihr Einsatz ist abgebrochen, der Rettungsdienst versorgt alle Patienten. Vielen Dank, Rückflug zur Basis.</o>
       <o>{@HEMS}, {@DSP}. Einsatz abbrechen, die Bodeneinheiten übernehmen den Transport. Rückkehr zur Basis, vielen Dank.</o>
       <o>{@HEMS}, {@DSP}. Einsatzauftrag storniert: Die Patienten sind im Rettungswagen. Sie können zur Basis zurückkehren.</o>
@@ -6215,5 +6215,316 @@
     <message key="DSP.NAME.15" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group FLORIAN CT (words only, {DSP}; {0} the city of the base)">
       <o>Florian Center</o>
     </message>
-
+    <message key="HRB.OPEN.ACC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing of the heli rescuers: accident or injured only (argument: injured)">
+      <o>Retter, hier das Briefing: Gemeldet ist ein Unfall mit {0} Verletzten. Die Lage ist unklar, deshalb planen wir mit dem Schlimmsten.</o>
+      <o>Briefing für die Retter. Die Leitstelle meldet einen Unfall mit {0} Verletzten. Wir haben noch kein klares Bild und bereiten uns auf eine schwere Lage vor.</o>
+      <o>Retter, das Briefing. Wir sind zu einem Unfall mit {0} Verletzten alarmiert. Details fehlen, und wir behandeln es als ernst, bis das Gegenteil feststeht.</o>
+      <o>Okay, herhören. Unfall, {0} Verletzte, und keiner weiß genau, was da unten los ist. Seid wachsam.</o>
+      <o>Gut, kurzes Briefing. Ein Unfall mit {0} Verletzten und noch kein klares Bild, wir rechnen mit dem Schlimmsten.</o>
+      <o>Also, Retter, das haben wir: ein Unfall, {0} Verletzte gemeldet, mehr nicht. Alles Weitere sehen wir vor Ort.</o>
+    </message>
+    <message key="HRB.OPEN.SAR" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: search and rescue (argument: persons)">
+      <o>Retter, hier das Briefing: Suche und Rettung, zu bergende Personen: {0}. Wir beginnen an der letzten bekannten Position und wissen nicht, wie lange sie schon draußen sind.</o>
+      <o>Briefing für die Retter. Das ist eine Suche und Rettung, zu bergende Personen: {0}. Wir suchen ab der letzten bekannten Position, die Zeit seit ihrem Verschwinden ist unbekannt.</o>
+      <o>Retter, das Briefing. Suche und Rettung, {0} zu bergen. Wir starten an der letzten bekannten Position und können nicht sagen, wie lange sie schon draußen sind.</o>
+      <o>Okay, herhören. Wir suchen {0} Vermisste. Wir starten an der letzten bekannten Position, und es kann eine lange Suche werden.</o>
+      <o>Gut, kurzes Briefing. Suche und Rettung, {0} zu finden, Start an der letzten bekannten Position. Keine Ahnung, wie lange sie schon draußen sind.</o>
+      <o>Also, Retter, wir haben {0} Vermisste und nur eine letzte bekannte Position. Augen auf, es kann dauern.</o>
+    </message>
+    <message key="HRB.OPEN.SARV" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: overdue vehicle">
+      <o>Retter, hier das Briefing: Suche und Rettung für ein überfälliges Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position, finden den Fahrer und bergen ihn.</o>
+      <o>Briefing für die Retter. Ein Fahrzeug ist überfällig. Wir fliegen die wahrscheinliche Route ab der letzten bekannten Position und suchen das Fahrzeug und den Fahrer.</o>
+      <o>Retter, das Briefing. Überfälliges Fahrzeug, nur die letzte bekannte Position. Wir folgen der wahrscheinlichen Route, finden den Fahrer und bergen ihn.</o>
+      <o>Okay, herhören. Ein Auto ist nie angekommen. Wir folgen seiner wahrscheinlichen Route ab der letzten bekannten Position und suchen den Fahrer.</o>
+      <o>Gut, kurzes Briefing. Überfälliges Fahrzeug: Wir fliegen die wahrscheinliche Route, finden das Auto, finden den Fahrer und bringen ihn raus.</o>
+      <o>Also, Retter, jemand ist überfällig und keiner weiß, wo. Wir folgen der wahrscheinlichen Route und suchen das Fahrzeug.</o>
+    </message>
+    <message key="HRB.OPEN.SARC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: parked car">
+      <o>Retter, hier das Briefing: Ein geparktes Auto wurde gefunden, der Besitzer wird vermisst. Wir suchen die Umgebung des Autos ab und bergen die Person.</o>
+      <o>Briefing für die Retter. Ein geparktes Fahrzeug wurde gefunden, der Besitzer fehlt. Wir beginnen am Auto, weiten die Suche aus und bergen die Person.</o>
+      <o>Retter, das Briefing. Geparktes Auto, Besitzer vermisst. Wir suchen rund um das Fahrzeug und bergen die Person, sobald wir sie finden.</o>
+      <o>Okay, herhören. Jemand hat ein Auto abgestellt und ist nie zurückgekommen. Wir beginnen am Auto und suchen die Umgebung ab.</o>
+      <o>Gut, kurzes Briefing. Ein geparktes Auto, und der Besitzer ist weg. Wir fangen dort an und suchen die Umgebung ab.</o>
+      <o>Also, Retter, wir haben ein leeres geparktes Auto und einen vermissten Besitzer. Wir beginnen am Auto und weiten die Suche aus.</o>
+    </message>
+    <message key="HRB.OPEN.SARH" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: person away from a house">
+      <o>Retter, hier das Briefing: Eine Person hat ihr Zuhause zu Fuß verlassen und wird vermisst. Wir suchen rund um das Haus und bergen sie.</o>
+      <o>Briefing für die Retter. Eine vermisste Person ist zu Fuß vom Haus weggegangen. Wir beginnen am Haus, suchen die Umgebung ab und bergen sie.</o>
+      <o>Retter, das Briefing. Eine Person ist von zu Hause weggelaufen. Wir suchen das Gebiet um das Haus ab und bergen sie, wenn wir sie finden.</o>
+      <o>Okay, herhören. Jemand ist von zu Hause weggegangen und wird vermisst. Wir beginnen am Haus und suchen die Umgebung ab.</o>
+      <o>Gut, kurzes Briefing. Eine Person fehlt von einem Haus, zu Fuß verschwunden. Wir suchen die Umgebung ab.</o>
+      <o>Also, Retter, eine Person ist von zu Hause losgezogen. Wir beginnen am Haus und schauen uns um.</o>
+    </message>
+    <message key="HRB.OPEN.TRF" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: patient transfer (argument: patients)">
+      <o>Retter, hier das Briefing: Eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Es gibt keine Einsatzstelle zu sichern, der Patient ist bereits in ärztlicher Obhut.</o>
+      <o>Briefing für die Retter. Das ist eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Einsatzstelle und keine Winde: Der Patient ist bereits in den Händen des Klinikpersonals.</o>
+      <o>Retter, das Briefing. Patientenverlegung, Patienten: {0}. Wir übernehmen im abgebenden Krankenhaus und fliegen sie zum Ziel.</o>
+      <o>Okay, herhören. Heute ist es eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Unfallstelle, ein sauberer Job.</o>
+      <o>Gut, kurzes Briefing. Eine Krankenhausverlegung, Patienten: {0}. Nichts zu sichern, wir übernehmen und fliegen.</o>
+      <o>Also, Retter, das hier ist eine Verlegung, Patienten: {0}. Ein ruhiger Job: abholen, fliegen, übergeben.</o>
+    </message>
+    <message key="HRB.OPEN.ORG" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: organ transport">
+      <o>Retter, hier das Briefing: ein Organtransport. Er ist zeitkritisch: Wir holen den Behälter ab und liefern ihn innerhalb der Frist. Es gibt keine Einsatzstelle zu sichern.</o>
+      <o>Briefing für die Retter. Organtransport, zeitkritisch. Wir holen den Behälter am Abholpunkt ab und liefern ihn vor Ablauf der Frist. Keine Einsatzstelle, keine Winde.</o>
+      <o>Retter, das Briefing. Wir transportieren ein Organ, und jede Minute zählt. Abholen, laden, liefern, ohne Einsatzstelle zu sichern.</o>
+      <o>Okay, herhören. Organtransport, die Uhr läuft. Wir holen es ab, laden es und fliegen los.</o>
+      <o>Gut, kurzes Briefing. Ein Organ auf Zeit: abholen, festschnallen, schnell liefern.</o>
+      <o>Also, Retter, wir fliegen ein Organ, und die Zeit ist knapp. Zügig am Boden, vorsichtig mit dem Behälter.</o>
+    </message>
+    <message key="HRB.ETA" actor="2" radio="auto" group="hrbrief" seq="2" new="1" trigger="the copilot gives the time to the scene (argument: minutes, 2 or more)">
+      <o>Die geschätzte Zeit bis zur Einsatzstelle beträgt etwa {0} Minuten.</o>
+      <o>Ankunft an der Einsatzstelle in etwa {0} Minuten bei der aktuellen Geschwindigkeit.</o>
+      <o>Wir sind etwa {0} Minuten von der Einsatzstelle entfernt.</o>
+      <o>Noch etwa {0} Minuten.</o>
+      <o>In rund {0} Minuten sind wir da.</o>
+      <o>Ungefähr {0} Minuten bis dorthin.</o>
+    </message>
+    <message key="HRB.VEH.BOTH" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units: some on scene (argument 1), others on the way (argument 0)">
+      <o>Am Boden: {list:1} {be:1} bereits an der Einsatzstelle und {list:0} {be:0} auf Anfahrt, wir stimmen uns mit ihnen ab.</o>
+      <o>Bodenkräfte: {list:1} an der Einsatzstelle, {list:0} auf Anfahrt. Den Landeplatz stimmen wir mit ihnen ab.</o>
+      <o>Unterstützung: {list:1} {be:1} vor Ort, {list:0} {be:0} noch unterwegs. Wir arbeiten zusammen.</o>
+      <o>Gute Nachricht: {list:1} {be:1} schon da, und {list:0} {be:0} auf Anfahrt.</o>
+      <o>Wir sind nicht allein: {list:1} vor Ort und {list:0} auf Anfahrt.</o>
+      <o>Bodenseite: {list:1} {be:1} vor Ort, {list:0} {be:0} kommt.</o>
+    </message>
+    <message key="HRB.VEH.SCENE" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units already on scene (argument 1)">
+      <o>{list:1} {be:1} schon an der Einsatzstelle, den Landeplatz stimmen wir mit ihnen ab.</o>
+      <o>Bodenkräfte: {list:1} {be:1} vor Ort. Wir stimmen uns mit ihnen ab.</o>
+      <o>Vor Ort haben wir {list:1}. Wir arbeiten mit ihnen zusammen und teilen uns die Fläche.</o>
+      <o>Wir haben Gesellschaft: {list:1} {be:1} schon da.</o>
+      <o>{list:1} {be:1} bereits vor Ort, wir tun uns mit ihnen zusammen.</o>
+      <o>Bodenseite: {list:1} {be:1} schon da.</o>
+    </message>
+    <message key="HRB.VEH.WAY" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units on the way (argument 0)">
+      <o>{list:0} {be:0} auf Anfahrt, aber wir sind wahrscheinlich zuerst da.</o>
+      <o>Bodenkräfte: {list:0} {be:0} unterwegs. Wir kommen eventuell vor ihnen an.</o>
+      <o>Unterstützung kommt: {list:0} {be:0} auf Anfahrt, voraussichtlich nach uns.</o>
+      <o>{list:0} {be:0} unterwegs, aber wir sind höchstwahrscheinlich zuerst da.</o>
+      <o>Bodenkräfte sind unterwegs: {list:0}. Wir sind wahrscheinlich vor ihnen da.</o>
+      <o>Hilfe ist unterwegs: {list:0}. Wir sind voraussichtlich zuerst dort.</o>
+    </message>
+    <message key="HRB.VEH.NONE" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers there are no ground units">
+      <o>Keine Bodenkräfte vor Ort oder auf Anfahrt. Wir sind zuerst da, also sichert ihr die Stelle.</o>
+      <o>Noch keine Rettungsfahrzeuge alarmiert. Wir kommen zuerst an, und die Sicherung der Stelle liegt bei uns.</o>
+      <o>Noch niemand am Boden und keine Einheiten unterwegs. Ihr sichert die Stelle, bevor sich jemand bewegt.</o>
+      <o>Wir sind allein: keine Bodenkräfte, keine auf Anfahrt.</o>
+      <o>Niemand dort und niemand unterwegs, vorerst. Wir sind zuerst vor Ort.</o>
+      <o>Sonst ist niemand am Boden, die Stelle gehört uns. Ihr sichert sie zuerst.</o>
+    </message>
+    <message key="HRB.MED.ACC" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: accident or injured only">
+      <o>Notarzt hier. Medizinisch wissen wir noch nichts. Ich beurteile bei Ankunft, der kritischste Patient kommt zuerst, und bei mehreren helft ihr mir bei der Sichtung.</o>
+      <o>Notarzt: noch keine klinischen Details. Ich beurteile, wenn wir unten sind, und versorge den kritischsten zuerst. Bei mehreren Patienten unterstützt ihr die Sichtung.</o>
+      <o>Notarzt am Funk. Zustand unbekannt, ich beurteile bei Ankunft und lege die Prioritäten fest. Bei mehreren Verletzten sortieren wir nach Dringlichkeit, und dafür brauche ich eure Augen.</o>
+      <o>Notarzt hier. Ehrlich gesagt haben wir kein klinisches Bild. Ich sehe mir zuerst den Patienten an, dann entscheiden wir. Bei mehreren sichten wir gemeinsam.</o>
+      <o>Medizinisch ist es ein weißes Blatt. Ich beurteile zuerst, der schwerste Patient wird zuerst versorgt, und bei mehreren helft ihr mir beim Sortieren.</o>
+      <o>Notarzt hier. Noch keine Details zu den Verletzungen. Erstbeurteilung vor Ort, dann die Prioritäten, und ich zähle auf eure Hilfe bei der Sichtung.</o>
+    </message>
+    <message key="HRB.MED.SAR" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: search and rescue">
+      <o>Notarzt hier. Medizinisch wissen wir nichts. Nach Stunden im Freien erwarte ich Unterkühlung, Erschöpfung oder Sturzverletzungen. Wenn wir sie finden, beurteile ich, und ihr helft bei der Bergung.</o>
+      <o>Notarzt: Der Zustand ist unbekannt. Ich rechne mit Kälte, Austrocknung oder Trauma. Wenn die Person gefunden ist, beurteile ich, und bei der Bergung zähle ich auf euch.</o>
+      <o>Notarzt am Funk. Keine klinischen Informationen. Wir können Unterkühlung, Erschöpfung oder Verletzungen finden. Ich beurteile beim Kontakt, und ihr leitet die Bergung am Boden.</o>
+      <o>Notarzt hier. Keine Ahnung, wie es ihnen geht. Nach langer Zeit im Freien kann es Kälte, Erschöpfung oder ein Sturz sein. Ich sehe sie mir zuerst an, ihr helft mir beim Herausholen.</o>
+      <o>Medizinisch ist es ein weißes Blatt. Ich erwarte Kälte oder Verletzungen, beurteile beim Kontakt, und ihr helft bei der Bergung.</o>
+      <o>Notarzt hier. Es kann alles sein, von Erschöpfung bis zu schwerem Trauma. Ich beurteile, wenn wir sie finden, und ihr helft mir beim Rest.</o>
+    </message>
+    <message key="HRB.MED.TRF" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: patient transfer">
+      <o>Notarzt hier. Der Patient ist im abgebenden Krankenhaus bereits stabilisiert. Ich übernehme die Übergabe, prüfe Monitore und Zugänge, und ich brauche einen ruhigen Flug.</o>
+      <o>Notarzt: Der Patient ist im abgebenden Krankenhaus stabil. Ich übernehme die Übergabe und prüfe vor dem Laden Monitore und Zugänge, und ich bitte um einen sanften Flug.</o>
+      <o>Notarzt am Funk. Patient vor Ort stabilisiert. Zuerst die Übergabe, dann das Laden, und ich überwache den ganzen Flug.</o>
+      <o>Notarzt hier. Der Patient ist schon stabil, also kommt es auf eine saubere Übergabe und einen sanften Flug an.</o>
+      <o>Notarzt hier. Übergabe, Monitore prüfen, dann laden wir. Bitte ruhig fliegen.</o>
+      <o>Notarzt hier. Der Patient ist stabil. Ich übernehme, wir laden vorsichtig und fliegen ihn sanft.</o>
+    </message>
+    <message key="HRB.MED.ORG" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: organ transport">
+      <o>Notarzt hier. Bei der Abholung prüfe ich Siegel, Temperatur und Papiere des Behälters. Niemand sonst fasst ihn an, und er bleibt den ganzen Flug über festgeschnallt und waagerecht.</o>
+      <o>Notarzt: Ich kontrolliere bei der Abholung Siegel, Temperatur und Dokumente. Den Behälter handhabt nur die medizinische Besatzung, er bleibt festgeschnallt und waagerecht.</o>
+      <o>Notarzt am Funk. Zuerst die Behälterkontrolle: Siegel, Temperatur, Papiere. Er bleibt festgeschnallt, aufrecht und unberührt bis zur Übergabe.</o>
+      <o>Notarzt hier. Ich prüfe zuerst die Box und die Papiere, und sonst legt niemand Hand an. Sie bleibt festgeschnallt.</o>
+      <o>Notarzt hier. Siegel, Temperatur, Papiere, dann die Gurte. Nur die medizinische Besatzung fasst den Behälter an.</o>
+      <o>Notarzt hier. Der Behälter ist meine Sache: prüfen, festschnallen und die ganze Strecke waagerecht halten.</o>
+    </message>
+    <message key="HRB.PLAN.G.CHF" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew chief briefs the ground sequence: the rescuer out first, calls the area, boards last">
+      <o>Wenn wir nah beim Patienten landen können, läuft es so am Boden. Du steigst als Erster durch die linke Tür aus, sicherst die Stelle und meldest sie. Deine Meldung ist die Freigabe für den Notarzt und mich, dann bringen wir die Trage und die Tasche. Am Ende steigst du als Letzter ein.</o>
+      <o>Ablauf am Boden. Wir landen nah beim Patienten, und du steigst zuerst links aus und sicherst die Stelle. Wenn du sie als sicher meldest, folgen der Notarzt und ich mit der Trage und der Tasche. Zurück bist du der Letzte an Bord. Können wir nicht nah landen, wechseln wir zur Winde.</o>
+      <o>Wenn wir landen: Du bist zuerst draußen durch die linke Tür und sicherst die Stelle, und deine Meldung ist die Freigabe für die Besatzung. Der Notarzt und ich rücken dann mit der Ausrüstung aus, und du steigst zuletzt ein. Können wir nicht landen, winschen wir.</o>
+      <o>Plan A ist der Boden: Wir landen nah beim Patienten, du steigst zuerst aus, prüfst die Stelle und meldest sie. Wenn du sicher sagst, kommen wir raus. Du bist der Letzte, der wieder einsteigt.</o>
+      <o>Wenn wir landen können, gehst du zuerst raus, machst die Stelle sicher und sagst uns Bescheid. Dann folgen der Notarzt und ich mit der Trage und der Tasche. Du steigst zuletzt ein.</o>
+      <o>Erst der Boden: Landung nah beim Patienten, du zuerst raus und sicherst, wir folgen auf deine Meldung. Zurück bist du der Letzte.</o>
+    </message>
+    <message key="HRB.PLAN.H.CHF" actor="4" radio="auto" group="hrbrief" seq="6" new="1" trigger="the rear crew chief briefs the hoist sequence: the rescuer down first, the winch, the crew on the call, the rescuer up last">
+      <o>Können wir nicht nah landen, gilt der Ablauf mit der Winde. Ich bediene die Winde. Du gehst als Erster am Seil nach unten, sicherst die Stelle und meldest sie. Deine Meldung ist die Freigabe für den Notarzt, der als Nächster runtergeht. Auf dem Rückweg bist du der Letzte am Seil.</o>
+      <o>Ablauf mit der Winde. Keine Landung nah beim Patienten, also bediene ich die Winde. Du wirst als Erster abgeseilt, sicherst die Stelle und meldest sie als sicher. Der Notarzt folgt auf deine Meldung, und du kommst zuletzt hoch.</o>
+      <o>Wenn es die Winde ist: Du gehst zuerst runter und sicherst die Stelle, ich bediene das Seil, und der Notarzt geht auf deine Meldung runter. Am Ende kommen der Patient und der Notarzt zuerst hoch, und du bist der Letzte am Seil.</o>
+      <o>Plan B ist die Winde: Du zuerst am Seil, du sicherst die Stelle und meldest sie. Der Notarzt folgt, wenn du Go sagst. Du kommst zuletzt hoch.</o>
+      <o>Wenn wir winschen, bediene ich das Seil, und du gehst zuerst runter. Du prüfst die Stelle und meldest sie frei, dann geht der Notarzt runter. Du bist der Letzte oben.</o>
+      <o>Sonst winschen wir: Du gehst zuerst runter und machst es sicher, der Notarzt folgt auf deine Meldung, und du kommst zuletzt hoch.</o>
+    </message>
+    <message key="HRB.PLAN.G.CPL" actor="2" radio="auto" group="hrbrief" seq="5" new="1" trigger="the copilot (fewer than 4 crew) briefs the ground sequence">
+      <o>Wenn wir nah beim Patienten landen können, läuft es so am Boden. Du steigst als Erster durch die linke Tür aus, sicherst die Stelle und meldest sie. Deine Meldung ist die Freigabe für den Notarzt und die Besatzung. Am Ende steigst du als Letzter ein.</o>
+      <o>Ablauf am Boden. Wir landen nah beim Patienten, und du steigst zuerst links aus und sicherst die Stelle. Wenn du sie als sicher meldest, folgen der Notarzt und die Besatzung mit der Ausrüstung. Zurück bist du der Letzte an Bord. Können wir nicht nah landen, wechseln wir zur Winde.</o>
+      <o>Wenn wir landen: Du bist zuerst draußen durch die linke Tür und sicherst die Stelle, und deine Meldung ist die Freigabe für die Besatzung. Der Notarzt folgt mit der Ausrüstung, und du steigst zuletzt ein. Können wir nicht landen, winschen wir.</o>
+      <o>Plan A ist der Boden: Wir landen nah beim Patienten, du steigst zuerst aus, prüfst die Stelle und meldest sie. Wenn du sicher sagst, kommt der Notarzt raus. Du bist der Letzte, der wieder einsteigt.</o>
+      <o>Wenn wir landen können, gehst du zuerst raus, machst die Stelle sicher und sagst uns Bescheid. Dann folgt der Notarzt mit der Ausrüstung. Du steigst zuletzt ein.</o>
+      <o>Erst der Boden: Landung nah beim Patienten, du zuerst raus und sicherst, der Notarzt folgt auf deine Meldung. Zurück bist du der Letzte.</o>
+    </message>
+    <message key="HRB.PLAN.H.CPL" actor="2" radio="auto" group="hrbrief" seq="6" new="1" trigger="the copilot (fewer than 4 crew) briefs the hoist sequence">
+      <o>Können wir nicht nah landen, gilt der Ablauf mit der Winde. Ich bediene die Winde aus der Kabine. Du gehst als Erster am Seil nach unten, sicherst die Stelle und meldest sie. Deine Meldung ist die Freigabe für den Notarzt, der als Nächster runtergeht. Auf dem Rückweg bist du der Letzte am Seil.</o>
+      <o>Ablauf mit der Winde. Keine Landung nah beim Patienten, also bediene ich die Winde aus der Kabine. Du wirst als Erster abgeseilt, sicherst die Stelle und meldest sie als sicher. Der Notarzt folgt auf deine Meldung, und du kommst zuletzt hoch.</o>
+      <o>Wenn es die Winde ist: Du gehst zuerst runter und sicherst die Stelle, ich bediene das Seil, und der Notarzt geht auf deine Meldung runter. Am Ende kommen der Patient und der Notarzt zuerst hoch, und du bist der Letzte am Seil.</o>
+      <o>Plan B ist die Winde: Du zuerst am Seil, du sicherst die Stelle und meldest sie. Ich bediene die Winde, der Notarzt folgt, wenn du Go sagst. Du kommst zuletzt hoch.</o>
+      <o>Wenn wir winschen, bediene ich das Seil, und du gehst zuerst runter. Du prüfst die Stelle und meldest sie frei, dann geht der Notarzt runter. Du bist der Letzte oben.</o>
+      <o>Sonst winschen wir: Du gehst zuerst runter und machst es sicher, der Notarzt folgt auf deine Meldung, und du kommst zuletzt hoch.</o>
+    </message>
+    <message key="HRB.PLAN.TRF" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew briefs the role of the rescuers on a patient transfer">
+      <o>Für dich: keine Einsatzstelle und keine Winde. Bleib sitzen und angeschnallt. Bei der Abholung hilfst du bei Trage und Übergabe, dann bleibst du in der Kabine, während wir den Patienten sanft ausfliegen.</o>
+      <o>Deine Rolle: keine Einsatzstelle und keine Winde. Du hilfst bei der Abholung mit der Trage und der Übergabe, dann bleibst du für den Flug sitzen und angeschnallt.</o>
+      <o>Für die Retter: Bei diesem Einsatz gibt es nichts zu sichern. Hilf bei der Abholung mit der Trage, dann bleib auf deinem Platz und im Gurt, bis wir gelandet sind.</o>
+      <o>Du hast einen leichten Einsatz. Du hilfst mit der Trage, dann setzt du dich hin, Gurt an, und bleibst aus dem Weg.</o>
+      <o>Keine Einsatzstelle zu sichern. Hilf uns mit der Trage und der Übergabe, und bleib dann sitzen und angeschnallt.</o>
+      <o>Dein Job heute: die Trage bei der Abholung, dann ein Sitz und ein Gurt. Mehr nicht.</o>
+    </message>
+    <message key="HRB.PLAN.ORG" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew briefs the role of the rescuers on an organ transport">
+      <o>Für dich: keine Einsatzstelle und keine Winde. Wir landen, laden den Behälter und schnallen ihn fest, du hältst die Kabine frei und bleibst angeschnallt. Nur die medizinische Besatzung fasst den Behälter an.</o>
+      <o>Deine Rolle: keine Einsatzstelle und keine Winde. Hilf uns, den Behälter zu sichern, halte die Kabine frei und bleib sitzen und angeschnallt.</o>
+      <o>Für die Retter: nichts zu sichern. Haltet die Kabine frei, während wir den Behälter laden und festzurren, und fasst ihn nicht an.</o>
+      <o>Leichter Job für dich: Geh uns aus dem Weg, während wir die Box laden, Gurt an, Finger weg vom Behälter.</o>
+      <o>Keine Einsatzstelle. Wir laden und sichern den Behälter, du hältst die Kabine frei und bleibst sitzen.</o>
+      <o>Dein Job heute: Sitz, Gurt und Finger weg vom Behälter.</o>
+    </message>
+    <message key="HRB.ASK" actor="1" radio="auto" group="hrbrief" seq="7" new="1" trigger="the pilot asks for questions on the plan">
+      <o>Gibt es Fragen zum Plan?</o>
+      <o>Ist alles klar? Gibt es Fragen?</o>
+      <o>Fragen von irgendjemandem, bevor wir weitermachen?</o>
+      <o>Irgendwelche Zweifel? Jetzt ist der Moment.</o>
+      <o>Alle im Bilde? Noch Fragen?</o>
+      <o>Ist etwas unklar? Dann jetzt sagen.</o>
+    </message>
+    <message key="HRB.Q.1" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks who gives the go once the area is secure">
+      <o>Eine Frage: Wer gibt das Go, sobald die Stelle gesichert ist?</o>
+      <o>Frage: Wer gibt nach meiner Sicherung der Stelle das Go zum Weitermachen?</o>
+      <o>Nur zur Sicherheit: Wer gibt das Go, nachdem die Stelle gesichert ist?</o>
+      <o>Wer gibt das Go, wenn die Stelle sicher ist?</o>
+      <o>Kurze Frage: Wer sagt Go, sobald ich gesichert habe?</o>
+      <o>Wer gibt das Go, wenn ich die Stelle sicher gemacht habe?</o>
+    </message>
+    <message key="HRB.A.1" actor="3" radio="auto" group="hrbrief" seq="9" new="1" trigger="the doctor answers: the rescuer gives the go">
+      <o>Du. Deine Meldung, dass die Stelle sicher ist, ist unser Go. Vorher verlässt niemand den Hubschrauber.</o>
+      <o>Das Go liegt bei dir. Sobald du die Stelle als sicher meldest, machen wir weiter. Nicht vorher.</o>
+      <o>Du gibst es. Deine Sicherheitsmeldung ist das grüne Licht, und davor verlässt niemand den Hubschrauber.</o>
+      <o>Das ist deine Entscheidung. Wenn du sicher sagst, rücken wir aus. Keine Sekunde früher.</o>
+      <o>Du. Wir warten auf deine Sicherheitsmeldung, dann kommen wir.</o>
+      <o>Das liegt bei dir. Deine Meldung ist unser grünes Licht.</o>
+    </message>
+    <message key="HRB.Q.2" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks what to do with a hazard or more patients">
+      <o>Was mache ich, wenn ich da unten eine Gefahr oder weitere Patienten finde?</o>
+      <o>Frage: Wie gehen wir mit einer Gefahr oder zusätzlichen Patienten an der Einsatzstelle um?</o>
+      <o>Wenn ich am Boden eine Gefahr oder weitere Verletzte finde, wie gehen wir vor?</o>
+      <o>Und wenn ich da unten eine Gefahr oder mehr Patienten finde?</o>
+      <o>Was, wenn es eine Gefahr oder mehr Patienten als gemeldet gibt?</o>
+      <o>Was, wenn die Lage schlimmer ist als gemeldet?</o>
+    </message>
+    <message key="HRB.A.2" actor="1" radio="auto" group="hrbrief" seq="9" new="1" trigger="the pilot answers: report at once, hold, re-plan">
+      <o>Meldet es sofort über Funk. Wir halten, planen neu, und ich fordere bei der Leitstelle weitere Einheiten an.</o>
+      <o>Meldet es unverzüglich. Wir halten oben, planen den Anflug neu, und ich fordere zusätzliche Einheiten an.</o>
+      <o>Meldet es sofort über Funk. Niemand bewegt sich, bis wir einen neuen Plan haben, und ich fordere mehr Kräfte an.</o>
+      <o>Sagt es mir sofort. Wir bleiben, wo wir sind, denken neu nach, und ich rufe mehr Hilfe.</o>
+      <o>Ruft es über Funk. Wir warten, wir planen neu, und ich fordere bei der Leitstelle Verstärkung an.</o>
+      <o>Funkt mich sofort an. Wir halten, wir überlegen neu, und ich rufe weitere Einheiten.</o>
+    </message>
+    <message key="HRB.Q.3" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks what is needed on the ground besides the security">
+      <o>Was brauchst du außer der Sicherung sonst noch von mir am Boden?</o>
+      <o>Abgesehen von der Sicherung der Stelle: Was ist meine Aufgabe am Boden?</o>
+      <o>Was brauchst du sonst noch von mir, wenn die Stelle sicher ist?</o>
+      <o>Was willst du da unten von mir, außer dass ich es sicher mache?</o>
+      <o>Soll ich am Boden noch etwas tun?</o>
+      <o>Was soll ich nach der Sicherung tun?</o>
+    </message>
+    <message key="HRB.A.3" actor="3" radio="auto" group="hrbrief" seq="9" new="1" trigger="the doctor answers: keep the area, help with the triage, fetch the equipment">
+      <o>Halte die Stelle frei und die Schaulustigen zurück, hilf mir bei der Sichtung, falls es mehr Patienten gibt, und bring, was ich verlange.</o>
+      <o>Halte die Stelle frei und die Schaulustigen fern, unterstütze die Sichtung bei mehreren Patienten und hol die Ausrüstung, die ich brauche.</o>
+      <o>Halte die Stelle, halte die Leute von uns fern, assistiere bei der Sichtung, wenn nötig, und trage, was ich verlange.</o>
+      <o>Halte die Leute zurück, hilf mir beim Sortieren der Patienten, wenn es mehr als einen gibt, und hol, was ich brauche.</o>
+      <o>Halte die Menge fern und hilf mir bei der Sichtung und mit der Ausrüstung.</o>
+      <o>Halte alle fern, hilf bei der Sichtung und trage, was ich verlange.</o>
+    </message>
+    <message key="HRB.NOQ" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer has no questions">
+      <o>Keine Fragen, alles klar.</o>
+      <o>Alles klar bei mir, keine Fragen.</o>
+      <o>Verstanden, keine Fragen.</o>
+      <o>Alles gut, nichts hinzuzufügen.</o>
+      <o>Klar auf meiner Seite.</o>
+      <o>Keine Zweifel hier.</o>
+    </message>
+    <message key="HRB.DB.1" actor="3" radio="auto" group="hrbrief" seq="10" new="1" trigger="the doctor asks the pilot how landing or hoisting is decided">
+      <o>Pilot, wie entscheiden wir zwischen Landung und Winde?</o>
+      <o>Pilot, was entscheidet zwischen dem Ablauf am Boden und dem mit der Winde?</o>
+      <o>Pilot, wer entscheidet, ob Boden oder Winde, und wann?</o>
+      <o>Pilot, wann wissen wir, ob wir landen oder winschen?</o>
+      <o>Eine Sache, Pilot: Wie wählen wir zwischen Landung und Winde?</o>
+      <o>Pilot, Landung oder Winde: Wann entscheiden wir?</o>
+    </message>
+    <message key="HRB.DBA.1" actor="1" radio="auto" group="hrbrief" seq="11" new="1" trigger="the pilot answers: on scene, confirmed two miles out">
+      <o>Ich entscheide vor Ort, wenn ich die Fläche sehe. Wenn ich nah landen kann, gilt der Ablauf am Boden, sonst die Winde. Ich bestätige es noch einmal zwei Meilen vorher.</o>
+      <o>Ich entscheide, wenn ich die Fläche sehe. Ein brauchbarer Landeplatz nah beim Patienten heißt Boden, sonst Winde. Ich bestätige bei zwei Meilen.</o>
+      <o>Das entscheide ich vor Ort. Landung nah heißt Boden, keine Landung heißt Winde, und ich bestätige bei zwei Meilen.</o>
+      <o>Ich sehe mir die Fläche an, wenn wir da sind. Können wir nah landen, Boden, wenn nicht, Winde. Ich sage es euch bei zwei Meilen.</o>
+      <o>Vor Ort, wenn ich es sehe. Landeplatz nah, Boden, sonst Winde, und ich sage es euch zwei Meilen vorher.</o>
+      <o>Ich entscheide, wenn wir da sind: Ein guter Platz nah bei ihnen heißt Boden, sonst Winde. Ihr hört es bei zwei Meilen.</o>
+    </message>
+    <message key="HRB.DB.2" actor="2" radio="auto" group="hrbrief" seq="12" new="1" trigger="the copilot asks what happens when the ground units are late and the area is not secure">
+      <o>Und wenn die Bodenkräfte bei unserer Ankunft noch nicht da sind und die Stelle nicht gesichert ist?</o>
+      <o>Was, wenn wir vor den Bodenkräften ankommen und niemand die Stelle gesichert hat?</o>
+      <o>Wenn wir zuerst an der Einsatzstelle sind und sie nicht gesichert ist, was dann?</o>
+      <o>Was, wenn bei unserer Ankunft niemand da ist, der die Stelle sichert?</o>
+      <o>Und wenn die Bodenkräfte sich verspäten und die Stelle nicht sicher ist?</o>
+      <o>Was, wenn wir zuerst da sind und es nicht sicher ist?</o>
+    </message>
+    <message key="HRB.DBA.2" actor="12" radio="ics" group="hrbrief" seq="13" new="1" trigger="the rescuer answers: I secure it myself first">
+      <o>Dann sichere ich sie zuerst selbst. Niemand verlässt den Hubschrauber, bevor ich es melde.</o>
+      <o>Ich sichere die Stelle zuerst, egal was die Bodenkräfte tun. Niemand bewegt sich, bis ich es melde.</o>
+      <o>In dem Fall mache ich die Stelle selbst sicher, bevor jemand anderes runterkommt.</o>
+      <o>Dann mache ich es selbst. Niemand kommt raus, bis ich es sage.</o>
+      <o>Ich kümmere mich selbst um die Sicherung, und die Besatzung wartet auf meine Meldung.</o>
+      <o>Dann liegt es bei mir. Ich sichere, ich melde, und dann kommt ihr.</o>
+    </message>
+    <message key="HRB.RB.HR" actor="12" radio="ics" group="hrbrief" seq="14" new="1" trigger="the rescuer reads back the sequence (ground and hoist)">
+      <o>Verstanden. Ob Boden oder Winde, ich gehe zuerst, sichere die Stelle und melde sie. Die Besatzung folgt auf meine Meldung, und ich steige als Letzter ein.</o>
+      <o>Verstanden. Ich gehe in beiden Fällen zuerst, sichere die Stelle und melde sie, die Besatzung rückt auf meine Meldung aus, und ich steige zuletzt ein.</o>
+      <o>Wiederholung: zuerst raus oder zuerst runter, sichern, melden, die Besatzung folgt auf meine Meldung, als Letzter wieder an Bord.</o>
+      <o>Habe verstanden. Ich gehe zuerst, mache die Stelle sicher, melde sie, und ihr folgt. Ich komme als Letzter zurück.</o>
+      <o>Alles verstanden. Zuerst runter, die Stelle sichern, meine Meldung ist das Go, und ich steige zuletzt ein.</o>
+      <o>Alles klar. Ich gehe zuerst und mache es sicher, ihr kommt auf meine Meldung, und ich bin der Letzte im Hubschrauber.</o>
+    </message>
+    <message key="HRB.RB.X" actor="12" radio="ics" group="hrbrief" seq="14" new="1" trigger="the rescuer reads back his role on a transfer or an organ transport">
+      <o>Verstanden. Ich bleibe an Bord, helfe beim Laden und halte die Kabine frei.</o>
+      <o>Verstanden. Ich bleibe an Bord und unterstütze das Laden, und ich halte die Kabine frei.</o>
+      <o>Wiederholung: keine Einsatzstelle für mich, ich helfe beim Laden und bleibe sitzen.</o>
+      <o>Habe verstanden. Ich helfe beim Laden und gehe dann aus dem Weg.</o>
+      <o>Alles verstanden. Ich bleibe an Bord und helfe beim Laden.</o>
+      <o>Alles klar. Ich helfe beim Laden und halte die Kabine frei.</o>
+    </message>
+    <message key="HRB.RB.DOC" actor="3" radio="auto" group="hrbrief" seq="15" new="1" trigger="the doctor confirms">
+      <o>Notarzt verstanden. Ich rücke auf die Meldung des Retters aus, beurteile und behandle, und dann laden wir.</o>
+      <o>Notarzt verstanden. Ich gehe auf die Meldung des Retters, dann Beurteilung, Behandlung und Laden.</o>
+      <o>Notarzt verstanden: erst die Meldung des Retters, dann gehe ich, beurteile und behandle.</o>
+      <o>Verstanden vom Notarzt. Ich warte auf die Meldung, dann gehe ich zum Patienten.</o>
+      <o>Notarzt hier, verstanden. Ich gehe, wenn der Retter es meldet, und die Beurteilung kommt zuerst.</o>
+      <o>Verstanden. Ich komme auf die Meldung raus und sehe mir zuerst den Patienten an.</o>
+    </message>
+    <message key="HRB.RB.CRW" actor="4" radio="auto" group="hrbrief" seq="16" new="1" trigger="the rear crew confirms">
+      <o>Hintere Besatzung verstanden. Ausrüstung bereit, und ich folge der Meldung.</o>
+      <o>Hintere Besatzung verstanden. Trage und Tasche bereit, wir rücken auf die Meldung des Retters aus.</o>
+      <o>Verstanden von der hinteren Besatzung. Bei mir ist alles bereit.</o>
+      <o>Leitender hier, verstanden. Ausrüstung bereit, wir warten auf die Meldung.</o>
+      <o>Hintere Besatzung verstanden, bereit, wenn ihr es seid.</o>
+      <o>Verstanden. Meine Seite ist bereit.</o>
+    </message>
+    <message key="HRB.END" actor="1" radio="auto" group="hrbrief" seq="17" new="1" trigger="the pilot closes the briefing">
+      <o>Gut. Den Plan wiederhole ich zwei Meilen vorher. Bis dahin Augen nach draußen, und meldet alles, was ihr seht.</o>
+      <o>Danke, alle zusammen. Zwei Meilen vorher briefen wir noch einmal. Bis dahin Augen offen.</o>
+      <o>Briefing abgeschlossen. Ich bestätige den Plan bei zwei Meilen, und bis dahin bleiben alle aufmerksam.</o>
+      <o>Gut. Wir gehen es zwei Meilen vorher noch einmal durch. Seid wachsam.</o>
+      <o>Also, Briefing beendet. Zwei Meilen vorher wiederhole ich es, und jetzt Augen nach draußen.</o>
+      <o>Okay, los geht es. Zwei Meilen vorher wiederhole ich den Plan, und bis dahin bleibt aufmerksam.</o>
+    </message>
 </voicepack>

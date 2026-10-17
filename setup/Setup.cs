@@ -14,19 +14,20 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
 [assembly: AssemblyTitle("HPG Mission Companion Setup")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.28.0.0")]
-[assembly: AssemblyFileVersion("0.28.0.0")]
+[assembly: AssemblyVersion("0.31.0.0")]
+[assembly: AssemblyFileVersion("0.31.0.0")]
 
 namespace HpgSetup
 {
     static class Info
     {
-        public const string Version = "0.28";
+        public const string Version = "0.31";
         public const string Name = "HPG Mission Companion";
         public const string Author = "Andrea Daviero";
         public const string ExeName = "HPGMissionCompanion.exe";
@@ -79,10 +80,14 @@ namespace HpgSetup
         public string Screenshot;
         public bool FromTemp;       // the uninstaller runs from a copy in the temp folder (the one in the install folder cannot delete itself)
         public int WaitPid;         // the process to wait for before going on
+        public bool ShowErrors;     // silent setup started by the program (the update): a failure is shown, not only logged
+        public bool Elevated;       // this copy of the setup was started again with administrator rights to close a program that it could not close
+        public static string[] RawArgs = new string[0];
 
         public static Options Parse(string[] args)
         {
             Options o = new Options();
+            RawArgs = args;
             foreach (string raw in args)
             {
                 string a = raw.Trim();
@@ -96,12 +101,19 @@ namespace HpgSetup
                 else if (l == "/oneclick") { o.OneClick = true; o.OneClickSet = true; }
                 else if (l == "/nooneclick") { o.OneClick = false; o.OneClickSet = true; }
                 else if (l == "/fromtemp") o.FromTemp = true;
+                else if (l == "/showerrors") o.ShowErrors = true;
+                else if (l == "/elevated") o.Elevated = true;
                 else if (l.StartsWith("/waitpid=")) int.TryParse(a.Substring(9), out o.WaitPid);
                 else if (l.StartsWith("/dir=")) o.Dir = a.Substring(5).Trim('"');
                 else if (l.StartsWith("/screenshot=")) o.Screenshot = a.Substring(12).Trim('"');
             }
             return o;
         }
+    }
+
+    class NeedElevationException : Exception
+    {
+        public NeedElevationException(string message) : base(message) { }
     }
 
     static class Ops
@@ -120,14 +132,32 @@ namespace HpgSetup
 
         static void Extract(string name, string path)
         {
-            using (Stream s = Resource(name))
+            // a file that the program has just left can stay locked for a moment (antivirus, the end of the process): try for about ten seconds
+            for (int attempt = 0; ; attempt++)
             {
-                if (s == null) throw new InvalidOperationException("missing resource " + name);
-                using (FileStream f = new FileStream(path, FileMode.Create, FileAccess.Write))
+                try
                 {
-                    byte[] buf = new byte[65536];
-                    int n;
-                    while ((n = s.Read(buf, 0, buf.Length)) > 0) f.Write(buf, 0, n);
+                    using (Stream s = Resource(name))
+                    {
+                        if (s == null) throw new InvalidOperationException("missing resource " + name);
+                        using (FileStream f = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        {
+                            byte[] buf = new byte[65536];
+                            int n;
+                            while ((n = s.Read(buf, 0, buf.Length)) > 0) f.Write(buf, 0, n);
+                        }
+                    }
+                    return;
+                }
+                catch (IOException ex)
+                {
+                    if (attempt >= 20) throw new IOException("The file " + path + " is in use and cannot be replaced (" + ex.Message + "). Close the program (the icon in the notification area, Exit) and run the setup again.");
+                    Thread.Sleep(500);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    if (attempt >= 20) throw new IOException("The file " + path + " cannot be written (" + ex.Message + "). Close the program and run the setup again.");
+                    Thread.Sleep(500);
                 }
             }
         }
@@ -145,49 +175,82 @@ namespace HpgSetup
             return null;
         }
 
-        static List<Process> RunningFrom(string dir)
+        // every copy of the program that runs now, wherever it runs from (the program allows one copy: the one of an older folder, or one whose
+        // path cannot be read because it runs with other rights, would hold the port and the files all the same)
+        static List<Process> RunningCopies()
         {
             List<Process> list = new List<Process>();
-            string exe = Path.GetFullPath(Path.Combine(dir, Info.ExeName));
-            foreach (Process p in Process.GetProcessesByName("HPGMissionCompanion"))
-            {
-                try { if (string.Equals(p.MainModule.FileName, exe, StringComparison.OrdinalIgnoreCase)) list.Add(p); }
-                catch (Exception) { }
-            }
+            int me = Process.GetCurrentProcess().Id;
+            foreach (Process p in Process.GetProcessesByName("HPGMissionCompanion")) if (p.Id != me) list.Add(p);
             return list;
         }
 
-        public static bool IsRunning(string dir) { return RunningFrom(dir).Count > 0; }
-
-        // ends the Piper processes that run from this folder (the children of the program: a program that is ended by force leaves them behind)
-        static void KillPiper(string dir)
+        static string PathOf(Process p)
         {
-            string root = Path.GetFullPath(dir).TrimEnd('\\') + "\\";
+            try { return p.MainModule.FileName; }
+            catch (Exception) { return "path not readable"; }
+        }
+
+        public static bool IsRunning(string dir) { return RunningCopies().Count > 0; }
+
+        public static bool IsElevated()
+        {
+            try { return new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator); }
+            catch (Exception) { return false; }
+        }
+
+        // ends the Piper processes of the folders of the copies that are closed (the children of the program: a program that is ended by force leaves them behind)
+        static void KillPiper(List<string> dirs)
+        {
+            List<string> roots = new List<string>();
+            foreach (string d in dirs) { try { roots.Add(Path.GetFullPath(d).TrimEnd('\\') + "\\"); } catch (Exception) { } }
             foreach (Process q in Process.GetProcessesByName("piper"))
             {
-                try { if (q.MainModule.FileName.StartsWith(root, StringComparison.OrdinalIgnoreCase)) q.Kill(); }
+                try
+                {
+                    string f = q.MainModule.FileName;
+                    foreach (string r in roots) if (f.StartsWith(r, StringComparison.OrdinalIgnoreCase)) { q.Kill(); break; }
+                }
                 catch (Exception) { }
             }
         }
 
-        // asks the program to close; if it only hides in the notification area, ends it and its Piper processes with the .NET calls (no helper program)
-        public static void CloseRunning(string dir, Action<string> log)
+        // the program only hides in the notification area when its window is closed: it is asked once and then ended with the .NET calls (no helper program).
+        // Every step goes to the setup log (%TEMP%\HPGMissionCompanionSetup.log). A copy that cannot be ended (it runs with administrator rights and this
+        // setup does not) makes the setup start again with those rights; if it still cannot be ended the install stops with the reason, it never goes on
+        // over a running program.
+        public static void CloseRunning(string dir, Action<string> log, bool elevated)
         {
-            foreach (Process p in RunningFrom(dir))
+            List<Process> copies = RunningCopies();
+            if (copies.Count == 0) return;
+            List<string> dirs = new List<string>();
+            dirs.Add(dir);
+            foreach (Process p in copies)
             {
-                log("Closing the running program");
+                string where = PathOf(p);
+                log("Closing the running program (PID " + p.Id + ", " + where + ")");
+                try { string d = Path.GetDirectoryName(where); if (!string.IsNullOrEmpty(d) && Directory.Exists(d)) dirs.Add(d); } catch (Exception) { }
+                try { p.CloseMainWindow(); } catch (Exception) { }
+            }
+            Thread.Sleep(800);
+            foreach (Process p in copies)
+            {
                 try
                 {
-                    p.CloseMainWindow();
-                    if (!p.WaitForExit(4000))
-                    {
-                        KillPiper(dir);
-                        p.Kill();
-                        p.WaitForExit(4000);
-                    }
+                    if (p.HasExited) continue;
+                    KillPiper(dirs);
+                    p.Kill();
+                    p.WaitForExit(6000);
                 }
-                catch (Exception ex) { Info.Log("close failed: " + ex.Message); }
+                catch (Exception ex) { log("The program (PID " + p.Id + ") could not be ended: " + ex.Message); }
             }
+            KillPiper(dirs);
+            List<Process> left = RunningCopies();
+            if (left.Count == 0) { log("The running program was closed"); return; }
+            string detail = "";
+            foreach (Process p in left) detail += (detail.Length > 0 ? "; " : "") + "PID " + p.Id + " (" + PathOf(p) + ")";
+            if (!elevated && !IsElevated()) throw new NeedElevationException("The running program cannot be closed with these rights: " + detail);
+            throw new InvalidOperationException("The running program cannot be closed: " + detail + ". Close it from its icon in the notification area (Exit) or from the Task Manager and run the setup again.");
         }
 
         static void MakeShortcut(string lnk, string target, string arguments, string workDir, string description)
@@ -222,6 +285,26 @@ namespace HpgSetup
             return n;
         }
 
+        // starts this setup again with administrator rights (the user answers the Windows question) and returns its exit code
+        public static int RunElevated(Options o, string dir)
+        {
+            StringBuilder a = new StringBuilder("/S /elevated /showerrors /dir=\"" + dir.TrimEnd('\\') + "\"");
+            if (!o.Desktop) a.Append(" /nodesktop");
+            if (!o.StartMenu) a.Append(" /nostartmenu");
+            if (!o.Launch) a.Append(" /nolaunch");
+            if (o.OneClickSet) a.Append(o.OneClick ? " /oneclick" : " /nooneclick");
+            ProcessStartInfo psi = new ProcessStartInfo(Assembly.GetExecutingAssembly().Location, a.ToString());
+            psi.UseShellExecute = true;
+            psi.Verb = "runas";
+            Info.Log("starting again with administrator rights: " + a);
+            using (Process p = Process.Start(psi))
+            {
+                if (p == null) return 1;
+                p.WaitForExit();
+                return p.ExitCode;
+            }
+        }
+
         public static void Install(Options o, Action<string> log)
         {
             string dir = Path.GetFullPath(o.Dir);
@@ -230,7 +313,12 @@ namespace HpgSetup
             Info.Log("install to " + dir);
             CleanTempUninstallers();
 
-            CloseRunning(dir, log);
+            if (o.WaitPid > 0)
+            {
+                try { using (Process old = Process.GetProcessById(o.WaitPid)) { log("Waiting for the program that started the setup to end"); old.WaitForExit(10000); } }
+                catch (Exception) { }
+            }
+            CloseRunning(dir, log, o.Elevated);
             Directory.CreateDirectory(dir);
 
             log("Copying the program");
@@ -372,7 +460,8 @@ namespace HpgSetup
             dir = Path.GetFullPath(dir);
             Info.Log("uninstall from " + dir + " removeData=" + removeData);
             string exe = Path.Combine(dir, Info.ExeName);
-            CloseRunning(dir, log);
+            try { CloseRunning(dir, log, true); }
+            catch (Exception ex) { log("Could not close the running program: " + ex.Message); }
 
             // the program removes itself from the EXE.xml of the simulators (its own code edits those files)
             if (File.Exists(exe))
@@ -574,7 +663,7 @@ namespace HpgSetup
             }
             if (Ops.IsRunning(opt.Dir))
             {
-                if (MessageBox.Show(this, "The program is running from this folder. It will be closed to update it.", Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK) return;
+                if (MessageBox.Show(this, "The program is running. It will be closed to update it.", Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK) return;
             }
             install.Enabled = false;
             close.Enabled = false;
@@ -590,9 +679,20 @@ namespace HpgSetup
                 close.Visible = false;
                 if (opt.Launch)
                 {
-                    try { Process.Start(new ProcessStartInfo(exe) { WorkingDirectory = opt.Dir, UseShellExecute = false }); }
+                    // through the shell: the program inherits no handle of the setup (the setup got the port of the old program from the program that started it)
+                    try { Process.Start(new ProcessStartInfo(exe) { WorkingDirectory = opt.Dir, UseShellExecute = true }); }
                     catch (Exception ex) { AddLog("Could not start the program: " + ex.Message); }
                 }
+            }
+            catch (NeedElevationException ex)
+            {
+                AddLog(ex.Message);
+                AddLog("Starting the setup again with administrator rights...");
+                int rc = 1;
+                try { rc = Ops.RunElevated(opt, opt.Dir); }
+                catch (Exception ex2) { AddLog("The setup could not be started with administrator rights: " + ex2.Message); }
+                if (rc == 0) { done = true; install.Text = "Finish"; install.Enabled = true; close.Visible = false; AddLog("Done (by the setup with administrator rights)."); }
+                else { AddLog("The install failed, see the log " + Path.Combine(Path.GetTempPath(), "HPGMissionCompanionSetup.log")); install.Enabled = true; close.Enabled = true; dirBox.Enabled = true; oneClick.Enabled = true; }
             }
             catch (Exception ex)
             {
@@ -646,10 +746,16 @@ namespace HpgSetup
                 if (o.Silent)
                 {
                     if (o.Dir == null) o.Dir = Info.DefaultDir();
-                    Ops.Install(o, delegate (string s) { Info.Log(s); });
+                    try { Ops.Install(o, delegate (string s) { Info.Log(s); }); }
+                    catch (NeedElevationException ex)
+                    {
+                        Info.Log(ex.Message);
+                        return Ops.RunElevated(o, o.Dir);
+                    }
                     if (o.Launch)
                     {
-                        try { Process.Start(new ProcessStartInfo(Path.Combine(o.Dir, Info.ExeName)) { WorkingDirectory = o.Dir, UseShellExecute = false }); }
+                        // through the shell: the program inherits no handle of the setup (see the install window)
+                        try { Process.Start(new ProcessStartInfo(Path.Combine(o.Dir, Info.ExeName)) { WorkingDirectory = o.Dir, UseShellExecute = true }); }
                         catch (Exception) { }
                     }
                     return 0;
@@ -674,7 +780,7 @@ namespace HpgSetup
             catch (Exception ex)
             {
                 Info.Log("ERROR: " + ex);
-                if (!o.Silent) MessageBox.Show(ex.Message, Info.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!o.Silent || o.ShowErrors) MessageBox.Show(ex.Message + "\r\n\r\nThe log of the setup: " + Path.Combine(Path.GetTempPath(), "HPGMissionCompanionSetup.log"), Info.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 1;
             }
         }

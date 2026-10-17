@@ -34,13 +34,16 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.28.0.0")]
-[assembly: AssemblyFileVersion("0.28.0.0")]
+[assembly: AssemblyVersion("0.31.0.0")]
+[assembly: AssemblyFileVersion("0.31.0.0")]
 
 namespace HPGMissionCompanion
 {
     internal static class Program
     {
+        // a second start of the program tells the first one to show its window (the mutex only lets one run)
+        internal static EventWaitHandle ShowEvent;
+
         [STAThread]
         static int Main(string[] args)
         {
@@ -394,6 +397,14 @@ namespace HPGMissionCompanion
                 File.WriteAllText(portOwnerReport, "port " + portNo + ": " + (portUser.Length > 0 ? portUser : "nobody") + "\r\n");
                 return 0;
             }
+            // --pool-test <report>: the random voices window driven on a made-up list (sort, used for, copy and paste through the clipboard)
+            string poolTestReport = Option(args, "--pool-test");
+            if (poolTestReport != null) return PoolSelfTest.Run(poolTestReport);
+            // --port-leak-test <report>: a program started while the service runs must not keep the port after the service stopped
+            string leakReport = Option(args, "--port-leak-test");
+            if (leakReport != null) return Server.LeakTest(leakReport);
+            string poolShot = Option(args, "--pool-shot");
+            if (poolShot != null) return PoolSelfTest.Shot(poolShot);
             // --expand <report> --text "<tagged text>" [--repeat N] [--seed N]: what the program would speak for a mission text (no audio)
             string expandReport = Option(args, "--expand");
             if (expandReport != null)
@@ -544,7 +555,12 @@ namespace HPGMissionCompanion
             if (Option(args, "--screenshot") == null)         // a screenshot run may happen while the program is running
             {
                 mutex = new Mutex(true, "Local\\HPGMissionCompanion", out createdNew);
-                if (!createdNew) return 0;
+                try { ShowEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "Local\\HPGMissionCompanion.show"); } catch (Exception) { ShowEvent = null; }
+                if (!createdNew)
+                {
+                    try { if (ShowEvent != null) ShowEvent.Set(); } catch (Exception) { }
+                    return 0;
+                }
             }
 
             Application.EnableVisualStyles();

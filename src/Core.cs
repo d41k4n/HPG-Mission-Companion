@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.28";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.31";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -387,6 +387,9 @@ namespace HPGMissionCompanion
         public string Family;       // "en", "fr", "it", "de", ...
         public string[] Keys;       // names a mission tag can use
         public int Rank;            // quality, higher is better
+        public string Sex = "";     // "male", "female" or "" when it is not known (the random voices window shows it)
+        public string QualityText = ""; // "x_low", "low", "medium", "high" (Piper) or "Windows"
+        public string Short = "";   // the name in the lists of the random voices window: name (engine, language)
         public string WinId;
         public string ModelPath;
         public string ConfigPath;
@@ -435,6 +438,10 @@ namespace HPGMissionCompanion
                     e.Display = name + " - " + gender.ToLowerInvariant() + " (Windows, " + lang + ")";
                     e.Keys = new string[] { name, id.Substring(id.LastIndexOf('\\') + 1) };
                     e.Rank = 5;
+                    string sexWord = gender.ToLowerInvariant();
+                    e.Sex = sexWord == "male" || sexWord == "female" ? sexWord : "";
+                    e.QualityText = "Windows";
+                    e.Short = name + " (Windows, " + lang + ")";
                     list.Add(e);
                 }
             }
@@ -495,6 +502,8 @@ namespace HPGMissionCompanion
                             VoiceInfo e = NewPiper(key, model, config, length, family, rank);
                             e.Id = "piper:" + key + ":" + kv.Key;
                             e.Speaker = Convert.ToInt32(kv.Value, CultureInfo.InvariantCulture);
+                            e.QualityText = quality;
+                            e.Short = name + " " + kv.Key + " (Piper, " + langCode + ")";
                             e.Display = name + " " + kv.Key + " - " + quality + " (Piper, " + langCode + ")";
                             e.Keys = new string[] { key + ":" + kv.Key, name + ":" + kv.Key, name + " " + kv.Key };
                             list.Add(e);
@@ -504,6 +513,9 @@ namespace HPGMissionCompanion
                     {
                         VoiceInfo e = NewPiper(key, model, config, length, family, rank);
                         e.Id = "piper:" + key;
+                        e.Sex = hint;
+                        e.QualityText = quality;
+                        e.Short = name + " (Piper, " + langCode + ")";
                         e.Display = name + " - " + quality + (hint.Length > 0 ? " - " + hint : "") + " (Piper, " + langCode + ")";
                         e.Keys = new string[] { key, name + "-" + quality, name };
                         list.Add(e);
@@ -592,6 +604,8 @@ namespace HPGMissionCompanion
                 e.Display = label + " (STT4SG)";
                 e.Keys = new string[] { "stt4sg:" + dialect, dialect, "de_" + dialect, "ch_" + dialect, "stt4sg_" + dialect };
                 e.Rank = 4;
+                e.QualityText = "Online";
+                e.Short = label + " (STT4SG)";
                 list.Add(e);
             }
         }
@@ -600,6 +614,18 @@ namespace HPGMissionCompanion
         {
             List<VoiceInfo> r = new List<VoiceInfo>();
             foreach (VoiceInfo v in voices) if (v.Family == family) r.Add(v);
+            return r;
+        }
+
+        // An online voice (STT4SG) sends the text to a server on the internet: it is used only when the user chose it (a fixed voice, or a pool that holds it), never
+        // by the rule of the number of the actor and never when a random pool is empty.
+        public static bool IsOnline(VoiceInfo v) { return v != null && v.Engine == "stt4sg"; }
+
+        // the voices of the family that the program may take by itself (every voice that runs on this PC)
+        public static List<VoiceInfo> AutoOfFamily(List<VoiceInfo> voices, string family)
+        {
+            List<VoiceInfo> r = new List<VoiceInfo>();
+            foreach (VoiceInfo v in voices) if (v.Family == family && !IsOnline(v)) r.Add(v);
             return r;
         }
     }
@@ -650,7 +676,7 @@ namespace HPGMissionCompanion
                 if (current.TryGetValue(Key(li.Code, actor), out have) && VoiceLibrary.ById(fam, have) != null && InPool(me, have)) return have;
                 List<VoiceInfo> cand = new List<VoiceInfo>();
                 foreach (VoiceInfo v in fam) if (InPool(me, v.Id)) cand.Add(v);
-                if (cand.Count == 0) cand = fam;                       // the pool has no installed voice: every voice of the language
+                if (cand.Count == 0) cand = VoiceLibrary.AutoOfFamily(voices, li.Family);   // the pool has no installed voice: every voice of the language that runs on this PC
                 if (cand.Count == 0) return null;
                 List<string> usedFixed = new List<string>(), usedDrawn = new List<string>();
                 for (int a = 1; a <= Actors.Count; a++)
@@ -752,9 +778,13 @@ namespace HPGMissionCompanion
                 if (v != null && v.Family != li.Family && !string.IsNullOrEmpty(a.Voice)) { /* kept: the user chose it */ }
                 if (v == null)
                 {
-                    List<VoiceInfo> fam = VoiceLibrary.OfFamily(voices, li.Family);
+                    List<VoiceInfo> fam = VoiceLibrary.AutoOfFamily(voices, li.Family);
                     if (fam.Count > 0) v = FallbackVoice(fam, p.Actor);
-                    else if (voices.Count > 0) { v = voices[0]; note += "no " + li.Name + " voice installed; "; }
+                    else
+                    {
+                        foreach (VoiceInfo any in voices) if (!VoiceLibrary.IsOnline(any)) { v = any; break; }
+                        if (v != null) note += "no " + li.Name + " voice installed; ";
+                    }
                 }
             }
             p.Voice = v;

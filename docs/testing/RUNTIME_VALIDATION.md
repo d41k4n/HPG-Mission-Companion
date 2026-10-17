@@ -100,3 +100,34 @@ The same file holds a CARLS keypad hold test that belongs to the mission reposit
 1. Clean up: close the simulator, open Tools, Clean up, check the four groups (Safe to delete, R&E configuration files, User settings with global.json, Other files), tick only the first, keep the backup. The files of the other groups, `global.json` and the saved profiles must still be there, and `backups\` must hold the zip. Then tick only User settings: `global.json` is gone and the mission writes a new one at the next start with every setting at its default (the zip holds the old one).
 2. Update mission index: press the button with the Community folder of the simulator; the output ends with SUCCESS, the index file time changes; in the simulator press Refresh in the mission app and a newly added mission file appears.
 3. Start with the simulator: tick the option, start the simulator: the app appears in the notification area (not in the taskbar), serves port 5997 on 127.0.0.1, and exits about 15 s after the simulator closes. Windows Firewall must not ask to open the port, and the mission still connects (the log of the program shows the connection); with "Accept connections from other computers" ticked it listens on 0.0.0.0 and the question may come back.
+
+## The setup closes the old program (0.29, PENDING)
+
+Reports of the testers (update during the use: the old copy stays, port busy). Offline checks done with a scratch install: a copy running from folder A and a setup into folder B closes the copy of A (log: Closing the running program (PID, path) / The running program was closed); a setup started with /waitpid waits for that process; the exe of the install folder locked for four seconds is replaced after the wait; a second start of the program shows the window of the first. Not tested offline: a copy with administrator rights (the setup asks for them and starts again).
+
+1. Start the program from the autostart of the simulator, press Check for updates (or run the setup by hand) while it runs: after the update only the new copy runs (Task Manager: one HPGMissionCompanion), the service is running on 5997 and the log has no port warning.
+2. Run the simulator as administrator (so that the autostart starts the program with those rights) and run the setup by hand: the Windows question appears once, the old copy is closed, the new one is installed.
+3. After a restart of the program in the middle of a flight: the voices of the crew come back within the first minute (they only return when the mission has found its voice server again: the mission skips every crew line while its voice server is away). Note in the log how long it takes from the service start to the first spoken line.
+
+## The random voices window: sex, quality, used for, sort, copy and paste (0.30, PENDING)
+
+User request of 2026-10-17. Offline: `HPGMissionCompanion.exe --pool-test report.txt` (ALL PASS) and `--pool-shot picture.png` run on a scratch build. With the program running and real voices:
+
+1. Actors and voices tab, set the dispatcher to "Random voice (see Voices...)" and open Voices...: every voice of the language has its sex (Windows voices: from Windows; Piper: known names, else unknown), its quality and, in the column Used, the actors that have it as their fixed voice (change the voice of the Pilot in the tab and open the window again: the Used column follows).
+2. Click each column title: the list is sorted by name, sex, quality, used first; click again: reversed; the checks stay.
+3. Check some voices, press Copy random to clipboard, paste into a text editor: header, language, one voice a line. Open Voices... of the ground unit (random too), press Paste random from clipboard: the same voices are checked; the line below the list says how many were pasted and how many are not available. OK, Save settings, restart: the pool of the ground unit is kept.
+4. Paste a text that is not a copy, and a copy made in another language: nothing changes and the line says so.
+
+## Fork of Daikan integrated in 0.30 (PENDING)
+
+Static: merged without conflicts, `tools/check.js` PASS, DE 4 has the same 1242 keys as EN 17 (no key missing or extra, the placeholders of every option checked against the base pack), the program builds. Runtime, with the simulator or the test missions:
+
+1. Voices tab, language German: no voice chosen for an actor and a random actor with an empty pool never get a voice marked (STT4SG) (log line [VOICE] drawn for ...); the Actors tab and the random voices window show the same default voice. Choose an STT4SG voice for one actor: it speaks (needs the internet), the file is cached in `audio\cache\stt4sg`.
+2. Radio effect tab: the three hiss sliders (intercom, radio, external radio) change the sound of `<ics>`, `<radio>` and `<radio:ext>`; they are saved and loaded with a profile.
+3. Advanced box: Purge audio cache (counts the files, asks, deletes), `HPGMissionCompanion.exe --purge-cache`, and the cache of messages that no longer exist is pruned at start.
+4. Mission in app mode with the pack DE 4: the briefing of the crew to the heli rescuer (`HRB.*`) is spoken in German, the ambulance message at the departure for the hospital (`AMB.DEP.DSP`) is the new text.
+5. About tab: the Contributors section, the note on the STT4SG voices and the guide below it are all readable.
+
+## Port after an update (0.31, PENDING)
+
+Static: `HPGMissionCompanion.exe --port-leak-test <report>` ALL PASS (a child that outlives the service does not keep the port; the ordinary listener does, which shows the test can fail). Runtime: with the program 0.31 running and the service started, update to a newer version from the Updates tab: the new program starts with the service on, no "Port 5997 is busy" line in the log. Updating from 0.30 or older to 0.31 can still show the busy port once (the old program passes the socket to the setup); the setup ends and the program takes the port in the first 4 seconds, otherwise close and open the program once.

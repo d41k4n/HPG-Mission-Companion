@@ -524,7 +524,8 @@ namespace HPGMissionCompanion
         public static ProcessStartInfo SetupStart(string setupFile, string installDir)
         {
             bool installed = File.Exists(Path.Combine(installDir, "Uninstall.exe"));
-            string args = "/S /dir=\"" + installDir.TrimEnd('\\') + "\"" + (installed ? "" : " /nodesktop /nostartmenu");
+            // /waitpid: the setup waits for this program to end; /showerrors: a failure is shown in a window (the program is gone by then)
+            string args = "/S /showerrors /waitpid=" + System.Diagnostics.Process.GetCurrentProcess().Id + " /dir=\"" + installDir.TrimEnd('\\') + "\"" + (installed ? "" : " /nodesktop /nostartmenu");
             ProcessStartInfo psi = new ProcessStartInfo(setupFile, args);
             psi.UseShellExecute = false;
             psi.WorkingDirectory = Path.GetDirectoryName(setupFile);

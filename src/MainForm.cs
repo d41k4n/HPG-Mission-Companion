@@ -631,13 +631,34 @@ namespace HPGMissionCompanion
             FillCatalogList();
             FillPacks();
             UpdateEngineState();
+            // the service and the simulator link first: the mission does not speak while its voice server is away, so after a restart of the program every
+            // second counts; the index, the update check and the tools come after
+            StartServer(true);
+            SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
+            if (Program.ShowEvent != null)
+            {
+                // the window may not exist yet (started minimized): the message goes through the synchronization context of the interface thread
+                System.Threading.SynchronizationContext ui = System.Threading.SynchronizationContext.Current;
+                Thread listen = new Thread(delegate ()
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            Program.ShowEvent.WaitOne();
+                            if (ui != null) ui.Post(delegate { Ctx.Log("[INFO] The program was started a second time: this window is shown"); ShowWindow(); }, null);
+                        }
+                        catch (Exception) { return; }
+                    }
+                });
+                listen.IsBackground = true;
+                listen.Start();
+            }
             ThreadPool.QueueUserWorkItem(delegate { try { int n = AppSounds.EnsureAll(); if (n > 0) Ctx.Log("[INFO] " + n + " notification sound(s) copied into the audio folder"); } catch (Exception ex) { Ctx.Log("[WARN] notification sounds: " + ex.Message); } });
-            StartServer(true);
-            SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
             // started minimized (by the simulator) while the simulator runs: the pilot says that the program is ready
             if (startHidden && Ctx.Settings.ReadyAnnounce && server != null && Tools.SimulatorRunning())
             {
@@ -1245,6 +1266,7 @@ namespace HPGMissionCompanion
             LangInfo li = CurrentLang();
             if (li == null) return;
             List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
+            List<VoiceInfo> auto = VoiceLibrary.AutoOfFamily(Ctx.Voices, li.Family);
             suppress = true;
             for (int i = 0; i < Actors.Count; i++)
             {
@@ -1253,7 +1275,7 @@ namespace HPGMissionCompanion
                 if (Actors.CanDraw(i + 1)) voiceBox[i].Items.Add(RandomItem);
                 foreach (VoiceInfo v in fam) voiceBox[i].Items.Add(v);
                 VoiceInfo sel = VoiceLibrary.ById(fam, a.Voice);
-                if (sel == null && fam.Count > 0) sel = fam[i % fam.Count];
+                if (sel == null && auto.Count > 0) sel = auto[i % auto.Count];     // the voice the program takes for it (never an online voice)
                 if (a.Random && Actors.CanDraw(i + 1)) voiceBox[i].SelectedItem = RandomItem; else voiceBox[i].SelectedItem = sel;
                 if (poolButton[i] != null) poolButton[i].Visible = a.Random && Actors.CanDraw(i + 1);
                 voiceBox[i].Enabled = fam.Count > 0;
@@ -1289,54 +1311,24 @@ namespace HPGMissionCompanion
 
         const string RandomItem = "Random voice (see Voices...)";
 
-        // the voices a random actor may take: a list with a check mark for each voice of the language; nothing checked or everything checked = every voice
+        // the voices a random actor may take: a list with a check mark for each voice of the language, its sex and quality, where it is used by other actors,
+        // sortable, with copy and paste of the choices (PoolForm); nothing checked or everything checked = every voice
         void EditPool(int i)
         {
             LangInfo li = CurrentLang();
             if (li == null) return;
             List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
             ActorSetting a = Ctx.Settings.Get(li.Code, i + 1);
-            using (Form f = new Form())
+            string who = Actors.Names[i];
+            using (PoolForm f = new PoolForm("Voices for " + who + " (" + li.Name + ")", li.Code, fam, a.Pool, VoicePool.UsedMap(li.Code, fam), delegate (VoiceInfo v)
             {
-                f.Text = "Voices for " + Actors.Names[i] + " (" + li.Name + ")";
-                f.StartPosition = FormStartPosition.CenterParent;
-                f.FormBorderStyle = FormBorderStyle.FixedDialog;
-                f.MaximizeBox = false; f.MinimizeBox = false;
-                f.ClientSize = new Size(480, 420);
-                Label hint = new Label();
-                hint.Text = "The voice is drawn among the checked voices at every new shift (dispatcher) or dispatch (ground unit, heli rescuer). The actors that are drawn never get the same voice. Select a voice and press Test to hear it.";
-                hint.Location = new Point(10, 8); hint.Size = new Size(460, 40);
-                f.Controls.Add(hint);
-                CheckedListBox list = new CheckedListBox();
-                list.CheckOnClick = true;
-                list.Location = new Point(10, 52); list.Size = new Size(460, 310);
-                foreach (VoiceInfo v in fam) list.Items.Add(v, a.Pool == null || a.Pool.Count == 0 || a.Pool.Contains(v.Id));
-                f.Controls.Add(list);
-                Button all = new Button(); all.Text = "All"; all.Location = new Point(10, 372); all.Size = new Size(70, 30);
-                all.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, true); };
-                f.Controls.Add(all);
-                Button none = new Button(); none.Text = "None"; none.Location = new Point(86, 372); none.Size = new Size(70, 30);
-                none.Click += delegate { for (int k = 0; k < list.Items.Count; k++) list.SetItemChecked(k, false); };
-                f.Controls.Add(none);
                 // Test: the voice selected in the list (or the first checked one) says a sample sentence, so that the voices of the pool can be heard
-                Button test = new Button(); test.Text = "Test"; test.Location = new Point(162, 372); test.Size = new Size(70, 30);
-                test.Click += delegate
-                {
-                    VoiceInfo v = list.SelectedItem as VoiceInfo;
-                    if (v == null) for (int k = 0; k < list.Items.Count && v == null; k++) if (list.GetItemChecked(k)) v = (VoiceInfo)list.Items[k];
-                    if (v == null || v.Keys == null || v.Keys.Length == 0) return;
-                    string who = Actors.Names[i];
-                    Ctx.Player.EnqueueTest("<" + v.Keys[0] + "><" + li.Code + ">" + string.Format(li.Sample, who));
-                };
-                f.Controls.Add(test);
-                Button ok = new Button(); ok.Text = "OK"; ok.DialogResult = DialogResult.OK; ok.Location = new Point(310, 372); ok.Size = new Size(76, 30);
-                f.Controls.Add(ok);
-                Button cancel = new Button(); cancel.Text = "Cancel"; cancel.DialogResult = DialogResult.Cancel; cancel.Location = new Point(394, 372); cancel.Size = new Size(76, 30);
-                f.Controls.Add(cancel);
-                f.AcceptButton = ok; f.CancelButton = cancel;
+                if (v == null || v.Keys == null || v.Keys.Length == 0) return;
+                Ctx.Player.EnqueueTest("<" + v.Keys[0] + "><" + li.Code + ">" + string.Format(li.Sample, who));
+            }))
+            {
                 if (f.ShowDialog(this) != DialogResult.OK) return;
-                List<string> ids = new List<string>();
-                for (int k = 0; k < list.Items.Count; k++) if (list.GetItemChecked(k)) ids.Add(((VoiceInfo)list.Items[k]).Id);
+                List<string> ids = f.CheckedIds();
                 a.Pool = (ids.Count == 0 || ids.Count == fam.Count) ? null : ids;
                 VoiceDraw.Reset();
                 MarkDirty();
@@ -2893,10 +2885,16 @@ namespace HPGMissionCompanion
             Lbl(page, "Credits and licences", 14, 228, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
             Lbl(page, "Text to speech: the voices installed in Windows, and Piper (github.com/rhasspy/piper, MIT licence) with the voices of the rhasspy/piper-voices " +
                 "repository. Every Piper voice has its own licence: read voices\\piper\\<voice>.MODEL_CARD.txt before using a voice outside your own PC. " +
-                "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program.",
-                14, 250, 700, 100);
+                "Piper uses eSpeak NG (GPL) for the phonemes. The engine and the voices are downloaded from their sources when you press Install; they are not part of this program. " +
+                "The Swiss German voices marked (STT4SG) come from the research demo of FHNW (stt4sg.fhnw.ch, non-commercial licence): they run on a server on the internet, and the text is sent there only when you choose one of those voices. " +
+                "Full list of the licences: THIRD_PARTY.md in the repository.",
+                14, 250, 700, 92);
+            Lbl(page, "Contributors", 14, 346, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "Daikan (GitHub d41k4n): co-author of the missions, testing and bug reports; the German voice pack, the Swiss German voices, the separate hiss of radio and external radio calls, " +
+                "the squelch-tail recordings, the audio cache tools. kekkeruuu: co-author of the missions.",
+                14, 366, 700, 32);
 
-            Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 358, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
+            Lbl(page, "Script developer guide (tags, voice packs, the say tag, versions, testing)", 14, 402, 0, 0).Font = new Font(Font.FontFamily, 9F, FontStyle.Bold);
             TextBox guide = new TextBox();
             guide.Multiline = true;
             guide.ReadOnly = true;
@@ -2904,8 +2902,8 @@ namespace HPGMissionCompanion
             guide.WordWrap = true;
             guide.Font = new Font("Consolas", 8.5F);
             guide.BackColor = Color.White;
-            guide.Location = new Point(14, 380);
-            guide.Size = new Size(700, 166);
+            guide.Location = new Point(14, 424);
+            guide.Size = new Size(700, 124);
             guide.Text = LoadGuide();
             guide.Select(0, 0);
             page.Controls.Add(guide);
@@ -2948,6 +2946,10 @@ namespace HPGMissionCompanion
                 if (r == DialogResult.Yes) SaveSettings();
             }
             reallyExit = true;
+            // whatever blocks while closing (a native call of the simulator link, a Piper process), the program is gone after four seconds
+            Thread watchdog = new Thread(delegate () { Thread.Sleep(4000); Environment.Exit(0); });
+            watchdog.IsBackground = true;
+            watchdog.Start();
             tick.Stop();
             SimLink.Stop();
             StopServer();

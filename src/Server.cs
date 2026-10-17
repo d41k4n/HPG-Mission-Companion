@@ -20,6 +20,81 @@ namespace HPGMissionCompanion
         TcpListener listener;
         volatile bool stopping;
 
+        // A socket of .NET Framework can be inherited by the programs this one starts (Process.Start with UseShellExecute false: the setup of an update, Piper, the
+        // index tool). The child then keeps the port after this program has stopped the service and ended (the update of 0.30: the owner of the port was the old
+        // program, already gone, and the new program held the inherited copy until it was closed). Both the listening socket and the accepted ones are made
+        // not inheritable.
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool SetHandleInformation(IntPtr handle, uint mask, uint flags);
+        const uint HandleFlagInherit = 1;
+
+        static void NoInherit(Socket s)
+        {
+            try { if (s != null) SetHandleInformation(s.Handle, HandleFlagInherit, 0); } catch (Exception) { }
+        }
+
+        static bool PortFree(int port)
+        {
+            try { TcpListener t = new TcpListener(IPAddress.Loopback, port); t.Start(); t.Stop(); return true; }
+            catch (SocketException) { return false; }
+        }
+
+        static int AnyFreePort()
+        {
+            TcpListener t = new TcpListener(IPAddress.Loopback, 0); t.Start();
+            int p = ((IPEndPoint)t.LocalEndpoint).Port; t.Stop(); return p;
+        }
+
+        // --port-leak-test <report>: a program that the service starts must not keep the port after the service stopped (the update of 0.30 left the port busy)
+        public static int LeakTest(string report)
+        {
+            StringBuilder sb = new StringBuilder();
+            bool ok = true;
+            Ctx.Log = delegate (string s) { };
+            // 1. an ordinary listener is inherited by a child that outlives it: the port stays busy (what happened)
+            int pa = AnyFreePort();
+            TcpListener plain = new TcpListener(IPAddress.Loopback, pa); plain.Start();
+            System.Diagnostics.Process childA = StartChild();
+            plain.Stop();
+            bool leaked = !PortFree(pa);
+            sb.AppendLine((leaked ? "INFO" : "INFO") + " ordinary listener, child alive, listener stopped: port " + (leaked ? "BUSY (the leak this test guards against)" : "free (the system did not leak it)"));
+            try { childA.Kill(); } catch (Exception) { }
+            // 2. the Server of the program: the same, the port must be free right after Stop
+            int pb = AnyFreePort();
+            Server srv = new Server(); srv.Start(pb, false);
+            System.Diagnostics.Process childB = StartChild();
+            try { srv.listener.Stop(); } catch (Exception) { }
+            bool freeB = PortFree(pb);
+            sb.AppendLine((freeB ? "PASS" : "FAIL") + " Server: a child that outlives the service does not keep the port");
+            if (!freeB) ok = false;
+            try { childB.Kill(); } catch (Exception) { }
+            // 3. a connection that the Server accepted is not inherited either
+            int pc = AnyFreePort();
+            Server srv2 = new Server(); srv2.Start(pc, false);
+            TcpClient cli = new TcpClient(); cli.Connect(IPAddress.Loopback, pc);
+            Thread.Sleep(400);
+            System.Diagnostics.Process childC = StartChild();
+            try { srv2.listener.Stop(); } catch (Exception) { }
+            lock (srv2.clients) { foreach (TcpClient c in srv2.clients) { try { c.Close(); } catch (Exception) { } } }
+            cli.Close();
+            Thread.Sleep(300);
+            bool freeC = PortFree(pc);
+            sb.AppendLine((freeC ? "PASS" : "FAIL") + " Server: a connection accepted before the child started is not kept by the child");
+            if (!freeC) ok = false;
+            try { childC.Kill(); } catch (Exception) { }
+            sb.AppendLine(ok ? "ALL PASS" : "FAILED");
+            File.WriteAllText(report, sb.ToString());
+            return ok ? 0 : 1;
+        }
+
+        static System.Diagnostics.Process StartChild()
+        {
+            System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("cmd.exe", "/c ping -n 30 127.0.0.1 >nul");
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
+            return System.Diagnostics.Process.Start(psi);
+        }
+
         // listenAll false: 127.0.0.1 only. The mission connects to localhost, and a program that listens on the loopback address only does not make
         // Windows Firewall ask to open the port (the question that came at every start with 0.0.0.0, even though the mission works without the answer)
         public void Start(int port, bool listenAll)
@@ -27,6 +102,7 @@ namespace HPGMissionCompanion
             stopping = false;
             listener = new TcpListener(listenAll ? IPAddress.Any : IPAddress.Loopback, port);
             listener.Start();
+            NoInherit(listener.Server);
             Ctx.Log("[SERVER] Started on " + (listenAll ? "0.0.0.0" : "127.0.0.1") + ":" + port);
             Thread accept = new Thread(AcceptLoop);
             accept.IsBackground = true;
@@ -53,6 +129,7 @@ namespace HPGMissionCompanion
                 try
                 {
                     TcpClient client = listener.AcceptTcpClient();
+                    NoInherit(client.Client);
                     lock (clients) { clients.Add(client); }
                     Ctx.Log("[ACCEPT] client " + client.Client.RemoteEndPoint);
                     Thread t = new Thread(delegate () { ClientLoop(client); });

@@ -1,8 +1,8 @@
 {
-    "sha256":  "3BD49393FA5AC22A25E0A96407EAFAE8346CF7DEA7334B6C2C170F1421EBF7E6",
-    "installerSha256":  "3570825B8D56701EAD9A58334497730DAAAF5ECE28855CD42C8FE3C9F868D531",
+    "sha256":  "308F10BA7DF7FF8863B6A6E91598F0F2FA8A6CCC11B0A022A67AABEEA65E2744",
+    "installerSha256":  "F0668C03A74ECCED31877BFC6C53B0E95B1C19DA23C0A091EF9C9F5E27829267",
     "deliveredOn":  "2026-10-17",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.28",
-    "note":  "Release 0.28: the 8 notification sounds of the sound-only messages (tablet tones, alarm, dead) are resources of the program and are copied into the audio folder when missing (never replacing a file), and the log and the Service label say who holds the port when it is busy. Static check PASS; --ensure-sounds run on an empty, a partial and a customized folder (sha256 of the copies equal to the release app-sounds), --port-owner run on IPv4 and IPv6 listeners. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.31",
+    "note":  "Release 0.31: port 5997 no longer stays busy after an update (the socket of the service is not inheritable, the setup starts the program through the shell; --port-leak-test ALL PASS). Includes everything of 0.30. Static check PASS, packs check PASS, pool self-test ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

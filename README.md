@@ -1,6 +1,6 @@
 # HPG Mission Companion
 
-Version 0.28
+Version 0.31
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
@@ -53,3 +53,10 @@ Static checks pass; the simulator behaviour (tags arriving through the HPG `spea
 ## Licence
 
 Use is free for everyone: you may run the program (a build from the author, or built unchanged from this repository) for any purpose, read the source and fork it on GitHub for reading. Modifying the code, copying or redistributing the program or the code, publishing derivative works, sublicensing or selling needs the explicit written consent of the author, as described in LICENSE. Third-party components keep their own licences (THIRD_PARTY.md).
+
+## Contributors
+
+- **Daikan** (GitHub d41k4n): co-author of the missions, testing and bug reports; German voice pack and translation tools, Swiss German voices (STT4SG), separate hiss of radio and external radio calls, squelch-tail recordings, audio cache tools, SimConnect.dll search on every drive (changelog 0.30 and earlier).
+- **kekkeruuu**: co-author of the missions.
+
+Their contributions are integrated with their history in the repository; the licences of the components they brought in are in `THIRD_PARTY.md`.

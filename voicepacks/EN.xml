@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="16" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="17" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -2617,13 +2617,13 @@
       <o>The organ is not holding up well.</o>
       <o>The organ is getting worse by the minute.</o>
     </message>
-    <message key="PAX3.25" actor="3" radio="auto" lvar="L:PAX3{VCP}25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
-      <o>Briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; the heli-rescuer boards first if hoist extraction is required.</o>
-      <o>Briefing: I secure the scene on arrival. Once cleared, the crew joins for the medical operations. At the end the medical crew boards first; if we extract by hoist, the heli-rescuer boards first.</o>
-      <o>Briefing: on arrival I secure the scene, the crew joins after clearance, and the medical crew boards first at the end; with a hoist extraction the heli-rescuer boards first.</o>
-      <o>Briefing: I secure the scene on arrival, then the crew joins for the medical work. At the end the medical crew boards first, or the heli-rescuer first if we extract by hoist.</o>
-      <o>Here is the plan: I secure the scene first, the crew joins after clearance, and at the end the medical crew boards first, unless it is a hoist extraction: then the heli-rescuer goes first.</o>
-      <o>The plan: I go first and secure the scene, the crew comes when it is clear, and at the end the medical crew boards first, or the heli-rescuer when it is a hoist extraction.</o>
+    <message key="PAX3.25" actor="12" radio="ics" lvar="L:PAX3{VCP}25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
+      <o>Briefing: on arrival, I will secure the scene. After clearance, the crew will join for medical operations. At the end, the medical crew boards first; I board first if hoist extraction is required.</o>
+      <o>Briefing: I secure the scene on arrival. Once cleared, the crew joins for the medical operations. At the end the medical crew boards first; if we extract by hoist, I board first.</o>
+      <o>Briefing: on arrival I secure the scene, the crew joins after clearance, and the medical crew boards first at the end; with a hoist extraction I board first.</o>
+      <o>Briefing: I secure the scene on arrival, then the crew joins for the medical work. At the end the medical crew boards first, or I do if we extract by hoist.</o>
+      <o>Briefing: I go first and secure the scene. When it is clear, the crew follows for the medical work. At the end the medical crew boards first, and I board first only for a hoist extraction.</o>
+      <o>Briefing: I secure the scene first, the crew comes in once I clear it, and at the end the medical crew boards first, except for a hoist extraction, where I go first.</o>
     </message>
     <message key="PAX3.26" actor="3" radio="auto" lvar="L:PAX3{VCP}26" wav="AND.pax3.weo.welcome.wav" sleep="0" futile="1">
       <o silent="1"/>
@@ -6132,6 +6132,318 @@
       <o>{@HEMS}, heli rescue base. They are coming to you. Fly safe.</o>
       <o>{@HEMS}, heli rescue base. Copy, the team is coming over.</o>
       <o>{@HEMS}, heli rescue base. Welcome, the team is on its way to the helicopter.</o>
+    </message>
+    <message key="HRB.OPEN.ACC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing of the heli rescuers: accident or injured only (argument: injured)">
+      <o>Rescuers, here is the briefing: an accident with {0} injured reported. The situation is unclear, so we plan for the worst case.</o>
+      <o>Briefing for the rescuers. Dispatch reports an accident with {0} injured. We have no clear picture yet, so we prepare for a serious scene.</o>
+      <o>Rescuers, the briefing. We are called to an accident with {0} injured. Details are missing, and we treat it as serious until proven otherwise.</o>
+      <o>Okay, listen up. Accident, {0} injured, and nobody really knows what is down there. Stay sharp.</o>
+      <o>Alright, short briefing. It is an accident with {0} injured and no clear picture yet, so we expect the worst.</o>
+      <o>Right, rescuers, here is what we have: an accident, {0} injured reported, and not much more. We will see on scene.</o>
+    </message>
+    <message key="HRB.OPEN.SAR" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: search and rescue (argument: persons)">
+      <o>Rescuers, here is the briefing: search and rescue, persons to recover: {0}. We start from the last known position and we do not know how long they have been out.</o>
+      <o>Briefing for the rescuers. This is a search and rescue, persons to recover: {0}. We search from the last known position, and the time since they went missing is unknown.</o>
+      <o>Rescuers, the briefing. Search and rescue with {0} to recover. We start at the last known position and we cannot say how long they have been out there.</o>
+      <o>Okay, listen up. We are looking for {0} missing. We start from the last known position, and it could be a long search.</o>
+      <o>Alright, short briefing. Search and rescue, {0} to find, starting from the last known position. No idea how long they have been out.</o>
+      <o>Right, rescuers, we have {0} missing and only a last known position. Eyes open, it may take a while.</o>
+    </message>
+    <message key="HRB.OPEN.SARV" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: overdue vehicle">
+      <o>Rescuers, here is the briefing: search and rescue for an overdue vehicle. We follow its probable route from the last known position, find the driver and recover them.</o>
+      <o>Briefing for the rescuers. A vehicle is overdue. We fly its probable route from the last known position and look for the vehicle and the driver.</o>
+      <o>Rescuers, the briefing. Overdue vehicle, last known position only. We follow the likely route, find the driver and recover them.</o>
+      <o>Okay, listen up. A car never arrived. We follow its probable route from the last known position and look for the driver.</o>
+      <o>Alright, short briefing. Overdue vehicle: we fly the likely route, find the car, find the driver, and bring them out.</o>
+      <o>Right, rescuers, somebody is late and nobody knows where. We follow the probable route and look for the vehicle.</o>
+    </message>
+    <message key="HRB.OPEN.SARC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: parked car">
+      <o>Rescuers, here is the briefing: a parked car was found and the owner is missing. We search the area around the car and recover the person.</o>
+      <o>Briefing for the rescuers. A parked vehicle was found and the owner is missing. We start at the car, widen the search around it, and recover the person.</o>
+      <o>Rescuers, the briefing. Parked car, owner missing. We search around the vehicle and recover the person when we find them.</o>
+      <o>Okay, listen up. Somebody left a car and never came back. We start at the car and search around it.</o>
+      <o>Alright, short briefing. A parked car, and the owner is gone. We start there and search the surroundings.</o>
+      <o>Right, rescuers, we have an empty parked car and a missing owner. We begin at the car and widen the search.</o>
+    </message>
+    <message key="HRB.OPEN.SARH" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: person away from a house">
+      <o>Rescuers, here is the briefing: a person left their home on foot and is missing. We search around the house and recover them.</o>
+      <o>Briefing for the rescuers. A missing person left the house on foot. We start at the house, search the surroundings and recover them.</o>
+      <o>Rescuers, the briefing. A person wandered away from home. We search the area around the house and recover them when found.</o>
+      <o>Okay, listen up. Somebody walked away from home and is missing. We start at the house and search around it.</o>
+      <o>Alright, short briefing. A person is missing from a house, gone on foot. We search the surroundings.</o>
+      <o>Right, rescuers, a person wandered off from home. We start at the house and look around.</o>
+    </message>
+    <message key="HRB.OPEN.TRF" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: patient transfer (argument: patients)">
+      <o>Rescuers, here is the briefing: a transfer between hospitals, patients: {0}. There is no scene to secure, the patient is already in medical care.</o>
+      <o>Briefing for the rescuers. This is an inter hospital transfer, patients: {0}. No scene and no hoist: the patient is already in the hands of the hospital staff.</o>
+      <o>Rescuers, the briefing. Patient transfer, patients: {0}. We take over at the sending hospital and fly them to the destination.</o>
+      <o>Okay, listen up. Today it is a transfer between hospitals, patients: {0}. No accident scene, just a clean job.</o>
+      <o>Alright, short briefing. A hospital transfer, patients: {0}. Nothing to secure, we take them over and fly.</o>
+      <o>Right, rescuers, this one is a transfer, patients: {0}. A calm job: pick up, fly, hand over.</o>
+    </message>
+    <message key="HRB.OPEN.ORG" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: organ transport">
+      <o>Rescuers, here is the briefing: an organ transport. It is time critical: we collect the container and deliver it within the time limit. There is no scene to secure.</o>
+      <o>Briefing for the rescuers. Organ transport, time critical. We collect the container at the pick-up point and deliver it before the time limit. No scene, no hoist.</o>
+      <o>Rescuers, the briefing. We carry an organ and every minute counts. Collect, load, deliver, with no scene to secure.</o>
+      <o>Okay, listen up. Organ transport, the clock is running. We collect it, load it and go.</o>
+      <o>Alright, short briefing. An organ on the clock: pick it up, strap it in, deliver it fast.</o>
+      <o>Right, rescuers, we are carrying an organ and time is short. Quick on the ground, careful with the container.</o>
+    </message>
+    <message key="HRB.ETA" actor="2" radio="auto" group="hrbrief" seq="2" new="1" trigger="the copilot gives the time to the scene (argument: minutes, 2 or more)">
+      <o>Estimated time to the scene is about {0} minutes.</o>
+      <o>ETA to the scene about {0} minutes at the current speed.</o>
+      <o>We are about {0} minutes from the scene.</o>
+      <o>About {0} minutes to go.</o>
+      <o>Around {0} minutes and we are there.</o>
+      <o>Roughly {0} minutes out.</o>
+    </message>
+    <message key="HRB.VEH.BOTH" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units: some on scene (argument 1), others on the way (argument 0)">
+      <o>On the ground: {list:1} {be:1} already on scene and {list:0} {be:0} on the way, so we coordinate with them.</o>
+      <o>Ground units: {list:1} on scene, {list:0} on the way. We coordinate the landing area with them.</o>
+      <o>Support: {list:1} {be:1} on location, {list:0} {be:0} still en route. We work together.</o>
+      <o>Good news: {list:1} {be:1} already there, and {list:0} {be:0} on the way.</o>
+      <o>We are not alone: {list:1} on scene and {list:0} on the way.</o>
+      <o>Ground side: {list:1} {be:1} on scene, {list:0} {be:0} coming.</o>
+    </message>
+    <message key="HRB.VEH.SCENE" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units already on scene (argument 1)">
+      <o>{list:1} {be:1} already on scene, so we coordinate the landing area with them.</o>
+      <o>Ground units: {list:1} {be:1} on location. We coordinate with them.</o>
+      <o>On scene we have {list:1}. We work with them and share the area.</o>
+      <o>We have company: {list:1} {be:1} already there.</o>
+      <o>{list:1} {be:1} on scene already, we team up with them.</o>
+      <o>Ground side: {list:1} {be:1} there already.</o>
+    </message>
+    <message key="HRB.VEH.WAY" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units on the way (argument 0)">
+      <o>{list:0} {be:0} on the way, but we will probably be there first.</o>
+      <o>Ground units: {list:0} {be:0} en route. We may arrive before them.</o>
+      <o>Support is coming: {list:0} {be:0} on the way, expected after us.</o>
+      <o>{list:0} {be:0} coming, but we will most likely be first.</o>
+      <o>Ground units are on the way: {list:0}. We are probably ahead of them.</o>
+      <o>Help is coming: {list:0}. We get there first, most likely.</o>
+    </message>
+    <message key="HRB.VEH.NONE" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers there are no ground units">
+      <o>No ground units on scene or on the way. We are first, so the area is yours to secure.</o>
+      <o>No rescue vehicles are tasked yet. We arrive first and the scene security falls on us.</o>
+      <o>Nobody on the ground yet and no units on the way. You secure the area before anyone moves.</o>
+      <o>We are alone: no ground units, none on the way.</o>
+      <o>No one there and no one coming for now. We are first on scene.</o>
+      <o>Nobody else on the ground, so the scene is ours. You secure it first.</o>
+    </message>
+    <message key="HRB.MED.ACC" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: accident or injured only">
+      <o>Doc here. Medically we know nothing yet. I assess on arrival, the most critical patient comes first, and you help me with the triage if there are several.</o>
+      <o>Doc: no clinical details yet. I assess when we are down and treat the most critical first. If there are several patients, you support the triage.</o>
+      <o>Doc speaking. Condition unknown, so I assess on arrival and set the priorities. With several injured we sort them by urgency, and I need your eyes for that.</o>
+      <o>Doc here. Honestly we have no clinical picture. I look at the patient first, then we decide. If there are more, we triage together.</o>
+      <o>Medically it is a blank page. I assess first, the worst patient gets treated first, and you help me sort them if there are several.</o>
+      <o>Doc here. No details on the injuries yet. First assessment on scene, then priorities, and I count on you to help with the triage.</o>
+    </message>
+    <message key="HRB.MED.SAR" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: search and rescue">
+      <o>Doc here. We know nothing medically. After hours outside I expect exposure, exhaustion or injuries from a fall. When we find them I assess, and you help with the recovery.</o>
+      <o>Doc: the condition is unknown. I expect cold, dehydration or trauma. When the person is found I assess, and I count on you for the recovery.</o>
+      <o>Doc speaking. No clinical information. We may find exposure, exhaustion or injuries. I assess on contact, and you lead the recovery on the ground.</o>
+      <o>Doc here. No idea how they are. After a long time outside it can be cold, exhaustion or a fall. I look at them first, you help me bring them out.</o>
+      <o>Medically it is a blank page. I expect cold or injuries, I assess on contact, and you help with the recovery.</o>
+      <o>Doc here. Could be anything from exhaustion to serious trauma. I assess when we find them, and you help me with the rest.</o>
+    </message>
+    <message key="HRB.MED.TRF" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: patient transfer">
+      <o>Doc here. The patient is already stabilised at the sending hospital. I take the handover, check the monitors and the lines, and I need a smooth ride.</o>
+      <o>Doc: the patient is stable at the sending hospital. I take the handover and check monitors and lines before loading, and I ask for a smooth flight.</o>
+      <o>Doc speaking. Patient stabilised on site. Handover first, then loading, and I monitor the whole flight.</o>
+      <o>Doc here. The patient is already stable, so it is all about a clean handover and a gentle ride.</o>
+      <o>Doc here. Handover, check the monitors, then we load. Keep it smooth.</o>
+      <o>Doc here. The patient is stable. I take over, we load carefully, and we fly them gently.</o>
+    </message>
+    <message key="HRB.MED.ORG" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: organ transport">
+      <o>Doc here. At the pick-up I check the seal, the temperature and the paperwork of the container. Nobody else touches it, and it stays strapped and level for the whole flight.</o>
+      <o>Doc: I verify seal, temperature and documents at the pick-up. The container is handled only by the medical crew and stays strapped and level.</o>
+      <o>Doc speaking. Container check first: seal, temperature, papers. It stays strapped, upright and untouched until the handover.</o>
+      <o>Doc here. I check the box and the papers first, and nobody else lays a hand on it. It stays strapped in.</o>
+      <o>Doc here. Seal, temperature, papers, then straps. Only the medical crew handles the container.</o>
+      <o>Doc here. The container is my job: check it, strap it, and keep it level all the way.</o>
+    </message>
+    <message key="HRB.PLAN.G.CHF" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew chief briefs the ground sequence: the rescuer out first, calls the area, boards last">
+      <o>If we can land close to the patient, this is the ground sequence. You leave first through the left door, secure the area and call it out. Your call is the go for Doc and me, then we bring the stretcher and the bag. At the end you board last.</o>
+      <o>Ground sequence. We land near the patient and you step out first on the left side to secure the area. When you call it secure, Doc and I follow with the stretcher and the bag. Coming back, you are the last one in. If we cannot land close, we switch to the hoist.</o>
+      <o>If we land: you are out first through the left door and secure the area, and your call is the go for the crew. Doc and I then move out with the equipment, and you board last. If we cannot land, we hoist.</o>
+      <o>Plan A is the ground: we land near the patient, you get out first, check the area and call it. When you say secure, we come out. You are the last one back in.</o>
+      <o>If we can land, you go out first, make the area safe and tell us. Then Doc and I follow with the stretcher and the bag. You board last.</o>
+      <o>Ground first: down near the patient, you out first and secure it, and we follow on your call. Back in, you are last.</o>
+    </message>
+    <message key="HRB.PLAN.H.CHF" actor="4" radio="auto" group="hrbrief" seq="6" new="1" trigger="the rear crew chief briefs the hoist sequence: the rescuer down first, the winch, the crew on the call, the rescuer up last">
+      <o>If we cannot land close, it is the hoist sequence. I run the winch. You go down first on the cable, secure the area and call it out. Your call is the go for Doc, who goes down next. On the way up you are the last on the cable.</o>
+      <o>Hoist sequence. No landing close to the patient, so I operate the winch. You are lowered first, secure the area and call it secure. Doc follows on your call, and you come up last.</o>
+      <o>If it is a hoist: you go down first and secure the area, I run the cable, and Doc goes down on your call. At the end the patient and Doc come up first and you are the last one up.</o>
+      <o>Plan B is the hoist: you first on the cable, you secure the area and call it. Doc follows when you say go. You come up last.</o>
+      <o>If we hoist, I handle the cable and you go down first. You check the area and call it clear, then Doc goes down. You are the last up.</o>
+      <o>Otherwise we hoist: you go down first and make it safe, Doc follows on your call, and you come up last.</o>
+    </message>
+    <message key="HRB.PLAN.G.CPL" actor="2" radio="auto" group="hrbrief" seq="5" new="1" trigger="the copilot (fewer than 4 crew) briefs the ground sequence">
+      <o>If we can land close to the patient, this is the ground sequence. You leave first through the left door, secure the area and call it out. Your call is the go for Doc and the crew. At the end you board last.</o>
+      <o>Ground sequence. We land near the patient and you step out first on the left side to secure the area. When you call it secure, Doc and the crew follow with the equipment. Coming back, you are the last one in. If we cannot land close, we switch to the hoist.</o>
+      <o>If we land: you are out first through the left door and secure the area, and your call is the go for the crew. Doc follows with the equipment, and you board last. If we cannot land, we hoist.</o>
+      <o>Plan A is the ground: we land near the patient, you get out first, check the area and call it. When you say secure, Doc comes out. You are the last one back in.</o>
+      <o>If we can land, you go out first, make the area safe and tell us. Then Doc follows with the equipment. You board last.</o>
+      <o>Ground first: down near the patient, you out first and secure it, and Doc follows on your call. Back in, you are last.</o>
+    </message>
+    <message key="HRB.PLAN.H.CPL" actor="2" radio="auto" group="hrbrief" seq="6" new="1" trigger="the copilot (fewer than 4 crew) briefs the hoist sequence">
+      <o>If we cannot land close, it is the hoist sequence. I run the winch from the cabin. You go down first on the cable, secure the area and call it out. Your call is the go for Doc, who goes down next. On the way up you are the last on the cable.</o>
+      <o>Hoist sequence. No landing close to the patient, so I operate the winch from the cabin. You are lowered first, secure the area and call it secure. Doc follows on your call, and you come up last.</o>
+      <o>If it is a hoist: you go down first and secure the area, I run the cable, and Doc goes down on your call. At the end the patient and Doc come up first and you are the last one up.</o>
+      <o>Plan B is the hoist: you first on the cable, you secure the area and call it. I run the winch, Doc follows when you say go. You come up last.</o>
+      <o>If we hoist, I handle the cable and you go down first. You check the area and call it clear, then Doc goes down. You are the last up.</o>
+      <o>Otherwise we hoist: you go down first and make it safe, Doc follows on your call, and you come up last.</o>
+    </message>
+    <message key="HRB.PLAN.TRF" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew briefs the role of the rescuers on a patient transfer">
+      <o>For you: no scene and no hoist. Stay seated and strapped in. At the pick-up you help with the stretcher and the handover, then you stay in the cabin while we fly the patient out smoothly.</o>
+      <o>Your role: no scene and no hoist. You help at the pick-up with the stretcher and the handover, then you stay seated and strapped in for the flight.</o>
+      <o>For the rescuers: nothing to secure on this one. Help with the stretcher at the pick-up, then keep your seat and your belt until we land.</o>
+      <o>You have an easy one. You help with the stretcher, then you sit down, belt on, and stay out of the way.</o>
+      <o>No scene to secure. Help us with the stretcher and the handover, and then stay seated and strapped in.</o>
+      <o>Your job today: the stretcher at the pick-up, then a seat and a belt. Nothing more.</o>
+    </message>
+    <message key="HRB.PLAN.ORG" actor="4" radio="auto" group="hrbrief" seq="5" new="1" trigger="the rear crew briefs the role of the rescuers on an organ transport">
+      <o>For you: no scene and no hoist. We land, load the container and strap it down, and you keep the cabin clear and stay strapped in. Only the medical crew touches the container.</o>
+      <o>Your role: no scene and no hoist. Help us secure the container, keep the cabin clear, and stay seated and strapped in.</o>
+      <o>For the rescuers: nothing to secure. Keep the cabin clear while we load and strap down the container, and do not touch it.</o>
+      <o>Easy job for you: stay out of the way while we load the box, belt on, hands off the container.</o>
+      <o>No scene. We load and strap the container, you keep the cabin clear and stay seated.</o>
+      <o>Your job today: seat, belt, and hands off the container.</o>
+    </message>
+    <message key="HRB.ASK" actor="1" radio="auto" group="hrbrief" seq="7" new="1" trigger="the pilot asks for questions on the plan">
+      <o>Any questions on the plan?</o>
+      <o>Is everything clear? Any questions?</o>
+      <o>Questions from anyone before we continue?</o>
+      <o>Any doubts? Now is the time.</o>
+      <o>Everybody clear? Any questions?</o>
+      <o>Anything unclear? Speak up now.</o>
+    </message>
+    <message key="HRB.Q.1" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks who gives the go once the area is secure">
+      <o>One question: who gives the go once the area is secure?</o>
+      <o>Question: after I secure the area, who gives the go to proceed?</o>
+      <o>Just to be sure, who gives the go after the area is secured?</o>
+      <o>Who calls the go when the area is safe?</o>
+      <o>Quick question: who says go once I have secured it?</o>
+      <o>Who gives the go once I have made the area safe?</o>
+    </message>
+    <message key="HRB.A.1" actor="3" radio="auto" group="hrbrief" seq="9" new="1" trigger="the doctor answers: the rescuer gives the go">
+      <o>You do. Your call that the area is secure is the go for us. Nobody leaves the helicopter before that.</o>
+      <o>The go is yours. Once you call the area secure, we proceed. Not before.</o>
+      <o>You give it. Your secure call is the green light, and nobody leaves the helicopter before it.</o>
+      <o>It is your call. When you say secure, we move. Not a second earlier.</o>
+      <o>You do. We wait for your secure call, then we come.</o>
+      <o>That is on you. Your call is our green light.</o>
+    </message>
+    <message key="HRB.Q.2" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks what to do with a hazard or more patients">
+      <o>What do I do if I find a hazard or more patients down there?</o>
+      <o>Question: how do we handle a hazard or additional patients on scene?</o>
+      <o>If I find a hazard or more injured on the ground, how do we proceed?</o>
+      <o>And if I find a danger or more patients down there?</o>
+      <o>What if there is a hazard or more patients than reported?</o>
+      <o>What if the scene is worse than reported?</o>
+    </message>
+    <message key="HRB.A.2" actor="1" radio="auto" group="hrbrief" seq="9" new="1" trigger="the pilot answers: report at once, hold, re-plan">
+      <o>Tell me at once on the radio. We hold, re-plan, and I ask dispatch for more units.</o>
+      <o>Report it immediately. We hold above, re-plan the approach, and I request additional units.</o>
+      <o>Call it right away on the radio. Nobody moves until we have a new plan, and I ask for more resources.</o>
+      <o>Tell me straight away. We stay put, rethink, and I call for more help.</o>
+      <o>Shout it on the radio. We wait, we re-plan, and I ask dispatch for backup.</o>
+      <o>Radio me at once. We hold, we rethink it, and I call for more units.</o>
+    </message>
+    <message key="HRB.Q.3" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer asks what is needed on the ground besides the security">
+      <o>Besides the security, what do you need from me on the ground?</o>
+      <o>Apart from securing the area, what is my task on the ground?</o>
+      <o>What else do you need from me once the area is secure?</o>
+      <o>What do you want from me down there, besides making it safe?</o>
+      <o>Anything else I should do on the ground?</o>
+      <o>After the security, what do you need me to do?</o>
+    </message>
+    <message key="HRB.A.3" actor="3" radio="auto" group="hrbrief" seq="9" new="1" trigger="the doctor answers: keep the area, help with the triage, fetch the equipment">
+      <o>Keep the area clear and the bystanders back, help me with the triage if there are more patients, and bring what I ask for.</o>
+      <o>Keep the area free and the bystanders away, support the triage with several patients, and fetch the equipment I need.</o>
+      <o>Hold the area, keep people away from us, assist the triage if needed, and carry what I ask for.</o>
+      <o>Keep people back, help me sort the patients if there is more than one, and fetch whatever I need.</o>
+      <o>Keep the crowd away, and give me a hand with the triage and the equipment.</o>
+      <o>Keep everybody clear, help with the triage, and carry what I ask for.</o>
+    </message>
+    <message key="HRB.NOQ" actor="12" radio="ics" group="hrbrief" seq="8" new="1" trigger="the rescuer has no questions">
+      <o>No questions, everything is clear.</o>
+      <o>All clear for me, no questions.</o>
+      <o>Understood, no questions.</o>
+      <o>All good, nothing to add.</o>
+      <o>Clear on my side.</o>
+      <o>No doubts here.</o>
+    </message>
+    <message key="HRB.DB.1" actor="3" radio="auto" group="hrbrief" seq="10" new="1" trigger="the doctor asks the pilot how landing or hoisting is decided">
+      <o>Pilot, how do we decide between landing and hoisting?</o>
+      <o>Pilot, what decides between the ground and the hoist sequence?</o>
+      <o>Pilot, who decides if it is ground or hoist, and when?</o>
+      <o>Pilot, when do we know if we land or hoist?</o>
+      <o>One thing, pilot: how do we choose between landing and hoisting?</o>
+      <o>Pilot, landing or hoist: when do we decide?</o>
+    </message>
+    <message key="HRB.DBA.1" actor="1" radio="auto" group="hrbrief" seq="11" new="1" trigger="the pilot answers: on scene, confirmed two miles out">
+      <o>I decide on scene when I see the area. If I can land close, it is the ground sequence, otherwise the hoist. I confirm it again two miles out.</o>
+      <o>I decide when I see the area. A usable landing spot close to the patient means ground, otherwise hoist. I confirm at two miles.</o>
+      <o>That is my call on scene. Landing close means ground, no landing means hoist, and I confirm at two miles.</o>
+      <o>I look at the area when we get there. If we can land close, ground; if not, hoist. I tell you at two miles.</o>
+      <o>On scene, when I see it. Landing spot close, ground, otherwise hoist, and I tell you two miles out.</o>
+      <o>I decide when we are there: a good spot close to them is ground, otherwise hoist. You hear it at two miles.</o>
+    </message>
+    <message key="HRB.DB.2" actor="2" radio="auto" group="hrbrief" seq="12" new="1" trigger="the copilot asks what happens when the ground units are late and the area is not secure">
+      <o>And if the ground units are not there yet when we arrive and the area is not secure?</o>
+      <o>What if we arrive before the ground units and nobody has secured the area?</o>
+      <o>If we are first on scene and the area is not secure, what then?</o>
+      <o>What if nobody is there to secure the area when we arrive?</o>
+      <o>And if the ground units are late and the area is not safe?</o>
+      <o>What if we get there first and it is not safe?</o>
+    </message>
+    <message key="HRB.DBA.2" actor="12" radio="ics" group="hrbrief" seq="13" new="1" trigger="the rescuer answers: I secure it myself first">
+      <o>Then I secure it myself first. Nobody leaves the helicopter before I call it.</o>
+      <o>I secure the area first, whatever the ground units do. Nobody moves until I call it.</o>
+      <o>In that case I make the area safe myself before anyone else comes down.</o>
+      <o>Then I do it myself. Nobody comes out until I say so.</o>
+      <o>I take care of the security myself, and the crew waits for my call.</o>
+      <o>Then it is on me. I secure it, I call it, and then you come.</o>
+    </message>
+    <message key="HRB.RB.HR" actor="12" radio="ics" group="hrbrief" seq="14" new="1" trigger="the rescuer reads back the sequence (ground and hoist)">
+      <o>Copy. Ground or hoist, I go first, secure the area and call it. The crew follows on my call, and I am the last one to board.</o>
+      <o>Understood. I go first in both cases, secure the area and call it, the crew moves on my call, and I board last.</o>
+      <o>Read back: first out or first down, secure, call it, the crew follows on my call, last one back on board.</o>
+      <o>Got it. I go first, make the area safe, call it, and you follow. I come back last.</o>
+      <o>Copy all. First down, secure the area, my call is the go, and I board last.</o>
+      <o>All clear. I go first and make it safe, you come on my call, and I am last in.</o>
+    </message>
+    <message key="HRB.RB.X" actor="12" radio="ics" group="hrbrief" seq="14" new="1" trigger="the rescuer reads back his role on a transfer or an organ transport">
+      <o>Copy. I stay aboard, help with the loading and keep the cabin clear.</o>
+      <o>Understood. I stay aboard and support the loading, and I keep the cabin clear.</o>
+      <o>Read back: no scene for me, I help with the loading and stay seated.</o>
+      <o>Got it. I help with the loading and then I stay out of the way.</o>
+      <o>Copy all. I stay on board and give a hand with the loading.</o>
+      <o>All clear. I help load and keep the cabin clear.</o>
+    </message>
+    <message key="HRB.RB.DOC" actor="3" radio="auto" group="hrbrief" seq="15" new="1" trigger="the doctor confirms">
+      <o>Doc copy. I move on the rescuer's call, assess and treat, and then we load.</o>
+      <o>Doc understood. I leave on the rescuer's call, then assessment, treatment and loading.</o>
+      <o>Doc copy: rescuer's call first, then I go, assess and treat.</o>
+      <o>Copy from the doc. I wait for the call, then I go to the patient.</o>
+      <o>Doc here, copy. I go when the rescuer calls it, and the assessment comes first.</o>
+      <o>Copy. I come out on the call and see the patient first.</o>
+    </message>
+    <message key="HRB.RB.CRW" actor="4" radio="auto" group="hrbrief" seq="16" new="1" trigger="the rear crew confirms">
+      <o>Rear crew copy. Equipment ready, and I follow the call.</o>
+      <o>Rear crew understood. Stretcher and bag ready, we move on the rescuer's call.</o>
+      <o>Copy from the rear crew. Everything is ready on my side.</o>
+      <o>Chief here, copy. Kit is ready, we wait for the call.</o>
+      <o>Rear crew copy, ready when you are.</o>
+      <o>Copy. My side is ready.</o>
+    </message>
+    <message key="HRB.END" actor="1" radio="auto" group="hrbrief" seq="17" new="1" trigger="the pilot closes the briefing">
+      <o>Good. I repeat the plan two miles out. Until then, eyes outside, and call out anything you see.</o>
+      <o>Thanks, everybody. We brief again two miles out. Keep your eyes open until then.</o>
+      <o>Briefing complete. I confirm the plan at two miles, and until then everybody stays alert.</o>
+      <o>Good. We go through it again two miles out. Stay sharp.</o>
+      <o>Alright, briefing done. Two miles out I repeat it, and now eyes outside.</o>
+      <o>Okay, let us go. Two miles out I repeat the plan, and until then stay alert.</o>
     </message>
     <message key="DSP.NAME.MAN" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is on the manual frequency (words only, {DSP})">
       <o>Dispatcher</o>
