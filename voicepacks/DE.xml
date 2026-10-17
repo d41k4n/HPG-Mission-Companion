@@ -6216,59 +6216,59 @@
       <o>Florian Center</o>
     </message>
     <message key="HRB.OPEN.ACC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing of the heli rescuers: accident or injured only (argument: injured)">
-      <o>Retter, hier das Briefing: Gemeldet ist ein Unfall mit {0} Verletzten. Die Lage ist unklar, deshalb planen wir mit dem Schlimmsten.</o>
-      <o>Briefing für die Retter. Die Leitstelle meldet einen Unfall mit {0} Verletzten. Wir haben noch kein klares Bild und bereiten uns auf eine schwere Lage vor.</o>
-      <o>Retter, das Briefing. Wir sind zu einem Unfall mit {0} Verletzten alarmiert. Details fehlen, und wir behandeln es als ernst, bis das Gegenteil feststeht.</o>
+      <o>Achtung Retter, hier das Briefing: Gemeldet ist ein Unfall mit {0} Verletzten. Die Lage ist unklar, deshalb planen wir mit dem Schlimmsten.</o>
+      <o>Kurzes Briefing für die Retter: Die Leitstelle meldet einen Unfall mit {0} Verletzten. Wir haben noch kein klares Bild und bereiten uns auf eine schwere Lage vor.</o>
+      <o>Achtung Retter, das Briefing: Wir sind zu einem Unfall mit {0} Verletzten alarmiert. Details fehlen, und wir behandeln es als ernst, bis das Gegenteil feststeht.</o>
       <o>Okay, herhören. Unfall, {0} Verletzte, und keiner weiß genau, was da unten los ist. Seid wachsam.</o>
       <o>Gut, kurzes Briefing. Ein Unfall mit {0} Verletzten und noch kein klares Bild, wir rechnen mit dem Schlimmsten.</o>
       <o>Also, Retter, das haben wir: ein Unfall, {0} Verletzte gemeldet, mehr nicht. Alles Weitere sehen wir vor Ort.</o>
     </message>
     <message key="HRB.OPEN.SAR" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: search and rescue (argument: persons)">
-      <o>Retter, hier das Briefing: Suche und Rettung, zu bergende Personen: {0}. Wir beginnen an der letzten bekannten Position und wissen nicht, wie lange sie schon draußen sind.</o>
-      <o>Briefing für die Retter. Das ist eine Suche und Rettung, zu bergende Personen: {0}. Wir suchen ab der letzten bekannten Position, die Zeit seit ihrem Verschwinden ist unbekannt.</o>
-      <o>Retter, das Briefing. Suche und Rettung, {0} zu bergen. Wir starten an der letzten bekannten Position und können nicht sagen, wie lange sie schon draußen sind.</o>
+      <o>Achtung Retter, hier das Briefing: Suche und Rettung von {0} Personen. Wir beginnen an der letzten bekannten Position und wissen nicht, wie lange sie schon draußen sind.</o>
+      <o>Kurzes Briefing für die Retter. Das ist eine Suche und Rettung. Zu bergende Personen: {0}. Wir suchen ab der letzten bekannten Position. Die Zeit seit ihrem Verschwinden ist unbekannt.</o>
+      <o>Achtung Retter, das Briefing. Suche und Rettung, {0} zu bergen. Wir starten an der letzten bekannten Position und können nicht sagen, wie lange sie schon draußen sind.</o>
       <o>Okay, herhören. Wir suchen {0} Vermisste. Wir starten an der letzten bekannten Position, und es kann eine lange Suche werden.</o>
       <o>Gut, kurzes Briefing. Suche und Rettung, {0} zu finden, Start an der letzten bekannten Position. Keine Ahnung, wie lange sie schon draußen sind.</o>
-      <o>Also, Retter, wir haben {0} Vermisste und nur eine letzte bekannte Position. Augen auf, es kann dauern.</o>
+      <o>Also, Retter, wir haben {0} Vermisste und nur eine letzte bekannten Position. Augen auf, es kann dauern.</o>
     </message>
     <message key="HRB.OPEN.SARV" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: overdue vehicle">
-      <o>Retter, hier das Briefing: Suche und Rettung für ein überfälliges Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position, finden den Fahrer und bergen ihn.</o>
-      <o>Briefing für die Retter. Ein Fahrzeug ist überfällig. Wir fliegen die wahrscheinliche Route ab der letzten bekannten Position und suchen das Fahrzeug und den Fahrer.</o>
-      <o>Retter, das Briefing. Überfälliges Fahrzeug, nur die letzte bekannte Position. Wir folgen der wahrscheinlichen Route, finden den Fahrer und bergen ihn.</o>
-      <o>Okay, herhören. Ein Auto ist nie angekommen. Wir folgen seiner wahrscheinlichen Route ab der letzten bekannten Position und suchen den Fahrer.</o>
+      <o>Achtung Retter, hier das Briefing: Suche und Rettung für ein überfälliges Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position, finden den Fahrer und bergen ihn.</o>
+      <o>Kurzes Briefing für die Retter: Ein Fahrzeug ist überfällig. Wir fliegen die wahrscheinliche Route ab der letzten bekannten Position und suchen das Fahrzeug und den Fahrer.</o>
+      <o>Achtung Retter, hier das Briefing: Überfälliges Fahrzeug an der letzten bekannten Position. Wir folgen der wahrscheinlichen Route, finden den Fahrer und bergen ihn.</o>
+      <o>Okay, bitte herhören. Ein Auto ist nie angekommen. Wir folgen seiner wahrscheinlichen Route ab der letzten bekannten Position und suchen den Fahrer.</o>
       <o>Gut, kurzes Briefing. Überfälliges Fahrzeug: Wir fliegen die wahrscheinliche Route, finden das Auto, finden den Fahrer und bringen ihn raus.</o>
       <o>Also, Retter, jemand ist überfällig und keiner weiß, wo. Wir folgen der wahrscheinlichen Route und suchen das Fahrzeug.</o>
     </message>
     <message key="HRB.OPEN.SARC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: parked car">
-      <o>Retter, hier das Briefing: Ein geparktes Auto wurde gefunden, der Besitzer wird vermisst. Wir suchen die Umgebung des Autos ab und bergen die Person.</o>
-      <o>Briefing für die Retter. Ein geparktes Fahrzeug wurde gefunden, der Besitzer fehlt. Wir beginnen am Auto, weiten die Suche aus und bergen die Person.</o>
-      <o>Retter, das Briefing. Geparktes Auto, Besitzer vermisst. Wir suchen rund um das Fahrzeug und bergen die Person, sobald wir sie finden.</o>
-      <o>Okay, herhören. Jemand hat ein Auto abgestellt und ist nie zurückgekommen. Wir beginnen am Auto und suchen die Umgebung ab.</o>
+      <o>Achtung Retter, hier das Briefing: Ein geparktes Auto wurde gefunden, der Besitzer wird vermisst. Wir suchen die Umgebung des Autos ab und bergen die Person.</o>
+      <o>Kurzes Briefing für die Retter: Ein geparktes Fahrzeug wurde gefunden, der Besitzer fehlt. Wir beginnen am Auto, weiten die Suche aus und bergen die Person.</o>
+      <o>Achtung Retter, das Briefing: Geparktes Auto, Besitzer vermisst. Wir suchen rund um das Fahrzeug und bergen die Person, sobald wir sie finden.</o>
+      <o>Okay, bitte herhören. Jemand hat ein Auto abgestellt und ist nie zurückgekommen. Wir beginnen am Auto und suchen die Umgebung ab.</o>
       <o>Gut, kurzes Briefing. Ein geparktes Auto, und der Besitzer ist weg. Wir fangen dort an und suchen die Umgebung ab.</o>
       <o>Also, Retter, wir haben ein leeres geparktes Auto und einen vermissten Besitzer. Wir beginnen am Auto und weiten die Suche aus.</o>
     </message>
     <message key="HRB.OPEN.SARH" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: person away from a house">
-      <o>Retter, hier das Briefing: Eine Person hat ihr Zuhause zu Fuß verlassen und wird vermisst. Wir suchen rund um das Haus und bergen sie.</o>
-      <o>Briefing für die Retter. Eine vermisste Person ist zu Fuß vom Haus weggegangen. Wir beginnen am Haus, suchen die Umgebung ab und bergen sie.</o>
-      <o>Retter, das Briefing. Eine Person ist von zu Hause weggelaufen. Wir suchen das Gebiet um das Haus ab und bergen sie, wenn wir sie finden.</o>
-      <o>Okay, herhören. Jemand ist von zu Hause weggegangen und wird vermisst. Wir beginnen am Haus und suchen die Umgebung ab.</o>
+      <o>Achtung Retter, hier das Briefing: Eine Person hat ihr Zuhause zu Fuß verlassen und wird vermisst. Wir suchen rund um das Haus und bergen sie.</o>
+      <o>Kurzes Briefing für die Retter: Eine vermisste Person ist zu Fuß vom Haus weggegangen. Wir beginnen am Haus, suchen die Umgebung ab und bergen sie.</o>
+      <o>Achtung Retter, das Briefing: Eine Person ist von zu Hause weggelaufen. Wir suchen das Gebiet um das Haus ab und bergen sie, wenn wir sie finden.</o>
+      <o>Okay, bitte herhören. Jemand ist von zu Hause weggegangen und wird vermisst. Wir beginnen am Haus und suchen die Umgebung ab.</o>
       <o>Gut, kurzes Briefing. Eine Person fehlt von einem Haus, zu Fuß verschwunden. Wir suchen die Umgebung ab.</o>
       <o>Also, Retter, eine Person ist von zu Hause losgezogen. Wir beginnen am Haus und schauen uns um.</o>
     </message>
     <message key="HRB.OPEN.TRF" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: patient transfer (argument: patients)">
-      <o>Retter, hier das Briefing: Eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Es gibt keine Einsatzstelle zu sichern, der Patient ist bereits in ärztlicher Obhut.</o>
-      <o>Briefing für die Retter. Das ist eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Einsatzstelle und keine Winde: Der Patient ist bereits in den Händen des Klinikpersonals.</o>
-      <o>Retter, das Briefing. Patientenverlegung, Patienten: {0}. Wir übernehmen im abgebenden Krankenhaus und fliegen sie zum Ziel.</o>
-      <o>Okay, herhören. Heute ist es eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Unfallstelle, ein sauberer Job.</o>
-      <o>Gut, kurzes Briefing. Eine Krankenhausverlegung, Patienten: {0}. Nichts zu sichern, wir übernehmen und fliegen.</o>
+      <o>Achtung Retter, hier das Briefing: Eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Es gibt keine Einsatzstelle zu sichern, der Patient ist bereits in ärztlicher Obhut.</o>
+      <o>Briefing für die Retter: Das ist eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Einsatzstelle und keine Winde: Der Patient ist bereits in den Händen des Klinikpersonals.</o>
+      <o>Achtung Retter, das Briefing: Patientenverlegung, Patienten: {0}. Wir übernehmen im abgebenden Krankenhaus und fliegen sie zum Ziel.</o>
+      <o>Okay, bitte herhören. Heute ist es eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Unfallstelle, ein sauberer Job.</o>
+      <o>Gut, kurzes Briefing: Eine Krankenhausverlegung, Patienten: {0}. Nichts zu sichern, wir übernehmen und fliegen.</o>
       <o>Also, Retter, das hier ist eine Verlegung, Patienten: {0}. Ein ruhiger Job: abholen, fliegen, übergeben.</o>
     </message>
     <message key="HRB.OPEN.ORG" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: organ transport">
-      <o>Retter, hier das Briefing: ein Organtransport. Er ist zeitkritisch: Wir holen den Behälter ab und liefern ihn innerhalb der Frist. Es gibt keine Einsatzstelle zu sichern.</o>
-      <o>Briefing für die Retter. Organtransport, zeitkritisch. Wir holen den Behälter am Abholpunkt ab und liefern ihn vor Ablauf der Frist. Keine Einsatzstelle, keine Winde.</o>
-      <o>Retter, das Briefing. Wir transportieren ein Organ, und jede Minute zählt. Abholen, laden, liefern, ohne Einsatzstelle zu sichern.</o>
-      <o>Okay, herhören. Organtransport, die Uhr läuft. Wir holen es ab, laden es und fliegen los.</o>
-      <o>Gut, kurzes Briefing. Ein Organ auf Zeit: abholen, festschnallen, schnell liefern.</o>
+      <o>Achtung Retter, hier das Briefing: ein Organtransport. Er ist zeitkritisch: Wir holen den Behälter ab und liefern ihn innerhalb der Frist. Es gibt keine Einsatzstelle zu sichern.</o>
+      <o>Briefing für die Retter: Organtransport, zeitkritisch. Wir holen den Behälter am Abholpunkt ab und liefern ihn vor Ablauf der Frist. Keine Einsatzstelle, keine Winde.</o>
+      <o>Achtung Retter, das Briefing: Wir transportieren ein Organ, und jede Minute zählt. Abholen, laden, liefern, ohne Einsatzstelle zu sichern.</o>
+      <o>Okay, bitte herhören. Organ-Transport. Die Uhr läuft. Direkter Flug zum Abholort. Nach der Aufnahme fliegen wir schnellstmöglich zum Ziel.</o>
+      <o>Gut, kurzes Briefing: Ein Organ auf Zeit: abholen, festschnallen, schnell liefern.</o>
       <o>Also, Retter, wir fliegen ein Organ, und die Zeit ist knapp. Zügig am Boden, vorsichtig mit dem Behälter.</o>
     </message>
     <message key="HRB.ETA" actor="2" radio="auto" group="hrbrief" seq="2" new="1" trigger="the copilot gives the time to the scene (argument: minutes, 2 or more)">
