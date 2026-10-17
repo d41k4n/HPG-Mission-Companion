@@ -1111,7 +1111,7 @@
       <o>Reanimation läuft. Wir halten euch auf dem Laufenden.</o>
       <o>CPR läuft weiter. Wir hören nicht auf.</o>
       <o>Reanimation läuft, wir machen ohne Unterbrechung weiter.</o>
-      <o>Wir drücken, wir hören nicht auf. Standby.</o>
+      <o>Wir drücken, wir hören nicht auf. Bitte warten.</o>
     </message>
     <message key="GRD.DEP.CHF" actor="4" radio="auto" group="grd" seq="2" new="1" trigger="stage crew deployment">
       <o>Besatzung rückt zum Patienten vor, Ausrüstung ist unterwegs.</o>
@@ -1123,10 +1123,10 @@
     </message>
     <message key="GRD.ETA.0" actor="4" radio="auto" group="grd" seq="4" new="1" trigger="remaining ground time, almost done">
       <o>Wir sind fast fertig, jeden Moment.</o>
-      <o>Fast fertig, Standby für Abflug.</o>
+      <o>Fast fertig, bereitmachen für Abflug.</o>
       <o>Nur noch wenige Sekunden.</o>
       <o>Gleich soweit, wir rufen, sobald wir fertig sind.</o>
-      <o>Fast fertig, Standby für den Abflug.</o>
+      <o>Fast fertig, bereitmachen für den Abflug.</o>
       <o>So gut wie durch, wir melden uns gleich.</o>
     </message>
     <message key="GRD.ETA.1" actor="4" radio="auto" group="grd" seq="4" new="1" trigger="remaining ground time, one minute">
@@ -1178,12 +1178,12 @@
       <o>Wir sind fast zurück, letzte Checks und wir schließen ab.</o>
     </message>
     <message key="GRD.TRT.C" actor="3" radio="auto" group="grd" seq="2" new="1" trigger="stage assessment and treatment, patient critical">
-      <o>Der Patient ist kritisch. Wir tun alles, was wir können, bitte Standby.</o>
+      <o>Der Patient ist kritisch. Wir tun alles, was wir können, bitte dranbleiben.</o>
       <o>Kritischer Zustand. Wir arbeiten mit Hochdruck, bleibt dran.</o>
       <o>Patient im kritischen Zustand. Behandlung läuft, wir geben Bescheid, sobald wir abtransportieren können.</o>
       <o>Sehr instabil. Wir behandeln gerade.</o>
-      <o>Kritischer Patient, wir arbeiten mit Hochdruck. Bitte Standby.</o>
-      <o>Zustand ist kritisch, wir tun alles Menschenmögliche. Standby.</o>
+      <o>Kritischer Patient, wir arbeiten mit Hochdruck. Bitte dranbleiben.</o>
+      <o>Zustand ist kritisch, wir tun alles Menschenmögliche. Bitte dranbleiben.</o>
     </message>
     <message key="GRD.TRT.M" actor="3" radio="auto" group="grd" seq="2" new="1" trigger="stage assessment and treatment, patient serious">
       <o>Der Patient ist in ernstem Zustand. Wir versorgen ihn und überwachen die Vitalparameter engmaschig.</o>
@@ -1242,28 +1242,28 @@
       <o>Hinten alle wohlauf? Kurze Meldung!</o>
     </message>
     <message key="HOS.CALL.D" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a deceased patient aboard">
-      <o>Klinik, RTH im Anflug, ETA ca. {0} Minuten. Der Patient ist während des Einsatzes verstorben.</o>
-      <o>Klinik, RTH im Anflug in etwa {0} Minuten. Wir haben einen verstorbenen Patienten an Bord.</o>
-      <o>Krankenhaus, {@HEMS}, ETA {0} Minuten, Patient im Flug verstorben.</o>
+      <o>Klinik, {@HEMS} im Anflug, Ankunft in etwa {0} Minuten. Der Patient ist während des Einsatzes verstorben.</o>
+      <o>Klinik, {@HEMS} im Anflug in etwa {0} Minuten. Wir haben einen verstorbenen Patienten an Bord.</o>
+      <o>Krankenhaus, {@HEMS}, Ankunft in {0} Minuten, Patient im Flug verstorben.</o>
       <o>Klinik, wir treffen in etwa {0} Minuten ein. Der Patient hat es leider nicht geschafft.</o>
-      <o>Klinik, RTH im Anflug, ca. {0} Minuten. Wir haben einen Verstorbenen an Bord.</o>
-      <o>Klinik, hier Christoph, ca. {0} Minuten entfernt. Der Patient hat es leider nicht überlebt.</o>
+      <o>Klinik, {@HEMS} im Anflug, etwa {0} Minuten. Wir haben einen Verstorbenen an Bord.</o>
+      <o>Klinik, hier {@HEMS}, etwa {0} Minuten entfernt. Der Patient hat es leider nicht überlebt.</o>
     </message>
     <message key="HOS.CALL.O" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with an organ aboard">
-      <o>Klinik, RTH im Anflug mit Organ, ETA ca. {0} Minuten.</o>
-      <o>Klinik, wir bringen das Organ, noch ca. {0} Minuten. Bitte Team bereithalten.</o>
-      <o>Krankenhaus, RTH im Anflug mit Spenderorgan, ETA {0} Minuten.</o>
+      <o>Klinik, {@HEMS} im Anflug mit Organ, Ankunft in etwa {0} Minuten.</o>
+      <o>Klinik, wir bringen das Organ, noch etwa {0} Minuten. Bitte Team bereithalten.</o>
+      <o>Krankenhaus, {@HEMS} im Anflug mit Spenderorgan, Ankunft in {0} Minuten.</o>
       <o>Klinik, Organ an Bord, wir sind in ungefähr {0} Minuten bei Ihnen.</o>
-      <o>Klinik, RTH im Anflug mit Organ, ca. {0} Minuten. Bitte das Team bereithalten.</o>
-      <o>Klinik, hier Christoph mit Spenderorgan, wir sind etwa {0} Minuten entfernt.</o>
+      <o>Klinik, {@HEMS} im Anflug mit Organ, etwa {0} Minuten. Bitte das Team bereithalten.</o>
+      <o>Klinik, hier {@HEMS} mit Spenderorgan, wir sind etwa {0} Minuten entfernt.</o>
     </message>
     <message key="HOS.CALL.P" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a patient aboard; {0}: minutes to go">
-      <o>Klinik, RTH im Anflug mit einem Patienten, ETA ca. {0} Minuten.</o>
-      <o>Klinik, RTH im Anflug mit Patient an Bord, noch etwa {0} Minuten.</o>
-      <o>Krankenhaus, hier RTH mit einem Patienten, ETA {0} Minuten.</o>
-      <o>Klinik, RTH im Anflug, ein Patient an Bord, Ankunft in ca. {0} Minuten.</o>
-      <o>Klinik, RTH im Anflug mit einem Patienten, ca. {0} Minuten.</o>
-      <o>Klinik, hier Christoph, ein Patient an Bord, wir sind in ca. {0} Minuten am Landeplatz.</o>
+      <o>Klinik, {@HEMS} im Anflug mit einem Patienten, Ankunft in ungefähr {0} Minuten.</o>
+      <o>Klinik, {@HEMS} im Anflug mit Patient an Bord, noch etwa {0} Minuten.</o>
+      <o>Krankenhaus, hier {@HEMS} mit einem Patienten, Ankunft in {0} Minuten.</o>
+      <o>Klinik, {@HEMS} im Anflug, ein Patient an Bord, Ankunft in ungefähr {0} Minuten.</o>
+      <o>Klinik, {@HEMS} im Anflug mit einem Patienten, ungefähr {0} Minuten.</o>
+      <o>Klinik, hier {@HEMS}, ein Patient an Bord, wir sind in ungefähr {0} Minuten am Landeplatz.</o>
     </message>
     <message key="HOS.HND" actor="3" radio="auto" group="hoshnd" seq="2" new="1">
       <o>Hier Notarzt. Übergabe: Patient ist stabilisiert, versorgt und überwacht. Alles Weitere bei euch.</o>
@@ -1282,25 +1282,25 @@
       <o>Übernommen, danke für die pünktliche Bereitstellung. Tolle Arbeit, Besatzung.</o>
     </message>
     <message key="HOS.REPLY" actor="9" radio="ext" group="hos" seq="2" new="1">
-      <o>RTH, verstanden. Der Landeplatz ist frei und das Schockraumteam erwartet euch.</o>
-      <o>Verstanden, RTH. Wir erwarten euch am Helilandeplatz.</o>
-      <o>RTH, verstanden. Helipad ist bereit und wir stehen parat.</o>
+      <o>{@HEMS}, verstanden. Der Landeplatz ist frei und das Schockraumteam erwartet euch.</o>
+      <o>Verstanden, {@HEMS}. Wir erwarten euch am Helilandeplatz.</o>
+      <o>{@HEMS}, verstanden. Helipad ist bereit und wir stehen parat.</o>
       <o>Verstanden. Wir warten am Landeplatz auf euch.</o>
-      <o>RTH, verstanden. Landedeck ist frei, wir erwarten euch dort.</o>
-      <o>Verstanden, RTH. Wir sind am Landeplatz bereit für euch, bis gleich.</o>
+      <o>{@HEMS}, verstanden. Landedeck ist frei, wir erwarten euch dort.</o>
+      <o>Verstanden, {@HEMS}. Wir sind am Landeplatz bereit für euch, bis gleich.</o>
     </message>
     <message key="HOS.REPLY.D" actor="9" radio="ext" group="hos" seq="2" new="1">
       <o>{@HEMS}, verstanden. Unser Beileid. Wir erwarten euch am Landeplatz.</o>
-      <o>Verstanden, RTH. Verstanden, wir werden am Landeplatz bereitstehen.</o>
-      <o>RTH, verstanden. Wir erwarten euch auf dem Helipad.</o>
+      <o>Verstanden, {@HEMS}. Verstanden, wir werden am Landeplatz bereitstehen.</o>
+      <o>{@HEMS}, verstanden. Wir erwarten euch auf dem Helipad.</o>
       <o>Verstanden. Das Team nimmt euch am Landeplatz in Empfang.</o>
-      <o>RTH, verstanden. Tut uns sehr leid. Wir warten am Landeplatz auf euch.</o>
-      <o>Verstanden, RTH. Wir stehen am Landeplatz bereit, unser aufrichtiges Beileid.</o>
+      <o>{@HEMS}, verstanden. Tut uns sehr leid. Wir warten am Landeplatz auf euch.</o>
+      <o>Verstanden, {@HEMS}. Wir stehen am Landeplatz bereit, unser aufrichtiges Beileid.</o>
     </message>
     <message key="HOS.REPLY.O" actor="9" radio="ext" group="hos" seq="2" new="1">
       <o>{@HEMS}, verstanden. Das Transplantationsteam steht am Helipad bereit.</o>
-      <o>Verstanden, RTH. Wir stehen zur Übernahme des Organs am Landeplatz bereit.</o>
-      <o>RTH, verstanden. Das Team ist bei eurer Landung am Helipad.</o>
+      <o>Verstanden, {@HEMS}. Wir stehen zur Übernahme des Organs am Landeplatz bereit.</o>
+      <o>{@HEMS}, verstanden. Das Team ist bei eurer Landung am Helipad.</o>
       <o>Verstanden, {@HEMS}. Das OP-Team wartet auf euch.</o>
       <o>{@HEMS}, verstanden. Das Team ist am Helipad und bereit zur Organübernahme.</o>
       <o>Verstanden, {@HEMS}. Das OP-Team erwartet euch am Landeplatz.</o>
@@ -2634,11 +2634,11 @@
       <o>Schön, dass du bei uns bist, Heliretter.</o>
     </message>
     <message key="PAX3.27" actor="3" radio="auto" lvar="L:PAX3{VCP}27" wav="AND.medical.assessment.in.progress.wav" sleep="0" trigger="Crew visit begins and the tablet starts revealing clinical data.">
-      <o>Patientenerstuntersuchung läuft. Standby für die Behandlungsentscheidung.</o>
-      <o>Untersuche den Patienten. Standby bezüglich Behandlungsentscheidung.</o>
-      <o>Die Sichtung des Patienten läuft. Bitte warten bis zur Therapieentscheidung.</o>
-      <o>Ich untersuche den Patienten. Standby für die weiteren Maßnahmen.</o>
-      <o>Ich schaue mir den Patienten jetzt an. Standby für die Therapieentscheidung.</o>
+      <o>Patientenerstuntersuchung läuft. Bereithalten für die Behandlungsentscheidung.</o>
+      <o>Untersuche den Patienten. Bereithalten bezüglich Behandlungsentscheidung.</o>
+      <o>Die Sichtung des Patienten läuft. Bereithalten bis zur Therapieentscheidung.</o>
+      <o>Ich untersuche den Patienten. Bereithalten für die weiteren Maßnahmen.</o>
+      <o>Ich schaue mir den Patienten jetzt an. Bereithalten für die Therapieentscheidung.</o>
       <o>Patientencheck läuft. Ich gebe Bescheid, sobald über die Therapie entschieden ist.</o>
     </message>
     <message key="PAX3.28" actor="3" radio="auto" lvar="L:PAX3{VCP}28" wav="AND.medical.critical.vital.signs.wav" trigger="Critical-vitals indicators turn red, patient deterioration requires an urgent transport decision.">
@@ -3462,12 +3462,12 @@
       <o>An beiden Seiten alles vorbereitet, {@HEMS}. Man erwartet Sie am Abholort und das Ziel ist bereit.</o>
     </message>
     <message key="DSP.ANS.ORG" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: organ transport">
-      <o>{@HEMS}, {@DSP}. Verstanden. Der Container steht am Abholort bereit, das Empfangsteam wartet. Bitte ETA durchgeben.</o>
-      <o>{@HEMS}, verstanden. Das Organ ist verpackt und abholbereit. Das Transplantationsteam wartet, ETA durchgeben sobald bekannt.</o>
-      <o>{@HEMS}, {@DSP}. Abholung bereit, Zielklinik auf Standby. Zeitfenster ist eng, bitte ETA melden.</o>
-      <o>{@HEMS}, der Container steht bereit und das OP-Team wartet. Bitte ETA durchgeben, wenn möglich.</o>
+      <o>{@HEMS}, {@DSP}. Verstanden. Der Container steht am Abholort bereit, das Empfangsteam wartet. Bitte Ankunftszeit durchgeben.</o>
+      <o>{@HEMS}, verstanden. Das Organ ist verpackt und abholbereit. Das Transplantationsteam wartet, Ankunftszeit durchgeben sobald bekannt.</o>
+      <o>{@HEMS}, {@DSP}. Abholung bereit, Zielklinik auf Standby. Zeitfenster ist eng, bitte Ankunftszeit melden.</o>
+      <o>{@HEMS}, der Container steht bereit und das OP-Team wartet. Bitte Ankunftszeit durchgeben, wenn möglich.</o>
       <o>Verstanden, {@HEMS}. Container steht bereit, Zielort wartet. Bitte Ankunftszeit durchgeben.</o>
-      <o>Alles bereit für Sie, {@HEMS}. Das Team am Zielort wartet, bitte ETA durchgeben.</o>
+      <o>Alles bereit für Sie, {@HEMS}. Das Team am Zielort wartet, bitte Ankunftszeit durchgeben.</o>
     </message>
     <message key="BRF.INT.PLT" actor="1" radio="auto" group="brfint" seq="1" futile="1" new="1" trigger="the crew presents itself on board: the pilot">
       <o silent="1"/>
@@ -3664,7 +3664,7 @@
       <o>Wählen Sie ENTFOG/ENTFEUCHTUNG!</o>
     </message>
     <message key="CHK.afterheatingckl.07" text="1" actor="11" trigger="checklist afterheatingckl">
-      <o>Generatorstrom: Prüfen Sie, ob eine Erhöhung um ca. 30 Ampere erforderlich ist, jedoch nur, wenn die elektrische Heizung installiert ist!</o>
+      <o>Generatorstrom: Prüfen Sie, ob eine Erhöhung um etwa 30 Ampere erforderlich ist, jedoch nur, wenn die elektrische Heizung installiert ist!</o>
     </message>
     <message key="CHK.aviopftckl.01" text="1" actor="11" trigger="checklist aviopftckl">
       <o>Checkliste für den Avionik-Vorflugtest!</o>
@@ -4432,7 +4432,7 @@
       <o>Wählen Sie ENTFOG/ENTFEUCHTUNG!</o>
     </message>
     <message key="CHK.quickheatingckl.07" text="1" actor="11" trigger="checklist quickheatingckl">
-      <o>Batteriestromstärke: Prüfen Sie, ob eine Erhöhung um ca. 30 Ampere erforderlich ist, jedoch nur, wenn die elektrische Heizung installiert ist!</o>
+      <o>Batteriestromstärke: Prüfen Sie, ob eine Erhöhung um etwa 30 Ampere erforderlich ist, jedoch nur, wenn die elektrische Heizung installiert ist!</o>
     </message>
     <message key="CHK.quickheatingmenuckl.01" text="1" actor="11" trigger="checklist quickheatingmenuckl">
       <o>Heizungsanlagenprüfung, Option auswählen!</o>
@@ -6057,7 +6057,7 @@
     <message key="HRQ.BRF.ACC" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
       <o>Bergwacht-Basis, {@HEMS}. Der Einsatz ist ein Unfall mit {0} Verletzten. Bitte Bergretter briefen.</o>
       <o>Bergwacht-Basis, {@HEMS}. Unfall vor Ort, {0} Verletzte gemeldet. Bitte briefen.</o>
-      <o>Bergwacht-Basis, {@HEMS}. Es handelt sich um einen Unfall, ca. {0} Verletzte. Sagt ihnen, dass sie sich vorbereiten sollen.</o>
+      <o>Bergwacht-Basis, {@HEMS}. Es handelt sich um einen Unfall, etwa {0} Verletzte. Sagt ihnen, dass sie sich vorbereiten sollen.</o>
       <o>Bergwacht-Basis, {@HEMS}. Wir fliegen zu einem Unfall, {0} Verletzte. Bitte weiterleiten.</o>
       <o>Bergwacht-Basis, {@HEMS}. Unfall mit {0} Verletzten. Bergretter, macht euch bereit.</o>
       <o>Bergwacht-Basis, {@HEMS}. Zur Info: Unfall, {0} Verletzte. Bitte Team briefen.</o>
