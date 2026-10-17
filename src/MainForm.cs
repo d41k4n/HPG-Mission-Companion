@@ -2148,11 +2148,11 @@ namespace HPGMissionCompanion
 
             Lbl(audioOutBox, "Headset: intercom, radio calls, external radio calls and the notifications (also with the helicopter off)", 10, 22, 644, 18);
             ComboBox headsetCombo = AudioDeviceCombo(10, 44, devices, ao.HeadsetDevice, delegate (string n) { Ctx.Settings.AudioOut.HeadsetDevice = n; });
-            AudioLevel(44, 406, 446, 170, ao.HeadsetLevel, delegate (int v) { Ctx.Settings.AudioOut.HeadsetLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><ics>Headset test. Intercom and radio calls are heard here."); });
+            AudioLevel(44, 406, 446, 170, ao.HeadsetLevel, delegate (int v) { Ctx.Settings.AudioOut.HeadsetLevel = v; }, 336, delegate { TestRadio("<ics>"); });
 
             Lbl(audioOutBox, "External: voices in the air (technicians, ground unit, patient, the crew outside the helicopter)", 10, 92, 644, 18);
             ComboBox externalCombo = AudioDeviceCombo(10, 114, devices, ao.ExternalDevice, delegate (string n) { Ctx.Settings.AudioOut.ExternalDevice = n; });
-            AudioLevel(114, 406, 446, 170, ao.ExternalLevel, delegate (int v) { Ctx.Settings.AudioOut.ExternalLevel = v; }, 336, delegate { Ctx.Player.EnqueueTest("<actor1><radio:off>External test. A voice in the air is heard here."); });
+            AudioLevel(114, 406, 446, 170, ao.ExternalLevel, delegate (int v) { Ctx.Settings.AudioOut.ExternalLevel = v; }, 336, delegate { TestRadio("<radio:off>"); });
 
             Lbl(audioOutBox, "Notifications: ringtones, new message tone, tablet alarm. They use the device of the headset, and their own level:", 10, 162, 644, 18);
             AudioLevel(186, 10, 56, 300, ao.NotifyLevel, delegate (int v) { Ctx.Settings.AudioOut.NotifyLevel = v; }, 440, delegate { Ctx.Player.PlayNotificationTest("AND.NEW.MSG.wav"); });
