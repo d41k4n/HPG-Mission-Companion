@@ -92,29 +92,254 @@ namespace HPGMissionCompanion
             return sb.ToString();
         }
 
-        // ---- numbers -------------------------------------------------------------------------------------
-        static readonly Regex Pair = new Regex("^\\s*(-?\\d+(?:[.,]\\d+)?)\\s*[,;]\\s*(-?\\d+(?:[.,]\\d+)?)\\s*$", RegexOptions.CultureInvariant);
+        // ---- numbers and coordinates ---------------------------------------------------------------------
+        // A pair of coordinates pasted whole into one box, in the formats people copy (user request 2026-10-18):
+        //   decimal            46.9096, 7.5049   46.9096,7.5049   46.9096 7.5049   46,9096;7,5049   46.9096/7.5049   (46.9096, 7.5049)   lat=46.9096 lon=7.5049
+        //   with hemisphere    46.9096N 7.5049E   N46.9096 E7.5049   7.5049E 46.9096N   46.9096 North 7.5049 East   (S and W are negative)
+        //   degrees, minutes   N46 54.576 E007 30.294   46 54.576 N 7 30.294 E   46:54.576N 7:30.294E
+        //   degrees, minutes, seconds   46d54'34.6"N 7d30'17.6"E with the degree, prime and double prime signs, or only spaces: 46 54 34.6 N 7 30 17.6 E
+        //   aviation, compact  465434N0073017E   4654N00730E   N465434E0073017   4654.576N00730.294E (NMEA)
+        //   links              Google Maps (@lat,lon  !3dlat!4dlon  ?q=lat,lon), OpenStreetMap (#map=z/lat/lon, mlat= and mlon=), geo:lat,lon
+        // The latitude comes first unless a hemisphere letter says otherwise; a first number beyond 90 with a second within 90 is a longitude first.
+        sealed class Cpt { public double Val; public char Hemi; }
 
-        // "46.9096, 7.5049" pasted in one box: the two numbers
-        public static bool SplitPair(string text, out string lat, out string lon)
+        static readonly Regex[] LinkRx = new Regex[]
         {
-            lat = null; lon = null;
-            if (text == null) return false;
-            Match m = Pair.Match(text);
-            if (!m.Success) return false;
-            lat = m.Groups[1].Value; lon = m.Groups[2].Value;
+            new Regex("!3d(-?\\d+(?:\\.\\d+)?)!4d(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant),
+            new Regex("@(-?\\d+(?:\\.\\d+)?),(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant),
+            new Regex("[?&#](?:q|ll|query|center|destination|daddr|saddr)=(-?\\d+(?:\\.\\d+)?)(?:,|%2C)\\+?(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase),
+            new Regex("mlat=(-?\\d+(?:\\.\\d+)?)&(?:amp;)?mlon=(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant),
+            new Regex("#map=\\d+/(-?\\d+(?:\\.\\d+)?)/(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant),
+            new Regex("^geo:(-?\\d+(?:\\.\\d+)?),(-?\\d+(?:\\.\\d+)?)", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)
+        };
+        static readonly Regex CompactSuffix = new Regex("^(\\d{2})(?:(\\d{2})(\\d{2}(?:\\.\\d+)?)?)?\\s*([NS])\\s*(\\d{3})(?:(\\d{2})(\\d{2}(?:\\.\\d+)?)?)?\\s*([EW])$", RegexOptions.CultureInvariant);
+        static readonly Regex CompactPrefix = new Regex("^([NS])\\s*(\\d{2})(?:(\\d{2})(\\d{2}(?:\\.\\d+)?)?)?\\s*([EW])\\s*(\\d{3})(?:(\\d{2})(\\d{2}(?:\\.\\d+)?)?)?$", RegexOptions.CultureInvariant);
+        static readonly Regex Nmea = new Regex("^(\\d{2})(\\d{2}\\.\\d+)\\s*([NS])\\s*(\\d{3})(\\d{2}\\.\\d+)\\s*([EW])$", RegexOptions.CultureInvariant);
+        static readonly Regex Tok = new Regex("[-+]?\\d+(?:[.,]\\d+)?|[NSEW]", RegexOptions.CultureInvariant);
+
+        // the text without the signs that only mark the units: degree, prime, double prime, brackets, the words latitude and longitude; null when something else is in it
+        static string Normalize(string text, out bool marks)
+        {
+            marks = false;
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in text)
+            {
+                if (c == '\u00B0' || c == '\u00BA' || c == '\u02DA' || c == '\u2032' || c == '\u2019' || c == '\u2018' || c == '\u00B4' || c == '`' || c == '\'' || c == '\u2033' || c == '\u201D' || c == '\u201C' || c == '"') { marks = true; sb.Append(' '); }
+                else if (c == '\u2212' || c == '\u2013' || c == '\u2014') sb.Append('-');
+                else if (c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}' || c == ':' || c == '=') sb.Append(' ');
+                else sb.Append(c);
+            }
+            string s = sb.ToString();
+            s = Regex.Replace(s, "\\b(?:latitude|longitude|lat|lng|lon|long)\\b", " ", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            s = Regex.Replace(s, "\\b(?:north|nord)\\b", "N", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            s = Regex.Replace(s, "\\b(?:south|sud)\\b", "S", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            s = Regex.Replace(s, "\\b(?:east|est)\\b", "E", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            s = Regex.Replace(s, "\\b(?:west|ovest)\\b", "W", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            s = Regex.Replace(s, "(?<=\\d)[dD](?=\\s|\\d|$)", " ", RegexOptions.CultureInvariant);   // 46d54
+            s = s.Trim().ToUpperInvariant();
+            if (s.Length == 0) return null;
+            foreach (char c in s) if (!(char.IsDigit(c) || c == '.' || c == ',' || c == ';' || c == '/' || c == '|' || c == '-' || c == '+' || c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == 'N' || c == 'S' || c == 'E' || c == 'W')) return null;
+            return s;
+        }
+
+        static bool Number(string t, out double v)
+        {
+            v = 0;
+            if (t == null) return false;
+            t = t.Trim();
+            if (t.IndexOf('.') < 0 && t.IndexOf(',') >= 0 && t.IndexOf(',') == t.LastIndexOf(',')) t = t.Replace(',', '.');
+            return double.TryParse(t, NumberStyles.Float, CultureInfo.InvariantCulture, out v) && !double.IsNaN(v) && !double.IsInfinity(v);
+        }
+
+        // degrees [minutes [seconds]] with the hemisphere: only the last part may have decimals, minutes and seconds under 60
+        static bool Group(List<string> nums, char hemi, out Cpt c)
+        {
+            c = null;
+            if (nums.Count < 1 || nums.Count > 3) return false;
+            double[] p = new double[3];
+            bool neg = false;
+            for (int i = 0; i < nums.Count; i++)
+            {
+                string t = nums[i];
+                if (i == 0 && t.StartsWith("-", StringComparison.Ordinal)) neg = true;
+                if (i > 0 && (t.StartsWith("-", StringComparison.Ordinal) || t.StartsWith("+", StringComparison.Ordinal))) return false;
+                if (!Number(t, out p[i])) return false;
+                p[i] = Math.Abs(p[i]);
+                if (i < nums.Count - 1 && (t.IndexOf('.') >= 0 || t.IndexOf(',') >= 0)) return false;
+                if (i > 0 && p[i] >= 60) return false;
+            }
+            double v = p[0] + p[1] / 60.0 + p[2] / 3600.0;
+            if (hemi == 'S' || hemi == 'W' || neg) v = -v;
+            c = new Cpt(); c.Val = v; c.Hemi = hemi;
             return true;
         }
 
-        // a coordinate typed by hand: the point or one comma as the decimal sign
+        static Cpt Fixed(string deg, string min, string sec, char hemi)
+        {
+            double d = 0, m = 0, s = 0;
+            if (!Number(deg, out d)) return null;
+            if (!string.IsNullOrEmpty(min) && !Number(min, out m)) return null;
+            if (!string.IsNullOrEmpty(sec) && !Number(sec, out s)) return null;
+            if (m >= 60 || s >= 60) return null;
+            double v = d + m / 60.0 + s / 3600.0;
+            Cpt c = new Cpt(); c.Val = (hemi == 'S' || hemi == 'W') ? -v : v; c.Hemi = hemi;
+            return c;
+        }
+
+        // which one is the latitude and which the longitude, and the range
+        static bool Assign(Cpt p, Cpt q, out double lat, out double lon)
+        {
+            lat = 0; lon = 0;
+            if (p == null || q == null) return false;
+            bool pLat = p.Hemi == 'N' || p.Hemi == 'S', pLon = p.Hemi == 'E' || p.Hemi == 'W', qLat = q.Hemi == 'N' || q.Hemi == 'S', qLon = q.Hemi == 'E' || q.Hemi == 'W';
+            bool swap = false;
+            if ((pLat && qLat) || (pLon && qLon)) return false;
+            if (pLat || qLon) swap = false;
+            else if (pLon || qLat) swap = true;
+            else swap = Math.Abs(p.Val) > 90 && Math.Abs(q.Val) <= 90;
+            lat = swap ? q.Val : p.Val; lon = swap ? p.Val : q.Val;
+            return lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+        }
+
+        static bool FromLink(string s, out Cpt a, out Cpt b)
+        {
+            a = null; b = null;
+            if (s.IndexOf("://", StringComparison.Ordinal) < 0 && !s.StartsWith("geo:", StringComparison.OrdinalIgnoreCase)) return false;
+            foreach (Regex r in LinkRx)
+            {
+                Match m = r.Match(s);
+                if (!m.Success) continue;
+                double x, y;
+                if (!Number(m.Groups[1].Value, out x) || !Number(m.Groups[2].Value, out y)) continue;
+                a = new Cpt(); a.Val = x; b = new Cpt(); b.Val = y;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool ParseCoordinates(string text, out double lat, out double lon)
+        {
+            lat = 0; lon = 0;
+            if (text == null) return false;
+            string raw = text.Trim();
+            if (raw.Length < 3 || raw.Length > 600) return false;
+            Cpt p, q;
+            if (FromLink(raw, out p, out q)) return Assign(p, q, out lat, out lon);
+            bool marks;
+            string s = Normalize(raw, out marks);
+            if (s == null) return false;
+            Match m = CompactSuffix.Match(s);
+            if (m.Success) return Assign(Fixed(m.Groups[1].Value, m.Groups[2].Value, m.Groups[3].Value, m.Groups[4].Value[0]), Fixed(m.Groups[5].Value, m.Groups[6].Value, m.Groups[7].Value, m.Groups[8].Value[0]), out lat, out lon);
+            m = CompactPrefix.Match(s);
+            if (m.Success) return Assign(Fixed(m.Groups[2].Value, m.Groups[3].Value, m.Groups[4].Value, m.Groups[1].Value[0]), Fixed(m.Groups[6].Value, m.Groups[7].Value, m.Groups[8].Value, m.Groups[5].Value[0]), out lat, out lon);
+            m = Nmea.Match(s);
+            if (m.Success) return Assign(Fixed(m.Groups[1].Value, m.Groups[2].Value, null, m.Groups[3].Value[0]), Fixed(m.Groups[4].Value, m.Groups[5].Value, null, m.Groups[6].Value[0]), out lat, out lon);
+
+            // numbers and hemisphere letters in order
+            List<string> items = new List<string>();
+            List<int> start = new List<int>(), end = new List<int>();
+            foreach (Match t in Tok.Matches(s)) { items.Add(t.Value); start.Add(t.Index); end.Add(t.Index + t.Length); }
+            if (items.Count == 0) return false;
+            List<int> letters = new List<int>();
+            for (int i = 0; i < items.Count; i++) if (items[i].Length == 1 && char.IsLetter(items[i][0])) letters.Add(i);
+            List<string> g1 = new List<string>(), g2 = new List<string>();
+            char h1 = '\0', h2 = '\0';
+            if (letters.Count == 0)
+            {
+                int n = items.Count;
+                if (n == 2) { g1.Add(items[0]); g2.Add(items[1]); }
+                else if (n == 4) { g1.Add(items[0]); g1.Add(items[1]); g2.Add(items[2]); g2.Add(items[3]); }
+                else if (n == 6) { for (int i = 0; i < 3; i++) { g1.Add(items[i]); g2.Add(items[i + 3]); } }
+                else return false;
+                if (n == 2)
+                {
+                    // two plain numbers: enough digits to be a place, and "46,7" is one number with a decimal comma, not a pair
+                    string sep = s.Substring(end[0], start[1] - end[0]);
+                    bool dec = g1[0].IndexOfAny(new char[] { '.', ',' }) >= 0 || g2[0].IndexOfAny(new char[] { '.', ',' }) >= 0;
+                    int digits = 0; foreach (char c in g1[0] + g2[0]) if (char.IsDigit(c)) digits++;
+                    if (digits < 4) return false;
+                    if (!dec && sep.Trim() == "," && sep.IndexOf(' ') < 0) return false;
+                }
+            }
+            else if (letters.Count == 2)
+            {
+                int l1 = letters[0], l2 = letters[1];
+                if (l1 == 0)
+                {
+                    // N46 54.5 E7 30.2 : the letter opens its group
+                    h1 = items[0][0]; h2 = items[l2][0];
+                    for (int i = 1; i < l2; i++) g1.Add(items[i]);
+                    for (int i = l2 + 1; i < items.Count; i++) g2.Add(items[i]);
+                }
+                else if (l2 == items.Count - 1)
+                {
+                    // 46 54.5 N 7 30.2 E : the letter closes its group
+                    h1 = items[l1][0]; h2 = items[l2][0];
+                    for (int i = 0; i < l1; i++) g1.Add(items[i]);
+                    for (int i = l1 + 1; i < l2; i++) g2.Add(items[i]);
+                }
+                else return false;
+            }
+            else return false;
+            Cpt a, b;
+            if (!Group(g1, h1, out a) || !Group(g2, h2, out b)) return false;
+            return Assign(a, b, out lat, out lon);
+        }
+
+        // one coordinate with signs and a hemisphere: 46.9096, 46 54.576 N, N46 54 34.6, 46d54'34.6"N (without a mark or a letter two numbers are not read as degrees and minutes)
+        public static bool ParseSingle(string text, out double v)
+        {
+            v = 0;
+            if (text == null) return false;
+            bool marks;
+            string s = Normalize(text.Trim(), out marks);
+            if (s == null) return false;
+            List<string> nums = new List<string>();
+            char hemi = '\0';
+            List<string> items = new List<string>();
+            foreach (Match t in Tok.Matches(s)) items.Add(t.Value);
+            if (items.Count == 0) return false;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].Length == 1 && char.IsLetter(items[i][0]))
+                {
+                    if (hemi != '\0' || (i != 0 && i != items.Count - 1)) return false;
+                    hemi = items[i][0];
+                }
+                else nums.Add(items[i]);
+            }
+            if (nums.Count > 1 && !marks && hemi == '\0') return false;
+            Cpt c;
+            if (!Group(nums, hemi, out c)) return false;
+            v = c.Val;
+            return true;
+        }
+
+        public static string FormatCoord(double v)
+        {
+            string r = v.ToString("0.#######", CultureInfo.InvariantCulture);
+            return r == "-0" ? "0" : r;
+        }
+
+        // a pair pasted in one box: the two numbers as plain decimals
+        public static bool SplitPair(string text, out string lat, out string lon)
+        {
+            lat = null; lon = null;
+            double a, b;
+            if (!ParseCoordinates(text, out a, out b)) return false;
+            lat = FormatCoord(a); lon = FormatCoord(b);
+            return true;
+        }
+
+        // a coordinate typed by hand: the point or one comma as the decimal sign, or degrees with minutes and seconds and the hemisphere
         public static bool ParseNumber(string text, out double v)
         {
             v = 0;
             if (text == null) return false;
             string s = text.Trim();
             if (s.Length == 0) return false;
-            if (s.IndexOf('.') < 0 && s.IndexOf(',') >= 0 && s.IndexOf(',') == s.LastIndexOf(',')) s = s.Replace(',', '.');
-            return double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out v) && !double.IsNaN(v) && !double.IsInfinity(v);
+            if (Number(s, out v)) return true;
+            return ParseSingle(s, out v);
         }
 
         // 1 for a coordinate, 0 empty, -1 not a number or out of range

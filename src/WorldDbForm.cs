@@ -34,9 +34,38 @@ namespace HPGMissionCompanion
                 // numbers
                 string la, lo;
                 t("a pair pasted in one box is split", WorldDb.SplitPair("46.9096, 7.5049", out la, out lo) && la == "46.9096" && lo == "7.5049");
-                t("a decimal comma is a number", WorldDb.SplitPair("46,9096;7,5049", out la, out lo) && la == "46,9096");
+                t("a decimal comma pair is split into plain decimals", WorldDb.SplitPair("46,9096;7,5049", out la, out lo) && la == "46.9096" && lo == "7.5049");
                 double v;
                 t("a decimal comma is read", WorldDb.ParseNumber("46,9096", out v) && Math.Abs(v - 46.9096) < 1e-9);
+                // the formats of a pair (user request 2026-10-18): each must give 46.909643 / 7.504905 (south and west are negative)
+                string[] same = new string[] {
+                    "46.909643, 7.504905", "46.909643,7.504905", "46.909643 7.504905", "46.909643;7.504905", "46.909643/7.504905", "(46.909643, 7.504905)", "[46.909643,7.504905]",
+                    "lat=46.909643 lon=7.504905", "Latitude: 46.909643, Longitude: 7.504905", "46,909643;7,504905", "46,909643 7,504905", "46,909643,7,504905", "  46.909643 ,  7.504905  ", "46.909643\t7.504905",
+                    "46.909643N 7.504905E", "46.909643N,7.504905E", "N46.909643 E7.504905", "N46.909643,E7.504905", "7.504905E 46.909643N", "E7.504905 N46.909643", "46.909643 North 7.504905 East", "46.909643\u00B0 N, 7.504905\u00B0 E",
+                    "46 54.57858 N 7 30.2943 E", "N46 54.57858 E007 30.2943", "N46\u00B0 54.57858' E7\u00B0 30.2943'", "46:54.57858N 7:30.2943E",
+                    "46\u00B054'34.7148\"N 7\u00B030'17.658\"E", "46 54 34.7148 N 7 30 17.658 E", "N46 54 34.7148 E7 30 17.658", "46d54m34.7148sN",
+                    "https://www.google.com/maps/@46.909643,7.504905,17z", "https://www.google.com/maps/place/x/@46.1,7.1,15z/data=!3d46.909643!4d7.504905", "https://maps.google.com/?q=46.909643,7.504905", "https://www.openstreetmap.org/#map=17/46.909643/7.504905",
+                    "https://www.openstreetmap.org/?mlat=46.909643&mlon=7.504905", "geo:46.909643,7.504905" };
+                int okFormats = 0; string badFormat = "";
+                for (int i = 0; i < same.Length; i++)
+                {
+                    double xa, xb;
+                    bool good = WorldDb.ParseCoordinates(same[i], out xa, out xb) && Math.Abs(xa - 46.909643) < 1e-5 && Math.Abs(xb - 7.504905) < 1e-5;
+                    if (same[i] == "46d54m34.7148sN") good = !WorldDb.ParseCoordinates(same[i], out xa, out xb);   // d/m/s letters are not a format: one coordinate only, refused as a pair
+                    if (good) okFormats++; else badFormat += " [" + same[i] + "]";
+                }
+                t("every format of a pair is read" + (badFormat.Length > 0 ? " - FAILED:" + badFormat : ""), okFormats == same.Length);
+                // compact aviation forms: 46 54 34 N 007 30 17 E
+                double ca, cb;
+                t("compact aviation 465434N0073017E", WorldDb.ParseCoordinates("465434N0073017E", out ca, out cb) && Math.Abs(ca - (46 + 54 / 60.0 + 34 / 3600.0)) < 1e-9 && Math.Abs(cb - (7 + 30 / 60.0 + 17 / 3600.0)) < 1e-9);
+                t("compact aviation degrees and minutes 4654N00730E and the prefix form N4654E00730", WorldDb.ParseCoordinates("4654N00730E", out ca, out cb) && Math.Abs(ca - (46 + 54 / 60.0)) < 1e-9 && Math.Abs(cb - 7.5) < 1e-9 && WorldDb.ParseCoordinates("N4654 E00730", out ca, out cb) && Math.Abs(ca - (46 + 54 / 60.0)) < 1e-9);
+                t("NMEA 4654.57858N00730.2943E", WorldDb.ParseCoordinates("4654.57858N00730.2943E", out ca, out cb) && Math.Abs(ca - 46.909643) < 1e-6 && Math.Abs(cb - 7.504905) < 1e-5);
+                t("south and west are negative", WorldDb.ParseCoordinates("33.8688S 151.2093E", out ca, out cb) && ca < -33.8 && cb > 151.2 && WorldDb.ParseCoordinates("40.7128 N 74.0060 W", out ca, out cb) && ca > 40.7 && cb < -74.0 && WorldDb.ParseCoordinates("-33.8688, -70.6693", out ca, out cb) && ca < 0 && cb < 0);
+                t("a longitude first is turned around when only that fits", WorldDb.ParseCoordinates("151.2093, -33.8688", out ca, out cb) && Math.Abs(ca + 33.8688) < 1e-9 && Math.Abs(cb - 151.2093) < 1e-9);
+                t("one number is not a pair, and neither are 46,7 or two letters of the same kind", !WorldDb.ParseCoordinates("46.9096", out ca, out cb) && !WorldDb.ParseCoordinates("46,7", out ca, out cb) && !WorldDb.ParseCoordinates("46.9N 7.5N", out ca, out cb));
+                t("out of range or text is refused", !WorldDb.ParseCoordinates("146.9, 190.5", out ca, out cb) && !WorldDb.ParseCoordinates("hello world", out ca, out cb) && !WorldDb.ParseCoordinates("46 61 10 N 7 30 17 E", out ca, out cb));
+                t("a single coordinate in degrees, minutes, seconds", WorldDb.ParseNumber("46\u00B054'34.7148\"N", out v) && Math.Abs(v - 46.909643) < 1e-6 && WorldDb.ParseNumber("7 30 17.658 W", out v) && v < 0 && WorldDb.ParseNumber("S33 52.128", out v) && v < 0);
+                t("two numbers in one box are not degrees and minutes without a mark or a letter", !WorldDb.ParseNumber("46 54", out v) && WorldDb.ParseNumber("46\u00B0 54'", out v) && Math.Abs(v - 46.9) < 1e-9);
                 // the records
                 string err;
                 Dictionary<string, object> h = WorldDb.BuildWaypoint(true, "TEST HANGAR", "me", "46.909643", "7.504900", "520", true, false, new string[] { "46.90961", "46.90958", "" }, new string[] { "7.50482", "7.50476", "" }, false, "", "", out err);
@@ -175,18 +204,28 @@ namespace HPGMissionCompanion
             return t;
         }
 
-        // a latitude and a longitude; "46.9, 7.5" pasted in the first one fills both
-        static void LatLon(Control parent, int x, int y, string caption, out TextBox lat, out TextBox lon)
+        // the two coordinates of a place pasted whole into the first box fill both, in any of the formats of WorldDb.ParseCoordinates (46.9,7.5  N46 54.5 E7 30.2  a map link ...);
+        // a paste is a jump in the length of the text, what is typed is checked when the box is left
+        static void PairFill(TextBox a, TextBox b)
         {
-            Cap(parent, caption, x, y, 650);
-            Cap(parent, "Latitude", x, y + 18, 120);
-            Cap(parent, "Longitude", x + 150, y + 18, 120);
-            TextBox a = Box(parent, x, y + 36, 140, ""), b = Box(parent, x + 150, y + 36, 140, "");
-            a.TextChanged += delegate
+            int last = 0;
+            Action fill = delegate
             {
                 string la, lo;
                 if (WorldDb.SplitPair(a.Text, out la, out lo)) { b.Text = lo; a.Text = la; }
             };
+            a.TextChanged += delegate { int len = a.TextLength; bool bulk = Math.Abs(len - last) > 3; last = len; if (bulk) fill(); };
+            a.Leave += delegate { fill(); };
+        }
+
+        // a latitude and a longitude; the whole pair pasted in the first one fills both
+        static void LatLon(Control parent, int x, int y, string caption, out TextBox lat, out TextBox lon)
+        {
+            Cap(parent, caption, x, y, 650);
+            Cap(parent, "Latitude (or both, any format)", x, y + 18, 260);
+            Cap(parent, "Longitude", x + 270, y + 18, 120);
+            TextBox a = Box(parent, x, y + 36, 260, ""), b = Box(parent, x + 270, y + 36, 140, "");
+            PairFill(a, b);
             lat = a; lon = b;
         }
 
@@ -251,17 +290,16 @@ namespace HPGMissionCompanion
             for (int k = 0; k < 3; k++)
             {
                 Cap(page, "Point " + (k + 1), 10, y + 24 + k * 30 + 3, 60);
-                pl[k] = Box(page, 70, y + 22 + k * 30, 140, "");
-                pn[k] = Box(page, 220, y + 22 + k * 30, 140, "");
-                TextBox a = pl[k], b = pn[k];
-                a.TextChanged += delegate { string la, lo; if (WorldDb.SplitPair(a.Text, out la, out lo)) { b.Text = lo; a.Text = la; } };
+                pl[k] = Box(page, 70, y + 22 + k * 30, 260, "");
+                pn[k] = Box(page, 340, y + 22 + k * 30, 140, "");
+                PairFill(pl[k], pn[k]);
             }
             y += 22 + 3 * 30 + 6;
             CheckBox marshal = new CheckBox(); marshal.Text = "Marshal at this place"; marshal.AutoSize = true; marshal.Location = new Point(10, y + 4); page.Controls.Add(marshal);
-            TextBox ml = Box(page, 190, y, 140, ""), mn = Box(page, 340, y, 140, "");
+            TextBox ml = Box(page, 190, y, 260, ""), mn = Box(page, 460, y, 140, "");
             ml.Enabled = false; mn.Enabled = false;
             marshal.CheckedChanged += delegate { ml.Enabled = marshal.Checked; mn.Enabled = marshal.Checked; };
-            ml.TextChanged += delegate { string la, lo; if (WorldDb.SplitPair(ml.Text, out la, out lo)) { mn.Text = lo; ml.Text = la; } };
+            PairFill(ml, mn);
             y += 40;
 
             ListBox list = new ListBox();
