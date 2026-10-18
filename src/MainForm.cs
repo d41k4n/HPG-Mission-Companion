@@ -2786,20 +2786,22 @@ namespace HPGMissionCompanion
                     lines.Add("Published program: " + ra.Tag + (ra.AssetUrl == null ? " (no setup file in the release)" : "") + ", this one is " + AppInfo.Version);
                 }
                 catch (Exception ex) { lines.Add("[ERROR] the published program could not be read: " + ex.Message); }
-                RemotePack rpk = null;
-                string packWhy = "";
+                List<RemotePack> rpks = new List<RemotePack>();
                 if (Ctx.Settings.UpdatePack)
                 {
-                    try
+                    foreach (string packName in Updates.PackNames)
                     {
-                        rpk = Updates.ReadRemotePack(Updates.PackReleaseApi, Path.Combine(Path.GetTempPath(), "hmc-update"));
-                        if (rpk != null && rpk.Info != null)
+                        if (packName != "EN" && VoicePacks.Find(packName) == null) continue;      // EN is the base pack; another pack only when it is installed
+                        try
                         {
-                            VoicePack have = VoicePacks.Find(rpk.Info.Name);
-                            lines.Add("Published voice pack " + rpk.Info.Name + ": version " + rpk.Info.Version + " (yours: " + (have != null ? have.Version.ToString() : "not installed") + ")");
+                            RemotePack one = Updates.ReadRemotePack(Updates.PackApi(packName), Path.Combine(Path.GetTempPath(), "hmc-update"), packName);
+                            if (one == null || one.Info == null) { lines.Add("Voice pack " + packName + ": no pack is published yet."); continue; }
+                            rpks.Add(one);
+                            VoicePack have = VoicePacks.Find(one.Info.Name);
+                            lines.Add("Published voice pack " + one.Info.Name + ": version " + one.Info.Version + " (yours: " + (have != null ? have.Version.ToString() : "not installed") + ")");
                         }
+                        catch (Exception ex) { lines.Add("[ERROR] the published voice pack " + packName + " could not be read: " + ex.Message); }
                     }
-                    catch (Exception ex) { lines.Add("[ERROR] the published voice pack could not be read: " + ex.Message); }
                 }
 
                 bool missionNew = rm != null && target != null && rm.Release.CompareTo(target.Release) > 0;
@@ -2807,8 +2809,19 @@ namespace HPGMissionCompanion
                 string scope = Ctx.Settings.UpdateWhat;          // both | mission | app, chosen in the Updates tab
                 bool doMission = missionNew && scope != "app";
                 bool doApp = appNew && scope != "mission";
-                bool packNew = rpk != null && Updates.PackIsNewer(rpk, out packWhy);
-                if (rpk != null && !packNew && packWhy.Length > 0) lines.Add("The published voice pack is not installed: " + packWhy + ".");
+                List<RemotePack> packsNew = new List<RemotePack>();
+                string packsKept = "";
+                foreach (RemotePack k in rpks)
+                {
+                    string packWhy;
+                    if (Updates.PackIsNewer(k, out packWhy)) packsNew.Add(k);
+                    else
+                    {
+                        if (packWhy.Length > 0) lines.Add("The published voice pack " + k.Info.Name + " is not installed: " + packWhy + ".");
+                        if (k.Info.Usable) packsKept += ", voice pack " + k.Info.Name + " " + (VoicePacks.Find(k.Info.Name) != null ? VoicePacks.Find(k.Info.Name).Version : k.Info.Version);
+                    }
+                }
+                bool packNew = packsNew.Count > 0;
                 bool doPack = packNew && !doApp;            // a new program brings its own pack with the setup
                 if (packNew && doApp) lines.Add("The voice pack comes with the new program.");
                 if (missionNew && !doMission) lines.Add("The mission is newer but the option Only the program is selected: it is not installed.");
@@ -2820,11 +2833,11 @@ namespace HPGMissionCompanion
                 List<string> whatList = new List<string>();
                 if (doMission) whatList.Add("mission " + rm.Release);
                 if (doApp) whatList.Add("program " + ra.Tag);
-                if (doPack) whatList.Add("voice pack " + rpk.Info.Name + " " + rpk.Info.Version);
+                if (doPack) foreach (RemotePack k in packsNew) whatList.Add("voice pack " + k.Info.Name + " " + k.Info.Version);
                 string newWhat = string.Join(", ", whatList.ToArray());
                 bool allRead = target != null && rm != null && ra != null && !lines.Exists(delegate (string x) { return x.StartsWith("[ERROR]"); });
                 string upToDate = "UP TO DATE: mission " + (target != null && !target.Missing ? target.Release.ToString() : "not found") + ", program " + AppInfo.Version
-                    + (doPack ? "" : (rpk != null && rpk.Info != null && rpk.Info.Usable ? ", voice pack " + rpk.Info.Name + " " + rpk.Info.Version : ""))
+                    + (doPack ? "" : packsKept)
                     + (missionNew && !doMission ? " (a newer mission exists but is not selected)" : "") + (appNew && !doApp ? " (a newer program exists but is not selected)" : "");
 
                 Ui(delegate
@@ -2861,7 +2874,7 @@ namespace HPGMissionCompanion
                         StringBuilder q = new StringBuilder();
                         if (doMission) q.AppendLine("Mission: " + rm.Release + " is available (yours: " + (target.Missing ? "none installed" : target.Release.ToString()) + ").");
                         if (doApp) q.AppendLine("Program: " + ra.Tag + " is available (yours: " + AppInfo.Version + ").");
-                        if (doPack) q.AppendLine("Voice pack " + rpk.Info.Name + ": version " + rpk.Info.Version + " is available (yours: " + (VoicePacks.Find(rpk.Info.Name) != null ? VoicePacks.Find(rpk.Info.Name).Version.ToString() : "none") + "). Only the XML is replaced; the old one goes to voicepacks\\obsolete.");
+                        if (doPack) foreach (RemotePack k in packsNew) q.AppendLine("Voice pack " + k.Info.Name + ": version " + k.Info.Version + " is available (yours: " + (VoicePacks.Find(k.Info.Name) != null ? VoicePacks.Find(k.Info.Name).Version.ToString() : "none") + "). Only the XML is replaced; the old one goes to voicepacks\\obsolete.");
                         q.AppendLine();
                         if (doMission && target.Missing) q.AppendLine("The mission file does not exist yet: it will be created in " + Path.GetDirectoryName(target.Path) + ".\n");
                         else if (doMission && !target.Release.HasRelease) q.AppendLine("The mission file to replace is a file without a release number (" + target.Path + ").\n");
@@ -2872,11 +2885,11 @@ namespace HPGMissionCompanion
                         StringBuilder notes = new StringBuilder();
                         if (doMission) notes.AppendLine("WHAT'S NEW IN THE MISSION, " + rm.Release + "\n\n" + (string.IsNullOrEmpty(rm.Notes) ? "No release notes are published for this source." : Updates.PlainNotes(rm.Notes)) + "\n");
                         if (doApp) notes.AppendLine("WHAT'S NEW IN THE PROGRAM, " + ra.Tag + "\n\n" + (string.IsNullOrEmpty(ra.Notes) ? "No release notes are published for this version." : Updates.PlainNotes(ra.Notes)) + "\n");
-                        if (doPack) notes.AppendLine("WHAT'S NEW IN THE VOICE PACK, " + rpk.Info.Name + " " + rpk.Info.Version + "\n\n" + (string.IsNullOrEmpty(rpk.Notes) ? "No notes are published for this pack." : Updates.PlainNotes(rpk.Notes)));
+                        if (doPack) foreach (RemotePack k in packsNew) notes.AppendLine("WHAT'S NEW IN THE VOICE PACK, " + k.Info.Name + " " + k.Info.Version + "\n\n" + (string.IsNullOrEmpty(k.Notes) ? "No notes are published for this pack." : Updates.PlainNotes(k.Notes)) + "\n");
                         go = NotesForm.Ask(this, Text + " - update available", q.ToString().TrimEnd(), notes.ToString()) == DialogResult.Yes;
                     }
                     if (!go) { UpdateIdle(); return; }
-                    InstallUpdates(doMission ? target : null, doMission ? rm : null, doApp ? ra : null, doPack ? rpk : null, indexCmd);
+                    InstallUpdates(doMission ? target : null, doMission ? rm : null, doApp ? ra : null, doPack ? packsNew : null, indexCmd);
                 });
             });
         }
@@ -2911,7 +2924,7 @@ namespace HPGMissionCompanion
         }
 
         // mission first (download, backup, replace, index), then the program (download, setup, exit)
-        void InstallUpdates(MissionCopy target, RemoteMission rm, RemoteApp ra, RemotePack rpk, string indexCmd)
+        void InstallUpdates(MissionCopy target, RemoteMission rm, RemoteApp ra, List<RemotePack> rpks, string indexCmd)
         {
             updateInfo.Text = "Updating...";
             string tmp = Path.Combine(Path.GetTempPath(), "hmc-update");
@@ -2943,11 +2956,15 @@ namespace HPGMissionCompanion
                         }
                         else Ui(delegate { UpdLog("[NOTICE] no index tool is known: run Update Mission Index yourself."); });
                     }
-                    if (rpk != null && rpk.File != null && File.Exists(rpk.File))
+                    if (rpks != null)
                     {
-                        // the XML only: Install keeps the old version in voicepacks\obsolete (a newer version is never asked about)
-                        string msg = VoicePacks.Install(rpk.File, delegate (string q) { return true; });
-                        Ui(delegate { UpdLog("Voice pack: " + msg); FillPacks(); });
+                        foreach (RemotePack rpk in rpks)
+                        {
+                            if (rpk == null || rpk.File == null || !File.Exists(rpk.File)) continue;
+                            // the XML only: Install keeps the old version in voicepacks\obsolete (a newer version is never asked about)
+                            string msg = VoicePacks.Install(rpk.File, delegate (string q) { return true; });
+                            Ui(delegate { UpdLog("Voice pack: " + msg); FillPacks(); });
+                        }
                     }
                     if (ra != null)
                     {

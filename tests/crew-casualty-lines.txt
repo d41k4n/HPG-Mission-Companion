@@ -1,0 +1,20 @@
+@settings variety=random bridge=EN
+@watch L:HMC_CTX_VALID 1
+@watch L:HMC_CREW_EXIST 15
+@watch L:HMC_CREW_PRESENT 3
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+@watch L:CARLS_CONNECTED 1
+<say:CPL.7>
+@watch L:HMC_CREW_MUTE 2
+<say:CPL.7>
+<say:CPL.9>
+<say:CPL.45>
+<actor3><say:CEM.DEAD>CPL
+<actor3><say:CEM.CRIT>PAX1
+<actor2><say:CEM.RAD.D>CPL
+<actor3><say:CEM.CONT>PAX2
+<actor3><say:CEM.HURT>
+<say:SAR.OPT>1000//80//926
+<say:SAR.INF.R>3.8
+<say:SAR.VEH>Red//Raptor quad
+<say:DSA.RB.A>

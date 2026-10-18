@@ -9,6 +9,7 @@ using System.Media;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Script.Serialization;
 
@@ -596,8 +597,17 @@ namespace HPGMissionCompanion
         static readonly Queue<string> order = new Queue<string>();
         static long cacheBytes;
 
+        // How the engines say a few words (user request of 2026-10-18: "SAR" was said as the word "sar"): the letters are spelled, whatever the language of the voice.
+        static readonly Regex SpellSar = new Regex(@"\bSAR\b", RegexOptions.Compiled);
+
+        public static string Pronounce(string text)
+        {
+            return string.IsNullOrEmpty(text) ? text : SpellSar.Replace(text, "S A R");
+        }
+
         public static byte[] Render(VoiceInfo v, double speed, string text)
         {
+            text = Pronounce(text);
             string key = v.Id + "|" + speed.ToString("0.00", CultureInfo.InvariantCulture) + "|" + text;
             lock (cache) { byte[] hit; if (cache.TryGetValue(key, out hit)) return hit; }
             byte[] wav;

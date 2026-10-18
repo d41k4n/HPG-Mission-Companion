@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="19" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="20" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -325,7 +325,7 @@
       <o>Nobody near the engine, it is clear.</o>
       <o>All clear around the engine, go ahead.</o>
     </message>
-    <message key="CPL.7" actor="2" radio="auto" lvar="L:CPL{VCP}7" wav="AND.cpl.engine.fire.wav" sleep="0">
+    <message key="CPL.7" actor="2" radio="auto" lvar="L:CPL{VCP}7" wav="AND.cpl.engine.fire.wav" sleep="0" standin="1">
       <o>Engine fire. Stop the engine.</o>
       <o>Engine fire, shut the engine down.</o>
       <o>We have an engine fire. Stop the engine now.</o>
@@ -341,7 +341,7 @@
       <o>One is running, let's do the other one.</o>
       <o>That one is running, now the next one.</o>
     </message>
-    <message key="CPL.9" actor="2" radio="auto" lvar="L:CPL{VCP}9" wav="AND.cpl.failure.wav" sleep="0">
+    <message key="CPL.9" actor="2" radio="auto" lvar="L:CPL{VCP}9" wav="AND.cpl.failure.wav" sleep="0" standin="1">
       <o>We have a failure.</o>
       <o>We have a failure on board.</o>
       <o>Failure detected.</o>
@@ -469,7 +469,7 @@
       <o>I see the site. The medical crew is already waiting.</o>
       <o>There is the site, the medical crew is waiting for us.</o>
     </message>
-    <message key="CPL.25" actor="2" radio="auto" lvar="L:CPL{VCP}25" wav="AND.cpl.t.we.have.to.stop.eng.wav" sleep="0">
+    <message key="CPL.25" actor="2" radio="auto" lvar="L:CPL{VCP}25" wav="AND.cpl.t.we.have.to.stop.eng.wav" sleep="0" standin="1">
       <o>We have to stop the engines and shut down the helicopter.</o>
       <o>We must stop the engines and shut the helicopter down.</o>
       <o>We need to stop the engines and switch off the helicopter.</o>
@@ -3341,7 +3341,7 @@
       <o>Let us see if we are good to take it. Quick check, everyone.</o>
       <o>Crew, are we good to take this one? Quick check.</o>
     </message>
-    <message key="DSA.FUEL.OK" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
+    <message key="DSA.FUEL.OK" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
       <o>Copilot: fuel is above our minimum, no problem there.</o>
       <o>Fuel checked, above our limit.</o>
       <o>Fuel is fine, above the minimum we set.</o>
@@ -3349,7 +3349,7 @@
       <o>Fuel is okay, enough above our minimum.</o>
       <o>Fuel looks fine, above the limit.</o>
     </message>
-    <message key="DSA.FUEL.LOW" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is at or below the limit set in the mission options">
+    <message key="DSA.FUEL.LOW" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is at or below the limit set in the mission options">
       <o>Copilot: fuel is below our minimum. I would not take another one without refuelling.</o>
       <o>Fuel is under our limit. We should go back and refuel first.</o>
       <o>Fuel is below the minimum we set, better to refuel before the next one.</o>
@@ -3357,7 +3357,7 @@
       <o>Fuel is low, below our limit. Refuel first, I think.</o>
       <o>Fuel is below our limit. Better to refuel before another one.</o>
     </message>
-    <message key="DSA.MIS" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: two or more missions already completed in the shift">
+    <message key="DSA.MIS" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: two or more missions already completed in the shift">
       <o>Copilot: we have already flown two missions on this shift. We could go back to base first.</o>
       <o>That would be another mission after two already done, we could go back to base first.</o>
       <o>We have two missions behind us already. Going back to base first is an option.</o>
@@ -3365,7 +3365,7 @@
       <o>We already flew a couple of missions, the base is an option before this one.</o>
       <o>Two missions in the books already. Back to base first is on the table.</o>
     </message>
-    <message key="DSA.EQP" actor="4" radio="auto" group="dsa" seq="3" new="1" trigger="second dispatch: equipment check (always fine)">
+    <message key="DSA.EQP" actor="4" radio="ics" group="dsa" seq="3" new="1" trigger="second dispatch: equipment check (always fine)">
       <o>Chief: equipment checked, everything is on board and ready.</o>
       <o>Rear crew: the equipment is complete and in order.</o>
       <o>Equipment check done, nothing missing.</o>
@@ -3373,7 +3373,7 @@
       <o>Equipment is complete, nothing missing from the bags.</o>
       <o>Equipment is okay, all complete.</o>
     </message>
-    <message key="DSA.HLT" actor="3" radio="auto" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
+    <message key="DSA.HLT" actor="3" radio="ics" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
       <o>Doc: crew health is good, everybody is fit for another one.</o>
       <o>Everybody is fit and ready, no problems on my side.</o>
       <o>Health check: all crew members are fine.</o>
@@ -3381,7 +3381,7 @@
       <o>Crew is fit, no problems from my side.</o>
       <o>All good on the crew health, I am fine to go.</o>
     </message>
-    <message key="DSA.GO" actor="2" radio="auto" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
+    <message key="DSA.GO" actor="2" radio="ics" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
       <o>Copilot: all checks are done, we are good to go.</o>
       <o>Checks complete, we can take it.</o>
       <o>Everything is in order, we are ready.</o>
@@ -3389,7 +3389,7 @@
       <o>All checked, we are ready to take it.</o>
       <o>All good here, ready when you are.</o>
     </message>
-    <message key="DSA.ASKP" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, checks fine: accept on the tablet">
+    <message key="DSA.ASKP" actor="2" radio="ics" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, checks fine: accept on the tablet">
       <o>Captain, we are ready. What do you want to do?</o>
       <o>Captain, your decision: do we take it?</o>
       <o>Pilot, do we take the dispatch?</o>
@@ -3397,7 +3397,7 @@
       <o>Captain, it is up to you. Do we accept?</o>
       <o>Your call, captain. Do we take it?</o>
     </message>
-    <message key="DSA.ASKP.B" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, with fuel below the limit or two missions done: take it or go back to base">
+    <message key="DSA.ASKP.B" actor="2" radio="ics" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, with fuel below the limit or two missions done: take it or go back to base">
       <o>Captain, we should think about going back to base first. What do you want to do?</o>
       <o>Captain, your decision: take it anyway, or return to base first?</o>
       <o>Pilot, do we take it or do we go back to base first?</o>
@@ -3421,7 +3421,7 @@
       <o>{@HEMS}, {@DSP}. Previous call reassigned, another unit is on it. Here is a new one.</o>
       <o>{@HEMS}, {@DSP}. Another unit took the previous call. This is a new one.</o>
     </message>
-    <message key="DSP.RQ" actor="1" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
+    <message key="DSP.RQ" actor="2" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
       <o>{@DSP}, {@HEMS}. Tasking received. Request any update on the patient and the ground units.</o>
       <o>{@DSP}, {@HEMS}, we copy the tasking. Please advise on the patient's condition and the units on scene.</o>
       <o>{@HEMS} to {@DSP}, tasking copied. Do you have any further information for us?</o>
@@ -6645,5 +6645,237 @@
       <o>Fire at the scene, so we hold off until it is under control.</o>
       <o>A fire is burning at the scene. We stay away until the area is cleared.</o>
       <o>Fire on scene. We keep clear, I watch the smoke and the wind.</o>
+    </message>
+    <message key="DSA.RB.A" actor="2" radio="off" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
+      <o>Hey crew, we got a dispatch on the tablet. Listen.</o>
+      <o>Crew, a new dispatch just came in. I read it out:</o>
+      <o>Hey, a dispatch has arrived. Here is what it says.</o>
+      <o>Heads up, crew: a dispatch came in on the tablet. I read it back.</o>
+      <o>Crew, we have a new tasking on the tablet. It says:</o>
+      <o>Hey everybody, a call has come in. I read it to you.</o>
+    </message>
+    <message key="DSA.RB.Q" actor="2" radio="off" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
+      <o>So, what do we do with this one?</o>
+      <o>Do we take it? What do you think?</o>
+      <o>What do we do? Are we going?</o>
+      <o>Opinions, crew? Do we accept it?</o>
+      <o>What is the plan, crew? Do we take it?</o>
+      <o>So? Do we go or not?</o>
+    </message>
+    <message key="SAR.TYP.SAR" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the kind of search, SAR">
+      <o>Crew, this is a SAR mission: we look for a missing person.</o>
+      <o>SAR briefing. We are searching for somebody who is missing.</o>
+      <o>Search and rescue today. Somebody is missing and we have to find them.</o>
+      <o>This one is a SAR: a person is missing, we search first and rescue after.</o>
+      <o>SAR tasking, crew. A missing person, we must find them first.</o>
+      <o>Briefing for the search: a missing person, and we are the ones to find them.</o>
+    </message>
+    <message key="SAR.TYP.SARV" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the overdue vehicle">
+      <o>SAR with an overdue vehicle. We follow its probable route from the last known position.</o>
+      <o>The vehicle is overdue. We search along its probable route, starting from the last contact.</o>
+      <o>SAR briefing: an overdue vehicle. We look for it and the driver along the route.</o>
+      <o>This is a search for an overdue vehicle. We follow the road from the last known point.</o>
+      <o>Overdue vehicle, crew. We search along the probable route.</o>
+      <o>We are looking for an overdue vehicle and its driver, along the way it should have taken.</o>
+    </message>
+    <message key="SAR.TYP.SARC" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a parked car, the owner is missing">
+      <o>SAR, parked car. The owner is missing, so we search the area around the car.</o>
+      <o>A car was found parked and its owner is missing. We search around it.</o>
+      <o>SAR briefing: parked vehicle, missing owner. We cover the ground around the car.</o>
+      <o>The car is parked and nobody is with it. We search the surroundings for the owner.</o>
+      <o>Search around a parked car, crew. The person who drove it is missing.</o>
+      <o>We look for the owner of a parked car. The search starts around the vehicle.</o>
+    </message>
+    <message key="SAR.TYP.SARH" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a person who walked away from home">
+      <o>SAR, a person who left home and has not come back. We search around the house.</o>
+      <o>Somebody wandered away from home. We search the area around the last known position.</o>
+      <o>SAR briefing: a missing person who left home alone. We search around the house first.</o>
+      <o>A person left home and did not return. The house is the last known position.</o>
+      <o>This search is for a person gone from home. We start from the house and widen.</o>
+      <o>We search for someone who walked away from home. Last known position is the house.</o>
+    </message>
+    <message key="SAR.INF.R" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: the search ring (argument 0 = its radius in nautical miles)">
+      <o>Information: the search area is a circle of {0} nautical miles around the last known position.</o>
+      <o>The search area has a radius of {0} nautical miles around the last known position.</o>
+      <o>Our area is the circle of {0} nautical miles shown on the map.</o>
+      <o>Copy. The ring on the map is {0} nautical miles in radius, and the person is inside it.</o>
+      <o>We search inside the ring: {0} nautical miles from the last known position.</o>
+      <o>The area is a ring of {0} nautical miles around the point where the person was last known.</o>
+    </message>
+    <message key="SAR.INF.N" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: no ring, the route and the last contact">
+      <o>Information: there is no search ring. We follow the route and the last contact marked on the map.</o>
+      <o>No ring on this one: the search follows the route between the last contact and the end of the probable route.</o>
+      <o>We have no ring. The search is along the probable route on the map, from the last contact.</o>
+      <o>No search circle today: we work along the route and the last contact point.</o>
+      <o>The area is the route on the map, starting from the last contact.</o>
+      <o>There is no ring, so we follow the road marked on the map from the last contact.</o>
+    </message>
+    <message key="SAR.VEH" actor="2" radio="auto" group="sarbrf" seq="3" new="1" trigger="briefing of a search and rescue mission: the vehicle of the dispatch (argument 0 = colour, 1 = model)">
+      <o>We look for a {0} {1}.</o>
+      <o>The vehicle is a {0} {1}. Keep an eye out for it.</o>
+      <o>Vehicle description: {0} {1}.</o>
+      <o>Look for a {0} {1}: it may give us the way to the person.</o>
+      <o>The dispatch gives a {0} {1}. That is what we look for.</o>
+      <o>Remember the vehicle: a {0} {1}.</o>
+    </message>
+    <message key="SAR.VEHN" actor="2" radio="auto" group="sarbrf" seq="3" new="1" trigger="briefing of a search and rescue mission: the vehicle of the dispatch when its colour is not known (argument 0 = model)">
+      <o>We look for this vehicle: {0}.</o>
+      <o>The vehicle is a {0}. Keep an eye out for it.</o>
+      <o>Vehicle description: {0}.</o>
+      <o>Look for a {0}: it may give us the way to the person.</o>
+      <o>The dispatch gives a {0}. That is what we look for.</o>
+      <o>Remember the vehicle: {0}.</o>
+    </message>
+    <message key="SAR.MET.R" actor="3" radio="auto" group="sarbrf" seq="4" new="1" trigger="briefing of a search and rescue mission: the method for a ring (argument 0 = the distance between the legs in meters, twice the spotting range)">
+      <o>Method: we divide the ring in sectors of 45 degrees and clear them one after the other, from the centre out. Legs about {0} meters apart.</o>
+      <o>We search by sectors of 45 degrees, one at a time, with legs spaced about {0} meters.</o>
+      <o>The ring is split in eight sectors. We clear a sector with parallel legs about {0} meters apart, then the next.</o>
+      <o>Plan: eight sectors of 45 degrees from the centre, legs {0} meters apart, and we mark every sector we have cleared.</o>
+      <o>We work sector by sector, 45 degrees each, with legs of about {0} meters between them.</o>
+      <o>Search pattern: sectors of 45 degrees, parallel legs {0} meters apart, nothing skipped.</o>
+    </message>
+    <message key="SAR.MET.V" actor="3" radio="auto" group="sarbrf" seq="4" new="1" trigger="briefing of a search and rescue mission: the method along a route (argument 0 = the distance between the legs in meters)">
+      <o>Method: we follow the route and fly legs along it, about {0} meters apart, on both sides of the road.</o>
+      <o>We search along the route, one leg on each side of the road, about {0} meters apart.</o>
+      <o>The search follows the road: parallel legs on both sides, about {0} meters from each other.</o>
+      <o>Plan: fly the route from the last contact, with legs {0} meters apart, left side and right side.</o>
+      <o>We stay on the route and cover both sides of it, with legs about {0} meters apart.</o>
+      <o>Route search: legs along the road, {0} meters apart, and we look at both sides.</o>
+    </message>
+    <message key="SAR.CLK" actor="4" radio="auto" group="sarbrf" seq="5" new="1" trigger="briefing of a search and rescue mission: the sides of the crew and the clock positions">
+      <o>Eyes: I take the left side, the copilot the right side, the captain looks ahead. Call everything by clock position.</o>
+      <o>Everybody has a side: left for me, right for the copilot, ahead for the captain. We call positions as on a clock.</o>
+      <o>Left side is mine, right side is the copilot's, and we say where we see it like a clock: twelve is ahead.</o>
+      <o>Clock positions, crew: twelve is the nose. I watch the left, the copilot the right.</o>
+      <o>I cover left, the copilot covers right, and every sighting is called by clock position.</o>
+      <o>We split the view: left, right, ahead. Any sighting goes out with its clock position.</o>
+    </message>
+    <message key="SAR.OPT" actor="2" radio="auto" group="sarbrf" seq="6" new="1" trigger="briefing of a search and rescue mission: the best altitude and speed (arguments 0 = feet above the ground, 1 = knots, 2 = the spotting range in meters)">
+      <o>Best search: about {0} feet above the ground and {1} knots or less. At the best we spot a person at up to {2} meters; lower, higher or faster and that range gets shorter.</o>
+      <o>Optimum is {0} feet above ground level at {1} knots or slower, and the crew can spot at up to {2} meters. Outside that the range drops.</o>
+      <o>Fly at about {0} feet above the ground and not faster than {1} knots: that gives the full spotting range of {2} meters.</o>
+      <o>Altitude {0} feet above the ground, speed at most {1} knots: that is the best for spotting, up to {2} meters. Too low, too high or too fast shortens it.</o>
+      <o>For the best range of {2} meters keep {0} feet above the ground and {1} knots or less.</o>
+      <o>Remember: {0} feet above ground and {1} knots at most for the best view, spotting up to {2} meters.</o>
+    </message>
+    <message key="SAR.END" actor="1" radio="auto" group="sarbrf" seq="7" new="1" trigger="briefing of a search and rescue mission: the pilot closes it">
+      <o>Good. Eyes open, and call everything you see.</o>
+      <o>Clear. Let us find them.</o>
+      <o>Alright, crew. Search carefully and keep calling.</o>
+      <o>Good briefing. Let us go and find the person.</o>
+      <o>Understood by everybody? Then eyes outside.</o>
+      <o>Okay. Eyes open and no sighting is too small.</o>
+    </message>
+    <message key="CEM.HURT" actor="3" radio="off" prio="3" new="1" trigger="a crew member hurt by an impact complains (the mission sets the actor: the voice of the hurt member)">
+      <o>Aaah... my back!</o>
+      <o>Ugh... that hurt. My arm...</o>
+      <o>Argh! My leg...</o>
+      <o>Ohh... my head...</o>
+      <o>Ah! My shoulder, I think it is broken...</o>
+      <o>Ahh... that was hard. I am hurt.</o>
+    </message>
+    <message key="CEM.WEAK" actor="3" radio="off" prio="3" new="1" trigger="a crew member critically hurt by an impact asks for help (the mission sets the actor)">
+      <o>I... I can't move... help me...</o>
+      <o>Please... I can't breathe... help...</o>
+      <o>It hurts... so much... I can't feel my legs...</o>
+      <o>Help... I am hurt badly... please...</o>
+      <o>I can't... I am fading... help me...</o>
+      <o>Oh god... somebody... help...</o>
+    </message>
+    <message key="CEM.DEAD" actor="3" radio="auto" prio="3" new="1" trigger="after an impact a crew member who is fine says that another one is dead (argument 0 = the role: PLT CPL PAX1 PAX2 PAX3)">
+      <o>{role:0} is not moving! No pulse! Oh no...</o>
+      <o>We lost {role:0}.</o>
+      <o>{role:0} is dead. I am so sorry.</o>
+      <o>No! {role:0} is not breathing!</o>
+      <o>{role:0} did not make it.</o>
+      <o>{role:0} is gone... we have to stay focused on the others.</o>
+    </message>
+    <message key="CEM.CRIT" actor="3" radio="auto" prio="3" new="1" trigger="after an impact a crew member who is fine says that another one is critical (argument 0 = the role)">
+      <o>{role:0} is badly hurt! We need a hospital, now!</o>
+      <o>{role:0} is in a critical state! Get a hospital, quickly!</o>
+      <o>{role:0} is hurt really badly. We cannot wait.</o>
+      <o>I have {role:0} here, critical. We have to move.</o>
+      <o>{role:0} needs a doctor right now. This is serious.</o>
+      <o>{role:0} is not good at all. We need to get to a hospital.</o>
+    </message>
+    <message key="CEM.RAD.D" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is dead (argument 0 = the role)">
+      <o>Dispatch, {@HEMS}. We had a crash and {role:0} is dead. We abort the mission and head for the hospital.</o>
+      <o>{@HEMS} to dispatch: {role:0} has died in the impact. Mission aborted, we are going to the hospital.</o>
+      <o>Dispatch, {@HEMS}, accident on board. {role:0} is deceased. We are cancelling the mission.</o>
+      <o>Dispatch from {@HEMS}: we lost {role:0} in the crash. We abort and proceed to the hospital.</o>
+      <o>{@HEMS} to dispatch, {role:0} did not survive the impact. We abort the mission.</o>
+      <o>Dispatch, {@HEMS}: crash, {role:0} deceased. We cancel the mission and fly to the hospital.</o>
+    </message>
+    <message key="CEM.RAD.C" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is critical (argument 0 = the role)">
+      <o>Dispatch, {@HEMS}. We had a crash and {role:0} is critical. We need a hospital.</o>
+      <o>{@HEMS} to dispatch: {role:0} is critically hurt after the impact. Requesting a hospital.</o>
+      <o>Dispatch, {@HEMS}, accident on board. {role:0} is in critical condition.</o>
+      <o>Dispatch from {@HEMS}: {role:0} is seriously hurt in the crash. We need medical care.</o>
+      <o>{@HEMS} to dispatch, {role:0} is critical. We will head for the hospital.</o>
+      <o>Dispatch, {@HEMS}: crash, {role:0} critical. We need a hospital and we will tell you our decision.</o>
+    </message>
+    <message key="CEM.OPS" actor="3" radio="auto" prio="3" new="1" trigger="the crew emergency aborts the ground operations: the doctor says that he comes back and the patient stays for the next unit">
+      <o>Aborting the visit. I am coming back to the helicopter, the patient stays for the next unit.</o>
+      <o>I stop here and come back. The patient will wait for another unit.</o>
+      <o>We abort the intervention. Coming back to the helicopter now, the patient stays on the scene.</o>
+      <o>Leaving the patient for the next unit. I am on my way back to the helicopter.</o>
+      <o>Visit aborted. Another unit takes over the patient, I return to the aircraft.</o>
+      <o>Back to the helicopter, we are stopping. The patient is left to the next unit.</o>
+    </message>
+    <message key="CEM.ABORT" actor="3" radio="auto" prio="2" new="1" trigger="the crew emergency aborts the mission (crew aboard): a crew member says that everybody goes to the hospital">
+      <o>Mission aborted. Everybody on board, we go to the hospital.</o>
+      <o>We abort. Get everybody in, we head to the hospital.</o>
+      <o>Mission cancelled. We take our injured to the hospital.</o>
+      <o>That is it for this mission. We go to the hospital, now.</o>
+      <o>We stop the mission. Priority is the hospital.</o>
+      <o>Mission over. We are flying to the hospital.</o>
+    </message>
+    <message key="CEM.CONT" actor="3" radio="auto" prio="2" new="1" trigger="the user chose to continue the mission with a critical crew member: a crew member acknowledges it (argument 0 = the role)">
+      <o>Understood, we continue the mission. {role:0} goes to the hospital at the next stop.</o>
+      <o>Copy, the mission goes on. We hand {role:0} over at the next hospital stop.</o>
+      <o>We continue. {role:0} will be handed over at the next stop.</o>
+      <o>Okay, we keep going. {role:0} stays with us until the next hospital stop.</o>
+      <o>Understood: continue. {role:0} gets care at the next hospital stop.</o>
+      <o>Mission continues. We will hand {role:0} over as soon as we reach a hospital.</o>
+    </message>
+    <message key="CEM.DSP" actor="8" radio="on" prio="3" new="1" trigger="the dispatcher answers the report of a crew member dead or critical: mission cancelled, another unit for the patient">
+      <o>{@HEMS}, {@DSP}. Copy, your mission is cancelled. Another unit is tasked to the patient. Proceed to the hospital.</o>
+      <o>{@DSP} to {@HEMS}. Copy the accident. The patient on scene will get another unit. Head for the hospital.</o>
+      <o>{@HEMS}, {@DSP}. We copy, mission cancelled. Another unit takes the patient. Fly to the hospital.</o>
+      <o>{@HEMS}, {@DSP}, understood. Tasking cancelled, another unit is on the way to the patient. Go to the hospital.</o>
+      <o>{@DSP} to {@HEMS}: copy, mission cancelled. Another unit will take care of the patient, fly to the hospital.</o>
+      <o>{@HEMS}, {@DSP}. Received. Mission cancelled, another unit tasked. Proceed to the hospital.</o>
+    </message>
+    <message key="MAY.REACT" actor="3" radio="auto" prio="3" new="1" trigger="critical failure (engine fire or transmission damage): a crew member aboard tells to land now">
+      <o>We have to land now! Hold on!</o>
+      <o>Land right now! Everybody brace!</o>
+      <o>Get it on the ground, now! We cannot stay up!</o>
+      <o>Put it down, captain, right now!</o>
+      <o>We are landing immediately! Brace for it!</o>
+      <o>Down, down, down! Land now!</o>
+    </message>
+    <message key="MAY.CALL.F" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, engine fire">
+      <o>Mayday, mayday, mayday, {@HEMS}. Engine fire. We are landing immediately and shutting down. Request assistance.</o>
+      <o>Mayday, mayday, mayday, this is {@HEMS}: fire in the engine, landing now, request emergency services.</o>
+      <o>{@HEMS}, mayday, mayday, mayday. Engine fire, we put down at once. Send assistance.</o>
+      <o>Mayday mayday mayday, {@HEMS}, engine on fire, making an emergency landing. Request assistance.</o>
+      <o>Mayday, {@HEMS}: we have an engine fire. Landing immediately, request help on the ground.</o>
+      <o>Mayday, mayday, mayday, {@HEMS}, fire on board, landing now. Emergency services please.</o>
+    </message>
+    <message key="MAY.CALL.G" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, damaged gearbox or transmission">
+      <o>Mayday, mayday, mayday, {@HEMS}. Gearbox failure. We are landing immediately and shutting down. Request assistance.</o>
+      <o>Mayday, mayday, mayday, this is {@HEMS}: gearbox damage, landing now, request emergency services.</o>
+      <o>{@HEMS}, mayday, mayday, mayday. Transmission trouble, we put down at once. Send assistance.</o>
+      <o>Mayday mayday mayday, {@HEMS}, gearbox damaged, making an emergency landing. Request assistance.</o>
+      <o>Mayday, {@HEMS}: we have a gearbox problem. Landing immediately, request help on the ground.</o>
+      <o>Mayday, mayday, mayday, {@HEMS}, transmission failure, landing now. Emergency services please.</o>
+    </message>
+    <message key="MAY.DSP" actor="8" radio="on" prio="3" new="1" trigger="critical failure: the dispatcher answers the mayday">
+      <o>{@HEMS}, {@DSP}. Copy mayday. Emergency services are alerted to your position. Land and shut down.</o>
+      <o>{@DSP} to {@HEMS}: mayday received. Help is on its way. Land and shut down.</o>
+      <o>{@HEMS}, {@DSP}. We copy your mayday. Assistance is on the way, land and shut down.</o>
+      <o>{@HEMS}, {@DSP}, mayday copied. Emergency services are rolling to you. Land as soon as you can.</o>
+      <o>{@DSP} to {@HEMS}. Copy mayday. Stay calm, land and shut down, help is coming.</o>
+      <o>{@HEMS}, {@DSP}. Mayday acknowledged. Emergency services alerted. Land and shut down.</o>
     </message>
 </voicepack>

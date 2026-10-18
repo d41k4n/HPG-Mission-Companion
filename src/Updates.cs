@@ -130,6 +130,9 @@ namespace HPGMissionCompanion
     {
         public const string PackReleaseApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/tags/voicepack-EN";
         public const string PackAsset = "EN.xml";
+        // the packs published apart from the program: one release voicepack-<NAME> with the asset <NAME>.xml; EN is always checked, the others only when installed
+        public static readonly string[] PackNames = new string[] { "EN", "DE" };
+        public static string PackApi(string name) { return "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/tags/voicepack-" + name; }
         public const string ReleasesApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/latest";
         public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
         public const string MissionAsset = "everywhere_all.json";
@@ -447,7 +450,7 @@ namespace HPGMissionCompanion
 
         // ---- GitHub: the voice pack EN ----------------------------------------------------------------
         // null when no pack release exists (404); the file is downloaded to tmpDir and read, so the caller can compare the version
-        public static RemotePack ReadRemotePack(string apiUrl, string tmpDir)
+        public static RemotePack ReadRemotePack(string apiUrl, string tmpDir, string name)
         {
             Dictionary<string, object> d;
             try { d = GetJson(apiUrl); }
@@ -465,7 +468,7 @@ namespace HPGMissionCompanion
                 foreach (object o in (System.Collections.IEnumerable)assets)
                 {
                     Dictionary<string, object> e = o as Dictionary<string, object>;
-                    if (e == null || !string.Equals(Str(e, "name"), PackAsset, StringComparison.OrdinalIgnoreCase)) continue;
+                    if (e == null || !string.Equals(Str(e, "name"), name + ".xml", StringComparison.OrdinalIgnoreCase)) continue;
                     p.Url = Str(e, "browser_download_url");
                     object size;
                     if (e.TryGetValue("size", out size)) p.Size = Convert.ToInt64(size);
@@ -475,7 +478,7 @@ namespace HPGMissionCompanion
             }
             if (p.Url == null) return null;
             Directory.CreateDirectory(tmpDir);
-            p.File = Path.Combine(tmpDir, "EN-published.xml");
+            p.File = Path.Combine(tmpDir, name + "-published.xml");
             Net.Download(p.Url, p.File, null, null, p.Size);
             if (!string.IsNullOrEmpty(p.Sha256) && Sha256Of(p.File) != p.Sha256) { File.Delete(p.File); throw new IOException("the published voice pack is corrupted (sha256 differs)"); }
             p.Info = VoicePacks.Load(p.File);

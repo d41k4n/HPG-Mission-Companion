@@ -24,6 +24,7 @@ namespace HPGMissionCompanion
         public bool Sfx;                        // a sound without text: the wav is played from the audio folder
         public int Vol = 100;                   // vol="70": the level (0-100) of the wav of a sound-only message, at most; 100 = the file as it is
         public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
+        public bool StandIn;                    // standin="1": a safety line (engine fire, failure, crash) that another crew member says when the speaker is dead or hurt too badly to speak (L:HMC_CREW_MUTE); without it the line is dropped
         public bool ToTech;                     // to="tech": a crew line said to the technician of the scene (not to the crew): heard like the technician is (intercom next to the helicopter with the speaker aboard and the battery on, else voice), never as a radio call
         public bool Text;                       // the words of a text that the mission speaks as it is (<text:KEY>English in the mission): the pack replaces the English words, the mission decides who speaks and how
         public int Prio = -1;                   // prio="0-3": 3 time critical, 2 operations, 1 conversation, 0 small talk; -1 = the rules of the program (Sched.cs) decide
@@ -176,6 +177,7 @@ namespace HPGMissionCompanion
                 m.Futile = e.GetAttribute("futile") == "1";
                 m.Text = e.GetAttribute("text") == "1";
                 m.ToTech = e.GetAttribute("to").Trim().ToLowerInvariant() == "tech";
+                m.StandIn = e.GetAttribute("standin") == "1";
                 int qv;
                 if (e.HasAttribute("prio")) { if (int.TryParse(e.GetAttribute("prio"), NumberStyles.Integer, CultureInfo.InvariantCulture, out qv) && qv >= 0 && qv <= 3) m.Prio = qv; else p.Problems.Add("message " + m.Key + ": prio must be 0-3"); }
                 if (e.HasAttribute("age")) { if (int.TryParse(e.GetAttribute("age"), NumberStyles.Integer, CultureInfo.InvariantCulture, out qv) && qv >= 0 && qv <= 600) m.Age = qv; else p.Problems.Add("message " + m.Key + ": age must be 0-600 seconds"); }
@@ -1042,8 +1044,14 @@ namespace HPGMissionCompanion
             }
             if (actor >= 1 && actor <= 5 && (muteMask & (1 << (actor - 1))) != 0)       // the dead and the badly hurt do not speak
             {
-                Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " cannot speak (L:HMC_CREW_MUTE)");
-                return "";
+                int other = msg.StandIn ? MuteStandIn(actor) : 0;       // a safety line goes to a crew member who can speak (user, 2026-10-18: the engine fire was never said when the copilot was dead)
+                if (other == 0)
+                {
+                    Ctx.Log("[SAY] " + msg.Key + " not said: " + Actors.Names[actor - 1] + " cannot speak (L:HMC_CREW_MUTE)");
+                    return "";
+                }
+                Ctx.Log("[SAY] " + msg.Key + ": " + Actors.Names[actor - 1] + " cannot speak, " + Actors.Names[other - 1] + " says it");
+                actor = other;
             }
             if (CrewAway && DispatchLine(msg.Key, actor))
             {
@@ -1078,6 +1086,14 @@ namespace HPGMissionCompanion
         // that member (user, 2026-10-14: the Daikan report, PAX1 lines with 3 crew). Rear seats go to the rear crew first, then the cockpit; a member who cannot
         // speak (L:HMC_CREW_MUTE) is skipped; 0 when nobody can. Only the texts of the packs: the messages that are a wav file (no options) are not touched.
         static readonly int[][] StandIns = { null, new int[] { }, new int[] { 1, 3, 4, 5 }, new int[] { 4, 5, 2, 1 }, new int[] { 3, 5, 2, 1 }, new int[] { 4, 3, 2, 1 } };
+
+        // the crew member who says a safety line of a speaker who cannot speak: the doctor, then the rear crew, then the copilot (never the pilot: the user), alive and able to speak; 0 when nobody
+        static int MuteStandIn(int actor)
+        {
+            foreach (int a in new int[] { 3, 4, 5, 2 })
+                if (a != actor && (crewExist == 0 || (crewExist & (1 << (a - 1))) != 0) && (muteMask & (1 << (a - 1))) == 0) return a;
+            return 0;
+        }
 
         static int StandIn(int actor)
         {
@@ -1268,6 +1284,11 @@ namespace HPGMissionCompanion
                 string key = letters.Trim() == "2" ? "HR_2" : "HR_1", w;
                 if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
                 return key == "HR_2" ? "two heli rescuers" : "one heli rescuer";
+            }
+            if (kind == "role")      // {role:N}: the argument is a role (PLT CPL PAX1 PAX2 PAX3), the word is the job word of the pack (the casualty of a crash is named by the role)
+            {
+                string rk = RoleOf(letters.Trim());
+                return rk != null ? JobWord(rk, pack) : letters.Trim();
             }
             if (kind == "place")     // {place:N}: the argument is H (the hospital), B (the base) or M (the meeting point): the names PL_H, PL_B and PL_M
             {

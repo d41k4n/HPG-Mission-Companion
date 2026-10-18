@@ -1,8 +1,8 @@
 {
-    "sha256": "4AC418D698C49312B7FDC2987A5ABED902CA6E8470D7F0CDD45559ABFE4844C2",
-    "installerSha256": "1DF245FCE204C7D89A131A2AE2F01837F9A3E2DF48BD7E9A6D3FB856CDDF90FE",
-    "deliveredOn": "2026-10-18",
+    "sha256": "BB438BD3061B43950B769EA7700E53B58A52E7B7908E74B2EDE51507934B5397",
+    "installerSha256": "F54A7C79C0C8DE48350CD10AB7A13747B92519D9AAFDD08DED3C11B0A1FC2560",
+    "deliveredOn": "2026-10-19",
     "artifact": "HPGMissionCompanion.exe",
-    "lastDeliveredVersion": "0.34",
-    "note": "Release 0.34 (local, not pushed): the radio rules of the user of 2026-10-18 (battery master or GPCP switch = powered = intercom; radio and polycon need power and the CARLS connected; nothing with the power off, no exception), the coordinate parser of World Database Update (every format, the whole pair in the first box), the voice packs EN 19 and DE 7 (15 new messages of the mission 169.63). Checks: node tools/check.js, --world-test ALL PASS, --packs-check, the scenario tests/radio-power-lines.txt (--expand). Runtime in the simulator pending."
+    "lastDeliveredVersion": "0.35",
+    "note": "Release 0.35 (local, not pushed): the user's rules of 2026-10-19 after the flight log: SAR spelled letter by letter, stand-in speaker for the muted copilot (standin on CPL 7, 9, 25), voice packs EN 20 and DE 8 (29 new messages of the mission 169.64: casualty and mayday, cold dispatch readback, SAR briefing), the Updates tab that monitors the packs EN and DE. Checks: node tools/check.js, --packs-check, the scenarios tests/crew-casualty-lines.txt and tests/radio-power-lines.txt (--expand). Runtime in the simulator pending."
 }

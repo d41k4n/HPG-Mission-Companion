@@ -37,8 +37,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.34.0.0")]
-[assembly: AssemblyFileVersion("0.34.0.0")]
+[assembly: AssemblyVersion("0.35.0.0")]
+[assembly: AssemblyFileVersion("0.35.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -227,6 +227,18 @@ namespace HPGMissionCompanion
                     {
                         try { RemoteApp a = Updates.ReadRemoteApp(ghApp); rep.AppendLine("github app: " + a.Tag + " newer=" + Updates.AppIsNewer(a) + " asset " + a.AssetName + " size " + a.AssetSize + " sha256 " + a.Sha256); }
                         catch (Exception ex) { rep.AppendLine("github app: " + ex.Message); }
+                    }
+                    // --github-pack <EN|DE>: the pack published apart from the program (release voicepack-<name>, asset <name>.xml)
+                    string ghPack = Option(args, "--github-pack");
+                    if (ghPack != null)
+                    {
+                        try
+                        {
+                            RemotePack rp = Updates.ReadRemotePack(Updates.PackApi(ghPack), Path.Combine(Path.GetTempPath(), "hmc-update"), ghPack);
+                            if (rp == null || rp.Info == null) rep.AppendLine("github pack " + ghPack + ": nothing is published");
+                            else { string why; bool newer = Updates.PackIsNewer(rp, out why); rep.AppendLine("github pack " + ghPack + ": version " + rp.Info.Version + " newer=" + newer + (why.Length > 0 ? " (" + why + ")" : "") + " installed " + (VoicePacks.Find(ghPack) != null ? VoicePacks.Find(ghPack).Version.ToString() : "none")); }
+                        }
+                        catch (Exception ex) { rep.AppendLine("github pack " + ghPack + ": " + ex.Message); }
                     }
                 }
                 catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }

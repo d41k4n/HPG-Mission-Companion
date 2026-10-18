@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="7" basever="19" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="8" basever="20" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -325,7 +325,7 @@
       <o>Bereich ist frei, bereit zum Start</o>
       <o>Bereich frei, alles klar zum Start.</o>
     </message>
-    <message key="CPL.7" actor="2" radio="auto" lvar="L:CPL{VCP}7" wav="AND.cpl.engine.fire.wav" sleep="0">
+    <message key="CPL.7" actor="2" radio="auto" lvar="L:CPL{VCP}7" wav="AND.cpl.engine.fire.wav" sleep="0" standin="1">
       <o>Triebwerksbrand. Triebwerk abstellen.</o>
       <o>Triebwerksbrand, Triebwerk sofort abschalten.</o>
       <o>Wir haben ein Triebwerksfeuer. Triebwerk jetzt abstellen.</o>
@@ -341,7 +341,7 @@
       <o>Guter Start. Das nächste jetzt.</o>
       <o>Das läuft, jetzt das nächste.</o>
     </message>
-    <message key="CPL.9" actor="2" radio="auto" lvar="L:CPL{VCP}9" wav="AND.cpl.failure.wav" sleep="0">
+    <message key="CPL.9" actor="2" radio="auto" lvar="L:CPL{VCP}9" wav="AND.cpl.failure.wav" sleep="0" standin="1">
       <o>Wir haben einen Ausfall.</o>
       <o>Wir haben eine Störung an Bord.</o>
       <o>Systemausfall festgestellt.</o>
@@ -469,7 +469,7 @@
       <o>Ich sehe den Platz. Das medizinische Team wartet bereits.</o>
       <o>Da ist der Platz, das medizinische Team wartet auf uns.</o>
     </message>
-    <message key="CPL.25" actor="2" radio="auto" lvar="L:CPL{VCP}25" wav="AND.cpl.t.we.have.to.stop.eng.wav" sleep="0">
+    <message key="CPL.25" actor="2" radio="auto" lvar="L:CPL{VCP}25" wav="AND.cpl.t.we.have.to.stop.eng.wav" sleep="0" standin="1">
       <o>Wir müssen die Triebwerke stoppen und den Heli herunterfahren.</o>
       <o>Wir müssen die Triebwerke abstellen und den Heli ausschalten.</o>
       <o>Wir müssen die Triebwerke stoppen und den Heli komplett abschalten.</o>
@@ -3341,7 +3341,7 @@
       <o>Mal sehen, ob wir es nehmen können. Kurzer Check, alle zusammen.</o>
       <o>Crew, können wir das wagen? Kurzer Check.</o>
     </message>
-    <message key="DSA.FUEL.OK" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
+    <message key="DSA.FUEL.OK" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
       <o>Copilot: Der Treibstoffstand liegt über unserem Minimum, kein Problem.</o>
       <o>Kraftstoffstand geprüft, über unserem Limit.</o>
       <o>Der Kraftstoffstand ist in Ordnung, er liegt über dem von uns festgelegten Minimum.</o>
@@ -3349,7 +3349,7 @@
       <o>Der Kraftstoff ist in Ordnung, ausreichend über unserem Minimum.</o>
       <o>Der Kraftstoffstand ist in Ordnung, er liegt über dem Grenzwert.</o>
     </message>
-    <message key="DSA.FUEL.LOW" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is at or below the limit set in the mission options">
+    <message key="DSA.FUEL.LOW" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is at or below the limit set in the mission options">
       <o>Kopilot: Der Treibstoffstand liegt unter unserem Mindeststand. Ich würde ohne Auftanken keinen weiteren Flug starten.</o>
       <o>Unser Treibstoffvorrat ist noch nicht voll. Wir sollten zuerst zurückfahren und tanken.</o>
       <o>Der Kraftstoffstand liegt unter dem von uns festgelegten Minimum; es ist besser, vor der nächsten Fahrt aufzutanken.</o>
@@ -3357,7 +3357,7 @@
       <o>Der Treibstoffvorrat ist niedrig, er liegt unter unserem Limit. Ich denke, wir sollten zuerst tanken.</o>
       <o>Unser Treibstoffvorrat ist unter dem Limit. Tanken Sie besser vor der nächsten Fahrt nach.</o>
     </message>
-    <message key="DSA.MIS" actor="2" radio="auto" group="dsa" seq="2" new="1" trigger="second dispatch: two or more missions already completed in the shift">
+    <message key="DSA.MIS" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: two or more missions already completed in the shift">
       <o>Kopilot: Wir haben in dieser Schicht bereits zwei Einsätze geflogen. Wir könnten zuerst zur Basis zurückkehren.</o>
       <o>Das wäre eine weitere Mission nach zwei bereits abgeschlossenen Einsätzen; wir könnten zuerst zur Basis zurückkehren.</o>
       <o>Wir haben bereits zwei Missionen abgeschlossen. Eine Rückkehr zur Basis wäre eine Option.</o>
@@ -3365,7 +3365,7 @@
       <o>Wir haben bereits ein paar Einsätze geflogen, die Basis ist eine Option vor diesem.</o>
       <o>Zwei Missionen sind bereits abgeschlossen. Eine Rückkehr zur Basis ist eine Option.</o>
     </message>
-    <message key="DSA.EQP" actor="4" radio="auto" group="dsa" seq="3" new="1" trigger="second dispatch: equipment check (always fine)">
+    <message key="DSA.EQP" actor="4" radio="ics" group="dsa" seq="3" new="1" trigger="second dispatch: equipment check (always fine)">
       <o>Chef: Ausrüstung geprüft, alles an Bord und bereit.</o>
       <o>Hintere Mannschaft: Die Ausrüstung ist vollständig und in Ordnung.</o>
       <o>Geräteprüfung durchgeführt, nichts fehlt.</o>
@@ -3373,7 +3373,7 @@
       <o>Die Ausrüstung ist vollständig, es fehlt nichts in den Taschen.</o>
       <o>Die Ausrüstung ist in Ordnung, alles vollständig.</o>
     </message>
-    <message key="DSA.HLT" actor="3" radio="auto" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
+    <message key="DSA.HLT" actor="3" radio="ics" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
       <o>Arzt: Der Gesundheitszustand der Crew ist gut, alle sind fit für einen weiteren Einsatz.</o>
       <o>Alle sind fit und bereit, von meiner Seite gibt es keine Probleme.</o>
       <o>Gesundheitscheck: Alle Crewmitglieder sind wohlauf.</o>
@@ -3381,7 +3381,7 @@
       <o>Die Crew ist fit, von meiner Seite gibt es keine Probleme.</o>
       <o>Alle sind gesund, ich kann mitfahren.</o>
     </message>
-    <message key="DSA.GO" actor="2" radio="auto" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
+    <message key="DSA.GO" actor="2" radio="ics" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
       <o>Copilot: Alle Kontrollen sind abgeschlossen, wir können losfliegen.</o>
       <o>Die Überprüfung ist abgeschlossen, wir können es mitnehmen.</o>
       <o>Alles ist in Ordnung, wir sind bereit.</o>
@@ -3389,7 +3389,7 @@
       <o>Alles geprüft, wir sind bereit, es entgegenzunehmen.</o>
       <o>Alles in Ordnung hier, bereit, wenn Sie es sind.</o>
     </message>
-    <message key="DSA.ASKP" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, checks fine: accept on the tablet">
+    <message key="DSA.ASKP" actor="2" radio="ics" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, checks fine: accept on the tablet">
       <o>Kapitän, wir sind bereit. Was möchten Sie tun?</o>
       <o>Kapitän, Sie entscheiden: Nehmen wir das Angebot an?</o>
       <o>Pilot, nehmen wir den Einsatz an?</o>
@@ -3397,7 +3397,7 @@
       <o>Kapitän, die Entscheidung liegt bei Ihnen. Nehmen wir an?</o>
       <o>Sie haben die Wahl, Kapitän. Nehmen wir sie an?</o>
     </message>
-    <message key="DSA.ASKP.B" actor="2" radio="auto" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, with fuel below the limit or two missions done: take it or go back to base">
+    <message key="DSA.ASKP.B" actor="2" radio="ics" group="dsa" seq="6" new="1" trigger="the copilot asks the pilot (the user) to decide, with fuel below the limit or two missions done: take it or go back to base">
       <o>Kapitän, wir sollten zunächst überlegen, zur Basis zurückzukehren. Was schlagen Sie vor?</o>
       <o>Kapitän, Ihre Entscheidung: Fliegen Sie trotzdem oder kehren Sie zuerst zur Basis zurück?</o>
       <o>Pilot, sollen wir es wagen oder zuerst zur Basis zurückkehren?</o>
@@ -3421,7 +3421,7 @@
       <o>{@HEMS}, {@DSP}. Vorheriger Einsatz wurde neu zugewiesen, eine andere Einheit ist dran. Hier ist ein neuer Einsatz.</o>
       <o>{@HEMS}, {@DSP}. Ein anderes Team hat den vorherigen Einsatz übernommen. Dies ist ein neuer Einsatz.</o>
     </message>
-    <message key="DSP.RQ" actor="1" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
+    <message key="DSP.RQ" actor="2" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
       <o>{@DSP}, {@HEMS}. Einsatzauftrag erhalten. Bitte um aktuelle Informationen zum Patienten und den Bodeneinheiten.</o>
       <o>{@DSP}, {@HEMS}, wir haben den Auftrag erhalten. Bitte informieren Sie uns über den Zustand des Patienten und die Einheiten vor Ort.</o>
       <o>{@HEMS} an {@DSP}, Auftrag erhalten. Haben Sie weitere Informationen für uns?</o>
@@ -6646,5 +6646,237 @@
       <o>Feuer am Einsatzort, wir warten, bis es unter Kontrolle ist.</o>
       <o>Am Einsatzort brennt ein Feuer. Wir bleiben weg, bis der Bereich freigegeben ist.</o>
       <o>Feuer vor Ort. Wir halten Abstand, ich beobachte Rauch und Wind.</o>
+    </message>
+    <message key="DSA.RB.A" actor="2" radio="off" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
+      <o>Hey Crew, wir haben einen Einsatz auf dem Tablet bekommen. Hört zu.</o>
+      <o>Crew, ein neuer Einsatz ist gerade reingekommen. Ich lese ihn vor:</o>
+      <o>Hey, ein Einsatz ist eingegangen. Das steht drin.</o>
+      <o>Achtung, Crew: Auf dem Tablet ist ein Einsatz eingegangen. Ich lese ihn zurück.</o>
+      <o>Crew, wir haben eine neue Alarmierung auf dem Tablet. Sie lautet:</o>
+      <o>Hey alle zusammen, ein Anruf ist eingegangen. Ich lese ihn euch vor.</o>
+    </message>
+    <message key="DSA.RB.Q" actor="2" radio="off" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
+      <o>Also, was machen wir mit dem hier?</o>
+      <o>Nehmen wir ihn an? Was meint ihr?</o>
+      <o>Was machen wir? Fliegen wir?</o>
+      <o>Meinungen, Crew? Nehmen wir ihn an?</o>
+      <o>Was ist der Plan, Crew? Nehmen wir ihn?</o>
+      <o>Also? Fliegen wir oder nicht?</o>
+    </message>
+    <message key="SAR.TYP.SAR" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the kind of search, SAR">
+      <o>Crew, das ist ein SAR-Einsatz: Wir suchen eine vermisste Person.</o>
+      <o>SAR-Briefing. Wir suchen jemanden, der vermisst wird.</o>
+      <o>Heute Suche und Rettung. Jemand wird vermisst und wir müssen ihn finden.</o>
+      <o>Das hier ist ein SAR: Eine Person wird vermisst, wir suchen zuerst und retten danach.</o>
+      <o>SAR-Auftrag, Crew. Eine vermisste Person, wir müssen sie zuerst finden.</o>
+      <o>Briefing für die Suche: eine vermisste Person, und wir sind es, die sie finden.</o>
+    </message>
+    <message key="SAR.TYP.SARV" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the overdue vehicle">
+      <o>SAR mit überfälligem Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position.</o>
+      <o>Das Fahrzeug ist überfällig. Wir suchen entlang seiner wahrscheinlichen Route, ab dem letzten Kontakt.</o>
+      <o>SAR-Briefing: ein überfälliges Fahrzeug. Wir suchen es und den Fahrer entlang der Route.</o>
+      <o>Das ist eine Suche nach einem überfälligen Fahrzeug. Wir folgen der Straße ab dem letzten bekannten Punkt.</o>
+      <o>Überfälliges Fahrzeug, Crew. Wir suchen entlang der wahrscheinlichen Route.</o>
+      <o>Wir suchen ein überfälliges Fahrzeug und seinen Fahrer, auf dem Weg, den es hätte nehmen sollen.</o>
+    </message>
+    <message key="SAR.TYP.SARC" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a parked car, the owner is missing">
+      <o>SAR, geparktes Auto. Der Besitzer wird vermisst, also suchen wir das Gebiet um das Auto.</o>
+      <o>Ein Auto wurde geparkt gefunden und sein Besitzer wird vermisst. Wir suchen rund um das Auto.</o>
+      <o>SAR-Briefing: geparktes Fahrzeug, vermisster Besitzer. Wir decken das Gelände um das Auto ab.</o>
+      <o>Das Auto steht geparkt und niemand ist dabei. Wir suchen die Umgebung nach dem Besitzer ab.</o>
+      <o>Suche um ein geparktes Auto, Crew. Die Person, die es gefahren hat, wird vermisst.</o>
+      <o>Wir suchen den Besitzer eines geparkten Autos. Die Suche beginnt rund um das Fahrzeug.</o>
+    </message>
+    <message key="SAR.TYP.SARH" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a person who walked away from home">
+      <o>SAR, eine Person, die das Haus verlassen hat und nicht zurückgekommen ist. Wir suchen rund um das Haus.</o>
+      <o>Jemand ist von zu Hause weggelaufen. Wir suchen das Gebiet um die letzte bekannte Position.</o>
+      <o>SAR-Briefing: eine vermisste Person, die allein das Haus verlassen hat. Wir suchen zuerst rund um das Haus.</o>
+      <o>Eine Person hat das Haus verlassen und ist nicht zurückgekehrt. Das Haus ist die letzte bekannte Position.</o>
+      <o>Diese Suche gilt einer Person, die von zu Hause fort ist. Wir starten am Haus und weiten aus.</o>
+      <o>Wir suchen jemanden, der von zu Hause weggegangen ist. Letzte bekannte Position ist das Haus.</o>
+    </message>
+    <message key="SAR.INF.R" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: the search ring (argument 0 = its radius in nautical miles)">
+      <o>Information: Das Suchgebiet ist ein Kreis von {0} Seemeilen um die letzte bekannte Position.</o>
+      <o>Das Suchgebiet hat einen Radius von {0} Seemeilen um die letzte bekannte Position.</o>
+      <o>Unser Gebiet ist der Kreis von {0} Seemeilen auf der Karte.</o>
+      <o>Verstanden. Der Ring auf der Karte hat {0} Seemeilen Radius, und die Person ist darin.</o>
+      <o>Wir suchen innerhalb des Rings: {0} Seemeilen von der letzten bekannten Position.</o>
+      <o>Das Gebiet ist ein Ring von {0} Seemeilen um den Punkt, an dem die Person zuletzt bekannt war.</o>
+    </message>
+    <message key="SAR.INF.N" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: no ring, the route and the last contact">
+      <o>Information: Es gibt keinen Suchring. Wir folgen der Route und dem letzten Kontakt auf der Karte.</o>
+      <o>Kein Ring bei diesem Einsatz: Die Suche folgt der Route zwischen dem letzten Kontakt und dem Ende der wahrscheinlichen Route.</o>
+      <o>Wir haben keinen Ring. Die Suche verläuft entlang der wahrscheinlichen Route auf der Karte, ab dem letzten Kontakt.</o>
+      <o>Heute kein Suchkreis: Wir arbeiten entlang der Route und des letzten Kontaktpunkts.</o>
+      <o>Das Gebiet ist die Route auf der Karte, beginnend beim letzten Kontakt.</o>
+      <o>Es gibt keinen Ring, also folgen wir der auf der Karte markierten Straße ab dem letzten Kontakt.</o>
+    </message>
+    <message key="SAR.VEH" actor="2" radio="auto" group="sarbrf" seq="3" new="1" trigger="briefing of a search and rescue mission: the vehicle of the dispatch (argument 0 = colour, 1 = model)">
+      <o>Wir suchen folgendes Fahrzeug: {1}, Farbe {0}.</o>
+      <o>Das Fahrzeug ist ein {1}, Farbe {0}. Haltet danach Ausschau.</o>
+      <o>Fahrzeugbeschreibung: {1}, Farbe {0}.</o>
+      <o>Achtet auf {1}, Farbe {0}: Es kann uns den Weg zur Person zeigen.</o>
+      <o>Der Einsatz nennt {1}, Farbe {0}. Danach suchen wir.</o>
+      <o>Merkt euch das Fahrzeug: {1}, Farbe {0}.</o>
+    </message>
+    <message key="SAR.VEHN" actor="2" radio="auto" group="sarbrf" seq="3" new="1" trigger="briefing of a search and rescue mission: the vehicle of the dispatch when its colour is not known (argument 0 = model)">
+      <o>Wir suchen dieses Fahrzeug: {0}.</o>
+      <o>Das Fahrzeug ist ein {0}. Haltet danach Ausschau.</o>
+      <o>Fahrzeugbeschreibung: {0}.</o>
+      <o>Achtet auf {0}: Es kann uns den Weg zur Person zeigen.</o>
+      <o>Der Einsatz nennt {0}. Danach suchen wir.</o>
+      <o>Merkt euch das Fahrzeug: {0}.</o>
+    </message>
+    <message key="SAR.MET.R" actor="3" radio="auto" group="sarbrf" seq="4" new="1" trigger="briefing of a search and rescue mission: the method for a ring (argument 0 = the distance between the legs in meters, twice the spotting range)">
+      <o>Methode: Wir teilen den Ring in Sektoren von 45 Grad und arbeiten sie nacheinander ab, von der Mitte nach außen. Die Bahnen liegen etwa {0} Meter auseinander.</o>
+      <o>Wir suchen in Sektoren von 45 Grad, einen nach dem anderen, mit Bahnen im Abstand von etwa {0} Metern.</o>
+      <o>Der Ring ist in acht Sektoren geteilt. Wir fliegen einen Sektor mit parallelen Bahnen im Abstand von etwa {0} Metern ab, dann den nächsten.</o>
+      <o>Plan: acht Sektoren von 45 Grad von der Mitte aus, Bahnen {0} Meter auseinander, und wir markieren jeden abgesuchten Sektor.</o>
+      <o>Wir arbeiten Sektor für Sektor, je 45 Grad, mit Bahnen von etwa {0} Metern Abstand.</o>
+      <o>Suchmuster: Sektoren von 45 Grad, parallele Bahnen {0} Meter auseinander, nichts wird übersprungen.</o>
+    </message>
+    <message key="SAR.MET.V" actor="3" radio="auto" group="sarbrf" seq="4" new="1" trigger="briefing of a search and rescue mission: the method along a route (argument 0 = the distance between the legs in meters)">
+      <o>Methode: Wir folgen der Route und fliegen Bahnen entlang davon, etwa {0} Meter auseinander, auf beiden Seiten der Straße.</o>
+      <o>Wir suchen entlang der Route, eine Bahn auf jeder Seite der Straße, etwa {0} Meter auseinander.</o>
+      <o>Die Suche folgt der Straße: parallele Bahnen auf beiden Seiten, etwa {0} Meter voneinander.</o>
+      <o>Plan: Die Route ab dem letzten Kontakt abfliegen, mit Bahnen {0} Meter auseinander, linke und rechte Seite.</o>
+      <o>Wir bleiben auf der Route und decken beide Seiten ab, mit Bahnen von etwa {0} Metern Abstand.</o>
+      <o>Routensuche: Bahnen entlang der Straße, {0} Meter auseinander, und wir schauen auf beide Seiten.</o>
+    </message>
+    <message key="SAR.CLK" actor="4" radio="auto" group="sarbrf" seq="5" new="1" trigger="briefing of a search and rescue mission: the sides of the crew and the clock positions">
+      <o>Augen: Ich nehme die linke Seite, der Copilot die rechte, der Kapitän schaut nach vorn. Alles wird nach Uhrzeit gemeldet.</o>
+      <o>Jeder hat eine Seite: links ich, rechts der Copilot, voraus der Kapitän. Wir melden Positionen wie auf einer Uhr.</o>
+      <o>Die linke Seite ist meine, die rechte die des Copiloten, und wir sagen, wo wir etwas sehen, wie auf einer Uhr: zwölf Uhr ist voraus.</o>
+      <o>Uhrzeiten, Crew: Zwölf Uhr ist die Nase. Ich beobachte links, der Copilot rechts.</o>
+      <o>Ich decke links ab, der Copilot rechts, und jede Sichtung wird mit der Uhrzeit gemeldet.</o>
+      <o>Wir teilen den Blick: links, rechts, voraus. Jede Sichtung geht mit ihrer Uhrzeit raus.</o>
+    </message>
+    <message key="SAR.OPT" actor="2" radio="auto" group="sarbrf" seq="6" new="1" trigger="briefing of a search and rescue mission: the best altitude and speed (arguments 0 = feet above the ground, 1 = knots, 2 = the spotting range in meters)">
+      <o>Beste Suche: etwa {0} Fuß über Grund und {1} Knoten oder weniger. Im besten Fall sehen wir eine Person bis auf {2} Meter; tiefer, höher oder schneller wird diese Reichweite kürzer.</o>
+      <o>Optimal sind {0} Fuß über Grund bei {1} Knoten oder langsamer, dann können wir bis auf {2} Meter erkennen. Darüber hinaus sinkt die Reichweite.</o>
+      <o>Fliegt etwa {0} Fuß über Grund und nicht schneller als {1} Knoten: Das gibt die volle Sichtreichweite von {2} Metern.</o>
+      <o>Höhe {0} Fuß über Grund, Geschwindigkeit höchstens {1} Knoten: Das ist das Beste zum Aufspüren, bis {2} Meter. Zu tief, zu hoch oder zu schnell verkürzt es.</o>
+      <o>Für die beste Reichweite von {2} Metern haltet {0} Fuß über Grund und {1} Knoten oder weniger.</o>
+      <o>Merkt euch: {0} Fuß über Grund und höchstens {1} Knoten für die beste Sicht, Erkennung bis {2} Meter.</o>
+    </message>
+    <message key="SAR.END" actor="1" radio="auto" group="sarbrf" seq="7" new="1" trigger="briefing of a search and rescue mission: the pilot closes it">
+      <o>Gut. Augen auf, und meldet alles, was ihr seht.</o>
+      <o>Klar. Finden wir sie.</o>
+      <o>Alles klar, Crew. Sucht sorgfältig und meldet weiter.</o>
+      <o>Gutes Briefing. Gehen wir die Person finden.</o>
+      <o>Von allen verstanden? Dann Augen nach draußen.</o>
+      <o>Okay. Augen auf, und keine Sichtung ist zu klein.</o>
+    </message>
+    <message key="CEM.HURT" actor="3" radio="off" prio="3" new="1" trigger="a crew member hurt by an impact complains (the mission sets the actor: the voice of the hurt member)">
+      <o>Aaah... mein Rücken!</o>
+      <o>Uff... das tat weh. Mein Arm...</o>
+      <o>Argh! Mein Bein...</o>
+      <o>Ohh... mein Kopf...</o>
+      <o>Ah! Meine Schulter, ich glaube, sie ist gebrochen...</o>
+      <o>Ahh... das war hart. Ich bin verletzt.</o>
+    </message>
+    <message key="CEM.WEAK" actor="3" radio="off" prio="3" new="1" trigger="a crew member critically hurt by an impact asks for help (the mission sets the actor)">
+      <o>Ich... ich kann mich nicht bewegen... helft mir...</o>
+      <o>Bitte... ich bekomme keine Luft... helft...</o>
+      <o>Es tut so weh... ich spüre meine Beine nicht...</o>
+      <o>Hilfe... ich bin schwer verletzt... bitte...</o>
+      <o>Ich kann nicht... mir wird schwarz... helft mir...</o>
+      <o>Oh Gott... jemand... helft mir...</o>
+    </message>
+    <message key="CEM.DEAD" actor="3" radio="auto" prio="3" new="1" trigger="after an impact a crew member who is fine says that another one is dead (argument 0 = the role: PLT CPL PAX1 PAX2 PAX3)">
+      <o>{role:0} bewegt sich nicht! Kein Puls! Oh nein...</o>
+      <o>Wir haben {role:0} verloren.</o>
+      <o>{role:0} ist tot. Es tut mir so leid.</o>
+      <o>Nein! {role:0} atmet nicht!</o>
+      <o>{role:0} hat es nicht geschafft.</o>
+      <o>{role:0} ist nicht mehr da... wir müssen uns auf die anderen konzentrieren.</o>
+    </message>
+    <message key="CEM.CRIT" actor="3" radio="auto" prio="3" new="1" trigger="after an impact a crew member who is fine says that another one is critical (argument 0 = the role)">
+      <o>{role:0} ist schwer verletzt! Wir brauchen sofort ein Krankenhaus!</o>
+      <o>{role:0} ist in einem kritischen Zustand! Schnell ins Krankenhaus!</o>
+      <o>{role:0} ist wirklich schwer verletzt. Wir können nicht warten.</o>
+      <o>Ich habe {role:0} hier, kritisch. Wir müssen los.</o>
+      <o>{role:0} braucht sofort einen Arzt. Das ist ernst.</o>
+      <o>{role:0} geht es gar nicht gut. Wir müssen ins Krankenhaus.</o>
+    </message>
+    <message key="CEM.RAD.D" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is dead (argument 0 = the role)">
+      <o>Leitstelle, {@HEMS}. Wir hatten einen Absturz und {role:0} ist tot. Wir brechen den Einsatz ab und fliegen zum Krankenhaus.</o>
+      <o>{@HEMS} an Leitstelle: {role:0} ist beim Aufprall gestorben. Einsatz abgebrochen, wir fliegen zum Krankenhaus.</o>
+      <o>Leitstelle, {@HEMS}, Unfall an Bord. {role:0} ist verstorben. Wir brechen den Einsatz ab.</o>
+      <o>Leitstelle von {@HEMS}: Wir haben beim Absturz {role:0} verloren. Wir brechen ab und fliegen zum Krankenhaus.</o>
+      <o>{@HEMS} an Leitstelle, {role:0} hat den Aufprall nicht überlebt. Wir brechen den Einsatz ab.</o>
+      <o>Leitstelle, {@HEMS}: Absturz, {role:0} verstorben. Wir sagen den Einsatz ab und fliegen zum Krankenhaus.</o>
+    </message>
+    <message key="CEM.RAD.C" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is critical (argument 0 = the role)">
+      <o>Leitstelle, {@HEMS}. Wir hatten einen Absturz und {role:0} ist kritisch. Wir brauchen ein Krankenhaus.</o>
+      <o>{@HEMS} an Leitstelle: {role:0} ist nach dem Aufprall schwer verletzt. Wir fordern ein Krankenhaus an.</o>
+      <o>Leitstelle, {@HEMS}, Unfall an Bord. {role:0} ist in kritischem Zustand.</o>
+      <o>Leitstelle von {@HEMS}: {role:0} ist beim Absturz ernsthaft verletzt. Wir brauchen medizinische Versorgung.</o>
+      <o>{@HEMS} an Leitstelle, {role:0} ist kritisch. Wir fliegen zum Krankenhaus.</o>
+      <o>Leitstelle, {@HEMS}: Absturz, {role:0} kritisch. Wir brauchen ein Krankenhaus und melden unsere Entscheidung.</o>
+    </message>
+    <message key="CEM.OPS" actor="3" radio="auto" prio="3" new="1" trigger="the crew emergency aborts the ground operations: the doctor says that he comes back and the patient stays for the next unit">
+      <o>Ich breche die Visite ab. Ich komme zum Hubschrauber zurück, der Patient bleibt für die nächste Einheit.</o>
+      <o>Ich höre hier auf und komme zurück. Der Patient wartet auf eine andere Einheit.</o>
+      <o>Wir brechen den Einsatz ab. Ich komme jetzt zum Hubschrauber zurück, der Patient bleibt an der Einsatzstelle.</o>
+      <o>Ich lasse den Patienten für die nächste Einheit. Ich bin auf dem Weg zurück zum Hubschrauber.</o>
+      <o>Visite abgebrochen. Eine andere Einheit übernimmt den Patienten, ich kehre zum Luftfahrzeug zurück.</o>
+      <o>Zurück zum Hubschrauber, wir hören auf. Der Patient bleibt bei der nächsten Einheit.</o>
+    </message>
+    <message key="CEM.ABORT" actor="3" radio="auto" prio="2" new="1" trigger="the crew emergency aborts the mission (crew aboard): a crew member says that everybody goes to the hospital">
+      <o>Einsatz abgebrochen. Alle an Bord, wir fliegen zum Krankenhaus.</o>
+      <o>Wir brechen ab. Alle rein, wir fliegen zum Krankenhaus.</o>
+      <o>Einsatz abgesagt. Wir bringen unsere Verletzten ins Krankenhaus.</o>
+      <o>Das war's für diesen Einsatz. Wir fliegen jetzt zum Krankenhaus.</o>
+      <o>Wir stoppen den Einsatz. Das Krankenhaus hat Vorrang.</o>
+      <o>Einsatz vorbei. Wir fliegen zum Krankenhaus.</o>
+    </message>
+    <message key="CEM.CONT" actor="3" radio="auto" prio="2" new="1" trigger="the user chose to continue the mission with a critical crew member: a crew member acknowledges it (argument 0 = the role)">
+      <o>Verstanden, wir setzen den Einsatz fort. {role:0} kommt beim nächsten Halt ins Krankenhaus.</o>
+      <o>Verstanden, der Einsatz geht weiter. Wir übergeben {role:0} beim nächsten Krankenhausstopp.</o>
+      <o>Wir machen weiter. {role:0} wird beim nächsten Halt übergeben.</o>
+      <o>Okay, wir fliegen weiter. {role:0} bleibt bei uns bis zum nächsten Krankenhausstopp.</o>
+      <o>Verstanden: weiter. {role:0} wird beim nächsten Krankenhausstopp versorgt.</o>
+      <o>Der Einsatz geht weiter. Wir übergeben {role:0}, sobald wir ein Krankenhaus erreichen.</o>
+    </message>
+    <message key="CEM.DSP" actor="8" radio="on" prio="3" new="1" trigger="the dispatcher answers the report of a crew member dead or critical: mission cancelled, another unit for the patient">
+      <o>{@HEMS}, {@DSP}. Verstanden, Ihr Einsatz ist abgesagt. Eine andere Einheit wird dem Patienten zugeteilt. Fliegen Sie zum Krankenhaus.</o>
+      <o>{@DSP} an {@HEMS}. Unfall verstanden. Der Patient an der Einsatzstelle bekommt eine andere Einheit. Halten Sie auf das Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Verstanden, Einsatz abgesagt. Eine andere Einheit übernimmt den Patienten. Fliegen Sie zum Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}, verstanden. Alarmierung aufgehoben, eine andere Einheit ist zum Patienten unterwegs. Fliegen Sie zum Krankenhaus.</o>
+      <o>{@DSP} an {@HEMS}: Verstanden, Einsatz abgesagt. Eine andere Einheit kümmert sich um den Patienten, fliegen Sie zum Krankenhaus.</o>
+      <o>{@HEMS}, {@DSP}. Empfangen. Einsatz abgesagt, andere Einheit alarmiert. Fliegen Sie zum Krankenhaus.</o>
+    </message>
+    <message key="MAY.REACT" actor="3" radio="auto" prio="3" new="1" trigger="critical failure (engine fire or transmission damage): a crew member aboard tells to land now">
+      <o>Wir müssen sofort landen! Festhalten!</o>
+      <o>Sofort landen! Alle festhalten!</o>
+      <o>Bring ihn auf den Boden, sofort! Wir können nicht oben bleiben!</o>
+      <o>Setz ihn ab, Kapitän, jetzt gleich!</o>
+      <o>Wir landen sofort! Haltet euch fest!</o>
+      <o>Runter, runter, runter! Sofort landen!</o>
+    </message>
+    <message key="MAY.CALL.F" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, engine fire">
+      <o>Mayday, Mayday, Mayday, {@HEMS}. Triebwerksbrand. Wir landen sofort und fahren herunter. Bitten um Unterstützung.</o>
+      <o>Mayday, Mayday, Mayday, hier {@HEMS}: Feuer im Triebwerk, wir landen jetzt, bitten um Rettungsdienste.</o>
+      <o>{@HEMS}, Mayday, Mayday, Mayday. Triebwerksbrand, wir setzen sofort auf. Schickt Hilfe.</o>
+      <o>Mayday Mayday Mayday, {@HEMS}, Triebwerk brennt, wir machen eine Notlandung. Bitten um Unterstützung.</o>
+      <o>Mayday, {@HEMS}: Wir haben einen Triebwerksbrand. Sofortige Landung, bitten um Hilfe am Boden.</o>
+      <o>Mayday, Mayday, Mayday, {@HEMS}, Feuer an Bord, wir landen jetzt. Rettungsdienste bitte.</o>
+    </message>
+    <message key="MAY.CALL.G" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, damaged gearbox or transmission">
+      <o>Mayday, Mayday, Mayday, {@HEMS}. Getriebeausfall. Wir landen sofort und fahren herunter. Bitten um Unterstützung.</o>
+      <o>Mayday, Mayday, Mayday, hier {@HEMS}: Getriebeschaden, wir landen jetzt, bitten um Rettungsdienste.</o>
+      <o>{@HEMS}, Mayday, Mayday, Mayday. Probleme am Getriebe, wir setzen sofort auf. Schickt Hilfe.</o>
+      <o>Mayday Mayday Mayday, {@HEMS}, Getriebe beschädigt, wir machen eine Notlandung. Bitten um Unterstützung.</o>
+      <o>Mayday, {@HEMS}: Wir haben ein Getriebeproblem. Sofortige Landung, bitten um Hilfe am Boden.</o>
+      <o>Mayday, Mayday, Mayday, {@HEMS}, Getriebeausfall, wir landen jetzt. Rettungsdienste bitte.</o>
+    </message>
+    <message key="MAY.DSP" actor="8" radio="on" prio="3" new="1" trigger="critical failure: the dispatcher answers the mayday">
+      <o>{@HEMS}, {@DSP}. Mayday verstanden. Rettungsdienste sind zu Ihrer Position alarmiert. Landen Sie und fahren Sie herunter.</o>
+      <o>{@DSP} an {@HEMS}: Mayday empfangen. Hilfe ist unterwegs. Landen und herunterfahren.</o>
+      <o>{@HEMS}, {@DSP}. Wir haben Ihr Mayday. Unterstützung ist unterwegs, landen und herunterfahren.</o>
+      <o>{@HEMS}, {@DSP}, Mayday verstanden. Rettungsdienste sind zu Ihnen unterwegs. Landen Sie, sobald Sie können.</o>
+      <o>{@DSP} an {@HEMS}. Mayday verstanden. Bleiben Sie ruhig, landen und herunterfahren, Hilfe kommt.</o>
+      <o>{@HEMS}, {@DSP}. Mayday bestätigt. Rettungsdienste alarmiert. Landen und herunterfahren.</o>
     </message>
 </voicepack>
