@@ -1,8 +1,8 @@
 {
-    "sha256":  "15F4D9AA00A6FF762874FA6B9DADE83F69AF7F0398569CA5C647AC48D166F9DA",
-    "installerSha256":  "64D2F78787A62EBF599BA61EE9126ACF795004CD57B292D183DF52441FC4D3FC",
+    "sha256":  "A23869E876C4F0852DDF407894F59B4498802E22F5CF70C12D994D1FBB640C50",
+    "installerSha256":  "597F61E00E57AFE133FB59472DA7A1C975253D8C74ADBBD0CE87A6E66D6BD74A",
     "deliveredOn":  "2026-10-18",
     "artifact":  "HPGMissionCompanion.exe",
     "lastDeliveredVersion":  "0.33",
-    "note":  "Release 0.33: the window World Database Update with the character check (--world-test ALL PASS, tabs looked at), the pack EN 18 with the 12 dispatch texts of the mission 169.62, the checkbox of the default voice packs. Includes everything of 0.32. Static check PASS, packs check PASS, queue test and shared data end-to-end ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "note":  "Release 0.33: the window World Database Update with the character check (--world-test ALL PASS, tabs looked at), the pack EN 18 with the 12 dispatch texts of the mission 169.62, the checkbox of the default voice packs. Includes everything of 0.32 and the German pack DE 6 (basever 18: the 12 dispatch texts without gender, rebuilt locally the same day). Static check PASS, packs check PASS, queue test and shared data end-to-end ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }
