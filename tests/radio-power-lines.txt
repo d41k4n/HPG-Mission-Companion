@@ -1,0 +1,32 @@
+@settings variety=random bridge=EN
+@watch L:HMC_CTX_VALID 1
+@watch L:HMC_CREW_EXIST 7
+@watch L:HMC_CREW_PRESENT 7
+@watch L:H145_SDK_OH_BATTERY_MASTER 0
+@watch L:H145_SDK_GPCP_PWR_SWITCH 0
+@watch L:CARLS_CONNECTED 1
+<say:APR.CPL.N:1>
+<actor8><radio><plain>Battery off, switch off: the dispatcher is silent.
+@watch L:HMC_AT_BASE 1
+<actor8><radio><plain>Battery off, switch off, at the base: still silent.
+@watch L:HMC_AT_BASE 0
+@watch L:HMC_CREW_PRESENT 3
+<say:APR.DOC.A:1>
+@watch L:HMC_CREW_PRESENT 7
+@watch L:H145_SDK_GPCP_PWR_SWITCH 1
+<say:APR.CPL.N:1>
+<actor8><radio><plain>Switch on, CARLS connected: the dispatcher is heard.
+@watch L:CARLS_CONNECTED 0
+<actor8><radio><plain>Switch on, CARLS not connected: silent.
+<say:APR.CPL.N:1>
+@watch L:HMC_CREW_PRESENT 3
+<say:APR.DOC.A:1>
+@watch L:CARLS_CONNECTED 2
+<say:APR.DOC.A:1>
+@watch L:CARLS_CONNECTED 1
+<say:APR.DOC.A:1>
+@watch L:HMC_CREW_PRESENT 7
+@watch L:H145_SDK_GPCP_PWR_SWITCH 0
+@watch L:H145_SDK_OH_BATTERY_MASTER 1
+<say:APR.CPL.N:1>
+<actor8><radio><plain>Battery on, CARLS connected: heard.

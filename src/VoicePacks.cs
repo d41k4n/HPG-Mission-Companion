@@ -432,7 +432,9 @@ namespace HPGMissionCompanion
         static int muteMask;                                // L:HMC_CREW_MUTE: the same bits, crew members who cannot speak
         static readonly Dictionary<string, PackMessage> watchMap = new Dictionary<string, PackMessage>(StringComparer.OrdinalIgnoreCase);
         static int radioVar = -1;                           // the battery master of the aircraft (SimLink.CtxRadio): 1 on, -1 not read
-        static bool atBase;                                 // L:HMC_AT_BASE
+        static int powerVar = -1;                           // the GPCP power switch of the aircraft (SimLink.CtxPower): 1 on, -1 not read
+        static int carlsVar = -1;                           // L:CARLS_CONNECTED: 1 connected, 0 not, 2 connecting, -1 not read
+        static bool atBase;                                 // L:HMC_AT_BASE (read for the log only: since 2026-10-18 the base no longer lets the dispatcher through)
         static int crewExist;                               // L:HMC_CREW_EXIST (0 = not published)
         static int zoneTech, zoneGround, zonePatient;       // L:HMC_ZONE_TECH / _GROUND / _PATIENT (0 = not published)
         static VoicePack watchPack;
@@ -811,7 +813,7 @@ namespace HPGMissionCompanion
                 watchPack = bridgePack.Length > 0 ? VoicePacks.Find(bridgePack) : null;
                 if (watchPack == null) return list;
                 list.Add(SimLink.CtxValid); list.Add(SimLink.CtxHeliOff); list.Add(SimLink.CtxCrew); list.Add(SimLink.CtxTechSex); list.Add(SimLink.CtxMute); list.Add(SimLink.CtxChat);
-                list.Add(SimLink.CtxRadio); list.Add(SimLink.CtxExist); list.Add(SimLink.CtxBase); list.Add(SimLink.CtxZoneTech); list.Add(SimLink.CtxZoneGround); list.Add(SimLink.CtxZonePatient);
+                list.Add(SimLink.CtxRadio); list.Add(SimLink.CtxPower); list.Add(SimLink.CtxCarls); list.Add(SimLink.CtxExist); list.Add(SimLink.CtxBase); list.Add(SimLink.CtxZoneTech); list.Add(SimLink.CtxZoneGround); list.Add(SimLink.CtxZonePatient);
                 foreach (PackMessage m in watchPack.Messages.Values)
                 {
                     string l = m.LvarFor(watchPack.Vcp);
@@ -845,9 +847,11 @@ namespace HPGMissionCompanion
                 if (name == SimLink.CtxHeliOff) { bool v = value > 0.5; CtxLog("helicopter off (battery master off and rotor stopped)", heliOff ? 1 : 0, v ? 1 : 0, baseline); heliOff = v; return; }
                 if (name == SimLink.CtxCrew) { int v = (int)Math.Round(value); CtxLog("crew aboard mask (1 pilot, 2 copilot, 4 doctor, 8 HEMS1, 16 HEMS2; the pilot is the user, the mission sets bit 1 from 169.49)", crewMask, v, baseline); crewMask = v; return; }
                 if (name == SimLink.CtxMute) { int v = (int)Math.Round(value); CtxLog("crew who cannot speak mask", muteMask, v, baseline); muteMask = v; return; }
-                if (name == SimLink.CtxRadio) { int v = value > 0.5 ? 1 : 0; CtxLog("battery master (" + SimLink.CtxRadio + ", the radio works with it on)", radioVar, v, baseline); radioVar = v; return; }
+                if (name == SimLink.CtxRadio) { int v = value > 0.5 ? 1 : 0; CtxLog("battery master (" + SimLink.CtxRadio + ", with it on or the GPCP switch on the intercom works)", radioVar, v, baseline); radioVar = v; return; }
+                if (name == SimLink.CtxPower) { int v = value > 0.5 ? 1 : 0; CtxLog("GPCP power switch (" + SimLink.CtxPower + ", with it on or the battery master on the intercom works)", powerVar, v, baseline); powerVar = v; return; }
+                if (name == SimLink.CtxCarls) { int v = (int)Math.Round(value); CtxLog("CARLS connected (1 connected, 2 connecting; radio and polycon need 1)", carlsVar, v, baseline); carlsVar = v; return; }
                 if (name == SimLink.CtxExist) { int v = (int)Math.Round(value); CtxLog("crew existing mask", crewExist, v, baseline); crewExist = v; return; }
-                if (name == SimLink.CtxBase) { bool v = value > 0.5; CtxLog("at the start base (dispatcher reaches the crew radios)", atBase ? 1 : 0, v ? 1 : 0, baseline); atBase = v; return; }
+                if (name == SimLink.CtxBase) { bool v = value > 0.5; CtxLog("at the start base (informational: no longer a radio exception)", atBase ? 1 : 0, v ? 1 : 0, baseline); atBase = v; return; }
                 if (name == SimLink.CtxZoneTech) { int v = (int)Math.Round(value); CtxLog("technician zone (1 up to 5 m, 2 up to 30 m, 3 up to 100 m, 4 beyond)", zoneTech, v, baseline); zoneTech = v; return; }
                 if (name == SimLink.CtxZoneGround) { int v = (int)Math.Round(value); CtxLog("ground unit zone", zoneGround, v, baseline); zoneGround = v; return; }
                 if (name == SimLink.CtxZonePatient) { int v = (int)Math.Round(value); CtxLog("patient zone", zonePatient, v, baseline); zonePatient = v; return; }
@@ -1053,11 +1057,10 @@ namespace HPGMissionCompanion
                 Hear h;
                 switch (msg.Radio)
                 {
-                    case "on": h = Hear.Radio; break;
+                    case "on": h = !ctxValid || LinkUp ? Hear.Radio : Hear.Silent; break;
                     case "off": h = Hear.Voice; break;
-                    case "ics": h = Hear.Ics; break;
-                    case "ext": h = !ctxValid || RadioOn || atBase ? Hear.External : Hear.Silent; break;
-                    case "ext-near": h = Hear.External; break;
+                    case "ics": h = !ctxValid || Powered ? Hear.Ics : Hear.Voice; break;
+                    case "ext": case "ext-near": h = !ctxValid || LinkUp ? Hear.External : Hear.Silent; break;
                     default: h = (msg.ToTech || ToTechKeys.Contains(msg.Key)) ? DecideToTech(actor) : Decide(actor); break;
                 }
                 if (h == Hear.Silent)
@@ -1085,38 +1088,44 @@ namespace HPGMissionCompanion
 
         // ---- how a line is heard (the rules of the user, 2026-10-11) ----
         // None: no context from the mission, the text gets no tag. Voice: spoken in the air at the normal level; VoiceFar: heard very low (30 to 100 m);
-        // Ics: the wired intercom of the helicopter; Radio: a radio call (the crew radios, so also with the battery off); External: a call on an external
+        // Ics: the wired intercom of the helicopter; Radio: a radio call (the crew polycon: powered and the CARLS connected); External: a call on an external
         // radio (the dispatcher, the hospital); Silent: not heard at all.
         internal enum Hear { None, Voice, VoiceFar, Ics, Radio, External, Silent }
 
-        // the radio works with the battery master on (the aircraft variable); when it is not read, the opposite of L:HMC_HELI_OFF
-        static bool RadioOn { get { return radioVar >= 0 ? radioVar == 1 : !heliOff; } }
+        // The user's rules of 2026-10-18 (no exceptions for the radio):
+        // - powered = battery master on OR the GPCP power switch on (the two aircraft variables); with both off nothing electrical works: no intercom, no radio, no polycon;
+        //   when neither variable is read, the opposite of L:HMC_HELI_OFF;
+        // - powered: the intercom (ICS) works;
+        // - powered and the CARLS connected (L:CARLS_CONNECTED = 1; not read counts as connected): intercom, radio and polycon (the crew radios) all work.
+        static bool Powered { get { return radioVar >= 0 || powerVar >= 0 ? radioVar == 1 || powerVar == 1 : !heliOff; } }
+        static bool LinkUp { get { return Powered && (carlsVar < 0 || carlsVar == 1); } }
 
         // From the context the mission publishes (L:HMC_CTX_VALID, L:HMC_CREW_PRESENT, L:HMC_CREW_EXIST, L:HMC_AT_BASE, L:HMC_ZONE_*) and the battery of the aircraft:
-        // - the dispatcher: external radio call when the battery is on, or with the helicopter at the base (the crew radios reach it there); otherwise nothing;
-        // - a crew member (actors 1-5; they carry radios, so the battery does not matter): radio when the call is between inside and outside, the intercom
-        //   (battery on) or the voice (battery off) when everybody is aboard, the voice when everybody is outside;
-        // - the technician: the intercom when next to the helicopter, with the pilot aboard and the battery on; otherwise the voice;
+        // - the dispatcher: external radio call when powered and the CARLS is connected; otherwise nothing (the tablet tone only), at the base too;
+        // - a crew member (actors 1-5): radio (polycon) when the call is between inside and outside and the link is up, else nothing; the intercom (powered)
+        //   or the voice (not powered) when everybody is aboard; the voice when everybody is outside;
+        // - the technician: the intercom when next to the helicopter, with the pilot aboard and powered; otherwise the voice;
         // - technician, ground unit, patient (no radio): by voice; heard from inside at the normal level up to 30 m, very low up to 100 m, not beyond;
         //   when nobody is aboard everybody is outside together: normal level. The distance is the zone that the mission publishes (0 = unknown: normal).
         static Hear Decide(int a)
         {
             if (!ctxValid) return Hear.None;
-            if (a == 8) return RadioOn || atBase ? Hear.External : Hear.Silent;
+            if (a == 8) return LinkUp ? Hear.External : Hear.Silent;
             if (a >= 1 && a <= 5)
             {
                 int bit = 1 << (a - 1);
+                Hear call = LinkUp ? Hear.Radio : Hear.Silent;               // inside <-> outside: the polycon, which needs the power and the CARLS
                 if ((crewMask & bit) != 0)
                 {
-                    if (crewExist == 0) return Hear.Radio;                   // the mission does not say who is outside: the old rule
-                    return (crewExist & ~crewMask & ~bit) != 0 ? Hear.Radio : (RadioOn ? Hear.Ics : Hear.Voice);
+                    if (crewExist == 0) return call;                         // the mission does not say who is outside: the old rule
+                    return (crewExist & ~crewMask & ~bit) != 0 ? call : (Powered ? Hear.Ics : Hear.Voice);
                 }
-                return (crewMask & ~bit) != 0 ? Hear.Radio : Hear.Voice;
+                return (crewMask & ~bit) != 0 ? call : Hear.Voice;
             }
             int zone;
             if (a == 6 || a == 7)
             {
-                if (zoneTech == RadioRules.ZoneNear && (crewMask & 1) != 0 && RadioOn) return Hear.Ics;
+                if (zoneTech == RadioRules.ZoneNear && (crewMask & 1) != 0 && Powered) return Hear.Ics;
                 zone = zoneTech;
             }
             else if (a == 9) zone = zoneGround;
@@ -1138,7 +1147,7 @@ namespace HPGMissionCompanion
             if (!ctxValid) return Hear.None;
             if (a < 1 || a > 5) return Decide(a);
             int bit = 1 << (a - 1);
-            if (zoneTech == RadioRules.ZoneNear && (crewMask & bit) != 0 && RadioOn) return Hear.Ics;
+            if (zoneTech == RadioRules.ZoneNear && (crewMask & bit) != 0 && Powered) return Hear.Ics;
             if (crewMask == 0) return Hear.Voice;
             if (zoneTech >= RadioRules.ZoneOut) return Hear.Silent;
             return zoneTech == RadioRules.ZoneFar ? Hear.VoiceFar : Hear.Voice;
@@ -1169,7 +1178,9 @@ namespace HPGMissionCompanion
 
         static string SilentReason(int actor)
         {
-            if (actor == 8) return "the radio is off (battery master off) and the helicopter is not at the base";
+            if (actor == 8 || actor <= 5)
+                return !Powered ? "no power (battery master off and GPCP switch off): no radio, no polycon, no intercom"
+                    : "the CARLS is not connected (L:CARLS_CONNECTED = " + carlsVar + "): no radio, no polycon";
             if (actor >= 6) return "more than 100 m from the helicopter";
             return "no listener";
         }

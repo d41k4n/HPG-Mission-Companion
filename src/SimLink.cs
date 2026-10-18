@@ -31,8 +31,10 @@ namespace HPGMissionCompanion
         public const string CtxMute = "L:HMC_CREW_MUTE";                   // same bits as the line below: crew members who cannot speak (dead, or hurt so badly that they are out of the conversation)
         public const string CtxCrew = "L:HMC_CREW_PRESENT";               // bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard
         public const string CtxRadio = "L:H145_SDK_OH_BATTERY_MASTER";    // the aircraft's own variable: 1 battery master on, the radio works (the mission reads it as L:{HXX}_SDK_OH_BATTERY_MASTER, HXX = H145); not read = the opposite of L:HMC_HELI_OFF
+        public const string CtxPower = "L:H145_SDK_GPCP_PWR_SWITCH";      // the aircraft's own variable: the GPCP power switch (1 on); like the battery master it powers the intercom (user, 2026-10-18)
+        public const string CtxCarls = "L:CARLS_CONNECTED";               // kept by the CARLS thread of the mission: 1 connected to the dispatcher group, 2 connecting, 0 not connected; radio and polycon need 1
         public const string CtxExist = "L:HMC_CREW_EXIST";                // same bits as L:HMC_CREW_PRESENT: the crew members that exist (aboard or outside); 0 = not published
-        public const string CtxBase = "L:HMC_AT_BASE";                    // 1 the helicopter is at the departure base, in range of its wifi: the dispatcher reaches the crew radios even with the battery off
+        public const string CtxBase = "L:HMC_AT_BASE";                    // 1 the helicopter is at the departure base, in range of its wifi (informational: since 2026-10-18 it no longer lets the dispatcher through with the power off)
         public const string CtxZoneTech = "L:HMC_ZONE_TECH";              // zone of the technician from the helicopter: 1 up to 5 m, 2 up to 30 m, 3 up to 100 m, 4 beyond; 0 = not published
         public const string CtxZoneGround = "L:HMC_ZONE_GROUND";          // the same for the ground unit / hospital staff (actor 9)
         public const string CtxZonePatient = "L:HMC_ZONE_PATIENT";        // the same for the patient / extra (actor 10)

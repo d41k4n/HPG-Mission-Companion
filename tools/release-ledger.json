@@ -1,8 +1,8 @@
 {
-    "sha256":  "A23869E876C4F0852DDF407894F59B4498802E22F5CF70C12D994D1FBB640C50",
-    "installerSha256":  "597F61E00E57AFE133FB59472DA7A1C975253D8C74ADBBD0CE87A6E66D6BD74A",
-    "deliveredOn":  "2026-10-18",
-    "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.33",
-    "note":  "Release 0.33: the window World Database Update with the character check (--world-test ALL PASS, tabs looked at), the pack EN 18 with the 12 dispatch texts of the mission 169.62, the checkbox of the default voice packs. Includes everything of 0.32 and the German pack DE 6 (basever 18: the 12 dispatch texts without gender, rebuilt locally the same day). Static check PASS, packs check PASS, queue test and shared data end-to-end ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "sha256": "4AC418D698C49312B7FDC2987A5ABED902CA6E8470D7F0CDD45559ABFE4844C2",
+    "installerSha256": "1DF245FCE204C7D89A131A2AE2F01837F9A3E2DF48BD7E9A6D3FB856CDDF90FE",
+    "deliveredOn": "2026-10-18",
+    "artifact": "HPGMissionCompanion.exe",
+    "lastDeliveredVersion": "0.34",
+    "note": "Release 0.34 (local, not pushed): the radio rules of the user of 2026-10-18 (battery master or GPCP switch = powered = intercom; radio and polycon need power and the CARLS connected; nothing with the power off, no exception), the coordinate parser of World Database Update (every format, the whole pair in the first box), the voice packs EN 19 and DE 7 (15 new messages of the mission 169.63). Checks: node tools/check.js, --world-test ALL PASS, --packs-check, the scenario tests/radio-power-lines.txt (--expand). Runtime in the simulator pending."
 }

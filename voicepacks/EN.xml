@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="18" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="19" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -6525,5 +6525,125 @@
     </message>
     <message key="DSP.NAME.15" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is, group FLORIAN CT (words only, {DSP}; {0} the city of the base)">
       <o>Florian center</o>
+    </message>
+    <message key="CRT.POL.OUT" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the police car takes the crew from the landing spot to the patient">
+      <o>Doc here. The police car takes us to the patient. We are on the move.</o>
+      <o>Police are driving us to the patient now. Stand by, we report when we are there.</o>
+      <o>We are in the police car, heading to the patient. Keep the helicopter safe.</o>
+      <o>The police car is taking the crew to the patient. Stand by for our report.</o>
+      <o>Crew in the police car, on our way to the patient. We will call you.</o>
+      <o>On the way to the patient with the police. Stand by.</o>
+    </message>
+    <message key="CRT.POL.BCK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the police car takes the crew back to the helicopter (visit done, or the closest police car carries the crew)">
+      <o>Visit done. The police car takes us back to the helicopter.</o>
+      <o>We are finished here. The police are driving us back to the landing spot.</o>
+      <o>Crew back in the police car, returning to the helicopter now.</o>
+      <o>Done with the patient. Police are bringing us back, be ready for us.</o>
+      <o>We are on our way back to the helicopter with the police. Stand by.</o>
+      <o>Heading back to the landing spot in the police car. See you in a few minutes.</o>
+    </message>
+    <message key="CRT.AMB.BCK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the crew and the patient come back to the helicopter in the ambulance">
+      <o>Patient loaded. The ambulance brings us and the patient back to the helicopter.</o>
+      <o>We ride in the ambulance with the patient, coming back to the landing spot.</o>
+      <o>Ambulance is taking the crew and the patient to the helicopter. Keep the area clear.</o>
+      <o>The patient is in the ambulance with us. We are returning to the helicopter.</o>
+      <o>Back to the helicopter in the ambulance, patient and crew. Stand by.</o>
+      <o>We are coming back with the ambulance, patient aboard. Prepare for loading.</o>
+    </message>
+    <message key="CRT.POL.OPR" actor="4" radio="auto" group="crt" seq="2" new="1" trigger="the doctor goes with the ambulance and the rear crew comes back to the helicopter with the police">
+      <o>Doc goes with the ambulance. I come back to the helicopter with the police.</o>
+      <o>The doctor stays with the patient in the ambulance. The police bring me back to you.</o>
+      <o>Rear crew here. Doc travels by ambulance, I return in the police car.</o>
+      <o>Doc rides with the patient. I am coming back with the police.</o>
+      <o>I come back with the police. The doctor goes in the ambulance with the patient.</o>
+      <o>Rear crew returning by police car, the doctor follows the patient in the ambulance.</o>
+    </message>
+    <message key="CRT.WALK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the closest police car is more than 600 m from the scene: the crew walks">
+      <o>No police car close enough. We walk back to the helicopter.</o>
+      <o>The nearest police car is too far. We go back on foot.</o>
+      <o>Police are too far away, so we walk to the landing spot.</o>
+      <o>No car nearby, the crew walks back to the helicopter.</o>
+      <o>The closest police car is more than six hundred meters away. We walk.</o>
+      <o>Too far for the police car. We come back on foot.</o>
+    </message>
+    <message key="MID.SET" actor="2" radio="auto" group="mid" seq="1" new="1" trigger="the user accepts the meeting point of a midway meeting with the ambulance">
+      <o>Meeting point set. The ambulance brings the patient there, and we land next to it.</o>
+      <o>Copy, meeting point confirmed. We fly there and take over the patient from the ambulance.</o>
+      <o>Midway meeting agreed. We land close to the ambulance and load the patient.</o>
+      <o>Meeting point is set on the tablet. The ambulance is on its way, we meet it there.</o>
+      <o>Route set to the meeting point. We pick the patient up from the ambulance.</o>
+      <o>Okay, we meet the ambulance at the agreed point and take the patient from there.</o>
+    </message>
+    <message key="MID.HND" actor="3" radio="auto" group="mid" seq="2" new="1" trigger="midway meeting: the doctor takes the patient over from the ambulance crew">
+      <o>Doc here. I take the handover from the ambulance crew. Monitoring is running, ready for the transfer.</o>
+      <o>Handover from the ambulance crew done. We load the patient now.</o>
+      <o>I am with the ambulance crew, taking the patient over. Loading starts.</o>
+      <o>Handover under way. The ambulance crew gives me the monitoring and the drips.</o>
+      <o>Patient handed over by the ambulance crew. We prepare for loading.</o>
+      <o>Ambulance crew briefed me. We move the patient to the helicopter.</o>
+    </message>
+    <message key="TRF.HND" actor="3" radio="auto" group="trfhnd" seq="1" new="1" trigger="patient transfer: the doctor goes in to take the patient over at the hospital">
+      <o>Doc here. I go in with the hospital staff for the handover, back with the patient soon.</o>
+      <o>We take over the patient inside. Handover and paperwork first, then we load.</o>
+      <o>I am going in to take the patient from the hospital team. Stand by.</o>
+      <o>Crew entering the hospital for the handover. We come back with the patient.</o>
+      <o>Handover with the hospital staff in progress. Please wait, we bring the patient out.</o>
+      <o>We collect the patient at the ward now. Stand by for loading.</o>
+    </message>
+    <message key="ORG.PCK" actor="4" radio="auto" group="orgpck" seq="1" new="1" trigger="organ transport: the rear crew collects the organ container at the pickup point">
+      <o>Rear crew here. We collect the organ container and check seal and documents.</o>
+      <o>Picking up the organ container now. Seal and paperwork checked first.</o>
+      <o>The container is being handed over. We check the label, temperature and seal.</o>
+      <o>Organ container in hand. Checking the documents before we leave.</o>
+      <o>Collecting the organ box. Seal, temperature and paperwork under check.</o>
+      <o>We take the organ box on board after checking the seal and the papers.</o>
+    </message>
+    <message key="APR.MID.PLT" actor="1" radio="auto" group="aprmid" seq="1" new="1" trigger="two nautical miles from the meeting point of a midway meeting">
+      <o>Two miles to the meeting point. We land next to the ambulance and take over the patient.</o>
+      <o>Approaching the meeting point, two miles out. Ambulance first, then we load.</o>
+      <o>Meeting point in two miles. We land close to the ambulance and take the patient from there.</o>
+      <o>Two miles to the meeting point. Keep an eye out for the ambulance and the landing area.</o>
+      <o>We are two miles from the meeting point. Land by the ambulance, then straight to the hospital.</o>
+      <o>Meeting point at two miles. Eyes open for the ambulance.</o>
+    </message>
+    <message key="APR.MID.DOC" actor="3" radio="auto" group="aprmid" seq="2" new="1">
+      <o>Doc ready. I take the handover from the ambulance crew and check the patient before loading.</o>
+      <o>Doc copy. Handover with the ambulance crew first, monitors and drips checked before the transfer.</o>
+      <o>I take the patient over from the ambulance crew, and I check the monitoring before we load.</o>
+      <o>Doc here. At the ambulance I take the handover, then we move the patient to the helicopter.</o>
+      <o>Doc ready. Handover from the ambulance crew, then I check the patient before loading.</o>
+      <o>Doc copy. I check the handover and the monitoring, then we load.</o>
+    </message>
+    <message key="APR.MID.CHF" actor="4" radio="auto" group="aprmid" seq="3" new="1">
+      <o>Rear crew ready. Stretcher at the door for the transfer from the ambulance.</o>
+      <o>Chief here. Stretcher prepared, we receive the patient from the ambulance.</o>
+      <o>Rear crew ready for the transfer. Stretcher and straps at the door.</o>
+      <o>Stretcher is ready, I help with the move from the ambulance.</o>
+      <o>Rear crew ready. We take the patient from the ambulance onto our stretcher.</o>
+      <o>Chief here. Stretcher ready at the door for the loading.</o>
+    </message>
+    <message key="APR.MID.END" actor="1" radio="auto" group="aprmid" seq="4" new="1">
+      <o>Good. Land close to the ambulance, then straight to the hospital.</o>
+      <o>Good. We meet the ambulance, load and go.</o>
+      <o>Good. Everybody alert for the landing next to the ambulance.</o>
+      <o>Good. Land by the ambulance, load the patient and fly on.</o>
+      <o>Okay. Careful around the ambulance, then to the destination.</o>
+      <o>Good. Eyes open for the ambulance and the landing area.</o>
+    </message>
+    <message key="APR.MUL" actor="3" radio="auto" group="approach" seq="3" new="1" trigger="more than one patient expected on the accident (HELOVICTIMS 2 or more)">
+      <o>Doc: more than one patient is expected. I triage on arrival and we decide the order together.</o>
+      <o>Several patients expected, so I triage as soon as we are on scene.</o>
+      <o>We expect more than one patient. I assess them all first, then we plan the transport.</o>
+      <o>Doc here. More than one patient is reported, I will triage them on arrival.</o>
+      <o>More than one patient expected. I triage first, then we decide who goes first.</o>
+      <o>Multiple patients reported. Triage on arrival, then we plan the transport.</o>
+    </message>
+    <message key="APR.FIR" actor="2" radio="auto" group="approach" seq="2" new="1" trigger="a fire at the accident scene (random_fire yes or forced)">
+      <o>Copilot: there is a fire at the scene. We stay clear until the fire service gives the all clear.</o>
+      <o>Fire reported on scene. We keep our distance until it is safe to land.</o>
+      <o>There is a fire on the scene. I watch the smoke and the flames and we land only when it is safe.</o>
+      <o>Fire at the scene, so we hold off until it is under control.</o>
+      <o>A fire is burning at the scene. We stay away until the area is cleared.</o>
+      <o>Fire on scene. We keep clear, I watch the smoke and the wind.</o>
     </message>
 </voicepack>
