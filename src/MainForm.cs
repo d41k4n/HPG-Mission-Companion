@@ -221,6 +221,15 @@ namespace HPGMissionCompanion
         readonly ComboBox indexCombo = new ComboBox();
         readonly Button indexButton = new Button();
         readonly TextBox toolsOut = new TextBox();
+        readonly CheckBox sharedAutoCheck = new CheckBox();
+        readonly CheckBox sharedDbCheck = new CheckBox();
+        readonly Label sharedInfo = new Label();
+        readonly Button sharedSyncButton = new Button();
+        readonly Button sharedApplyButton = new Button();
+        readonly Button sharedRestoreButton = new Button();
+        bool sharedRunning;
+        bool dbSimSeen;
+        DateTime nextSharedSync = DateTime.MaxValue;     // set when the program has started: the first check, then every 30 minutes
         readonly ComboBox missionCombo = new ComboBox();
         readonly Button updateButton = new Button();
         readonly Label updateInfo = new Label();
@@ -528,15 +537,32 @@ namespace HPGMissionCompanion
             if (mixInfo.Text != mix) mixInfo.Text = mix;
             string bridge = Say.BridgeStatus();
             if (bridgeInfo.Text != bridge) bridgeInfo.Text = bridge;
-            if (exitWithSimArg && DateTime.UtcNow >= nextSimCheck)
+            if ((exitWithSimArg || Ctx.Settings.SharedDbPatch) && DateTime.UtcNow >= nextSimCheck)
             {
                 nextSimCheck = DateTime.UtcNow.AddSeconds(5);
-                if (Tools.SimulatorRunning()) { simSeen = true; simLastSeen = DateTime.UtcNow; }
-                else if (simSeen && (DateTime.UtcNow - simLastSeen).TotalSeconds > 15)
+                if (Tools.SimulatorRunning()) { simSeen = true; dbSimSeen = true; simLastSeen = DateTime.UtcNow; }
+                else if ((simSeen || dbSimSeen) && (DateTime.UtcNow - simLastSeen).TotalSeconds > 15)
                 {
-                    AppendLog("[INFO] The simulator was closed: leaving.");
-                    ExitApp(false);
+                    // the simulator is closed: now the offline databases of HPG can be changed (the option of the Tools tab)
+                    if (dbSimSeen && Ctx.Settings.SharedDbPatch)
+                    {
+                        dbSimSeen = false;
+                        SharedResult d = SharedData.ApplyDb(SharedData.FindDbFolders(), false);
+                        SharedLog(d);
+                    }
+                    dbSimSeen = false;
+                    if (exitWithSimArg && simSeen)
+                    {
+                        AppendLog("[INFO] The simulator was closed: leaving.");
+                        ExitApp(false);
+                    }
+                    simSeen = false;
                 }
+            }
+            if (started && Ctx.Settings.SharedAutoSync && DateTime.UtcNow >= nextSharedSync && !sharedRunning)
+            {
+                nextSharedSync = DateTime.UtcNow.AddMinutes(30);
+                SharedSync(true);
             }
         }
 
@@ -634,7 +660,11 @@ namespace HPGMissionCompanion
             // the service and the simulator link first: the mission does not speak while its voice server is away, so after a restart of the program every
             // second counts; the index, the update check and the tools come after
             StartServer(true);
+            // the counter of the shared waypoint table goes to the simulator like the other HMC variables: a variable must be known before the link connects
+            int storedRev = SharedData.StoredDataRev();
+            if (storedRev > 0) SimLink.Publish(SharedData.VarRev, storedRev);
             SimLink.Start(delegate { return Ctx.Settings.AutoAudioInhibit; });
+            nextSharedSync = DateTime.UtcNow.AddSeconds(10);
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
@@ -2274,13 +2304,143 @@ namespace HPGMissionCompanion
             autoIndexCheck.CheckedChanged += delegate { Ctx.Settings.AutoIndex = autoIndexCheck.Checked; MarkDirty(); };
             indexBox.Controls.Add(autoIndexCheck);
 
+            GroupBox sharedBox = new GroupBox();
+            sharedBox.Text = "Shared data: hangar and hospital waypoints, offline databases";
+            sharedBox.Location = new Point(10, 310);
+            sharedBox.Size = new Size(708, 172);
+            page.Controls.Add(sharedBox);
+            Lbl(sharedBox, "The hangar and hospital points of the mission are kept on GitHub for everybody (plus your own). The program writes them into the work folder and the mission reads them " +
+                "at the next dispatch. The airports, aprons and helipads of the HPG tablet can get the same changes (only with the simulator closed; the original files are kept).", 10, 18, 688, 44);
+            sharedSyncButton.Text = "Update now";
+            sharedSyncButton.Location = new Point(10, 66);
+            sharedSyncButton.Size = new Size(110, 28);
+            sharedSyncButton.Click += delegate { SharedSync(false); };
+            sharedBox.Controls.Add(sharedSyncButton);
+            sharedAutoCheck.Text = "Update the waypoints when the program starts and every 30 minutes";
+            sharedAutoCheck.AutoSize = true;
+            sharedAutoCheck.Checked = Ctx.Settings.SharedAutoSync;
+            sharedAutoCheck.Location = new Point(132, 72);
+            sharedAutoCheck.CheckedChanged += delegate { Ctx.Settings.SharedAutoSync = sharedAutoCheck.Checked; MarkDirty(); };
+            sharedBox.Controls.Add(sharedAutoCheck);
+            Button myPoints = Btn(sharedBox, "My points...", 10, 100, 110, 28);
+            myPoints.Click += delegate { OpenSharedFile(SharedData.LocalWaypointsPath); };
+            Button myDb = Btn(sharedBox, "My database changes...", 128, 100, 160, 28);
+            myDb.Click += delegate { OpenSharedFile(SharedData.LocalDbPath); };
+            Button share = Btn(sharedBox, "Share my points...", 296, 100, 140, 28);
+            share.Click += delegate { ShareShared(); };
+            sharedDbCheck.Text = "Apply the changes to the offline databases of HPG when the simulator is closed";
+            sharedDbCheck.AutoSize = true;
+            sharedDbCheck.Checked = Ctx.Settings.SharedDbPatch;
+            sharedDbCheck.Location = new Point(10, 136);
+            sharedDbCheck.CheckedChanged += delegate { Ctx.Settings.SharedDbPatch = sharedDbCheck.Checked; MarkDirty(); };
+            sharedBox.Controls.Add(sharedDbCheck);
+            sharedApplyButton.Text = "Apply now";
+            sharedApplyButton.Location = new Point(444, 130);
+            sharedApplyButton.Size = new Size(116, 28);
+            sharedApplyButton.Click += delegate { SharedApplyDb(true); };
+            sharedBox.Controls.Add(sharedApplyButton);
+            sharedRestoreButton.Text = "Restore the originals";
+            sharedRestoreButton.Location = new Point(566, 130);
+            sharedRestoreButton.Size = new Size(130, 28);
+            sharedRestoreButton.Click += delegate { SharedRestoreDb(); };
+            sharedBox.Controls.Add(sharedRestoreButton);
+            sharedInfo.AutoSize = false;
+            sharedInfo.Location = new Point(444, 100);
+            sharedInfo.Size = new Size(254, 28);
+            sharedInfo.ForeColor = SystemColors.GrayText;
+            sharedInfo.Text = SharedData.StatusLine();
+            sharedBox.Controls.Add(sharedInfo);
+
             toolsOut.Multiline = true;
             toolsOut.ReadOnly = true;
             toolsOut.ScrollBars = ScrollBars.Vertical;
             toolsOut.Font = new Font("Consolas", 9F);
-            toolsOut.Location = new Point(10, 312);
-            toolsOut.Size = new Size(708, 230);
+            toolsOut.Location = new Point(10, 490);
+            toolsOut.Size = new Size(708, 72);
             page.Controls.Add(toolsOut);
+        }
+
+        // ---- shared data -------------------------------------------------------------------------------
+        void SharedLog(SharedResult r)
+        {
+            foreach (string line in r.Lines) { ToolsLog(line); Ctx.Log(line); }
+        }
+
+        // downloads the published waypoints, writes the table in the work folder(s) and raises the counter the mission watches
+        void SharedSync(bool automatic)
+        {
+            if (sharedRunning) return;
+            sharedRunning = true;
+            sharedSyncButton.Enabled = false;
+            if (!automatic) ToolsLog("--- Shared data " + DateTime.Now.ToString("HH:mm:ss"));
+            List<string> works = SharedData.TargetWorkFolders(Ctx.Settings.WorkFolder);
+            bool patch = Ctx.Settings.SharedDbPatch;
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                SharedResult r = SharedData.Sync(SharedData.RepoBase, works);
+                if (r.DataRev > 0) SimLink.Publish(SharedData.VarRev, r.DataRev);
+                SharedResult d = null;
+                bool simOn = Tools.SimulatorRunning();
+                if (patch && !simOn && !r.FromCache) d = SharedData.ApplyDb(SharedData.FindDbFolders(), false);
+                Ui(delegate
+                {
+                    // an automatic check that found nothing new stays quiet (the log keeps only the warnings and what changed)
+                    if (!automatic || r.Written > 0 || !r.Ok || r.FromCache || r.Lines.Exists(delegate (string l) { return l.StartsWith("[WARN]", StringComparison.Ordinal); })) SharedLog(r);
+                    if (d != null) SharedLog(d);
+                    else if (patch && simOn && !automatic) ToolsLog("[INFO] Offline databases: the simulator is running; the changes are applied when it closes.");
+                    sharedInfo.Text = SharedData.StatusLine();
+                    sharedRunning = false;
+                    sharedSyncButton.Enabled = true;
+                });
+            });
+        }
+
+        void SharedApplyDb(bool manual)
+        {
+            if (Tools.SimulatorRunning())
+            {
+                if (manual) MessageBox.Show("Microsoft Flight Simulator is running. Close it first: the databases are read by the tablet of HPG while it runs.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            List<string> folders = SharedData.FindDbFolders();
+            if (folders.Count == 0) { ToolsLog("[INFO] Offline databases: no HPG database folder found."); return; }
+            if (manual && MessageBox.Show("Apply the shared changes (and yours) to the offline databases of HPG?\n\n" + string.Join("\n", folders.ToArray()) +
+                "\n\nThe original files are kept and \"Restore the originals\" puts them back.", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            ToolsLog("--- Offline databases " + DateTime.Now.ToString("HH:mm:ss"));
+            SharedLog(SharedData.ApplyDb(folders, false));
+            sharedInfo.Text = SharedData.DbStatusLine();
+        }
+
+        void SharedRestoreDb()
+        {
+            if (Tools.SimulatorRunning()) { MessageBox.Show("Microsoft Flight Simulator is running. Close it first.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+            ToolsLog("--- Restore the offline databases " + DateTime.Now.ToString("HH:mm:ss"));
+            SharedLog(SharedData.RestoreDb());
+            sharedInfo.Text = SharedData.DbStatusLine();
+        }
+
+        void OpenSharedFile(string path)
+        {
+            try
+            {
+                SharedData.EnsureLocalFiles();
+                Process.Start("notepad.exe", "\"" + path + "\"");
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        }
+
+        // the program cannot write to the repository: it puts the user's points on the clipboard and opens the page for a new GitHub issue, where the user pastes them
+        void ShareShared()
+        {
+            if (MessageBox.Show("Share your own points?\n\nThe contents of your two files (My points, My database changes) are copied to the clipboard and the page for a new issue of the mission repository opens in your browser. " +
+                "Paste the text there; you need a GitHub account. Nothing is sent by the program itself.", Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+            try
+            {
+                Clipboard.SetText(SharedData.ShareText());
+                Process.Start(SharedData.IssueUrl + "?title=" + Uri.EscapeDataString("Shared waypoints and database changes"));
+                ToolsLog("Your points are on the clipboard: paste them into the new issue.");
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         }
 
         // ---- updates tab -------------------------------------------------------------------------

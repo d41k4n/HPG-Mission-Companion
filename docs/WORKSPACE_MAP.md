@@ -9,6 +9,8 @@
 | `src/Install.cs` | downloads, Piper catalog, voice install and removal, `EXE.xml` start with the simulator |
 | `src/Tools.cs` | work folder finding, grouping, backup and deletion, mission index runner |
 | `src/VoicePacks.cs` | voice pack XML model and loader, install with archiving, the `say` / `text` / `plain` / `pack` / `names` / `variety` tags, the comparison of a pack with the base pack EN (`PackCheck`) |
+| `src/Sched.cs` | the speech scheduler: lanes (radio, crew, checklist, fx), priorities, replaced messages, age (`SchedCore`, `SchedRules`), and the self test `--queue-test` that replays a log of the program |
+| `src/SharedData.cs` | shared data: the hangar and hospital waypoint table written from GitHub (`L:HMC_DATA_REV`) and the changes to the offline databases of HPG (original kept, simulator closed), `--shared-test` |
 | `src/Mixer.cs` | volume: mission volumes (`L:VOLUME_CREW`, `L:VOLUME_CHK`) and the inside / outside level of the voices (`CAMERA STATE`) |
 | `src/Names.cs` | static lists of first names (male, female) for the random crew and technician names |
 | `src/SimLink.cs` | SimConnect link: keeps `L:AUDIOINHIBIT` at 1 (read every 5 s, write when different) |
@@ -20,7 +22,7 @@
 | `tools/` | `build.cmd`, `check.js`, `import-pack.js`, `pack-extras-EN.json`, `sync-pack-texts.js` (the generated block of the mission texts in `voicepacks/EN.xml`), `assert-main-branch.js`, `release-ledger.json` |
 | `voicepacks/` | the voice packs shipped with the program (`EN.xml`); the XML is the source after the import |
 | `docs/` | `DEVELOPER_GUIDE.md` (for mission authors, compiled into the program) |
-| `docs/architecture/` | `TAGS_AND_PROTOCOL.md`, `COMPANION_TOOLS.md`, `VOICEPACKS.md` |
+| `docs/architecture/` | `TAGS_AND_PROTOCOL.md`, `COMPANION_TOOLS.md`, `VOICEPACKS.md`, `SHARED_DATA.md` |
 | `docs/testing/` | `RUNTIME_VALIDATION.md` |
 | `tests/` | standalone HPG test missions |
 | `.githooks/`, `.github/` | pre-commit and pre-push guards, the build workflow |

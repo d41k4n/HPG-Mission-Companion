@@ -1,8 +1,8 @@
 {
-    "sha256":  "308F10BA7DF7FF8863B6A6E91598F0F2FA8A6CCC11B0A022A67AABEEA65E2744",
-    "installerSha256":  "F0668C03A74ECCED31877BFC6C53B0E95B1C19DA23C0A091EF9C9F5E27829267",
-    "deliveredOn":  "2026-10-17",
+    "sha256":  "61C217C3DDD916CDE1F25433890E5C0EF95B740D8FB8C2C6D8CC8AE30AAEA035",
+    "installerSha256":  "BD5634E35B7A477EF420E91EC6C7FCF950830E95F4FC07ED7DF67036386BEBB5",
+    "deliveredOn":  "2026-10-18",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.31",
-    "note":  "Release 0.31: port 5997 no longer stays busy after an update (the socket of the service is not inheritable, the setup starts the program through the shell; --port-leak-test ALL PASS). Includes everything of 0.30. Static check PASS, packs check PASS, pool self-test ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.32",
+    "note":  "Release 0.32: the speech queue with four lanes, priorities and ages (--queue-test ALL PASS), the shared hangar and hospital waypoints written from GitHub with the L:HMC_DATA_REV counter, and the shared changes to the offline databases of HPG (--shared-test end-to-end ALL PASS on test folders). Includes everything of 0.31 and the German pack 5 of Daikan. Static check PASS, packs check PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

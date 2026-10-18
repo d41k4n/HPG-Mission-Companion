@@ -131,3 +131,24 @@ Static: merged without conflicts, `tools/check.js` PASS, DE 4 has the same 1242 
 ## Port after an update (0.31, PENDING)
 
 Static: `HPGMissionCompanion.exe --port-leak-test <report>` ALL PASS (a child that outlives the service does not keep the port; the ordinary listener does, which shows the test can fail). Runtime: with the program 0.31 running and the service started, update to a newer version from the Updates tab: the new program starts with the service on, no "Port 5997 is busy" line in the log. Updating from 0.30 or older to 0.31 can still show the busy port once (the old program passes the socket to the setup); the setup ends and the program takes the port in the first 4 seconds, otherwise close and open the program once.
+
+## Speech queue: lanes, priorities, subjects (sources 2026-10-18, runtime PENDING)
+
+User request of 2026-10-18 after the log of MPR (13 lines in 8 s spoken for 75 s after the dispatch was accepted). Offline: `HPGMissionCompanion.exe --queue-test report.txt --log hmc-20261018-100154.log --pack voicepacks\EN.xml --smoke --silent` (ALL PASS: 24 decisions on made-up cases, the replay of the log with the old and the new queue, the real player with real voices and no sound). With the simulator and the mission:
+
+1. Accept a dispatch with the crew aboard: the dispatcher (radio lane) and the briefing of the crew (crew lane) overlap in time (the radio of the dispatcher is not heard in a row with the briefing), nothing speaks twice with the same voice at once, the whole burst ends in about half the time. The log has `[lane ..., priority ..., KEY, waited N s]` on every `[VOICE]` and `[DROP]` lines for the lines that were not spoken.
+2. Start the engines with a checklist read by the checklist voice while the crew talks: the checklist is never delayed by the crew or the radio and never delays them.
+3. Cabin: with the cabin ready, a "cabin preparation in progress" line that was waiting is not spoken afterwards.
+4. Hover callouts (numbers, clock positions) late by more than a few seconds are not said; a burst of the same callout keeps the last one.
+5. Overlap too loud or confusing? The setting `OverlapLanes` false in `HPGMissionCompanion.json` gives one line at a time by priority; report which pairs of lanes should not overlap.
+6. An interrupt of a checklist line (the checklist voice with Interrupt) does not cut the crew or the radio; an interrupt of any other line does not cut the checklist.
+
+## Shared data: waypoint table and offline databases (0.32, tested on test folders, runtime PENDING)
+
+User request of 2026-10-18, design in docs/architecture/SHARED_DATA.md. Offline: `--shared-test` (sync against a folder, table, counter, cache fallback, local points, patch and restore of a copy of the real databases; ALL PASS in the scratch end-to-end test). With the simulator and the mission 169.61 or newer, the program running:
+
+1. Tools tab, **Update now**: the log says the revision read and `table_R&E_shared_waypoints.json` written in `hpg-airbus-h145-ap\work` (open the file: `version`, `hangar_wps` with 14 records, `hospitals_wps` with 6, one record per line).
+2. Dispatch to a hospital that has a record in the file (Chieti, Pescara, Innsbruck, CBF Berlin, UKB Berlin, Tiefenau): the staff and the marshal use the points of the file as before (same behaviour as the built-in records). Remove the table file and the program: the same hospitals still work (built-in fallback).
+3. Add a hangar of your own in **My points...** (copy a record of the shared file, change `id` and the coordinates), **Update now**, with the simulator still running: at the next dispatch from that hangar the technician and the marshal walk your points; the L:HMC_DATA_REV counter changed (the mission reads the table again). A record with a wrong value is skipped and named in the log.
+4. Offline databases: tick the option, close the simulator, wait 15 s (or **Apply now**): the log lists the files changed. Add to `db` a hospital helipad of your own (**My database changes...**, `H_hospital`): in the HPG tablet the point shows in the hospital search. **Restore the originals** puts the files back (compare with the HPG package: the sizes return). Open question: does the tablet cache the databases (does it need a restart of the simulator or of the aircraft)?
+5. After an HPG update of the H145 package: the log says the file is taken as the new original and the changes apply again.

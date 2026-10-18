@@ -1,0 +1,43 @@
+# Shared data: hangar and hospital waypoints, offline databases of HPG
+
+User request of 2026-10-18. The custom **hangar waypoints** (the path from the hangar door to the helicopter) and **hospital waypoints** (the path from the pad to the hospital door and the waiting point of the medical staff) of the R&E mission used to be requested on Discord and added to the mission by hand. They, and the changes that users want in the **offline databases** of the H145 (`html_ui\HPGH145-System\db\*.json`: airports, aprons, hospital helipads, helipads), now live in `shared-data/` of the mission repository (`davierosoft/HEMS-random-everywhere-mission`). The program does what the mission cannot: it downloads, checks, merges and writes the files (the `fetch` command of the mission returns only the status code, never the body: tested in the simulator 2026-10-18, `standalone-tests/shared-waypoints-test.json`).
+
+Code: `src/SharedData.cs` (`SharedData`, `Js`), the box **Shared data** of the Tools tab in `src/MainForm.cs`, `--shared-test` in `src/Program.cs`. Mission side: macro `shared wps load` and the three macros that read the table (`user hospital WP`, `user hospital WP for transfer`, `user hangar WP`), see the mission repository `docs/architecture/SHARED_DATA.md`.
+
+## What is on GitHub (`shared-data/`)
+
+| File | Content |
+| --- | --- |
+| `manifest.json` | `{"schema":1,"revision":N,"files":{"<path>":{"sha256":"...","bytes":n}}}`; the revision goes up by one each time a file changes (`node tools/shared-data.js build`) |
+| `waypoints.json` | `{"hangar_wps":[...],"hospitals_wps":[...]}`: the records exactly as the mission reads them (`id`, `WPspawnlat/lon` or `WPdoorlat/lon`, `max_rng_m`, `WPtot`, `WP1..3lat/lon`, `marshal_present`, `WPMarshalLAT/LON`, `technician_boarding/deboarding`), plus an optional `by` |
+| `db/<type>.json` | `{"add":[[lat,lon,...]],"remove":[{"lat":..,"lon":..,"radius_m":30,"name":".."}]}` for `airport`, `apron`, `H_hospital`, `H_civil` (the program also understands `airport-nocode`, `airport-mil`, `runway`) |
+
+Record of an offline database (arrays, as HPG writes them): `airport*` `[lat, lon, name, icao, iata]`, `H_hospital` `[lat, lon, pad_name, name]`, `apron`, `H_civil`, `runway` `[lat, lon, name]`. The repository validates every file (`tools/test-shared-data.js`: ranges, WPtot against the points, unique ids, hashes of the manifest) and that every built-in record of the mission is also in `waypoints.json`.
+
+## Waypoint table
+
+1. The program reads `manifest.json`, then each listed file; every file is checked against its **sha256** (text normalised: BOM removed, CRLF to LF). A file that does not match (cut, damaged) stops the whole read: the copy kept from the last good read (`shared-data\cache\` next to the program) is used and the log says so. Without any copy nothing is written.
+2. The points of the user, `shared-data\local-waypoints.json` (same shape as `waypoints.json`, button **My points...**), are put first; a published record with the same `id` is dropped (the user's one wins). A record that does not pass the checks (`SharedData.CheckWaypoint`: same rules as the repository tool) is skipped and the log names it.
+3. The result is written as `table_R&E_shared_waypoints.json` (a flat JSON object `{"version":<manifest revision>,"hangar_wps":[...],"hospitals_wps":[...]}`, one record a line, numbers digit for digit, `null` stays `null`) into the work folder of the H145 add-on (`hpg-airbus-h145-ap\work`, or the folder chosen in the Tools tab). The file is rewritten only when its text changed.
+4. When a table file changed, the counter **`L:HMC_DATA_REV`** goes up by one (kept in `shared-data\state.json`, published to the simulator by `SimLink` like the other HMC variables, before the link opens; written again at every ping). The mission compares it with the value it loaded and reads the table again at the next dispatch; without the program the table is read once. The counter is a number, never reset: it only has to differ.
+
+The check runs 10 s after the start of the program (option **Update the waypoints when the program starts and every 30 minutes**, in the profiles) and on **Update now**.
+
+## Offline databases of HPG
+
+Only the changes are on GitHub (`db/<type>.json`) and in `shared-data\local-db.json` (button **My database changes...**, one entry per type). Applied by `SharedData.ApplyDb`:
+
+- **Only with the simulator closed** (`Tools.SimulatorRunning`), and only when the option **Apply the changes to the offline databases of HPG when the simulator is closed** is on (default off; it is not part of a settings profile, it edits files outside the program). It runs at the start of the program when the simulator is not running, after **Apply now**, and when the program sees the simulator close (15 s after).
+- Files are found in `<Community>\hpg-*\html_ui\*\db\`. They are encrypted by the Store (EFS): they are read and written as streams (`FileMode.Create`), never copied with `File.Copy`.
+- The **original** of each file is kept first (`shared-data\db-backup\<folder hash>\<type>.json`, sha256 in `db-state.json`) and the patched file is always rebuilt from the original: remove (every record within `radius_m` of the point, default 30 m, and with the name when one is given), then add (not when a record with the same names is within 30 m). The new text is parsed back and its record count checked before the file is touched; a write error puts the original bytes back. Same layout as HPG writes (two spaces, one value a line).
+- A file that is neither the original nor our result (HPG updated its package) becomes the **new original**; the changes apply to it again. The state is per file; `up to date` when the file is ours and the changes did not change (signature).
+- **Restore the originals** puts every original back (a file that is no longer ours is left alone). With no change left (emptied files on GitHub and no local entry) the original comes back by itself.
+- The `generatedIndex.json` files of that folder are empty lists (`[]`): there is no index to update for these databases. Whether the tablet of HPG caches them is not known (runtime test pending).
+
+## Share your points
+
+The program cannot write to the repository (no token in a public program). **Share my points...** copies the two local files to the clipboard (a text with the JSON) and opens the page for a new GitHub issue of the mission repository; the user pastes and sends it; the maintainer checks it with `tools/shared-data.js check` and commits it. Nothing is sent by the program.
+
+## Command line (checks, test folders only)
+
+`--shared-test <report> --state <folder> [--source <folder|url> --work <folder>] [--db <folder> --apply-db [--dry-run]] [--restore-db]`: the sync against a folder (or the URL), the table in a test work folder, the databases of a test folder; it never touches the real data folder. Scratch end-to-end test (`scratchpad/shared-e2e.js` of the release session): first sync, second sync without a change (counter stays), a local hangar that wins over a published one, an invalid local record skipped, a damaged download (the cache is used, the counter stays), a source gone with no cache (fails and says so), a dry run that changes nothing, patch of a copy of the real databases (records removed within 20 m computed independently, one added, a duplicate skipped, all other records identical in order), a second apply (`up to date`), an updated file taken as the new original, restore byte for byte.

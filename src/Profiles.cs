@@ -43,6 +43,7 @@ namespace HPGMissionCompanion
         public bool AutoUpdateCheck = true;
         public bool UpdatePack = true;
         public string UpdateWhat = "both";
+        public bool SharedAutoSync = true;               // the waypoint table of the mission; the change of the offline databases (SharedDbPatch) is never in a profile: it edits files outside the program
         public bool ShowAdvanced = false;
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();   // only the languages that the profile sets
     }
@@ -199,6 +200,7 @@ namespace HPGMissionCompanion
             p.StartWithSim = s.StartWithSim; p.ExitWithSim = s.ExitWithSim; p.StartMinimized = s.StartMinimized; p.ReadyAnnounce = s.ReadyAnnounce;
             p.AutoAudioInhibit = s.AutoAudioInhibit; p.AutoIndex = s.AutoIndex; p.AutoUpdateCheck = s.AutoUpdateCheck; p.UpdatePack = s.UpdatePack; p.UpdateWhat = s.UpdateWhat;
             p.ShowAdvanced = s.ShowAdvanced;
+            p.SharedAutoSync = s.SharedAutoSync;
             p.Languages = new Dictionary<string, LangSetting>();
             foreach (KeyValuePair<string, LangSetting> kv in s.Languages)
             {
@@ -230,6 +232,7 @@ namespace HPGMissionCompanion
             s.StartWithSim = p.StartWithSim; s.ExitWithSim = p.ExitWithSim; s.StartMinimized = p.StartMinimized; s.ReadyAnnounce = p.ReadyAnnounce;
             s.AutoAudioInhibit = p.AutoAudioInhibit; s.AutoIndex = p.AutoIndex; s.AutoUpdateCheck = p.AutoUpdateCheck; s.UpdatePack = p.UpdatePack; s.UpdateWhat = p.UpdateWhat;
             s.ShowAdvanced = p.ShowAdvanced;
+            s.SharedAutoSync = p.SharedAutoSync;
             foreach (KeyValuePair<string, LangSetting> kv in p.Languages)
             {
                 LangSetting ls = new LangSetting();

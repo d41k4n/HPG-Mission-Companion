@@ -8,10 +8,10 @@ JSON text frames. Field names are case-insensitive, `"interrupt":1` and `true` a
 
 | Message | Effect |
 | --- | --- |
-| `{"Text":"...","Interrupt":false}` | speak the text (queued after what is playing) |
-| `{"Text":"...","Interrupt":true}` | cancel what is playing and queued, then speak |
+| `{"Text":"...","Interrupt":false}` | speak the text (queued in its lane, see VOICEPACKS.md "Queue") |
+| `{"Text":"...","Interrupt":true}` | cancel what is playing and queued in the lane of the text, then speak: a checklist line (actor 11) cancels the checklist lane only, any other line every lane but the checklist |
 | `{"FileName":"x.wav"}` | play `audio\x.wav` from the audio folder (volume and radio do not apply) |
-| `{"Interrupt":true}` with no text | cancel everything |
+| `{"Interrupt":true}` with no text | cancel everything, every lane |
 
 Ping and close frames are answered. A text that has only whitespace and an interrupt acts like the last row.
 

@@ -16,6 +16,8 @@
 //   --oneclick <report> [--profile <file>] [--no-download]   apply a settings profile (default: the recommended one), download the Piper engine and voices it needs, keep the old settings in backups\settings; the report grows line by line
 //   --install-pack <xml>     install a voice pack (an older version of the same pack is archived in voicepacks\obsolete)
 //   --packs-check <report>   list the voice packs of the voicepacks folder, their problems and what they lack against the base pack EN
+//   --queue-test <report> [--log <hmc log>] [--pack <EN.xml>]   the decisions of the speech scheduler (lanes, priorities) on made-up cases; with a log, its lines replayed with the old and the new queue
+//   --shared-test <report> --source <folder|url> --state <folder> [--work <folder>] [--db <folder>] [--apply-db] [--restore-db] [--dry-run]   the shared data: the waypoint table and the changes to the offline databases (test folders only)
 //   --pack-template <xml> --lang IT [--name IT] [--report <file>]   write the base pack as the start of a translation
 //   --pack-add-missing <pack> [--report <file>]   add the English texts of the keys that a pack lacks to its file (the old file goes to voicepacks\obsolete)
 //   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
@@ -34,8 +36,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.31.0.0")]
-[assembly: AssemblyFileVersion("0.31.0.0")]
+[assembly: AssemblyVersion("0.32.0.0")]
+[assembly: AssemblyFileVersion("0.32.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -400,6 +402,56 @@ namespace HPGMissionCompanion
             // --pool-test <report>: the random voices window driven on a made-up list (sort, used for, copy and paste through the clipboard)
             string poolTestReport = Option(args, "--pool-test");
             if (poolTestReport != null) return PoolSelfTest.Run(poolTestReport);
+            // --queue-test <report> [--log <hmc log>] [--pack <EN.xml>]: the decisions of the speech scheduler on made-up cases and, with a log of the program, the replay of its lines with the old and the new queue
+            string queueReport = Option(args, "--queue-test");
+            if (queueReport != null)
+            {
+                VoicePacks.Refresh();
+                return QueueSelfTest.Run(queueReport, Option(args, "--log"), Option(args, "--pack"), Has(args, "--smoke"));
+            }
+            // --shared-test <report> --source <folder|url> --state <folder> [--work <folder>] [--db <folder>] [--apply-db] [--restore-db] [--dry-run]: the shared data (waypoint table, offline database changes)
+            string sharedReport = Option(args, "--shared-test");
+            if (sharedReport != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                int rc = 0;
+                try
+                {
+                    string state = Option(args, "--state");
+                    if (state == null) throw new InvalidOperationException("--state <folder> is needed (the test never uses the real data folder)");
+                    SharedData.StateOverride = state;
+                    SharedResult r;
+                    string work = Option(args, "--work");
+                    string source = Option(args, "--source");
+                    if (source != null)
+                    {
+                        List<string> works = new List<string>();
+                        if (work != null) works.Add(work);
+                        r = SharedData.Sync(source, works);
+                        foreach (string s in r.Lines) rep.AppendLine(s);
+                        rep.AppendLine("sync ok=" + r.Ok + " revision=" + r.Revision + " datarev=" + r.DataRev + " hangars=" + r.Hangars + " hospitals=" + r.Hospitals + " local=" + r.LocalHangars + "/" + r.LocalHospitals + " written=" + r.Written + " cache=" + r.FromCache);
+                        if (!r.Ok) rc = 1;
+                    }
+                    string db = Option(args, "--db");
+                    if (Has(args, "--apply-db") && db != null)
+                    {
+                        r = SharedData.ApplyDb(new string[] { db }, Has(args, "--dry-run"));
+                        foreach (string s in r.Lines) rep.AppendLine(s);
+                        rep.AppendLine("apply-db ok=" + r.Ok);
+                        if (!r.Ok) rc = 1;
+                    }
+                    if (Has(args, "--restore-db"))
+                    {
+                        r = SharedData.RestoreDb();
+                        foreach (string s in r.Lines) rep.AppendLine(s);
+                        rep.AppendLine("restore-db ok=" + r.Ok);
+                        if (!r.Ok) rc = 1;
+                    }
+                }
+                catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
+                File.WriteAllText(sharedReport, rep.ToString());
+                return rc;
+            }
             // --port-leak-test <report>: a program started while the service runs must not keep the port after the service stopped
             string leakReport = Option(args, "--port-leak-test");
             if (leakReport != null) return Server.LeakTest(leakReport);

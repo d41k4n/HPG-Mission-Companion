@@ -664,17 +664,21 @@ namespace HPGMissionCompanion
         }
     }
 
-    // Speech and wav playback, one item at a time, in order. Interrupt cancels the current item and the queue.
+    // Speech and wav playback. Four lanes (radio, crew, checklist, fx) speak together, each one a line at a time; what waits is ordered by priority, and a line that
+    // waited too long or was replaced by a later message of its subject is dropped (Sched.cs decides, docs/architecture/VOICEPACKS.md "Queue"). Interrupt cancels the
+    // lane of the line (a checklist line: the checklist lane; any other line: every lane but the checklist) and the line that speaks there; CancelAll cancels everything.
     internal sealed class Player
     {
-        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public int Generation; public bool Test; public DateTime Born = DateTime.UtcNow; public int MaxAge; public int Vol = 100; }
+        sealed class Item { public bool IsFile; public string Value; public List<Segment> Segs; public bool Test; public int Vol = 100; public SchedItem S; }
 
-        readonly BlockingCollection<Item> queue = new BlockingCollection<Item>();
-        readonly object sync = new object();
-        int generation;
-        Playing current;
+        readonly SchedCore core = new SchedCore();
+        readonly int[] generation = new int[Lanes.Count];
+        readonly Playing[] current = new Playing[Lanes.Count];
+        readonly Stopwatch clock = Stopwatch.StartNew();
 
-        // what plays now, to be stopped by an interrupt: the system player (default device only) or a playback on a chosen device
+        double Now { get { return clock.Elapsed.TotalSeconds; } }
+
+        // what plays now in a lane, to be stopped by an interrupt: the system player (default device only) or a playback on a chosen device
         sealed class Playing
         {
             public SoundPlayer Sp; public WaveOutPlayback Wo;
@@ -689,48 +693,66 @@ namespace HPGMissionCompanion
 
         public Player()
         {
-            Thread worker = new Thread(Run);
-            worker.IsBackground = true;
-            worker.Start();
+            for (int l = 0; l < Lanes.Count; l++)
+            {
+                int lane = l;
+                Thread worker = new Thread(delegate () { Run(lane); });
+                worker.IsBackground = true;
+                worker.Name = "player-" + Lanes.Names[l];
+                worker.Start();
+            }
         }
 
-        public void EnqueueText(string text, bool interrupt) { EnqueueText(text, interrupt, 0); }
+        public void EnqueueText(string text, bool interrupt) { EnqueueText(text, interrupt, 0, null, false); }
 
         // a test of the program itself (the Test buttons, Try a text): it does not depend on the simulator, so the volume of the mission and the
         // inside / outside level are not applied (as if L:VOLUME_CREW were 100): the program can be set up before the simulator and the mission run
-        public void EnqueueTest(string text) { EnqueueText(text, true, 0, true); }
+        public void EnqueueTest(string text) { EnqueueText(text, true, 0, null, true); }
 
         // maxAgeSeconds > 0: the item is dropped when its turn comes later than that (lines from the simulator variables must not arrive late)
-        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds) { EnqueueText(text, interrupt, maxAgeSeconds, false); }
+        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds) { EnqueueText(text, interrupt, maxAgeSeconds, null, false); }
 
-        void EnqueueText(string text, bool interrupt, int maxAgeSeconds, bool test)
+        // hint: the pack message the text was made from (the bridge), for its priority and subject
+        public void EnqueueText(string text, bool interrupt, int maxAgeSeconds, PackMessage hint) { EnqueueText(text, interrupt, maxAgeSeconds, hint, false); }
+
+        void EnqueueText(string text, bool interrupt, int maxAgeSeconds, PackMessage hint, bool test)
         {
-            if (interrupt) CancelAll();
             List<string> notes = new List<string>();
             string wavFile;
             text = Say.Process(text, notes, out wavFile);       // <say:KEY>, <pack:..>, <names:..>, <variety:..>, <plain>
+            string key; PackMessage msg;
+            Say.TakeLast(out key, out msg);
+            if (hint != null) { msg = hint; key = hint.Key; }
             List<Segment> segs = TagParser.Parse(text, notes);
             foreach (string n in notes) Ctx.Log("[WARN] " + n);
             if (!test) Say.ApplyDelivery(segs);              // the dispatcher: external radio call, or nothing with the radio off
+            int lane = segs.Count > 0 ? SchedRules.LaneOf(segs[0]) : Lanes.Crew;
+            if (interrupt) Interrupt(lane);
+            SchedMeta meta = test ? new SchedMeta() : SchedRules.Classify(key, msg);
             if (wavFile != null)
             {
                 int wavVol;
                 wavFile = Say.SplitWav(wavFile, out wavVol);
                 string path = Path.GetFullPath(Path.Combine(Ctx.AudioDir, wavFile.Replace("\\", "").Replace("..", "")));
-                if (AppSounds.Provide(path)) { Ctx.Log("[PLAY] " + wavFile + (wavVol < 100 ? " (level " + wavVol + ")" : "")); EnqueueFile(path, false, wavVol); }
+                if (AppSounds.Provide(path))
+                {
+                    Ctx.Log("[PLAY] " + wavFile + (wavVol < 100 ? " (level " + wavVol + ")" : ""));
+                    Item f = new Item(); f.IsFile = true; f.Value = path; f.Vol = wavVol;
+                    Submit(f, Lanes.Fx, 0, meta, key, 0);
+                }
                 else Ctx.Log("[WARN] sound file " + wavFile + " is not in the audio folder");
             }
             if (segs.Count == 0) return;
             Item item = new Item();
             item.Segs = segs;
             item.Test = test;
-            item.MaxAge = maxAgeSeconds;
-            item.Generation = Thread.VolatileRead(ref generation);
-            queue.Add(item);
+            Submit(item, lane, segs[0].Actor, meta, key, maxAgeSeconds);
         }
 
         // a sound file of the audio folder by name (sound-only messages of a pack)
-        public void PlayAudioFile(string spec, int maxAgeSeconds)
+        public void PlayAudioFile(string spec, int maxAgeSeconds) { PlayAudioFile(spec, maxAgeSeconds, null); }
+
+        public void PlayAudioFile(string spec, int maxAgeSeconds, PackMessage hint)
         {
             int vol;
             string name = Say.SplitWav(spec, out vol);
@@ -741,9 +763,7 @@ namespace HPGMissionCompanion
             item.IsFile = true;
             item.Value = path;
             item.Vol = vol;
-            item.MaxAge = maxAgeSeconds;
-            item.Generation = Thread.VolatileRead(ref generation);
-            queue.Add(item);
+            Submit(item, Lanes.Fx, 0, SchedRules.Classify(hint != null ? hint.Key : "", hint), hint != null ? hint.Key : "", maxAgeSeconds);
         }
 
         public void EnqueueFile(string path, bool interrupt) { EnqueueFile(path, interrupt, 100); }
@@ -758,54 +778,130 @@ namespace HPGMissionCompanion
             item.IsFile = true;
             item.Value = path;
             item.Test = true;
-            item.Generation = Thread.VolatileRead(ref generation);
-            queue.Add(item);
+            Submit(item, Lanes.Fx, 0, new SchedMeta(), "", 0);
         }
 
         public void EnqueueFile(string path, bool interrupt, int vol)
         {
-            if (interrupt) CancelAll();
+            if (interrupt) Interrupt(Lanes.Fx);
             Item item = new Item();
             item.IsFile = true;
             item.Value = path;
             item.Vol = vol;
-            item.Generation = Thread.VolatileRead(ref generation);
-            queue.Add(item);
+            SchedMeta meta = new SchedMeta(); meta.Prio = 3;
+            Submit(item, Lanes.Fx, 0, meta, "", 0);
+        }
+
+        // puts a line in its lane: the lines it replaces or pushes out are dropped, and a time critical line cuts the small talk that is speaking in its lane
+        void Submit(Item item, int lane, int actor, SchedMeta meta, string key, int callerMaxAge)
+        {
+            SchedItem s = new SchedItem();
+            s.Lane = lane; s.Actor = actor; s.Key = key ?? ""; s.Prio = meta.Prio; s.Topic = meta.Topic; s.Rank = meta.Rank;
+            s.MaxAge = meta.Age > 0 ? (callerMaxAge > 0 ? Math.Min(meta.Age, callerMaxAge) : meta.Age) : callerMaxAge;
+            if (item.Test) { s.Prio = 3; s.MaxAge = 0; s.Topic = ""; }
+            s.Tag = item; item.S = s;
+            List<SchedDrop> dropped = new List<SchedDrop>();
+            lock (core.Lock)
+            {
+                core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapLanes;
+                s.Born = Now;
+                SchedItem cut = core.Add(s, dropped);
+                if (cut != null) StopLane(cut.Lane);
+                Monitor.PulseAll(core.Lock);
+            }
+            LogDrops(dropped);
+        }
+
+        // the caller holds core.Lock
+        void StopLane(int lane)
+        {
+            generation[lane]++;
+            if (current[lane] != null)
+            {
+                try { current[lane].Stop(); } catch (Exception) { }
+            }
+        }
+
+        // an interrupt of a line of this lane: the checklist lane only for a checklist line, every other lane for any other line
+        void Interrupt(int lane)
+        {
+            List<SchedDrop> dropped = new List<SchedDrop>();
+            lock (core.Lock)
+            {
+                for (int l = 0; l < Lanes.Count; l++)
+                {
+                    if (lane == Lanes.Checklist ? l != Lanes.Checklist : l == Lanes.Checklist) continue;
+                    core.Clear(l, dropped, "interrupted");
+                    StopLane(l);
+                }
+                Monitor.PulseAll(core.Lock);
+            }
+            LogDrops(dropped);
         }
 
         public void CancelAll()
         {
-            Interlocked.Increment(ref generation);
-            Item dropped;
-            while (queue.TryTake(out dropped)) { }
-            lock (sync)
+            List<SchedDrop> dropped = new List<SchedDrop>();
+            lock (core.Lock)
             {
-                if (current != null)
-                {
-                    try { current.Stop(); } catch (Exception) { }
-                }
+                core.Clear(-1, dropped, "cancelled");
+                for (int l = 0; l < Lanes.Count; l++) StopLane(l);
+                Monitor.PulseAll(core.Lock);
+            }
+            LogDrops(dropped);
+        }
+
+        static void LogDrops(List<SchedDrop> dropped)
+        {
+            foreach (SchedDrop d in dropped)
+            {
+                if (d.Why == "interrupted" || d.Why == "cancelled") continue;      // asked for by the mission: not worth a line of the log
+                Ctx.Log("[DROP] " + d.Item.Name + " (lane " + Lanes.Names[d.Item.Lane] + ", priority " + d.Item.Prio + "): " + d.Why);
             }
         }
 
-        void Run()
+        bool Stale(int lane, int gen) { return Thread.VolatileRead(ref generation[lane]) != gen; }
+
+        // nothing waits and nothing is speaking (the self test waits for this)
+        public bool Idle()
         {
-            foreach (Item item in queue.GetConsumingEnumerable())
+            lock (core.Lock)
             {
-                if (item.Generation != Thread.VolatileRead(ref generation)) continue;
-                if (item.MaxAge > 0 && (DateTime.UtcNow - item.Born).TotalSeconds > item.MaxAge)
+                if (core.PendingCount() > 0) return false;
+                for (int l = 0; l < Lanes.Count; l++) if (core.Playing[l] != null) return false;
+                return true;
+            }
+        }
+
+        void Run(int lane)
+        {
+            while (true)
+            {
+                SchedItem s;
+                int gen = 0;
+                List<SchedDrop> dropped = new List<SchedDrop>();
+                lock (core.Lock)
                 {
-                    Ctx.Log("[DROP] a line from the simulator waited more than " + item.MaxAge + " s and was dropped");
-                    continue;
+                    core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapLanes;
+                    s = core.Next(lane, Now, dropped);
+                    if (s != null) gen = generation[lane];
+                    else if (dropped.Count == 0) Monitor.Wait(core.Lock, 250);       // a new line, a line that finished, or the age of the waiting lines to check again
                 }
+                LogDrops(dropped);
+                if (s == null) continue;
+                Item item = (Item)s.Tag;
                 try
                 {
-                    if (item.IsFile) PlayFile(item);
-                    else
+                    if (!Stale(lane, gen))
                     {
-                        foreach (Segment seg in item.Segs)
+                        if (item.IsFile) PlayFile(item, lane, gen);
+                        else
                         {
-                            if (item.Generation != Thread.VolatileRead(ref generation)) break;
-                            Speak(item, seg);
+                            foreach (Segment seg in item.Segs)
+                            {
+                                if (Stale(lane, gen)) break;
+                                Speak(item, seg, lane, gen);
+                            }
                         }
                     }
                 }
@@ -813,10 +909,18 @@ namespace HPGMissionCompanion
                 {
                     Ctx.Log("[ERROR] " + ex.Message);
                 }
+                finally
+                {
+                    lock (core.Lock)
+                    {
+                        core.Finished(lane);
+                        Monitor.PulseAll(core.Lock);
+                    }
+                }
             }
         }
 
-        void Speak(Item item, Segment seg)
+        void Speak(Item item, Segment seg, int lane, int gen)
         {
             Plan p = Resolver.Resolve(seg, Ctx.Settings, Ctx.Voices);
             if (p.Voice == null) { Ctx.Log("[ERROR] no voice available"); return; }
@@ -824,14 +928,15 @@ namespace HPGMissionCompanion
             if (p.Far) level *= RadioRules.FarVolume;
             Cat cat = p.Radio ? Cat.Headset : Cat.External;       // intercom, radio and external radio calls are heard in the headset, a voice in the air is not
             level *= LevelFor(cat);
-            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + level.ToString("0.#", CultureInfo.InvariantCulture) + (item.Test ? " (test: the volume of the mission is not applied)" : "") + (p.Radio ? (p.Fx == "ics" ? ", intercom" : (p.Fx == "ext" ? ", external radio" : ", radio")) + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Far ? ", far (30 to 100 m)" : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + ": " + seg.Text);
+            string where = " [lane " + Lanes.Names[lane] + ", priority " + item.S.Prio + (item.S.Key.Length > 0 ? ", " + item.S.Key : "") + ", waited " + Math.Max(0, Now - item.S.Born).ToString("0.0", CultureInfo.InvariantCulture) + " s]";
+            Ctx.Log("[VOICE] actor " + p.Actor + ", " + p.Lang + ", " + p.Voice.Display + ", speed " + p.Speed.ToString("0.0#", CultureInfo.InvariantCulture) + ", vol " + level.ToString("0.#", CultureInfo.InvariantCulture) + (item.Test ? " (test: the volume of the mission is not applied)" : "") + (p.Radio ? (p.Fx == "ics" ? ", intercom" : (p.Fx == "ext" ? ", external radio" : ", radio")) + (p.Beep != null ? " (" + p.Beep + ")" : "") : "") + (p.Far ? ", far (30 to 100 m)" : "") + (p.Note.Length > 0 ? " (" + p.Note.Trim() + ")" : "") + where + ": " + seg.Text);
             DateTime t0 = DateTime.UtcNow;
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
             Ctx.Log("[RENDER] " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms, " + (wav.Length / 1024) + " KB");
-            if (item.Generation != Thread.VolatileRead(ref generation)) return;
+            if (Stale(lane, gen)) return;
             RadioSettings rs = FxSettings(p);
             byte[] fx = AudioFx.Apply(wav, level, Ctx.Settings.MasterVolume, p.Radio, rs);
-            PlayBytes(item, fx, null, cat);
+            PlayBytes(lane, gen, fx, null, cat);
         }
 
         // the radio effect of a line: the intercom has the hiss of the user and a click; a radio call the radio hiss and the beep of the user (or the one of
@@ -852,16 +957,16 @@ namespace HPGMissionCompanion
         }
 
         // a wav file of the audio folder, at the master volume (PCM 16 bit); any other format plays as it is
-        void PlayFile(Item item)
+        void PlayFile(Item item, int lane, int gen)
         {
             byte[] fx = null;
             double level = item.Vol * (item.Test ? 1.0 : Mixer.CrewFactor()) * LevelFor(Cat.Notify);
             try { fx = AudioFx.Apply(File.ReadAllBytes(item.Value), level, Ctx.Settings.MasterVolume, false, Ctx.Settings.Radio); }
             catch (Exception) { fx = null; }
-            if (fx != null) PlayBytes(item, fx, null, Cat.Notify); else PlayBytes(item, null, item.Value, Cat.Notify);
+            if (fx != null) PlayBytes(lane, gen, fx, null, Cat.Notify); else PlayBytes(lane, gen, null, item.Value, Cat.Notify);
         }
 
-        void PlayBytes(Item item, byte[] bytes, string path, Cat cat)
+        void PlayBytes(int lane, int gen, byte[] bytes, string path, Cat cat)
         {
             if (Ctx.Silent)
             {
@@ -873,23 +978,23 @@ namespace HPGMissionCompanion
             {
                 WaveOutPlayback wo = new WaveOutPlayback();
                 Playing pw = new Playing(); pw.Wo = wo;
-                lock (sync) { current = pw; }
-                if (item.Generation != Thread.VolatileRead(ref generation)) { lock (sync) { current = null; } return; }
+                lock (core.Lock) { current[lane] = pw; }
+                if (Stale(lane, gen)) { lock (core.Lock) { current[lane] = null; } return; }
                 bool played = false;
                 try { played = wo.Play(bytes, WaveOutDevices.Resolve(DeviceFor(cat))); }
                 catch (Exception ex) { Ctx.Log("[WARN] the output device failed (" + ex.Message + "): the Windows default device is used"); }
-                finally { lock (sync) { current = null; } }
+                finally { lock (core.Lock) { current[lane] = null; } }
                 if (played) return;
-                if (item.Generation != Thread.VolatileRead(ref generation)) return;
+                if (Stale(lane, gen)) return;
             }
             using (MemoryStream ms = bytes != null ? new MemoryStream(bytes) : null)
             {
                 SoundPlayer player = bytes != null ? new SoundPlayer(ms) : new SoundPlayer(path);
                 Playing ps = new Playing(); ps.Sp = player;
-                lock (sync) { current = ps; }
-                if (item.Generation != Thread.VolatileRead(ref generation)) { lock (sync) { current = null; } return; }
+                lock (core.Lock) { current[lane] = ps; }
+                if (Stale(lane, gen)) { lock (core.Lock) { current[lane] = null; } return; }
                 try { player.PlaySync(); }
-                finally { lock (sync) { current = null; } player.Dispose(); }
+                finally { lock (core.Lock) { current[lane] = null; } player.Dispose(); }
             }
         }
     }

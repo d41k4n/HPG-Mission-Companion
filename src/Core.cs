@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.31";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.32";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -184,6 +184,9 @@ namespace HPGMissionCompanion
         public bool UseMissionVolumes = true;   // follow L:VOLUME_CREW and L:VOLUME_CHK of the mission
         public int AttenCamInside = 9;          // dB less for a voice from outside heard while the view is inside the helicopter (0 = off)
         public int AttenCamOutside = 12;        // dB less for a voice from inside heard while the view is outside (0 = off)
+        public bool SharedAutoSync = true;      // the waypoint table of the mission (hangars, hospitals) is downloaded from GitHub at start and every 30 minutes (Tools tab, Shared data)
+        public bool SharedDbPatch = false;      // the shared changes are also applied to the offline databases of HPG (airports, aprons, helipads) when the simulator is closed; off until the user turns it on
+        public bool OverlapLanes = true;        // the lanes of the player (radio, crew, checklist, sounds) speak together; false: one line at a time in the whole program, by priority (the old behaviour)
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
 
         public static Settings Load(string path)

@@ -1,13 +1,13 @@
 # HPG Mission Companion
 
-Version 0.31
+Version 0.32
 
 A companion program for the HPG H145 missions in Microsoft Flight Simulator (2020 and 2024). It runs the voice service of the missions with natural voices, one voice per mission actor, and has tools for the mission work folder and the mission index.
 
 - **Voice service**: the WebSocket voice server the HPG mission system expects (`localhost:5997`), speaking with the voices installed in Windows and with [Piper](https://github.com/rhasspy/piper) voices that the app downloads on request. The text of a `speak` command carries tags that choose the actor, the voice, the speed, the volume, the language and a radio effect. See `docs/architecture/TAGS_AND_PROTOCOL.md`.
 - **Actors**: ten actors (Pilota, Copilota, Doctor, HEMS1, HEMS2, Frank, Sarah, Dispatcher, Ground unit, Patient), a voice and a speed for each, per language (English, French, Italian, German).
 - **Radio effect**: beep, hiss, band filter and squelch tail, adjustable.
-- **Tools**: two boxes, the mission work folder (open and clean, grouped, with a zip backup) and the mission index (the HPG `Update Mission Index` tool, also at start, option on by default).
+- **Tools**: three boxes, the mission work folder (open and clean, grouped, with a zip backup), the mission index (the HPG `Update Mission Index` tool, also at start, option on by default) and the shared data (the hangar and hospital waypoints of the mission downloaded from GitHub into the work folder, and, if you allow it, the shared changes to the offline airport, apron and helipad lists of the HPG tablet; see `docs/architecture/SHARED_DATA.md`).
 - **Updates**: the button Check for updates in the window footer (and at start, option on by default) opens this tab; it installs both the R&E mission file and the program, only the mission or only the program, always after a question; the button, the tab and the status line turn amber when something newer is published and say what (Update: mission / program / both; green "Up to date" otherwise), and a small message in the corner of the screen announces an update found at the start.
 - **Voice packs**: XML files with the texts of the mission messages (several options each); a mission speaks one with `<say:KEY>` and passes dynamic parts as arguments separated by `//`. Drag and drop in the Voice packs tab. Translated packs: the checklists and the dispatch descriptions of the mission have keys (`<text:KEY>English`), so a pack in another language speaks them too; the list compares every pack with the base pack EN and shows in red the packs that lack texts or do not fit; New translation writes the base pack as a file to translate. The guide for mission authors is `docs/DEVELOPER_GUIDE.md` and the About tab.
 - **Voice app mode**: with the mission in app mode (`L:AUDIOINHIBIT` 1, voice code APP) the program reads the LVAR counters of the mission through SimConnect and speaks the matching message of the pack; radio rule, sounds without voice, conversations. See `docs/architecture/VOICEPACKS.md`.

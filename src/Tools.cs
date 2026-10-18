@@ -144,7 +144,7 @@ namespace HPGMissionCompanion
         {
             Dictionary<string, CleanGroup> groups = new Dictionary<string, CleanGroup>();
             string[] order = new string[] { "safe", "config", "settings", "other" };
-            Add(groups, "safe", "Safe to delete (debug)", "The debug snapshots of the mission (table_R&E_debug_*: automatic, manual, dispatch and previous-mission) and the tables written by the test missions (table_R&E_osm_*, table_R&E_*_test*). Nothing of yours is in them.", true);
+            Add(groups, "safe", "Safe to delete (debug)", "The debug snapshots of the mission (table_R&E_debug_*: automatic, manual, dispatch and previous-mission) the tables written by the test missions (table_R&E_osm_*, table_R&E_*_test*) and the shared waypoint table (the program writes it again). Nothing of yours is in them.", true);
             Add(groups, "config", "R&E configuration files (resets saved games and profiles)", "Your saved games, custom settings profiles, enabled accidents, aircraft profile links, custom missions and the other table_R&E_* files (custom hospitals, DF stations). They are lost for good: leave the backup ticked.", false);
             Add(groups, "settings", "User settings: global.json (use it to reset to default, or if the mission does not start)", "global.json holds the global variables of ALL the HPG missions, that is your settings and their state. It sometimes gets corrupted and then the mission does not start. Deleting it resets every setting to its default and the mission writes a new one at the next start. Close the simulator first.", false);
             Add(groups, "other", "Other files (not of this mission)", "table_* files of other missions, Flight_* records, PersistedAircraftState and files that are not recognised. Normally leave them.", false);
@@ -180,6 +180,7 @@ namespace HPGMissionCompanion
             if (n == "global.json") return "settings";
             if (n.StartsWith("table_r&e_debug_")) return "safe";
             if (n.StartsWith("table_r&e_osm_") || (n.StartsWith("table_r&e_") && n.Contains("_test"))) return "safe";
+            if (n == "table_r&e_shared_waypoints.json") return "safe";      // written again by the program from GitHub and your own file (Tools tab, Shared data)
             if (n.StartsWith("table_r&e_")) return "config";      // saved games, custom settings and profiles, enabled accidents, aircraft profile links, custom missions, hospitals, DF stations
             return "other";
         }

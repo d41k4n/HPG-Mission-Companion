@@ -26,6 +26,10 @@ namespace HPGMissionCompanion
         public bool Futile;                     // small talk that nobody needs: its options 1 and 2 are silent, 3 is the default; the options of a conversation of futile messages are always coherent
         public bool ToTech;                     // to="tech": a crew line said to the technician of the scene (not to the crew): heard like the technician is (intercom next to the helicopter with the speaker aboard and the battery on, else voice), never as a radio call
         public bool Text;                       // the words of a text that the mission speaks as it is (<text:KEY>English in the mission): the pack replaces the English words, the mission decides who speaks and how
+        public int Prio = -1;                   // prio="0-3": 3 time critical, 2 operations, 1 conversation, 0 small talk; -1 = the rules of the program (Sched.cs) decide
+        public int Age = -1;                    // age="seconds": how long the line may wait for its turn before it is dropped; 0 = for ever, -1 = the rules decide
+        public string Topic = "";               // topic="name" rank="n": a later message (higher rank) of the same subject replaces the earlier ones that have not been spoken yet
+        public int Rank;
         public List<string> Options = new List<string>();
         public List<string> OptionSex = new List<string>();     // for each option: "" (any technician), "m" or "f" (only when the technician of the scene is male or female); the voice follows: actor 6 or 7
 
@@ -172,6 +176,12 @@ namespace HPGMissionCompanion
                 m.Futile = e.GetAttribute("futile") == "1";
                 m.Text = e.GetAttribute("text") == "1";
                 m.ToTech = e.GetAttribute("to").Trim().ToLowerInvariant() == "tech";
+                int qv;
+                if (e.HasAttribute("prio")) { if (int.TryParse(e.GetAttribute("prio"), NumberStyles.Integer, CultureInfo.InvariantCulture, out qv) && qv >= 0 && qv <= 3) m.Prio = qv; else p.Problems.Add("message " + m.Key + ": prio must be 0-3"); }
+                if (e.HasAttribute("age")) { if (int.TryParse(e.GetAttribute("age"), NumberStyles.Integer, CultureInfo.InvariantCulture, out qv) && qv >= 0 && qv <= 600) m.Age = qv; else p.Problems.Add("message " + m.Key + ": age must be 0-600 seconds"); }
+                m.Topic = e.GetAttribute("topic").Trim();
+                if (m.Topic.Length > 0 && !Regex.IsMatch(m.Topic, "^[A-Za-z0-9_.-]{1,24}$")) { p.Problems.Add("message " + m.Key + ": topic may only have letters, digits . _ - (up to 24)"); m.Topic = ""; }
+                if (int.TryParse(e.GetAttribute("rank"), NumberStyles.Integer, CultureInfo.InvariantCulture, out qv) && qv >= 0 && qv <= 99) m.Rank = qv;
                 foreach (XmlNode o in e.SelectNodes("o"))
                 {
                     string t = Regex.Replace(o.InnerText, "\\s+", " ").Trim();
@@ -476,12 +486,18 @@ namespace HPGMissionCompanion
             }
         }
 
+        // The message that Compose or ExpandText worked on last, on this thread: the scheduler (Player.EnqueueText) reads it right after Process to know the key of a line.
+        [ThreadStatic] static string lastKey;
+        [ThreadStatic] static PackMessage lastMsg;
+        public static void TakeLast(out string key, out PackMessage msg) { key = lastKey ?? ""; msg = lastMsg; lastKey = null; lastMsg = null; }
+
         // ---- main entry: the text of a speak message in, the text for the tag parser out ----
         public static string Process(string text, List<string> notes, out string wavFile)
         {
             wavFile = null;
             if (string.IsNullOrEmpty(text)) return text;
             if (!ControlRx.IsMatch(text)) { lock (sync) { return ApplyDefaultActor(text); } }
+            lastKey = null; lastMsg = null;
             lock (sync)
             {
                 StringBuilder outp = new StringBuilder();
@@ -888,8 +904,8 @@ namespace HPGMissionCompanion
             foreach (string n in notes) Ctx.Log("[WARN] " + n);
             if (Sink != null) { Sink((text ?? "") + (wav != null ? "  [sound file " + wav + "]" : "")); return; }
             if (Ctx.Player == null) return;
-            if (wav != null) Ctx.Player.PlayAudioFile(wav, maxAgeSeconds);
-            if (!string.IsNullOrEmpty(text)) Ctx.Player.EnqueueText(text, false, maxAgeSeconds);
+            if (wav != null) Ctx.Player.PlayAudioFile(wav, maxAgeSeconds, msg);
+            if (!string.IsNullOrEmpty(text)) Ctx.Player.EnqueueText(text, false, maxAgeSeconds, msg);
         }
 
         // ---- text: a free text of the mission that has a key ----
@@ -910,6 +926,7 @@ namespace HPGMissionCompanion
         static string ExpandText(string spec, string rest, List<string> notes)
         {
             string key = spec.Trim();
+            lastKey = key; lastMsg = null;
             string[] parts = rest.Split(new string[] { "//" }, StringSplitOptions.None);
             string english = parts[0].Trim();
             string[] values = new string[parts.Length - 1];
@@ -983,6 +1000,7 @@ namespace HPGMissionCompanion
         static string Compose(PackMessage msg, VoicePack pack, string args, string before, int forced, List<string> notes, out string wavFile)
         {
             wavFile = null;
+            lastKey = msg.Key; lastMsg = msg;
             if (msg.Options.Count == 0)
             {
                 if (msg.Wav.Length > 0) wavFile = msg.Vol < 100 ? msg.Wav + "|" + msg.Vol : msg.Wav;       // "name|vol": SplitWav
