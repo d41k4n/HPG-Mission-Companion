@@ -1,8 +1,8 @@
 {
-    "sha256":  "61C217C3DDD916CDE1F25433890E5C0EF95B740D8FB8C2C6D8CC8AE30AAEA035",
-    "installerSha256":  "BD5634E35B7A477EF420E91EC6C7FCF950830E95F4FC07ED7DF67036386BEBB5",
+    "sha256":  "15F4D9AA00A6FF762874FA6B9DADE83F69AF7F0398569CA5C647AC48D166F9DA",
+    "installerSha256":  "64D2F78787A62EBF599BA61EE9126ACF795004CD57B292D183DF52441FC4D3FC",
     "deliveredOn":  "2026-10-18",
     "artifact":  "HPGMissionCompanion.exe",
-    "lastDeliveredVersion":  "0.32",
-    "note":  "Release 0.32: the speech queue with four lanes, priorities and ages (--queue-test ALL PASS), the shared hangar and hospital waypoints written from GitHub with the L:HMC_DATA_REV counter, and the shared changes to the offline databases of HPG (--shared-test end-to-end ALL PASS on test folders). Includes everything of 0.31 and the German pack 5 of Daikan. Static check PASS, packs check PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
+    "lastDeliveredVersion":  "0.33",
+    "note":  "Release 0.33: the window World Database Update with the character check (--world-test ALL PASS, tabs looked at), the pack EN 18 with the 12 dispatch texts of the mission 169.62, the checkbox of the default voice packs. Includes everything of 0.32. Static check PASS, packs check PASS, queue test and shared data end-to-end ALL PASS. Runtime in the simulator pending. The csc of .NET Framework 4 is not deterministic, so a rebuild from the sources has a different hash."
 }

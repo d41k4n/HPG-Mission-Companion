@@ -123,6 +123,47 @@ namespace HPGMissionCompanion
 
         public static string Compact(object v) { StringBuilder sb = new StringBuilder(); Compact(sb, v); return sb.ToString(); }
 
+        // the user's own files: objects one key a line, a list of records one record a line, a list of plain values on one line
+        public static string Pretty(object v) { StringBuilder sb = new StringBuilder(); Pretty(sb, v, 0); return sb.ToString(); }
+
+        static void Pretty(StringBuilder sb, object v, int indent)
+        {
+            string pad = new string(' ', indent);
+            IDictionary<string, object> d = v as IDictionary<string, object>;
+            if (d != null)
+            {
+                if (d.Count == 0) { sb.Append("{}"); return; }
+                sb.Append("{\n");
+                int n = 0;
+                foreach (KeyValuePair<string, object> kv in d)
+                {
+                    sb.Append(pad).Append("  ").Append(Quote(kv.Key)).Append(": ");
+                    Pretty(sb, kv.Value, indent + 2);
+                    sb.Append(++n < d.Count ? ",\n" : "\n");
+                }
+                sb.Append(pad).Append('}');
+                return;
+            }
+            IList l = v as IList;
+            if (l != null && !(v is string))
+            {
+                if (l.Count == 0) { sb.Append("[]"); return; }
+                bool flat = true;
+                foreach (object x in l) if (x is IDictionary<string, object> || (x is IList && !(x is string))) flat = false;
+                if (flat) { Compact(sb, v); return; }
+                sb.Append("[\n");
+                for (int i = 0; i < l.Count; i++)
+                {
+                    sb.Append(pad).Append("  ");
+                    Compact(sb, l[i]);
+                    sb.Append(i < l.Count - 1 ? ",\n" : "\n");
+                }
+                sb.Append(pad).Append(']');
+                return;
+            }
+            Compact(sb, v);
+        }
+
         // the style of the HPG database files: two spaces, every value of a record on its own line
         public static string Records(List<IList> records)
         {

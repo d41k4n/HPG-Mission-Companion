@@ -11,6 +11,7 @@
 | `src/VoicePacks.cs` | voice pack XML model and loader, install with archiving, the `say` / `text` / `plain` / `pack` / `names` / `variety` tags, the comparison of a pack with the base pack EN (`PackCheck`) |
 | `src/Sched.cs` | the speech scheduler: lanes (radio, crew, checklist, fx), priorities, replaced messages, age (`SchedCore`, `SchedRules`), and the self test `--queue-test` that replays a log of the program |
 | `src/SharedData.cs` | shared data: the hangar and hospital waypoint table written from GitHub (`L:HMC_DATA_REV`) and the changes to the offline databases of HPG (original kept, simulator closed), `--shared-test` |
+| `src/WorldDb.cs`, `src/WorldDbForm.cs` | the window World Database Update: one tab for a hangar, a hospital, an airport, an apron, a hospital helipad, a helipad or a point to remove; the ASCII check of every text; the user's own files; `--world-test`, `--world-shot` |
 | `src/Mixer.cs` | volume: mission volumes (`L:VOLUME_CREW`, `L:VOLUME_CHK`) and the inside / outside level of the voices (`CAMERA STATE`) |
 | `src/Names.cs` | static lists of first names (male, female) for the random crew and technician names |
 | `src/SimLink.cs` | SimConnect link: keeps `L:AUDIOINHIBIT` at 1 (read every 5 s, write when different) |

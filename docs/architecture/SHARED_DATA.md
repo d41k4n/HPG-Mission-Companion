@@ -34,6 +34,12 @@ Only the changes are on GitHub (`db/<type>.json`) and in `shared-data\local-db.j
 - **Restore the originals** puts every original back (a file that is no longer ours is left alone). With no change left (emptied files on GitHub and no local entry) the original comes back by itself.
 - The `generatedIndex.json` files of that folder are empty lists (`[]`): there is no index to update for these databases. Whether the tablet of HPG caches them is not known (runtime test pending).
 
+## World Database Update window
+
+The button **World Database Update...** (Tools tab, box Shared data) opens a window with one tab for each thing to add or remove: Hangar, Hospital, Airport (primary, secondary, military), Apron, Hospital helipad, Helipad, Remove a point. Each tab has only its fields (the coordinates accept `46.9, 7.5` pasted in the latitude box; a hangar needs the door, the range and up to 3 path points in order; the marshal is optional). **Add to my list** checks the record with the rules of the repository tool and writes it to the user's own files (`local-waypoints.json`, `local-db.json`, one record a line); the list under the form shows the user's entries and **Remove selected** deletes one. After the window closes, new waypoints are written to the table at once (Update now); database changes wait for Apply now (simulator closed).
+
+**Unicode check:** before anything is saved every text (names, codes) is checked: only printable ASCII is allowed (the mission and the tablet show other characters badly). A popup names each character, its code (U+XXXX) and position, and the plain letter that can replace it (u for the u with a diaeresis, ss for the sharp s, a hyphen for a long dash...); when all of them have a plain letter the user can accept the replacement and go on, otherwise (Cyrillic, symbols, emoji) the record is not saved until the text is rewritten. Code in src/WorldDb.cs (logic) and src/WorldDbForm.cs (window); command line `--world-test` (the logic: unicode check, records, the user's files; ALL PASS) and `--world-shot` (a picture of each tab).
+
 ## Share your points
 
 The program cannot write to the repository (no token in a public program). **Share my points...** copies the two local files to the clipboard (a text with the JSON) and opens the page for a new GitHub issue of the mission repository; the user pastes and sends it; the maintainer checks it with `tools/shared-data.js check` and commits it. Nothing is sent by the program.

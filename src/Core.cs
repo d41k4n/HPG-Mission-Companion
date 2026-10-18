@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.32";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.33";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -168,7 +168,7 @@ namespace HPGMissionCompanion
         public string IndexTool = "";
         public bool AutoIndex = true;           // run the mission index update when the app starts
         public string UpdateWhat = "both";      // what the Updates tab installs: both | mission | app (the user's request of 2026-10-11)
-        public bool UpdatePack = true;          // the Updates tab also installs a newer voice pack EN (the XML only, published apart from the program) when the program itself is not updated
+        public bool UpdatePack = true;          // the Updates tab also installs newer default voice packs (today the pack EN; the XML only, published apart from the program) when the program itself is not updated
         public bool ReadyAnnounce = true;       // started minimized with the simulator running: the pilot says that the program is ready
         public bool AutoUpdateCheck = true;     // check for updates when the program starts (the user's request of 2026-10-11): only reads the published versions and tells; nothing is downloaded without the question
         public string LastUpdateCheck = "";     // UTC time of the last check (ISO), for information: the automatic check runs at every start

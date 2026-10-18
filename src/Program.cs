@@ -18,6 +18,7 @@
 //   --packs-check <report>   list the voice packs of the voicepacks folder, their problems and what they lack against the base pack EN
 //   --queue-test <report> [--log <hmc log>] [--pack <EN.xml>]   the decisions of the speech scheduler (lanes, priorities) on made-up cases; with a log, its lines replayed with the old and the new queue
 //   --shared-test <report> --source <folder|url> --state <folder> [--work <folder>] [--db <folder>] [--apply-db] [--restore-db] [--dry-run]   the shared data: the waypoint table and the changes to the offline databases (test folders only)
+//   --world-test <report> --state <folder>   the logic of the window World Database Update (unicode check, records, the user's files); --world-shot <png base> --state <folder>   a picture of each tab
 //   --pack-template <xml> --lang IT [--name IT] [--report <file>]   write the base pack as the start of a translation
 //   --pack-add-missing <pack> [--report <file>]   add the English texts of the keys that a pack lacks to its file (the old file goes to voicepacks\obsolete)
 //   --simlink-check <report> find SimConnect.dll, try one connection, write the result and exit
@@ -36,8 +37,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.32.0.0")]
-[assembly: AssemblyFileVersion("0.32.0.0")]
+[assembly: AssemblyVersion("0.33.0.0")]
+[assembly: AssemblyFileVersion("0.33.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -451,6 +452,16 @@ namespace HPGMissionCompanion
                 catch (Exception ex) { rep.AppendLine("ERROR: " + ex); rc = 1; }
                 File.WriteAllText(sharedReport, rep.ToString());
                 return rc;
+            }
+            // --world-test <report> --state <folder>: the logic of the window World Database Update (unicode check, records, the user's files); --world-shot <base png path> --state <folder>: a picture of every tab
+            string worldReport = Option(args, "--world-test");
+            string worldShot = Option(args, "--world-shot");
+            if (worldReport != null || worldShot != null)
+            {
+                SharedData.StateOverride = Option(args, "--state") ?? Path.Combine(Path.GetTempPath(), "hmc-world-test");
+                if (worldReport != null) return WorldDbSelfTest.Run(worldReport);
+                Application.EnableVisualStyles();
+                return WorldDbSelfTest.Shot(worldShot);
             }
             // --port-leak-test <report>: a program started while the service runs must not keep the port after the service stopped
             string leakReport = Option(args, "--port-leak-test");

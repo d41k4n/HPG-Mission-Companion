@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="17" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="18" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -4765,13 +4765,13 @@
       <o>A rider lost control of his quad and has been injured.</o>
     </message>
     <message key="DSC.8.2" text="1" actor="8" trigger="dispatch description of incident 8, variant 2">
-      <o>A rider lost control of his quad and has been injured.</o>
+      <o>A rider lost control of her quad and has been injured.</o>
     </message>
     <message key="DSC.8.3" text="1" actor="8" trigger="dispatch description of incident 8, variant 3">
       <o>A rider lost control of his quad and has been injured.</o>
     </message>
     <message key="DSC.8.4" text="1" actor="8" trigger="dispatch description of incident 8, variant 4">
-      <o>A rider lost control of his quad and has been injured.</o>
+      <o>A rider lost control of her quad and has been injured.</o>
     </message>
     <message key="DSC.9.1" text="1" actor="8" trigger="dispatch description of incident 9, variant 1">
       <o>RTC BUS involved</o>
@@ -4813,7 +4813,7 @@
       <o>Farmer has been injuried when his tractor tipped over.</o>
     </message>
     <message key="DSC.11.2" text="1" actor="8" trigger="dispatch description of incident 11, variant 2">
-      <o>Farmer has been injuried when his tractor tipped over.</o>
+      <o>Farmer has been injuried when her tractor tipped over.</o>
     </message>
     <message key="DSC.11.3" text="1" actor="8" trigger="dispatch description of incident 11, variant 3">
       <o>Farmer has been injuried falling from a tractor, with the tractor still moving.</o>
@@ -4834,7 +4834,7 @@
       <o>Collision between vehicle and train at railroad crossing.There are reported injured.</o>
     </message>
     <message key="DSC.13.1" text="1" actor="8" trigger="dispatch description of incident 13, variant 1">
-      <o>Worker has been injuried by a payloader in a quarry.Bucket hit him during manoeuvres.</o>
+      <o>Worker has been injuried by a payloader in a quarry. Bucket hit the worker during manoeuvres.</o>
     </message>
     <message key="DSC.13.2" text="1" actor="8" trigger="dispatch description of incident 13, variant 2">
       <o>Worker has been injuried by a payloader in a quarry.</o>
@@ -5077,7 +5077,7 @@
       <o>A person fallen from ladder in the garden. Medical assistance is required.</o>
     </message>
     <message key="DSC.33.2" text="1" actor="8" trigger="dispatch description of incident 33, variant 2">
-      <o>A person fallen from ladder while gardening. He requires urgent medical assistance.</o>
+      <o>A person fallen from ladder while gardening. Urgent medical assistance is required.</o>
     </message>
     <message key="DSC.33.3" text="1" actor="8" trigger="dispatch description of incident 33, variant 3">
       <o>A person has been injured while cooking with grill</o>
@@ -5146,7 +5146,7 @@
       <o>Climber injured after falling from mountain side. Rescue area may require specialized heli-rescuers</o>
     </message>
     <message key="DSC.38.1" text="1" actor="8" trigger="dispatch description of incident 38, variant 1">
-      <o>A person has fallen from a chair lift, he is injured.</o>
+      <o>A person has fallen from a chair lift and is injured.</o>
     </message>
     <message key="DSC.38.2" text="1" actor="8" trigger="dispatch description of incident 38, variant 2">
       <o>Reported injured after fall from chair lift.</o>
@@ -5260,10 +5260,10 @@
       <o>Ski accident. Two skiers skiing towards each other, each expecting the other to move aside. Now both are down and complaining.</o>
     </message>
     <message key="DSC.47.3" text="1" actor="8" trigger="dispatch description of incident 47, variant 3">
-      <o>Snowboarder misjudged a turn, then fell and landed on his back, initially unconscious</o>
+      <o>Snowboarder misjudged a turn, then fell and landed on the back, initially unconscious</o>
     </message>
     <message key="DSC.47.4" text="1" actor="8" trigger="dispatch description of incident 47, variant 4">
-      <o>Skier swerved to avoid another skier, tangled his own feet, and severely twisted his right knee.</o>
+      <o>Skier swerved to avoid another skier, got tangled up, and severely twisted the right knee.</o>
     </message>
     <message key="DSC.50.1" text="1" actor="8" trigger="dispatch description of incident 50, variant 1">
       <o>Ski accident</o>
@@ -5284,7 +5284,7 @@
       <o>A worker has been injured during factory equipment operation</o>
     </message>
     <message key="DSC.48.3" text="1" actor="8" trigger="dispatch description of incident 48, variant 3">
-      <o>A factory worker fallen on ground during his job</o>
+      <o>A factory worker fallen on ground during work</o>
     </message>
     <message key="DSC.48.4" text="1" actor="8" trigger="dispatch description of incident 48, variant 4">
       <o>A worker collapsed after chemical products inhalation</o>
@@ -5371,7 +5371,7 @@
       <o>Husband is breathing very deeply and quickly, looks strenuous</o>
     </message>
     <message key="DSC.56.4" text="1" actor="8" trigger="dispatch description of incident 56, variant 4">
-      <o>Husband seems to be sleeping, but breathing is strange</o>
+      <o>Wife seems to be sleeping, but breathing is strange</o>
     </message>
     <message key="DSC.57.1" text="1" actor="8" trigger="dispatch description of incident 57, variant 1">
       <o>Severe wound in a patient with hemophilia.</o>
@@ -5428,10 +5428,10 @@
       <o>Person has fallen while fishing. Situation is unclear</o>
     </message>
     <message key="DSC.64.3" text="1" actor="8" trigger="dispatch description of incident 64, variant 3">
-      <o>Fisherman getting Injured. Urgent medical assistance has been requested.</o>
+      <o>Angler getting Injured. Urgent medical assistance has been requested.</o>
     </message>
     <message key="DSC.64.4" text="1" actor="8" trigger="dispatch description of incident 64, variant 4">
-      <o>Received a call about sick fisherman. Medical assistance is required.</o>
+      <o>Received a call about sick angler. Medical assistance is required.</o>
     </message>
     <message key="DSC.99.1" text="1" actor="8" trigger="dispatch description of incident 99, variant 1">
       <o>Secondary mission: Patient transfer has been requested.</o>

@@ -2322,11 +2322,9 @@ namespace HPGMissionCompanion
             sharedAutoCheck.Location = new Point(132, 72);
             sharedAutoCheck.CheckedChanged += delegate { Ctx.Settings.SharedAutoSync = sharedAutoCheck.Checked; MarkDirty(); };
             sharedBox.Controls.Add(sharedAutoCheck);
-            Button myPoints = Btn(sharedBox, "My points...", 10, 100, 110, 28);
-            myPoints.Click += delegate { OpenSharedFile(SharedData.LocalWaypointsPath); };
-            Button myDb = Btn(sharedBox, "My database changes...", 128, 100, 160, 28);
-            myDb.Click += delegate { OpenSharedFile(SharedData.LocalDbPath); };
-            Button share = Btn(sharedBox, "Share my points...", 296, 100, 140, 28);
+            Button world = Btn(sharedBox, "World Database Update...", 10, 100, 200, 28);
+            world.Click += delegate { OpenWorldDb(); };
+            Button share = Btn(sharedBox, "Share my points...", 218, 100, 150, 28);
             share.Click += delegate { ShareShared(); };
             sharedDbCheck.Text = "Apply the changes to the offline databases of HPG when the simulator is closed";
             sharedDbCheck.AutoSize = true;
@@ -2419,14 +2417,19 @@ namespace HPGMissionCompanion
             sharedInfo.Text = SharedData.DbStatusLine();
         }
 
-        void OpenSharedFile(string path)
+        // the window to enter hangars, hospitals and database changes; what was saved is used at once (the waypoint table is written again, the databases wait for Apply now)
+        void OpenWorldDb()
         {
-            try
+            using (WorldDbForm f = new WorldDbForm())
             {
-                SharedData.EnsureLocalFiles();
-                Process.Start("notepad.exe", "\"" + path + "\"");
+                f.ShowDialog(this);
+                if (f.WaypointsChanged) SharedSync(false);
+                if (f.DatabasesChanged)
+                {
+                    sharedInfo.Text = "Database changes saved: press Apply now.";
+                    if (Ctx.Settings.SharedDbPatch) ToolsLog("[INFO] Database changes saved: they are applied when the simulator is closed, or press Apply now.");
+                }
             }
-            catch (Exception ex) { MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         }
 
         // the program cannot write to the repository: it puts the user's points on the clipboard and opens the page for a new GitHub issue, where the user pastes them
@@ -2510,7 +2513,7 @@ namespace HPGMissionCompanion
                 Ctx.Settings.UpdateWhat = updMission.Checked ? "mission" : (updApp.Checked ? "app" : "both");
                 MarkDirty();
             };
-            updPackCheck.Text = "Also the voice pack EN when a newer one is published (XML only)";
+            updPackCheck.Text = "Also the default voice packs when newer ones exist (XML only)";
             updPackCheck.AutoSize = true;
             updPackCheck.Location = new Point(330, 22);
             updPackCheck.Checked = Ctx.Settings.UpdatePack;
