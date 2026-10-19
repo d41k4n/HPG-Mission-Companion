@@ -461,6 +461,17 @@ namespace HPGMissionCompanion
         {
             SetVariety(Ctx.Settings.Variety);
             VoicePack p = Ctx.Settings.BridgePack.Length > 0 ? VoicePacks.Find(Ctx.Settings.BridgePack) : null;
+            if (p == null)
+            {
+                // nothing chosen by the player: the pack the mission declares, then the pack of the default language, then the base pack EN, then the first one.
+                // (Tester report 2026-10-19: with EN and DE installed the first pack by name was DE and the lines of the mission came in German and English.)
+                foreach (string want in new string[] { declared, Ctx.Settings.DefaultLanguage, PackCheck.BaseName })
+                {
+                    if (string.IsNullOrEmpty(want)) continue;
+                    VoicePack q = VoicePacks.Find(want);
+                    if (q != null && q.Usable) { p = q; break; }
+                }
+            }
             if (p == null) foreach (VoicePack q in VoicePacks.Packs) if (q.Usable) { p = q; break; }
             SetBridgePack(p != null ? p.Name : "");
             SimLink.OnWatch = OnWatch;
@@ -723,6 +734,12 @@ namespace HPGMissionCompanion
             }
             SimLink.Publish(SimLink.VarStatus, status);
             SimLink.Publish(SimLink.VarPackVersion, version);
+            // the player chose no pack: the lines follow the pack that the mission declares
+            if (p != null && p.Usable && Ctx.Settings.BridgePack.Length == 0 && !string.Equals(bridgePack, p.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                bridgePack = p.Name;
+                SimLink.SetWatch(WatchNames());
+            }
         }
 
         static void ParseNames(string arg)

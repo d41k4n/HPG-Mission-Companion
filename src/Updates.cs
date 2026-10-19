@@ -136,6 +136,16 @@ namespace HPGMissionCompanion
         public const string ReleasesApi = "https://api.github.com/repos/davierosoft/HPG-Mission-Companion/releases/latest";
         public const string MissionReleasesApi = "https://api.github.com/repos/davierosoft/HEMS-random-everywhere-mission/releases/latest";
         public const string MissionAsset = "everywhere_all.json";
+        // the newest published mission build, told to the mission (user request of 2026-10-19): two numbers, release 169.65 -> major 169, minor 65 (two integers:
+        // 169.9 comes before 169.65). The mission compares them with its own build and shows its notice; 0 / 0 until a release has been read.
+        public const string VarLatestMajor = "L:HMC_MISSION_LATEST_MAJOR";
+        public const string VarLatestMinor = "L:HMC_MISSION_LATEST_MINOR";
+        public static void PublishLatestMission(MissionRelease r)
+        {
+            if (!r.HasRelease) return;
+            SimLink.Publish(VarLatestMajor, r.Major);
+            SimLink.Publish(VarLatestMinor, r.Minor);
+        }
         public const string MissionId = "HEMSRandE";
         public const string OfficialFolder = "RANDOM AND EVERYWHERE";
 

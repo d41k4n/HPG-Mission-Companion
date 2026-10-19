@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.35";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.36";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -155,7 +155,9 @@ namespace HPGMissionCompanion
     internal sealed class Settings
     {
         public string DefaultLanguage = "EN";
-        public int Port = 5997;
+        public const int MissionPort = 5997;    // the HPG mission system connects to localhost:5997 and nowhere else: the port is fixed, there is no option (user request of 2026-10-19)
+        public static int PortWas;              // a saved port other than 5997 (an old settings file): said once in the log
+        public int Port = 5997;                 // kept in the file for the old versions; always 5997
         public bool ListenAll = false;          // false: the service listens on 127.0.0.1 only (the mission connects to localhost, and Windows Firewall never asks); true: on every network interface
         public string AudioFolder = "";
         public bool StartWithSim = false;
@@ -217,7 +219,7 @@ namespace HPGMissionCompanion
         {
             if (Languages == null) Languages = new Dictionary<string, LangSetting>();
             if (LangInfo.ByCode(DefaultLanguage) == null) DefaultLanguage = "EN";
-            if (Port < 1 || Port > 65535) Port = 5997;
+            if (Port != MissionPort) { if (Port >= 1 && Port <= 65535) PortWas = Port; Port = MissionPort; }
             if (AudioFolder == null) AudioFolder = "";
             if (WorkFolder == null) WorkFolder = "";
             if (IndexTool == null) IndexTool = "";
@@ -408,6 +410,7 @@ namespace HPGMissionCompanion
         public static Settings Settings = new Settings();
         public static volatile List<VoiceInfo> Voices = new List<VoiceInfo>();
         public static Action<string> Log = delegate (string s) { };
+        public static Action<int, string> ActorAlert;      // a main actor was spoken without an assigned voice (actor, language): the window tells it (user request of 2026-10-19)
         public static bool Silent;
         public static Player Player;
 
@@ -633,6 +636,80 @@ namespace HPGMissionCompanion
         }
     }
 
+    // The actors that must always have a voice (user request of 2026-10-19): the five of the crew, the dispatcher, the ground unit and the heli rescuer. For them
+    // there is no "none": a missing voice, or one that is no longer installed, is replaced at once by a default (a Microsoft voice of the language when one is
+    // installed, else an installed Piper voice; the dispatcher, the ground unit and the heli rescuer also draw at random, like the recommended profile), the program
+    // tells it, and without any voice for a language that the service needs the service does not start.
+    internal static class ActorRules
+    {
+        public static readonly int[] Main = new int[] { 1, 2, 3, 4, 5, 8, 9, 12 };
+        // told to the mission (the tablet shows the message on the dispatch, briefing, audio options and checklist pages): how many main actors have no voice and
+        // cannot get one (the voices are stopped), and how many got a default voice since the settings were last saved
+        public const string VarMissing = "L:HMC_ACTORS_MISSING";
+        public const string VarDefaulted = "L:HMC_ACTORS_DEFAULTED";
+        public static bool IsMain(int actor) { return Array.IndexOf(Main, actor) >= 0; }
+
+        // the languages the service needs voices for: the default language and the language of the pack that the mission uses
+        public static List<string> Required(Settings s)
+        {
+            List<string> r = new List<string>();
+            if (LangInfo.ByCode(s.DefaultLanguage) != null) r.Add(s.DefaultLanguage);
+            if (!string.IsNullOrEmpty(s.BridgePack))
+            {
+                VoicePack p = VoicePacks.Find(s.BridgePack);
+                string code = p != null ? p.Language : s.BridgePack;
+                if (LangInfo.ByCode(code) != null && !r.Contains(code)) r.Add(code);
+            }
+            return r;
+        }
+
+        // assigned = it draws its voice (and the language has voices) or its voice is installed
+        public static bool Assigned(Settings s, LangInfo li, int actor, List<VoiceInfo> voices)
+        {
+            ActorSetting a = s.Get(li.Code, actor);
+            if (a.Random && Actors.CanDraw(actor)) return VoiceLibrary.AutoOfFamily(voices, li.Family).Count > 0;
+            return VoiceLibrary.ById(voices, a.Voice) != null;
+        }
+
+        public static List<int> Missing(Settings s, LangInfo li, List<VoiceInfo> voices)
+        {
+            List<int> m = new List<int>();
+            foreach (int a in Main) if (!Assigned(s, li, a, voices)) m.Add(a);
+            return m;
+        }
+
+        public static VoiceInfo DefaultVoice(List<VoiceInfo> auto, int actor)
+        {
+            if (auto.Count == 0) return null;
+            List<VoiceInfo> ms = auto.FindAll(delegate (VoiceInfo v) { return v.Engine == "windows"; });
+            List<VoiceInfo> pool = ms.Count > 0 ? ms : auto;
+            return pool[(actor - 1) % pool.Count];
+        }
+
+        // gives the missing actors of the language a default; returns the actors changed (the caller saves the settings)
+        public static List<int> Fill(Settings s, LangInfo li, List<VoiceInfo> voices)
+        {
+            List<int> done = new List<int>();
+            List<VoiceInfo> auto = VoiceLibrary.AutoOfFamily(voices, li.Family);
+            if (auto.Count == 0) return done;
+            foreach (int actor in Missing(s, li, voices))
+            {
+                ActorSetting a = s.Get(li.Code, actor);
+                a.Voice = DefaultVoice(auto, actor).Id;
+                a.Random = Actors.CanDraw(actor);
+                done.Add(actor);
+            }
+            return done;
+        }
+
+        public static string Names(List<int> actors)
+        {
+            List<string> n = new List<string>();
+            foreach (int a in actors) n.Add(Actors.Names[a - 1]);
+            return string.Join(", ", n.ToArray());
+        }
+    }
+
     // The voices drawn at random (the user's request of 2026-10-16). An actor with Random takes one voice of its pool (every voice of the language when the pool
     // is empty) and keeps it until the mission asks for a new draw (<voices:shift> the dispatcher, <voices:dispatch> the ground unit and the heli rescuer).
     // The voices of the actors that are drawn are never the same, and they avoid the voices that the other actors have chosen; only when there are not enough
@@ -778,6 +855,7 @@ namespace HPGMissionCompanion
             if (v == null)
             {
                 v = VoiceLibrary.ById(voices, a.Random ? VoiceDraw.Pick(s, li, p.Actor, voices) : a.Voice);
+                if (v == null && ActorRules.IsMain(p.Actor) && Ctx.ActorAlert != null) Ctx.ActorAlert(p.Actor, li.Code);
                 if (v != null && v.Family != li.Family && !string.IsNullOrEmpty(a.Voice)) { /* kept: the user chose it */ }
                 if (v == null)
                 {

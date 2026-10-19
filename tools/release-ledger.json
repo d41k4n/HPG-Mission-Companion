@@ -1,8 +1,8 @@
 {
-    "sha256": "BB438BD3061B43950B769EA7700E53B58A52E7B7908E74B2EDE51507934B5397",
-    "installerSha256": "F54A7C79C0C8DE48350CD10AB7A13747B92519D9AAFDD08DED3C11B0A1FC2560",
+    "sha256": "3D974FBCAD0B45A2ACB595BE1FB09E676617F0922C3F7A3623E9EEFD9E7B55AD",
+    "installerSha256": "028FE7FD91645ADD9D3826EAAE3A9398014BC0BA2FA865D855F132FC1B11EBB7",
     "deliveredOn": "2026-10-19",
     "artifact": "HPGMissionCompanion.exe",
-    "lastDeliveredVersion": "0.35",
-    "note": "Release 0.35 (local, not pushed): the user's rules of 2026-10-19 after the flight log: SAR spelled letter by letter, stand-in speaker for the muted copilot (standin on CPL 7, 9, 25), voice packs EN 20 and DE 8 (29 new messages of the mission 169.64: casualty and mayday, cold dispatch readback, SAR briefing), the Updates tab that monitors the packs EN and DE. Checks: node tools/check.js, --packs-check, the scenarios tests/crew-casualty-lines.txt and tests/radio-power-lines.txt (--expand). Runtime in the simulator pending."
+    "lastDeliveredVersion": "0.36",
+    "note": "Release 0.36: the main actors always have a voice (defaults, popup, messages on the tablet), the fixed port 5997 (option removed), the default voice pack that follows the mission, the new mission build told to the mission, the recommended profile saved with the random voices. Checks: node tools/check.js, --actors-test, --packs-check. Runtime in the simulator pending."
 }

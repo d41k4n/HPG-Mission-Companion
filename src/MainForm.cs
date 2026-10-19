@@ -119,6 +119,9 @@ namespace HPGMissionCompanion
         readonly Button saveButton = new Button();
         readonly CheckBox listenAllBox = new CheckBox();
         readonly Label saveLabel = new Label();
+        bool ensureBusy, noVoiceAnnounced, actorsBlocked;
+        int actorsMissingCount, actorsDefaultedCount;      // told to the mission: it shows the message on its pages (user request of 2026-10-19)
+        DateTime nextActorCheck = DateTime.MaxValue, lastActorAlert = DateTime.MinValue;
         readonly CheckBox advancedCheck = new CheckBox();      // footer: show or hide the advanced groups of the tabs
         readonly ToolTip tips = new ToolTip();
         int tabHover = -1;
@@ -128,7 +131,6 @@ namespace HPGMissionCompanion
         // service tab
         readonly Label serviceLabel = new Label();
         readonly Button startStop = new Button();
-        readonly NumericUpDown portBox = new NumericUpDown();
         readonly TextBox audioBox = new TextBox();
         readonly ComboBox defaultLangBox = new ComboBox();
         readonly TrackBar masterBar = new TrackBar();
@@ -230,6 +232,8 @@ namespace HPGMissionCompanion
         bool sharedRunning;
         bool dbSimSeen;
         DateTime nextSharedSync = DateTime.MaxValue;     // set when the program has started: the first check, then every 30 minutes
+        DateTime nextMissionWatch = DateTime.MaxValue;   // the newest published mission build is read again every 30 minutes (silent: only the variables for the mission)
+        bool missionWatchRunning;
         readonly ComboBox missionCombo = new ComboBox();
         readonly Button updateButton = new Button();
         readonly Label updateInfo = new Label();
@@ -283,6 +287,17 @@ namespace HPGMissionCompanion
 
             uiContext = SynchronizationContext.Current;
             Ctx.Log = AppendLog;
+            Ctx.ActorAlert = delegate (int actor, string lang)
+            {
+                // a main actor was spoken without its voice (speech thread): tell it and give it a default at once (at most one message every 20 s)
+                if ((DateTime.UtcNow - lastActorAlert).TotalSeconds < 20) return;
+                lastActorAlert = DateTime.UtcNow;
+                Ui(delegate
+                {
+                    AppendLog("[WARN] The actor " + Actors.Names[actor - 1] + " (" + lang + ") was spoken without an assigned voice");
+                    EnsureActors(false);
+                });
+            };
             if (this.logFile != null) AppendLog("[INFO] " + AppInfo.Title + " started" + (startHidden ? " minimized" : "") + ", " + Environment.OSVersion + ", log file " + this.logFile);
 
             tabs.Location = new Point(12, 12);
@@ -564,6 +579,29 @@ namespace HPGMissionCompanion
                 nextSharedSync = DateTime.UtcNow.AddMinutes(30);
                 SharedSync(true);
             }
+            if (started && DateTime.UtcNow >= nextActorCheck)
+            {
+                // voices installed or removed meanwhile: the service follows (it stops without voices, it starts again when they are back)
+                nextActorCheck = DateTime.UtcNow.AddSeconds(30);
+                bool wasBlocked = actorsBlocked;
+                bool ok = EnsureActors(false);
+                if (ok && wasBlocked && server == null) StartServer(true);
+            }
+            if (started && Ctx.Settings.AutoUpdateCheck && DateTime.UtcNow >= nextMissionWatch && !missionWatchRunning && !updateRunning)
+            {
+                nextMissionWatch = DateTime.UtcNow.AddMinutes(30);
+                missionWatchRunning = true;
+                ThreadPool.QueueUserWorkItem(delegate
+                {
+                    try
+                    {
+                        RemoteMission m = Updates.ReadRemoteMissionGitHub(Updates.MissionReleasesApi);
+                        Updates.PublishLatestMission(m.Release);
+                    }
+                    catch (Exception ex) { Ctx.Log("[INFO] Mission watch: the published mission could not be read (" + ex.Message + ")"); }
+                    finally { missionWatchRunning = false; }
+                });
+            }
         }
 
         // the log is dark green; each kind of message has its own colour, voices in yellow
@@ -659,6 +697,14 @@ namespace HPGMissionCompanion
             UpdateEngineState();
             // the service and the simulator link first: the mission does not speak while its voice server is away, so after a restart of the program every
             // second counts; the index, the update check and the tools come after
+            if (Settings.PortWas != 0)
+            {
+                // the mission system connects to localhost:5997 only (tester report 2026-10-19: the service listened on 5993, the mission never connected: no checklist voice)
+                AppendLog("[WARN] The saved service port was " + Settings.PortWas + ": the mission connects to port " + Settings.MissionPort + " only, the port is fixed to " + Settings.MissionPort);
+                Settings.PortWas = 0;
+                try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
+            }
+            EnsureActors(false);       // every main actor has a voice before the service starts (the popup comes when the window is up)
             StartServer(true);
             // the counter of the shared waypoint table goes to the simulator like the other HMC variables: a variable must be known before the link connects
             int storedRev = SharedData.StoredDataRev();
@@ -668,6 +714,16 @@ namespace HPGMissionCompanion
             RefreshTools();
             if (Ctx.Settings.AutoIndex && indexCombo.Items.Count > 0) UpdateIndex(true);
             if (Ctx.Settings.AutoUpdateCheck) CheckUpdates(true);
+            nextMissionWatch = DateTime.UtcNow.AddMinutes(30);
+            nextActorCheck = DateTime.UtcNow.AddSeconds(30);
+            if (actorsBlocked)
+                Ui(delegate
+                {
+                    if (noVoiceAnnounced) return;
+                    noVoiceAnnounced = true;
+                    ShowWindow();
+                    MessageBox.Show(this, "There is no voice for the crew, the dispatcher, the ground unit and the heli rescuer, so the service did not start.\n\nInstall the default voices: Service tab, tick Show advanced options at the bottom, then One click (it downloads the Piper engine and the recommended voices, about 530 MB). You can also add a voice in Windows: Settings, Time & language, Speech.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                });
             if (Ctx.Voices.Count == 0) AppendLog("[ERROR] No voice is installed.");
             if (Program.ShowEvent != null)
             {
@@ -728,6 +784,69 @@ namespace HPGMissionCompanion
             }
         }
 
+        // ---- the main actors always have a voice (user request of 2026-10-19) ----------------------------
+        // the numbers that the mission shows on its pages (L:HMC_ACTORS_MISSING, L:HMC_ACTORS_DEFAULTED); the program itself only writes the log and the popup
+        void PublishActorState()
+        {
+            SimLink.Publish(ActorRules.VarMissing, actorsMissingCount);
+            SimLink.Publish(ActorRules.VarDefaulted, actorsDefaultedCount);
+        }
+
+        // Gives every main actor of every language a voice: the voice of the user when it is installed, else a Microsoft voice, else an installed Piper voice.
+        // false when a language that the service needs has no voice at all: the service must not run (the red message, the log, the popup).
+        bool EnsureActors(bool popup)
+        {
+            if (ensureBusy) return !actorsBlocked;
+            ensureBusy = true;
+            try
+            {
+                List<string> required = ActorRules.Required(Ctx.Settings);
+                List<string> given = new List<string>(), blocked = new List<string>();
+                int missingNow = 0, defaultedNow = 0;
+                foreach (LangInfo li in LangInfo.All)
+                {
+                    List<int> filled = ActorRules.Fill(Ctx.Settings, li, Ctx.Voices);
+                    if (filled.Count > 0)
+                    {
+                        defaultedNow += filled.Count;
+                        string what = li.Name + ": " + ActorRules.Names(filled);
+                        given.Add(what);
+                        AppendLog("[WARN] No voice was assigned to " + what + ": a default voice was given");
+                    }
+                    List<int> still = ActorRules.Missing(Ctx.Settings, li, Ctx.Voices);
+                    if (still.Count > 0 && required.Contains(li.Code)) { blocked.Add(li.Name + " (" + ActorRules.Names(still) + ")"); missingNow += still.Count; }
+                }
+                actorsDefaultedCount += defaultedNow;
+                actorsMissingCount = missingNow;
+                PublishActorState();
+                if (given.Count > 0)
+                {
+                    VoiceDraw.Reset();
+                    try { Ctx.Settings.Save(Ctx.SettingsPath); } catch (Exception) { }
+                }
+                actorsBlocked = blocked.Count > 0;
+                if (actorsBlocked)
+                {
+                    string msg = "No voice is installed for " + string.Join("; ", blocked.ToArray()) + ": the service cannot run. Install the default voices (Service tab, Show advanced options, One click) or a voice in Windows (Settings, Time & language, Speech).";
+                    AppendLog("[ERROR] " + msg);
+                    if (server != null) StopServer();
+                    if (popup && !noVoiceAnnounced)
+                    {
+                        noVoiceAnnounced = true;
+                        Ui(delegate
+                        {
+                            ShowWindow();
+                            MessageBox.Show(this, "There is no voice for " + string.Join("; ", blocked.ToArray()) + ".\n\nWithout a voice for the crew, the dispatcher, the ground unit and the heli rescuer the service does not start.\n\nInstall the default voices: Service tab, tick Show advanced options at the bottom, then One click (it downloads the Piper engine and the recommended voices, about 530 MB). You can also add a voice in Windows: Settings, Time & language, Speech.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        });
+                    }
+                    return false;
+                }
+                noVoiceAnnounced = false;
+                return true;
+            }
+            finally { ensureBusy = false; }
+        }
+
         void SaveSettings()
         {
             CaptureVoices();
@@ -735,6 +854,8 @@ namespace HPGMissionCompanion
             {
                 Ctx.Settings.Save(Ctx.SettingsPath);
                 dirty = false;
+                actorsDefaultedCount = 0;          // the user has seen the defaults: the mission stops showing the message
+                PublishActorState();
                 SetSaveInfo("Settings saved.");
             }
             catch (Exception ex)
@@ -809,17 +930,9 @@ namespace HPGMissionCompanion
             advBox.Size = new Size(708, 232);
             page.Controls.Add(advBox);
 
-            Lbl(advBox, "Port:", 10, 25, 0, 0);
-            portBox.Minimum = 1024;
-            portBox.Maximum = 65535;
-            portBox.Value = Ctx.Settings.Port;
-            portBox.Location = new Point(46, 21);
-            portBox.Size = new Size(70, 22);
-            portBox.ValueChanged += delegate { Ctx.Settings.Port = (int)portBox.Value; MarkDirty(); };
-            advBox.Controls.Add(portBox);
-            listenAllBox.Text = "Accept connections from other computers (Windows Firewall may ask to open the port)";
+            listenAllBox.Text = "Accept connections from other computers (Windows Firewall may ask to open the port " + Settings.MissionPort + ")";
             listenAllBox.AutoSize = true;
-            listenAllBox.Location = new Point(136, 23);
+            listenAllBox.Location = new Point(10, 23);
             listenAllBox.Checked = Ctx.Settings.ListenAll;
             listenAllBox.CheckedChanged += delegate
             {
@@ -1121,6 +1234,7 @@ namespace HPGMissionCompanion
 
         void StartServer(bool automatic)
         {
+            if (!EnsureActors(!automatic)) { SetServiceState(false); return; }       // no service without a voice for every main actor
             Server s = new Server();
             int port = Ctx.Settings.Port;
             try
@@ -1295,6 +1409,7 @@ namespace HPGMissionCompanion
         {
             LangInfo li = CurrentLang();
             if (li == null) return;
+            EnsureActors(false);
             List<VoiceInfo> fam = VoiceLibrary.OfFamily(Ctx.Voices, li.Family);
             List<VoiceInfo> auto = VoiceLibrary.AutoOfFamily(Ctx.Voices, li.Family);
             suppress = true;
@@ -2777,6 +2892,7 @@ namespace HPGMissionCompanion
                 try
                 {
                     rm = Updates.ReadRemoteMissionGitHub(Updates.MissionReleasesApi);
+                    Updates.PublishLatestMission(rm.Release);       // the mission shows its own notice when this build is newer than the one it runs
                     lines.Add("Published mission: " + rm.Release + " (" + rm.Source + ", " + (rm.Size / 1024) + " KB)");
                 }
                 catch (Exception ex) { lines.Add("[ERROR] the published mission could not be read: " + ex.Message); }

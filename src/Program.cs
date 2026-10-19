@@ -7,7 +7,7 @@
 //   --exit-with-sim          leave when Microsoft Flight Simulator closes
 //   --silent                 do everything but the sound (for checks)
 //   --log-file <path>        also write the log to a file
-//   --port <n>  --audio <dir>
+//   --port <n> (tests only: the port of the mission is fixed to 5997 and the settings never change it)  --audio <dir>
 //   --list-file <path>       write the voices to a file and exit
 //   --selftest <wav> --text "<tagged text>"   synthesize the first part of the text to a wav file and exit
 //   --autostart on|off       add or remove this program in the EXE.xml of the simulators found (and exit)
@@ -37,8 +37,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.35.0.0")]
-[assembly: AssemblyFileVersion("0.35.0.0")]
+[assembly: AssemblyVersion("0.36.0.0")]
+[assembly: AssemblyFileVersion("0.36.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -328,6 +328,49 @@ namespace HPGMissionCompanion
                 }
                 File.WriteAllText(packsCheck, rep.ToString());
                 return 0;
+            }
+
+            // --actors-test <report>: the rules of the main actors on made-up voice lists (no voice, Microsoft voices, Piper only, a voice no longer installed, a random actor)
+            string actorsTest = Option(args, "--actors-test");
+            if (actorsTest != null)
+            {
+                StringBuilder rep = new StringBuilder();
+                int failed = 0;
+                Action<bool, string> check = delegate (bool ok, string what) { rep.AppendLine((ok ? "PASS " : "FAIL ") + what); if (!ok) failed++; };
+                Func<string, string, string, VoiceInfo> voice = delegate (string id, string engine, string family) { VoiceInfo v = new VoiceInfo(); v.Id = id; v.Engine = engine; v.Family = family; v.Display = id; v.Keys = new string[] { id }; v.Rank = engine == "windows" ? 5 : 3; return v; };
+                LangInfo en = LangInfo.ByCode("EN");
+                List<VoiceInfo> none = new List<VoiceInfo>();
+                List<VoiceInfo> ms = new List<VoiceInfo>(new VoiceInfo[] { voice("win:A", "windows", en.Family), voice("win:B", "windows", en.Family), voice("piper:p1", "piper", en.Family), voice("stt4sg:x", "stt4sg", en.Family) });
+                List<VoiceInfo> piper = new List<VoiceInfo>(new VoiceInfo[] { voice("piper:p1", "piper", en.Family), voice("piper:p2", "piper", en.Family), voice("stt4sg:x", "stt4sg", en.Family) });
+                Settings s = new Settings(); s.Normalize();
+                check(ActorRules.Missing(s, en, ms).Count == 8, "a new setting: the eight main actors have no voice");
+                check(ActorRules.Fill(s, en, none).Count == 0 && ActorRules.Missing(s, en, none).Count == 8, "no voice at all: nothing can be given, the eight actors stay missing (the service does not start)");
+                check(ActorRules.Fill(s, en, piper).Count == 8, "Piper voices only: the eight actors get one");
+                check(!ActorRules.Missing(s, en, piper).Contains(1) && s.Get("EN", 1).Voice.StartsWith("piper:"), "the crew gets an installed Piper voice, never the online one");
+                Settings s2 = new Settings(); s2.Normalize();
+                List<int> filled = ActorRules.Fill(s2, en, ms);
+                check(filled.Count == 8 && ActorRules.Missing(s2, en, ms).Count == 0, "Microsoft and Piper voices: the eight actors get one");
+                check(s2.Get("EN", 1).Voice.StartsWith("win:") && s2.Get("EN", 2).Voice.StartsWith("win:") && s2.Get("EN", 12).Voice.StartsWith("win:"), "the Microsoft voices come first");
+                check(s2.Get("EN", 8).Random && s2.Get("EN", 9).Random && s2.Get("EN", 12).Random && !s2.Get("EN", 1).Random, "the dispatcher, the ground unit and the heli rescuer draw at random, the crew does not");
+                check(!s2.Get("EN", 6).Random && string.IsNullOrEmpty(s2.Get("EN", 6).Voice), "the other actors (technicians, patient, checklist) are left as they are");
+                check(ActorRules.Fill(s2, en, ms).Count == 0, "a second pass changes nothing");
+                s2.Get("EN", 3).Voice = "win:GONE";
+                check(ActorRules.Missing(s2, en, ms).Count == 1 && ActorRules.Missing(s2, en, ms)[0] == 3, "a voice that is no longer installed counts as missing");
+                check(ActorRules.Fill(s2, en, ms).Count == 1 && s2.Get("EN", 3).Voice.StartsWith("win:") && s2.Get("EN", 3).Voice != "win:GONE", "...and is replaced");
+                Settings s4 = new Settings(); s4.Normalize();
+                s4.Get("EN", 4).Voice = "piper:p1"; ActorRules.Fill(s4, en, ms);
+                check(s4.Get("EN", 4).Voice == "piper:p1", "the chosen installed voice is not replaced");
+                Settings s5 = new Settings(); s5.Normalize(); s5.DefaultLanguage = "EN"; s5.BridgePack = "";
+                check(ActorRules.Required(s5).Count == 1 && ActorRules.Required(s5)[0] == "EN", "the language the service needs: the default language");
+                check(ActorRules.IsMain(1) && ActorRules.IsMain(5) && ActorRules.IsMain(8) && ActorRules.IsMain(9) && ActorRules.IsMain(12) && !ActorRules.IsMain(6) && !ActorRules.IsMain(10) && !ActorRules.IsMain(11), "main actors: the crew (1-5), dispatcher 8, ground unit 9, heli rescuer 12");
+                Settings s6 = new Settings(); s6.Port = 5993; Settings.PortWas = 0; s6.Normalize();
+                check(s6.Port == 5997 && Settings.PortWas == 5993, "a saved port 5993 is set back to the fixed port 5997 and remembered for the log");
+                Settings.PortWas = 0;
+                Settings s7 = new Settings(); s7.Normalize();
+                check(s7.Port == 5997 && Settings.PortWas == 0, "the fixed port 5997 needs no message");
+                rep.AppendLine(failed == 0 ? "ALL PASS" : failed + " FAILED");
+                File.WriteAllText(actorsTest, rep.ToString());
+                return failed == 0 ? 0 : 1;
             }
 
             // --pack-template <out.xml> --lang IT [--name IT] [--report <file>]: a translation of the base pack as a new file

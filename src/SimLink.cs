@@ -130,7 +130,10 @@ namespace HPGMissionCompanion
             double app;
             if (!double.TryParse(AppInfo.Version, NumberStyles.Float, CultureInfo.InvariantCulture, out app)) app = 0;
             Publish(VarAppVersion, app);
-            lock (outLock) { if (!outputs.ContainsKey(VarStatus)) outputs[VarStatus] = 0; if (!outputs.ContainsKey(VarPackVersion)) outputs[VarPackVersion] = 0; }
+            lock (outLock) { if (!outputs.ContainsKey(VarStatus)) outputs[VarStatus] = 0; if (!outputs.ContainsKey(VarPackVersion)) outputs[VarPackVersion] = 0;
+                // known before the connection (the data definition is made at the connection): the newest published mission build, 0 until the update check has read it
+                if (!outputs.ContainsKey(Updates.VarLatestMajor)) outputs[Updates.VarLatestMajor] = 0; if (!outputs.ContainsKey(Updates.VarLatestMinor)) outputs[Updates.VarLatestMinor] = 0;
+                if (!outputs.ContainsKey(ActorRules.VarMissing)) outputs[ActorRules.VarMissing] = 0; if (!outputs.ContainsKey(ActorRules.VarDefaulted)) outputs[ActorRules.VarDefaulted] = 0; }
             worker = new Thread(Run);
             worker.IsBackground = true;
             worker.Name = "SimLink";
