@@ -38,6 +38,7 @@
   "UpdatePack": true,
   "UpdateWhat": "both",
   "ShowAdvanced": false,
+  "OverlapMode": 1,
   "Languages": {
     "EN": {
       "Actors": [

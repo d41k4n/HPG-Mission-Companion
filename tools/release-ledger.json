@@ -1,8 +1,8 @@
 {
-    "sha256": "3D974FBCAD0B45A2ACB595BE1FB09E676617F0922C3F7A3623E9EEFD9E7B55AD",
-    "installerSha256": "028FE7FD91645ADD9D3826EAAE3A9398014BC0BA2FA865D855F132FC1B11EBB7",
+    "sha256": "14CED3168CE69354BC97637EDCBC0FFA2B91D3648B5BF046053766E0F4A90E13",
+    "installerSha256": "44CD8893FB795B80FB55CD1F1D552DB6BBEFEBEF617D1A2429CA12B47AC3A3D6",
     "deliveredOn": "2026-10-19",
     "artifact": "HPGMissionCompanion.exe",
-    "lastDeliveredVersion": "0.36",
-    "note": "Release 0.36: the main actors always have a voice (defaults, popup, messages on the tablet), the fixed port 5997 (option removed), the default voice pack that follows the mission, the new mission build told to the mission, the recommended profile saved with the random voices. Checks: node tools/check.js, --actors-test, --packs-check. Runtime in the simulator pending."
+    "lastDeliveredVersion": "0.37",
+    "note": "Release 0.37: voices at the same time (take turns / everything together / one line at a time), queue replay reads the lane of the log, packs EN 21 and DE 9 (greetings, weather, farewell). Checks: node tools/check.js, --queue-test, --actors-test, --packs-check. Runtime in the simulator pending."
 }

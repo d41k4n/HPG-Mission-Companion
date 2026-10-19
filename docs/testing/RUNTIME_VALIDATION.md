@@ -158,3 +158,8 @@ User request of 2026-10-18, design in docs/architecture/SHARED_DATA.md. Offline:
 - Clear the voice of the crew actors in HPGMissionCompanion.json and start: each one gets a Microsoft voice and the tablet shows the amber message with their number until Save settings; the dispatcher, ground unit and heli rescuer show Random voice.
 - Uninstall a Piper voice used by an actor while the program runs: within 30 seconds (or at its first line) the actor gets a default and the amber message appears on the tablet.
 - Apply the recommended profile with One click: the dispatcher, the ground unit and the heli rescuer are on Random voice.
+
+## Voices at the same time (0.37, pending)
+
+Offline (done): `node tools/check.js`, `--queue-test` with the log hmc-20261019-211023 (turns: 0 s of overlapped speech against 28 s, all together; the model of the old queue follows the log within 3 s). The replay reads the lane the player wrote in the log (`[lane radio, ...]`); older logs without it use the mode of the line.
+Simulator (pending): Volume tab, "Voices at the same time": with "take turns" the dispatcher on the external radio and the crew triage on the intercom never speak together at the dispatch reading; callouts (priority 3) and the notification sounds still come over the speech; "everything together" restores the old behaviour; "one line at a time" never has two voices; the choice survives a restart and a saved profile; loading a profile of an older version gives "take turns".

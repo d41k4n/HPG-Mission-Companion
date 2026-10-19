@@ -43,6 +43,7 @@ namespace HPGMissionCompanion
         public bool AutoUpdateCheck = true;
         public bool UpdatePack = true;
         public string UpdateWhat = "both";
+        public int OverlapMode = 1;                      // voices at the same time: 0 one at a time, 1 radio and crew take turns, 2 everything together
         public bool SharedAutoSync = true;               // the waypoint table of the mission; the change of the offline databases (SharedDbPatch) is never in a profile: it edits files outside the program
         public bool ShowAdvanced = false;
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();   // only the languages that the profile sets
@@ -123,6 +124,7 @@ namespace HPGMissionCompanion
             if (p.Names != "random") p.Names = "functions";
             if (p.UpdateWhat != "mission" && p.UpdateWhat != "app") p.UpdateWhat = "both";
             if (p.BridgePack == null) p.BridgePack = "";
+            if (p.OverlapMode < 0 || p.OverlapMode > 2) p.OverlapMode = 1;
             p.AttenCamInside = Math.Max(0, Math.Min(30, p.AttenCamInside));
             p.AttenCamOutside = Math.Max(0, Math.Min(30, p.AttenCamOutside));
             List<string> drop = new List<string>();
@@ -201,6 +203,7 @@ namespace HPGMissionCompanion
             p.AutoAudioInhibit = s.AutoAudioInhibit; p.AutoIndex = s.AutoIndex; p.AutoUpdateCheck = s.AutoUpdateCheck; p.UpdatePack = s.UpdatePack; p.UpdateWhat = s.UpdateWhat;
             p.ShowAdvanced = s.ShowAdvanced;
             p.SharedAutoSync = s.SharedAutoSync;
+            p.OverlapMode = s.OverlapMode;
             p.Languages = new Dictionary<string, LangSetting>();
             foreach (KeyValuePair<string, LangSetting> kv in s.Languages)
             {
@@ -233,6 +236,7 @@ namespace HPGMissionCompanion
             s.AutoAudioInhibit = p.AutoAudioInhibit; s.AutoIndex = p.AutoIndex; s.AutoUpdateCheck = p.AutoUpdateCheck; s.UpdatePack = p.UpdatePack; s.UpdateWhat = p.UpdateWhat;
             s.ShowAdvanced = p.ShowAdvanced;
             s.SharedAutoSync = p.SharedAutoSync;
+            s.OverlapMode = p.OverlapMode; s.OverlapLanes = p.OverlapMode != 0;
             foreach (KeyValuePair<string, LangSetting> kv in p.Languages)
             {
                 LangSetting ls = new LangSetting();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="8" basever="20" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="9" basever="21" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -6879,4 +6879,458 @@
       <o>{@DSP} an {@HEMS}. Mayday verstanden. Bleiben Sie ruhig, landen und herunterfahren, Hilfe kommt.</o>
       <o>{@HEMS}, {@DSP}. Mayday bestätigt. Rettungsdienste alarmiert. Landen und herunterfahren.</o>
     </message>
+    <message key="GRT.TEC.M" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, morning of the simulator: the technician greets the crew by name">
+      <o sex="m">Guten Morgen, {@PLT}! Guten Morgen, {@CPL}. Ich hoffe, ihr habt gut geschlafen.</o>
+      <o sex="m">Morgen, {@PLT}. Morgen, {@CPL}. Bereit für eine neue Schicht?</o>
+      <o sex="m">Guten Morgen, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit für den Tag?</o>
+      <o sex="m">Guten Morgen euch beiden. Im Hangar gibt es Kaffee, wenn du magst, {@PLT}.</o>
+      <o sex="f">Guten Morgen, {@PLT}, guten Morgen, {@CPL}! Habt ihr gut geschlafen?</o>
+      <o sex="f">Morgen, {@PLT}, morgen, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Morgen, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
+      <o sex="f">Guten Morgen, ihr zwei. Der Kaffee ist im Hangar fertig, {@PLT}, bedien dich.</o>
+          <o sex="m">Morgen, {@PLT}, morgen, {@CPL}. Neuer Tag, neue Schicht.</o>
+      <o sex="m">Guten Morgen, Crew. Alles ist für euch bereit, {@PLT}.</o>
+      <o sex="f">Guten Morgen, ihr zwei! Bereit, heute Leben zu retten?</o>
+      <o sex="f">Morgen, {@PLT}, morgen, {@CPL}. Im Hangar ist es ruhig, genießt es, solange es hält.</o>
+</message>
+    <message key="GRT.TEC.A" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, afternoon of the simulator: the technician greets the crew by name">
+      <o sex="m">Guten Tag, {@PLT}! Guten Tag, {@CPL}. Willkommen zurück.</o>
+      <o sex="m">Tag, {@PLT}. Tag, {@CPL}. Bereit für den Rest der Schicht?</o>
+      <o sex="m">Guten Tag, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
+      <o sex="m">Guten Tag euch beiden. Ich hoffe, das Mittagessen war gut, {@PLT}.</o>
+      <o sex="f">Guten Tag, {@PLT}, guten Tag, {@CPL}! Schön, dass ihr da seid.</o>
+      <o sex="f">Tag, {@PLT}, Tag, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Tag, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
+      <o sex="f">Guten Tag, ihr zwei. Ich hoffe, der Tag war bisher freundlich zu dir, {@PLT}.</o>
+          <o sex="m">Tag, Crew. Schön, dass du da bist, {@PLT}.</o>
+      <o sex="m">Guten Tag, {@PLT}, {@CPL}. Bisher ist es ruhig auf dem Vorfeld.</o>
+      <o sex="f">Tag, {@PLT}, Tag, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
+      <o sex="f">Guten Tag, Crew. Hier ist alles in Ordnung.</o>
+</message>
+    <message key="GRT.TEC.E" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, evening or night of the simulator: the technician greets the crew by name">
+      <o sex="m">Guten Abend, {@PLT}! Guten Abend, {@CPL}. Willkommen.</o>
+      <o sex="m">Abend, {@PLT}. Abend, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="m">Guten Abend, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
+      <o sex="m">Guten Abend euch beiden. Ich hoffe, es wird eine ruhige, {@PLT}.</o>
+      <o sex="f">Guten Abend, {@PLT}, guten Abend, {@CPL}! Schön, euch zu sehen.</o>
+      <o sex="f">Abend, {@PLT}, Abend, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Abend, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
+      <o sex="f">Guten Abend, ihr zwei. Hoffen wir auf eine ruhige Nacht, {@PLT}.</o>
+          <o sex="m">Abend, Crew. Schön, dich zu sehen, {@PLT}.</o>
+      <o sex="m">Guten Abend, {@PLT}, {@CPL}. Bisher ist es ruhig auf dem Vorfeld.</o>
+      <o sex="f">Abend, {@PLT}, Abend, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
+      <o sex="f">Guten Abend, Crew. Hier ist alles in Ordnung.</o>
+</message>
+    <message key="GRT.CPL.M" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, morning: the copilot answers the technician by name">
+      <o>Guten Morgen, {@TECH}! Alles in Ordnung hier?</o>
+      <o>Morgen, {@TECH}. Hattest du eine ruhige Nacht?</o>
+      <o>Guten Morgen, {@TECH}. Danke, wir sind bereit.</o>
+      <o>Guten Morgen! Immer schön, dich zu sehen, {@TECH}.</o>
+      <o>Morgen, {@TECH}. Wie geht es dem Hubschrauber heute?</o>
+      <o>Hallo, {@TECH}, guten Morgen. Alles gut bei dir?</o>
+</message>
+    <message key="GRT.CPL.A" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, afternoon: the copilot answers the technician by name">
+      <o>Guten Tag, {@TECH}! Alles in Ordnung hier?</o>
+      <o>Tag, {@TECH}. War es ein hektischer Tag?</o>
+      <o>Guten Tag, {@TECH}. Danke, wir sind bereit.</o>
+      <o>Guten Tag! Immer schön, dich zu sehen, {@TECH}.</o>
+      <o>Tag, {@TECH}. Wie geht es dem Hubschrauber heute?</o>
+      <o>Hallo, {@TECH}, guten Tag. Alles gut bei dir?</o>
+</message>
+    <message key="GRT.CPL.E" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, evening or night: the copilot answers the technician by name">
+      <o>Guten Abend, {@TECH}! Alles in Ordnung hier?</o>
+      <o>Abend, {@TECH}. War es ein ruhiger Tag?</o>
+      <o>Guten Abend, {@TECH}. Danke, wir sind bereit.</o>
+      <o>Guten Abend! Immer schön, dich zu sehen, {@TECH}.</o>
+      <o>Abend, {@TECH}. Wie geht es dem Hubschrauber heute Abend?</o>
+      <o>Hallo, {@TECH}, guten Abend. Alles gut bei dir?</o>
+</message>
+    <message key="GRT.PLT.M" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, morning: the pilot greets the technician by name">
+      <o>Guten Morgen, {@TECH}. Wie geht es ihr?</o>
+      <o>Morgen, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Guten Morgen, {@TECH}. Danke, dass du da bist.</o>
+      <o>Morgen, {@TECH}. Bei dir alles bereit?</o>
+      <o>Guten Morgen, {@TECH}. Wir sind so weit, wenn du es bist.</o>
+      <o>Hallo, {@TECH}. Guten Morgen, und danke für die Vorbereitung.</o>
+</message>
+    <message key="GRT.PLT.A" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, afternoon: the pilot greets the technician by name">
+      <o>Guten Tag, {@TECH}. Wie geht es ihr?</o>
+      <o>Tag, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Guten Tag, {@TECH}. Danke, dass du da bist.</o>
+      <o>Tag, {@TECH}. Bei dir alles bereit?</o>
+      <o>Guten Tag, {@TECH}. Wir sind so weit, wenn du es bist.</o>
+      <o>Hallo, {@TECH}. Guten Tag, und danke für die Vorbereitung.</o>
+</message>
+    <message key="GRT.PLT.E" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, evening or night: the pilot greets the technician by name">
+      <o>Guten Abend, {@TECH}. Wie geht es ihr?</o>
+      <o>Abend, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Guten Abend, {@TECH}. Danke, dass du da bist.</o>
+      <o>Abend, {@TECH}. Bei dir alles bereit?</o>
+      <o>Guten Abend, {@TECH}. Wir sind so weit, wenn du es bist.</o>
+      <o>Hallo, {@TECH}. Guten Abend, und danke für die Vorbereitung.</o>
+</message>
+    <message key="CHT.TEC" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="4" new="1" trigger="hangar: the technician tells how the helicopter is (the circumstances)">
+      <o sex="m">Sie ist in gutem Zustand. Die Tanks sind voll, das Öl ist in Ordnung und das Bordbuch ist unterschrieben.</o>
+      <o sex="m">Alles geprüft: Rotor, Türen, Reifen. Nichts ist auf der Liste offen.</o>
+      <o sex="m">Keine Mängel, keine offenen Punkte. Der Hubschrauber ist bereit, wann immer ihr es seid.</o>
+      <o sex="m">Ich habe die Frontscheibe geputzt und die Kabine kontrolliert. Ihr könnt fliegen, wann ihr wollt.</o>
+      <o sex="f">Sie ist in bestem Zustand. Der Tank ist voll, das Öl ist in Ordnung und das Bordbuch ist unterschrieben.</o>
+      <o sex="f">Ich habe alles geprüft: Rotor, Türen, Reifen. Nichts ist auf der Liste offen.</o>
+      <o sex="f">Keine Mängel und keine offenen Punkte. Der Hubschrauber ist bereit, wenn ihr es seid.</o>
+      <o sex="f">Ich habe die Frontscheibe geputzt und die Kabine kontrolliert. Sie gehört euch.</o>
+          <o sex="m">Alles in Ordnung. Hydraulik, Treibstoff, Reifen: alles geprüft.</o>
+      <o sex="m">Sie ist sauber, betankt und bereit. Nichts zu melden.</o>
+      <o sex="f">Sie ist betankt und geprüft. Nichts zu melden.</o>
+      <o sex="f">Alle Systeme geprüft, keine Warnungen auf der Liste. Ihr könnt los.</o>
+</message>
+    <message key="CHT.CPL" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="5" new="1" trigger="hangar: the copilot thanks the technician">
+      <o>Super, danke, {@TECH}. Du kümmerst dich immer so gut um sie.</o>
+      <o>Perfekt. Dann müssen wir uns um nichts sorgen.</o>
+      <o>Danke, {@TECH}. Wir bringen sie heil zurück.</o>
+      <o>Gut zu hören. Danke für die Arbeit, {@TECH}.</o>
+      <o>Ausgezeichnet. Wir melden uns, falls etwas auftaucht.</o>
+      <o>Vielen Dank, {@TECH}. Bis später.</o>
+</message>
+    <message key="CHT.TEC2" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="6" new="1" trigger="hangar: the technician wishes the crew a good flight">
+      <o sex="m">Habt einen guten Flug und passt da draußen auf euch auf.</o>
+      <o sex="m">Fliegt sicher. Das Wetter kann schnell umschlagen.</o>
+      <o sex="m">Viel Glück heute, und bringt alle heil nach Hause.</o>
+      <o sex="m">Genießt den Flug. Ich bin hier, wenn ihr zurückkommt.</o>
+      <o sex="f">Habt einen guten Flug und passt da draußen auf.</o>
+      <o sex="f">Fliegt sicher und behaltet das Wetter im Blick.</o>
+      <o sex="f">Viel Glück heute, und bringt alle heil nach Hause.</o>
+      <o sex="f">Genießt den Flug. Ich warte genau hier, bis ihr zurück seid.</o>
+          <o sex="m">Passt da draußen auf euch auf und ruft mich, wenn ihr etwas braucht.</o>
+      <o sex="m">Fliegt sicher. Ich bin hier, wenn ihr landet.</o>
+      <o sex="f">Passt auf euch auf und meldet euch, wenn ihr etwas braucht.</o>
+      <o sex="f">Habt einen sicheren Flug. Ich bin hier, wenn ihr landet.</o>
+</message>
+    <message key="WXH.RL" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (light rain)">
+      <o>Heute nieselt es ein bisschen. Nimm eine Jacke mit, {@PLT}.</o>
+      <o>Es regnet ein wenig. Nichts Ernstes, aber das Vorfeld ist nass.</o>
+      <o>Leichter Regen heute, achtet also auf den nassen Boden, wenn ihr herumlauft.</o>
+      <o>Ein leichter Regen, nichts, womit der Hubschrauber nicht fertig wird.</o>
+          <o>Es nieselt. Das Vorfeld ist rutschig, achtet auf euren Schritt.</o>
+      <o>Ein bisschen Regen da draußen, nichts, worüber man sich sorgen muss.</o>
+</message>
+    <message key="WXD.RL" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (light rain)">
+      <o>Ihr seid im Nieselregen zurückgekommen. Geht rein und trocknet euch ab.</o>
+      <o>Leichter Regen da draußen, ich habe es gesehen. Der Hubschrauber trocknet im Hangar.</o>
+      <o>Zurück durch den Regen. Zum Glück nur ein leichter.</o>
+      <o>Das Vorfeld ist wieder nass. Achtet auf euren Schritt auf dem Weg hinein.</o>
+          <o>Zurück aus dem Nieselregen. Geht trocknen, ich kümmere mich um sie.</o>
+      <o>Leichter Regen, also kein Problem. Willkommen zurück.</o>
+</message>
+    <message key="WXC.RL" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (light rain)">
+      <o>Ja, ein bisschen nass, aber in Ordnung.</o>
+      <o>Ein bisschen Regen hat noch niemandem geschadet.</o>
+      <o>Stimmt. Wenigstens ist er nicht stark.</o>
+      <o>Wir kommen klar, danke.</o>
+          <o>Nur ein bisschen Wasser, kein Problem.</o>
+      <o>Es ist nur Nieselregen, ich überlebe das.</o>
+</message>
+    <message key="WXH.RH" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (heavy rain)">
+      <o>Heute schüttet es! Was für ein Pech, bei diesem Regen hier draußen zu sein.</o>
+      <o>Was für ein Wolkenbruch. Ihr beneidet mich nicht, so draußen im Wasser.</o>
+      <o>Starker Regen heute. Ich hoffe, der Einsatz ist es wert, nass zu werden.</o>
+      <o>Es gießt in Strömen. Fliegt sicher und bleibt trocken, wenn es geht.</o>
+          <o>Schaut euch diesen Regen an! Dafür könntet ihr mich nicht bezahlen, zu fliegen.</o>
+      <o>Es regnet in Strömen. Wenigstens ist der Hangar trocken.</o>
+</message>
+    <message key="WXD.RH" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (heavy rain)">
+      <o>Es schüttet immer noch! Ihr seid sicher durchnässt, kommt herein.</o>
+      <o>Was für ein Wolkenbruch. Was für ein Pech, da draußen zu sein.</o>
+      <o>Ihr seid durch diesen ganzen Regen geflogen? Mir hätte das nicht gefallen.</o>
+      <o>Starker Regen auf dem Vorfeld. Geht schnell hinein, ich kümmere mich um den Hubschrauber.</o>
+          <o>Ihr seid bestimmt durchnässt. Geht hinein und trocknet euch ab, ich übernehme hier.</o>
+      <o>Das war viel Regen. Gut gemacht, sie zurückzubringen.</o>
+</message>
+    <message key="WXC.RH" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (heavy rain)">
+      <o>Wem sagst du das. Nicht der beste Tag, um draußen zu sein.</o>
+      <o>Ja, und wir müssen darin fliegen.</o>
+      <o>Hoffen wir, dass es bald aufklart.</o>
+      <o>Mir ist das Dach des Hubschraubers jederzeit lieber als das hier.</o>
+          <o>Ich will nur ein trockenes Handtuch und einen heißen Kaffee.</o>
+      <o>Es war stark, aber dem Hubschrauber hat es nichts ausgemacht.</o>
+</message>
+    <message key="WXH.SN" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (snow)">
+      <o>Schnee heute! Es sieht wunderschön aus, aber hier draußen ist es kalt und glatt.</o>
+      <o>Es schneit. Achtet auf das Vorfeld, es ist rutschig.</o>
+      <o>Schneefall heute. Ich habe geräumt, was ging, aber seid vorsichtig auf dem Eis.</o>
+      <o>Ein weißer Tag da draußen. Schön anzusehen, weniger schön zum Arbeiten.</o>
+          <o>Schnee auf dem Vorfeld. Achtet auf das Eis und fliegt vorsichtig.</o>
+      <o>Es schneit. Die Kälte hilft den Triebwerken beim Start nicht, habt also Geduld.</o>
+</message>
+    <message key="WXD.SN" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (snow)">
+      <o>Willkommen zurück im Schnee. Geht hinein und wärmt euch auf.</o>
+      <o>Es schneit weiter. Ich reinige den Hubschrauber und prüfe ihn auf Eis.</o>
+      <o>Eine weiße Landung, wie schön. Achtet auf das rutschige Vorfeld.</o>
+      <o>Wieder Schnee auf dem Vorfeld. Holt euch ein heißes Getränk.</o>
+          <o>Überall Schnee. Ich räume den Hubschrauber frei, ihr geht hinein.</o>
+      <o>Willkommen zurück. Wärmt euch auf, ich fege den Schnee von ihr.</o>
+</message>
+    <message key="WXC.SN" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (snow)">
+      <o>Schön, aber kalt. Wir sind vorsichtig.</o>
+      <o>Ja, ein weißer Tag. Wir achten genau auf das Eis.</o>
+      <o>Von oben sieht es wenigstens schön aus.</o>
+      <o>Danke, dass du das Vorfeld geräumt hast.</o>
+          <o>Es sieht toll aus, und es ist eiskalt.</o>
+      <o>Wir gehen es langsam an. Danke für die Warnung.</o>
+</message>
+    <message key="WXH.HT" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (heat)">
+      <o>Heute ist es heiß! Ich schmelze hier draußen schon.</o>
+      <o>Was für eine Hitze. Trink viel Wasser, {@PLT}.</o>
+      <o>Ein heißer Tag. Den Triebwerken gefällt die Hitze auch nicht.</o>
+      <o>Die Sonne brennt. Gutes Wetter zum Baden, schlechtes zum Arbeiten auf dem Vorfeld.</o>
+          <o>Heiß heute. Trinkt Wasser und haltet die Kabine kühl.</o>
+      <o>Es ist glühend heiß hier draußen. Ich könnte auf dem Vorfeld ein Ei braten.</o>
+</message>
+    <message key="WXD.HT" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (heat)">
+      <o>Zurück in dieser Hitze. Kommt in den Schatten, ich habe kaltes Wasser.</o>
+      <o>Es ist immer noch so heiß. Der Hubschrauber braucht Zeit zum Abkühlen.</o>
+      <o>Was für eine Hitze, und ihr seid darin geflogen. Trinkt etwas Wasser.</o>
+      <o>Das Vorfeld glüht. Ich stelle den Hubschrauber in den Schatten.</o>
+          <o>Zurück in der Hitze. Holt euch Wasser, das habt ihr verdient.</o>
+      <o>Hier draußen kocht es. Geht hinein und kühlt euch ab.</o>
+</message>
+    <message key="WXC.HT" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (heat)">
+      <o>Ich weiß. Ein kaltes Getränk wäre willkommen.</o>
+      <o>Es ist wirklich heiß. Wir trinken genug.</o>
+      <o>Wenigstens hat die Kabine etwas Luft.</o>
+      <o>Stimmt. Danke für das Wasser.</o>
+          <o>Die Kabine war ein Backofen. Ich brauche eine Dusche.</o>
+      <o>Ich weiß. Wir trinken viel Wasser.</o>
+</message>
+    <message key="WXH.CD" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (cold)">
+      <o>Heute ist es kalt! Meine Finger sind schon steif.</o>
+      <o>Es ist frisch hier draußen. Zieht euch warm an, wenn ihr herumlauft.</o>
+      <o>Ein kalter Tag. Dem Hubschrauber macht es wenigstens nichts aus.</o>
+      <o>Es ist kalt, aber trocken. Es könnte schlimmer sein.</o>
+          <o>Es ist kalt. Vergesst eure Handschuhe nicht.</o>
+      <o>Ein kalter Wind heute. Wärmt euch gut auf, bevor ihr los geht.</o>
+</message>
+    <message key="WXD.CD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (cold)">
+      <o>Willkommen zurück. Es ist kalt, geht hinein und holt euch etwas Warmes.</o>
+      <o>Es ist frisch hier draußen. Ich kümmere mich um den Hubschrauber, geht hinein.</o>
+      <o>Kalter Tag, heißer Kaffee. Ihr wisst, wo er steht.</o>
+      <o>Der Wind auf dem Vorfeld ist kalt. Geht schnell hinein.</o>
+          <o>Ihr seid bestimmt durchgefroren. Drinnen wartet heißer Tee.</o>
+      <o>Kalter Tag. Geht hinein und wärmt euch auf, ich kümmere mich um sie.</o>
+</message>
+    <message key="WXC.CD" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (cold)">
+      <o>Ja, es ist kalt. Danke für die Warnung.</o>
+      <o>Wir ziehen uns warm an.</o>
+      <o>Wenigstens ist die Luft ruhig.</o>
+      <o>Ich hoffe, im Hangar gibt es heißen Kaffee.</o>
+          <o>Kalt, aber wenigstens ist die Luft klar.</o>
+      <o>Ich ziehe noch eine Schicht an.</o>
+</message>
+    <message key="WXH.FZ" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (freezing cold)">
+      <o>Heute herrscht Frost! Meine Hände sind taub.</o>
+      <o>Brutale Kälte. Achtet auf das Eis auf dem Vorfeld und am Rotor.</o>
+      <o>Unter null und ich arbeite draußen. Sagt mir nochmal, warum ich diesen Job liebe.</o>
+      <o>Es ist eiskalt hier draußen. Bleibt warm und achtet beim Fliegen auf Eis.</o>
+          <o>Heute unter null. Prüft vor dem Abheben auf Eis.</o>
+      <o>Es ist so kalt, dass mein Kaffee gefriert. Passt da draußen auf euch auf.</o>
+</message>
+    <message key="WXD.FZ" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (freezing cold)">
+      <o>Hier draußen herrscht Frost! Geht hinein und wärmt euch auf, ich kümmere mich um den Hubschrauber.</o>
+      <o>Es ist unter null. Ich prüfe Rotor und Türen auf Eis.</o>
+      <o>Ihr seid bei dieser Kälte geflogen? Mutig. Kommt rein und wärmt eure Hände.</o>
+      <o>Es ist bitterkalt. Geht hinein, im Hangar gibt es heißen Kaffee.</o>
+          <o>Ihr seid bestimmt eiskalt. Geht hinein, ich erledige das hier.</o>
+      <o>Überall Frost. Ich prüfe sie auf Eis.</o>
+</message>
+    <message key="WXC.FZ" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (freezing cold)">
+      <o>Brrr, eiskalt. Danke, dass du dich bei dieser Kälte um sie kümmerst.</o>
+      <o>Absolut. Wir prüfen auf Eis.</o>
+      <o>Du hast einen heißen Kaffee verdient.</o>
+      <o>Bleib warm, wir sind schnell.</o>
+          <o>Meine Nase ist gefroren. Danke, dass du dich kümmerst.</o>
+      <o>Ich prüfe nach dem Start auf Eis.</o>
+</message>
+    <message key="WXH.FG" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (fog or low visibility)">
+      <o>Die Sicht ist heute schlecht. Man sieht kaum das Ende des Vorfelds.</o>
+      <o>Heute ist es neblig. Geht es da draußen ruhig an.</o>
+      <o>Dicke Luft heute. Ich hoffe, ihr habt gute Augen.</o>
+      <o>Schlechte Sicht, fliegt also vorsichtig.</o>
+          <o>Nebel auf dem Vorfeld. Fliegt langsam und haltet die Augen offen.</o>
+      <o>Da draußen sieht man nichts. Viel Glück dabei.</o>
+</message>
+    <message key="WXD.FG" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (fog or low visibility)">
+      <o>Zurück in diesem Nebel. Ich bin froh, dass ihr den Weg nach Hause gefunden habt.</o>
+      <o>Die Sicht ist furchtbar. Gut gemacht, dass ihr dabei gelandet seid.</o>
+      <o>Es ist sehr neblig. Beim nächsten Mal weise ich euch mit den Lichtern ein.</o>
+      <o>Dichter Nebel auf dem Vorfeld. Willkommen zurück, und seid vorsichtig auf dem Weg hinein.</o>
+          <o>Schön, euch wieder aus diesem Nebel zu sehen.</o>
+      <o>Dichter Nebel auf dem Vorfeld. Gut gemacht, den Landeplatz zu finden.</o>
+</message>
+    <message key="WXC.FG" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (fog or low visibility)">
+      <o>Wir gehen es ruhig an, danke.</o>
+      <o>Ja, wir fliegen vorsichtig.</o>
+      <o>Hoffen wir, dass es aufklart.</o>
+      <o>Guter Punkt. Augen nach draußen.</o>
+          <o>Wir fliegen nach Instrumenten, danke.</o>
+      <o>Ich hoffe, es klart bald auf.</o>
+</message>
+    <message key="WXH.WD" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (strong wind)">
+      <o>Heute ist es windig! Passt beim Anlassen auf.</o>
+      <o>Starker Wind da draußen. Haltet euren Hut fest.</o>
+      <o>Heute ist viel Wind. Der Rotorstart wird spannend.</o>
+      <o>Heute gibt es Böen. Haltet beim Abheben die Augen offen.</o>
+          <o>Der Wind heult heute. Seid vorsichtig mit den Türen.</o>
+      <o>Starker Wind: alles festbinden. Und ihr, haltet euch gut fest.</o>
+</message>
+    <message key="WXD.WD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (strong wind)">
+      <o>Eine windige Landung, nehme ich an. Willkommen zurück.</o>
+      <o>Der Wind ist stark auf dem Vorfeld. Achtet auf die Türen.</o>
+      <o>Es gibt Böen. Ich sichere den Hubschrauber.</o>
+      <o>Was für ein Wind heute. Gut gemacht, sie hereinzubringen.</o>
+          <o>Starker Wind, ich habe sie hereinkommen sehen. Schöne Landung.</o>
+      <o>Böen auf dem Vorfeld. Ich sichere sie sofort.</o>
+</message>
+    <message key="WXC.WD" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (strong wind)">
+      <o>Ja, das haben wir gemerkt. Wir sind vorsichtig.</o>
+      <o>Danke, wir behalten den Wind im Auge.</o>
+      <o>Ich halte gut fest.</o>
+      <o>Immer ist irgendetwas, oder?</o>
+          <o>Wir kommen mit dem Wind klar, keine Sorge.</o>
+      <o>Hoffen wir, dass er sich beruhigt.</o>
+</message>
+    <message key="WXH.FR" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (fine weather)">
+      <o>Schönes Wetter heute. Ein guter Tag zum Fliegen.</o>
+      <o>Tolles Wetter. Genießt es, solange es hält.</o>
+      <o>Klar und ruhig. Perfekt zum Fliegen.</o>
+      <o>Keine Wolke in Sicht, na ja, fast. Ein schöner Tag für einen Flug.</o>
+          <o>Ein herrlicher Tag. Macht das Beste daraus.</o>
+      <o>Sonne und kein Wind. Ehrlich, ein Piloten-Traum.</o>
+</message>
+    <message key="WXD.FR" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (fine weather)">
+      <o>Willkommen zurück. Schönes Wetter dafür.</o>
+      <o>Was für ein schöner Tag. Ich hoffe, der Einsatz lief so gut wie das Wetter.</o>
+      <o>Den ganzen Tag klarer Himmel. Willkommen zurück.</o>
+      <o>Ein guter Tag zum Fliegen und ein guter Tag, zurück zu sein.</o>
+          <o>Schönes Wetter zum Zurückkommen.</o>
+      <o>Ein wunderschöner Tag. Ich hoffe, der Einsatz war genauso gut.</o>
+</message>
+    <message key="WXC.FR" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (fine weather)">
+      <o>Absolut, mal schönes Wetter zur Abwechslung.</o>
+      <o>Wunderschön. Das könnte ich jeden Tag machen.</o>
+      <o>Wir sollten es genießen.</o>
+      <o>Ein guter Tag zum Fliegen, in der Tat.</o>
+          <o>Gar nicht schlecht, ehrlich.</o>
+      <o>Über dieses Wetter beschwere ich mich nicht.</o>
+</message>
+    <message key="WXB.OK" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather, no remarkable condition (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Wetter: Wind {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer.</o>
+      <o>Das Wetter: Wind aus {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+      <o>Wettercheck: {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer.</o>
+      <o>Wind {0} mit {1} Knoten, Temperatur {2} Grad, Sicht {3} Kilometer.</o>
+          <o>Wetterüberblick: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+      <o>Kurz das Wetter: {0} Grad, {1} Knoten, Temperatur {2}, Sicht {3} Kilometer.</o>
+</message>
+    <message key="WXB.RL" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (light rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Leichter Regen: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Der Landeplatz kann nass sein.</o>
+      <o>Wetter: leichter Regen, Wind {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer.</o>
+      <o>Ein bisschen Regen: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Achtet auf den nassen Boden.</o>
+      <o>Leichter Regen unterwegs: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+          <o>Ein bisschen Regen: Temperatur {2}, Wind {0} mit {1} Knoten, Sicht {3} Kilometer.</o>
+      <o>Leichter Regen, Sicht {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad.</o>
+</message>
+    <message key="WXB.RH" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heavy rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Starker Regen: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Rechnet mit rutschigem Landeplatz und eingeschränkter Sicht.</o>
+      <o>Wetter: starker Regen, Wind {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer. Vorsicht am Boden.</o>
+      <o>Es schüttet: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Die Sicht kann schnell sinken.</o>
+      <o>Starker Regen auf der Strecke: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Rechnet mit einer nassen Einsatzstelle.</o>
+          <o>Starker Regen, Sicht {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad. Rechnet mit einer nassen und rutschigen Einsatzstelle.</o>
+      <o>Es regnet stark: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Vorsicht da draußen.</o>
+</message>
+    <message key="WXB.SN" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (snow) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Schnee: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Achtet auf White-out und rutschigen Landeplatz.</o>
+      <o>Wetter: Schneefall, Wind {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer. Vorsicht mit dem Schnee rund um den Hubschrauber.</o>
+      <o>Es schneit: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Rechnet mit Eis am Boden.</o>
+      <o>Schnee auf der Strecke: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Bei der Landung ist ein White-out möglich.</o>
+          <o>Schnee, {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Achtet auf Eis.</o>
+      <o>Schneefall: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Der Boden kann rutschig sein.</o>
+</message>
+    <message key="WXB.HT" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heat) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Heiß: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Achtet in der Hitze auf die Triebwerksleistung und trinkt Wasser.</o>
+      <o>Wetter: hohe Temperatur, {2} Grad, Wind {0} Grad mit {1} Knoten, Sicht {3} Kilometer. Die Leistung wird geringer sein.</o>
+      <o>Es ist heiß: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Achtet auf die Leistungsreserve.</o>
+      <o>Hitze heute: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Trinkt genug, Crew.</o>
+          <o>Hohe Temperatur, {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Trinkt Wasser und achtet auf die Leistung.</o>
+      <o>Heißes Wetter: {2} Grad, Wind {0} mit {1} Knoten. Die Triebwerke haben weniger Leistung.</o>
+</message>
+    <message key="WXB.CD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Kalt: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Zieht euch warm an.</o>
+      <o>Wetter: kalt, {2} Grad, Wind {0} Grad mit {1} Knoten, Sicht {3} Kilometer.</o>
+      <o>Es ist kalt: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Der Patient braucht eine Decke.</o>
+      <o>Kalter Tag: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer.</o>
+          <o>Kalt: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Haltet den Patienten warm.</o>
+      <o>Kaltes Wetter, {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer.</o>
+</message>
+    <message key="WXB.FZ" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (freezing cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Frost: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Achtet auf Eis am Rotor und am Boden.</o>
+      <o>Wetter: Frost, {2} Grad, Wind {0} Grad mit {1} Knoten, Sicht {3} Kilometer. Vereisung ist möglich.</o>
+      <o>Unter null: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Haltet den Patienten warm und achtet auf Eis.</o>
+      <o>Bittere Kälte: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Vorsicht vor Vereisung.</o>
+          <o>Frost, {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer. Prüft vor dem Start auf Eis.</o>
+      <o>Unter null: {2} Grad, Wind {0} mit {1} Knoten. Möglicherweise Eis am Rotor und am Boden.</o>
+</message>
+    <message key="WXB.FG" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fog or low visibility) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Schlechte Sicht: nur {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad. Wir gehen es langsam an.</o>
+      <o>Wetter: Nebel oder Dunst, Sicht {3} Kilometer, Wind {0} Grad mit {1} Knoten, Temperatur {2}.</o>
+      <o>Geringe Sicht: {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad. Augen nach draußen, alle zusammen.</o>
+      <o>Die Sicht ist schlecht, {3} Kilometer: Wind {0} mit {1} Knoten, {2} Grad. Vorsicht im Anflug.</o>
+          <o>Nebel: Sicht {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad. Wir gehen es langsam an.</o>
+      <o>Geringe Sicht, {3} Kilometer, Wind {0} mit {1} Knoten, {2} Grad. Augen nach draußen.</o>
+</message>
+    <message key="WXB.WD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (strong wind) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Starker Wind: {0} Grad mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Rechnet mit Turbulenz und einer anspruchsvollen Landung.</o>
+      <o>Wetter: windig, Wind {0} Grad mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer. Vorsicht bei der Landung.</o>
+      <o>Es ist windig: {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Wir spüren es in Bodennähe.</o>
+      <o>Böiger Wind: {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Achtet auf Rotorstart und Landung.</o>
+          <o>Windig: {0} Grad mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Rechnet mit einem holprigen Flug.</o>
+      <o>Starker Wind aus {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Vorsicht bei der Landung.</o>
+</message>
+    <message key="WXB.FR" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fine weather) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Das Wetter ist gut: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer. Ein guter Tag zum Fliegen.</o>
+      <o>Heute gutes Wetter. Wind {0} mit {1} Knoten, Temperatur {2}, Sicht {3} Kilometer.</o>
+      <o>Schönes Wetter: Wind {0} Grad mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+      <o>Klar und ruhig: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+          <o>Schönes Wetter für den Einsatz: Wind {0} mit {1} Knoten, {2} Grad, Sicht {3} Kilometer.</o>
+      <o>Das Wetter ist gut: {2} Grad, Wind {0} mit {1} Knoten, Sicht {3} Kilometer.</o>
+</message>
+    <message key="DEB.BYE.TEC.M" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, morning: the technician says goodbye to the pilot by name">
+      <o>Einen schönen Tag, {@PLT}.</o>
+      <o>Geh einen Kaffee holen, den hast du dir verdient. Einen schönen Tag.</o>
+      <o>Ruh dich gut aus, und einen schönen Tag.</o>
+      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Tag.</o>
+          <o>Nimm es ruhig, {@PLT}. Einen schönen Tag.</o>
+      <o>Gut gemacht heute. Einen schönen Tag.</o>
+</message>
+    <message key="DEB.BYE.TEC.A" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, afternoon: the technician says goodbye to the pilot by name">
+      <o>Einen schönen Nachmittag, {@PLT}.</o>
+      <o>Geh etwas essen, das hast du dir verdient. Einen schönen Nachmittag.</o>
+      <o>Ruh dich gut aus und genieß den Rest des Tages.</o>
+      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Nachmittag.</o>
+          <o>Nimm es ruhig, {@PLT}. Einen schönen Nachmittag.</o>
+      <o>Gut gemacht heute. Einen schönen Nachmittag.</o>
+</message>
+    <message key="DEB.BYE.TEC.E" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, evening or night: the technician says goodbye to the pilot by name">
+      <o>Einen schönen Abend, {@PLT}.</o>
+      <o>Geh dich ausruhen, das hast du dir verdient. Gute Nacht.</o>
+      <o>Ruh dich gut aus, und gute Nacht.</o>
+      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Abend.</o>
+          <o>Nimm es ruhig, {@PLT}. Einen schönen Abend.</o>
+      <o>Gut gemacht heute. Gute Nacht.</o>
+</message>
+    <message key="DEB.BYE.PLT" actor="1" radio="auto" group="wxd" seq="3" prio="1" age="90" to="tech" new="1" trigger="hangar, after the flight: the pilot answers the goodbye of the technician">
+      <o>Danke, {@TECH}. Bis zum nächsten Mal.</o>
+      <o>Danke. Dir auch, {@TECH}.</o>
+      <o>Danke für alles. Pass auf dich auf.</o>
+      <o>Danke, {@TECH}. Bis zur nächsten Schicht.</o>
+          <o>Danke, {@TECH}. Mach's gut.</o>
+      <o>Danke, {@TECH}. Pass auf dich auf.</o>
+</message>
 </voicepack>

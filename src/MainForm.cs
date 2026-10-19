@@ -119,6 +119,7 @@ namespace HPGMissionCompanion
         readonly Button saveButton = new Button();
         readonly CheckBox listenAllBox = new CheckBox();
         readonly Label saveLabel = new Label();
+        readonly ComboBox overlapBox = new ComboBox();     // Volume tab: voices at the same time
         bool ensureBusy, noVoiceAnnounced, actorsBlocked;
         int actorsMissingCount, actorsDefaultedCount;      // told to the mission: it shows the message on its pages (user request of 2026-10-19)
         DateTime nextActorCheck = DateTime.MaxValue, lastActorAlert = DateTime.MinValue;
@@ -2264,7 +2265,23 @@ namespace HPGMissionCompanion
                 "ground unit are comes from the context of the mission (L:HMC_CREW_PRESENT, L:HMC_ZONE_*); the view from the simulator (CAMERA STATE: 2 is the cockpit, every other view counts as outside). " +
                 "With somebody aboard, a voice in the air that comes from more than 30 m is heard very low and from more than 100 m not at all; when everybody is outside together the voices keep the normal level. " +
                 "Without the mission context or the view nothing is reduced. Sound files (ringtones, notifications) follow L:VOLUME_CREW and the notification level of the advanced options below.", 10, 336, 706, 96).ForeColor = SystemColors.GrayText;
-            mixInfo.Location = new Point(10, 440);
+            Lbl(page, "Voices at the same time:", 10, 444, 0, 0);
+            overlapBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            overlapBox.Location = new Point(166, 440);
+            overlapBox.Width = 540;
+            overlapBox.Items.Add("Radio, crew and checklist take turns (the sounds and urgent calls may overlap)");
+            overlapBox.Items.Add("Everything together (radio, crew and checklist speak at the same time)");
+            overlapBox.Items.Add("One line at a time in the whole program");
+            overlapBox.SelectedIndex = Ctx.Settings.OverlapMode == 0 ? 2 : (Ctx.Settings.OverlapMode == 2 ? 1 : 0);
+            overlapBox.SelectedIndexChanged += delegate
+            {
+                Ctx.Settings.OverlapMode = overlapBox.SelectedIndex == 2 ? 0 : (overlapBox.SelectedIndex == 1 ? 2 : 1);
+                Ctx.Settings.OverlapLanes = Ctx.Settings.OverlapMode != 0;
+                if (!suppress) MarkDirty();
+            };
+            page.Controls.Add(overlapBox);
+            Lbl(page, "With turns a line of the crew waits while the dispatcher speaks and the other way round, with fewer and clearer overlaps; a time critical call (callouts of the hoist, V, engine fire) and the tablet tones are never held back. Lines that wait too long are dropped, as before.", 10, 468, 706, 34).ForeColor = SystemColors.GrayText;
+            mixInfo.Location = new Point(10, 508);
             mixInfo.Size = new Size(706, 22);
             page.Controls.Add(mixInfo);
 
@@ -2277,7 +2294,7 @@ namespace HPGMissionCompanion
         void BuildAudioOutBox(TabPage page)
         {
             audioOutBox.Text = "Audio output (advanced)";
-            audioOutBox.Location = new Point(10, 472);
+            audioOutBox.Location = new Point(10, 538);
             audioOutBox.Size = new Size(664, 292);
             page.Controls.Add(audioOutBox);
             AudioOutSettings ao = Ctx.Settings.AudioOut;

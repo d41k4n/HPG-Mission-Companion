@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.36";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.37";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -188,7 +188,8 @@ namespace HPGMissionCompanion
         public int AttenCamOutside = 12;        // dB less for a voice from inside heard while the view is outside (0 = off)
         public bool SharedAutoSync = true;      // the waypoint table of the mission (hangars, hospitals) is downloaded from GitHub at start and every 30 minutes (Tools tab, Shared data)
         public bool SharedDbPatch = false;      // the shared changes are also applied to the offline databases of HPG (airports, aprons, helipads) when the simulator is closed; off until the user turns it on
-        public bool OverlapLanes = true;        // the lanes of the player (radio, crew, checklist, sounds) speak together; false: one line at a time in the whole program, by priority (the old behaviour)
+        public bool OverlapLanes = true;        // old file: the lanes of the player speak together; false: one line at a time (kept in step with OverlapMode)
+        public int OverlapMode = -1;            // voices at the same time (user request of 2026-10-19): 0 one line at a time in the whole program, 1 radio, crew and checklist take turns (the sounds and the time critical lines overlap them), 2 everything together; -1 an old file: taken from OverlapLanes (true gives 1)
         public Dictionary<string, LangSetting> Languages = new Dictionary<string, LangSetting>();
 
         public static Settings Load(string path)
@@ -239,6 +240,8 @@ namespace HPGMissionCompanion
             if (Variety != "coherent") Variety = "random";
             if (Names != "random") Names = "functions";
             if (CallSignMode != "custom") CallSignMode = "airline";
+            if (OverlapMode < 0 || OverlapMode > 2) OverlapMode = OverlapLanes ? 1 : 0;
+            OverlapLanes = OverlapMode != 0;
             if (CallSign == null) CallSign = "";
             if (CrewNames == null) CrewNames = new Dictionary<string, string>();
             AttenCamInside = Math.Max(0, Math.Min(30, AttenCamInside));

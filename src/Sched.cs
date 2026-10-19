@@ -56,6 +56,7 @@ namespace HPGMissionCompanion
         public readonly List<SchedItem>[] Pending = new List<SchedItem>[Lanes.Count];
         public readonly SchedItem[] Playing = new SchedItem[Lanes.Count];
         public bool Overlap = true;        // false: one line at a time in the whole program (the order of the old queue, but by priority)
+        public bool Turns;                 // with Overlap: the speech lanes (radio, crew, checklist) take turns, only the sound files and the time critical lines (priority 3) overlap them
         public int ShedMax = 4;            // lines of priority 0 and 1 that may wait in a lane; the oldest of the lowest priority are dropped beyond that
         int seq;
 
@@ -139,6 +140,31 @@ namespace HPGMissionCompanion
                 }
         }
 
+        static bool Speech(int lane) { return lane != Lanes.Fx; }
+
+        // the best line of a lane that could be spoken now (its actor is not speaking elsewhere)
+        SchedItem BestEligible(int lane)
+        {
+            SchedItem best = null;
+            foreach (SchedItem c in Pending[lane]) if (!ActorBusy(lane, c.Actor) && (best == null || Better(c, best))) best = c;
+            return best;
+        }
+
+        // Turns (user request of 2026-10-19: too many voices at the same time): a line of a speech lane does not start while another speech lane speaks, nor before
+        // a better line that waits in another speech lane (the same priority: the earlier one first). A time critical line (priority 3) and the sound files never wait.
+        bool MustWait(int lane, SchedItem c)
+        {
+            if (!Turns || !Speech(lane) || c.Prio >= 3) return false;
+            for (int l = 0; l < Lanes.Count; l++)
+            {
+                if (l == lane || !Speech(l)) continue;
+                if (Playing[l] != null) return true;
+                SchedItem other = BestEligible(l);
+                if (other != null && Better(other, c)) return true;
+            }
+            return false;
+        }
+
         bool ActorBusy(int lane, int actor)
         {
             if (actor <= 0) return false;
@@ -165,7 +191,7 @@ namespace HPGMissionCompanion
             {
                 List<SchedItem> order = new List<SchedItem>(q);
                 order.Sort(delegate (SchedItem a, SchedItem b) { return Better(a, b) ? -1 : (Better(b, a) ? 1 : 0); });
-                foreach (SchedItem c in order) if (!ActorBusy(lane, c.Actor)) { pick = c; break; }
+                foreach (SchedItem c in order) if (!ActorBusy(lane, c.Actor) && !MustWait(lane, c)) { pick = c; break; }
                 if (pick == null) return null;
             }
             q.Remove(pick);
@@ -287,7 +313,7 @@ namespace HPGMissionCompanion
         sealed class Line
         {
             public double Arrive, Start, Dur;
-            public string Key = "", Mode = "voice", Text = "";
+            public string Key = "", Mode = "voice", Text = "", LogLane = "";      // LogLane: the lane the player wrote in the log ("radio", "crew", "checklist"), empty in older logs
             public int Actor, Lane, Prio, Age;
             public string Topic = ""; public int Rank;
             public bool Counter;      // the line came from a simulator counter (the old queue dropped it after 30 s)
@@ -389,6 +415,28 @@ namespace HPGMissionCompanion
             b = c.Next(Lanes.Radio, 1, drops);
             Check(rep, b != null && c.Next(Lanes.Crew, 1, drops) == null, "overlap off: only one lane speaks");
 
+            // Turns: the speech lanes take turns, the sounds and the time critical lines overlap
+            c = new SchedCore(); drops.Clear(); c.Turns = true;
+            c.Add(It(Lanes.Radio, 2, 8, 0, 0, "DSC.1.1", "", 0), drops); c.Add(It(Lanes.Crew, 2, 2, 1, 0, "DSA.ASK", "", 0), drops);
+            a = c.Next(Lanes.Radio, 0, drops);
+            Check(rep, a != null && c.Next(Lanes.Crew, 0, drops) == null, "turns: the crew line waits while the dispatcher speaks");
+            c.Add(It(Lanes.Crew, 3, 3, 2, 0, "CPL.43", "", 0), drops);
+            Check(rep, c.Next(Lanes.Crew, 0, drops) != null, "turns: a time critical line speaks over the dispatcher");
+            c.Add(It(Lanes.Fx, 2, 0, 3, 0, "AND.NEW.MSG", "", 0), drops);
+            Check(rep, c.Next(Lanes.Fx, 0, drops) != null, "turns: a sound file overlaps the speech");
+            c.Finished(Lanes.Radio); c.Finished(Lanes.Crew);
+            Check(rep, c.Next(Lanes.Crew, 0, drops) != null, "turns: the crew line goes when the dispatcher has finished");
+            c = new SchedCore(); drops.Clear(); c.Turns = true;
+            c.Add(It(Lanes.Crew, 1, 2, 0, 0, "BRF.1", "", 0), drops); c.Add(It(Lanes.Radio, 2, 8, 1, 0, "DSC.1.1", "", 0), drops);
+            Check(rep, c.Next(Lanes.Crew, 0, drops) == null && c.Next(Lanes.Radio, 0, drops) != null, "turns: a better line of another lane goes first");
+            c = new SchedCore(); drops.Clear(); c.Turns = true;
+            c.Add(It(Lanes.Radio, 2, 8, 0, 0, "A", "", 0), drops); c.Add(It(Lanes.Crew, 2, 8, 1, 0, "B", "", 0), drops);
+            c.Next(Lanes.Radio, 0, drops);
+            c.Add(It(Lanes.Crew, 2, 2, 2, 0, "C", "", 0), drops);
+            Check(rep, c.Next(Lanes.Crew, 0, drops) == null, "turns: the radio line of the same priority and earlier goes first, no deadlock with an actor that speaks elsewhere");
+            c.Finished(Lanes.Radio);
+            Check(rep, c.Next(Lanes.Crew, 0, drops) != null, "turns: and the crew goes next");
+
             // rules
             SchedMeta m = SchedRules.Classify("CPL.43", null);
             Check(rep, m.Prio == 3 && m.Age == 3, "CPL.43 (V callout) is priority 3 and 3 s");
@@ -462,7 +510,7 @@ namespace HPGMissionCompanion
 
         // ---- the replay of a log ----
         static readonly Regex LineRx = new Regex("^(\\d\\d):(\\d\\d):(\\d\\d)\\.(\\d+) \\[(\\w+)\\] (.*)$", RegexOptions.Compiled);
-        static readonly Regex VoiceRx = new Regex("^actor (\\d+), ([A-Z]{2}), (.*?)(, intercom|, external radio|, radio)?(?: \\(([^)]*)\\))?: (.*)$", RegexOptions.Compiled);
+        static readonly Regex VoiceRx = new Regex("^actor (\\d+), ([A-Z]{2}), (.*?)(, intercom|, external radio|, radio)?(?: \\[lane ([a-z]+)[^\\]]*\\])?(?: \\(([^)]*)\\))?: (.*)$", RegexOptions.Compiled);
         static readonly Regex SayRx = new Regex("^(\\S+) -> option", RegexOptions.Compiled);
         static readonly Regex RenderRx = new Regex("^(\\d+) ms, (\\d+) KB", RegexOptions.Compiled);
         static readonly Regex KeyTagRx = new Regex("<(?:say|text):([A-Za-z0-9_.\\-]+)", RegexOptions.Compiled);
@@ -531,7 +579,7 @@ namespace HPGMissionCompanion
                     Match vm = VoiceRx.Match(body);
                     if (!vm.Success) continue;
                     Line ln = new Line();
-                    ln.Start = t; ln.Actor = int.Parse(vm.Groups[1].Value); ln.Text = vm.Groups[6].Value;
+                    ln.Start = t; ln.Actor = int.Parse(vm.Groups[1].Value); ln.Text = vm.Groups[7].Value; ln.LogLane = vm.Groups[5].Value;
                     string mode = vm.Groups[4].Value;
                     ln.Mode = mode == ", intercom" ? "ics" : (mode == ", external radio" ? "ext" : (mode == ", radio" ? "radio" : "voice"));
                     lines.Add(ln); last = ln;
@@ -577,10 +625,11 @@ namespace HPGMissionCompanion
                 ln.Msg = pm;
                 SchedMeta meta = SchedRules.Classify(ln.Key, pm);
                 ln.Prio = meta.Prio; ln.Age = meta.Age; ln.Topic = meta.Topic; ln.Rank = meta.Rank;
-                ln.Lane = ln.Actor == 11 ? Lanes.Checklist : (ln.Mode == "ics" || ln.Mode == "voice" ? Lanes.Crew : Lanes.Radio);
+                ln.Lane = ln.LogLane == "radio" ? Lanes.Radio : (ln.LogLane == "checklist" ? Lanes.Checklist : (ln.LogLane == "crew" ? Lanes.Crew : (ln.Actor == 11 ? Lanes.Checklist : (ln.Mode == "ics" || ln.Mode == "voice" ? Lanes.Crew : Lanes.Radio))));
             }
-            Result oldR = Simulate(win, false, true);
-            Result newR = Simulate(win, true, false);
+            Result oldR = Simulate(win, false, true, false);
+            Result newR = Simulate(win, true, false, false);
+            Result turnR = Simulate(win, true, false, true);
             rep.AppendLine();
             rep.AppendLine("The old queue is modelled (one line at a time, in order, counters dropped after 30 s): its start times differ from the log by " + oldR.Err.ToString("0.0", CultureInfo.InvariantCulture) + " s on average.");
             rep.AppendLine("Lines that waited 2 s or more with either queue, or were not spoken (durations from the size of the rendered sound, 44100 bytes a second assumed):");
@@ -597,6 +646,13 @@ namespace HPGMissionCompanion
             rep.AppendLine("longest wait (s)         " + oldR.MaxWait.ToString("0.0", CultureInfo.InvariantCulture).PadLeft(9) + "   " + newR.MaxWait.ToString("0.0", CultureInfo.InvariantCulture).PadLeft(9));
             rep.AppendLine("lines that waited > 10 s " + oldR.Over10.ToString().PadLeft(9) + "   " + newR.Over10.ToString().PadLeft(9));
             rep.AppendLine("total wait (s)           " + oldR.SumWait.ToString("0", CultureInfo.InvariantCulture).PadLeft(9) + "   " + newR.SumWait.ToString("0", CultureInfo.InvariantCulture).PadLeft(9));
+            rep.AppendLine();
+            rep.AppendLine("                         all together   turns (radio and crew take turns)");
+            rep.AppendLine("lines spoken             " + newR.Played.ToString().PadLeft(12) + "   " + turnR.Played.ToString().PadLeft(12) + "   of " + win.Count);
+            rep.AppendLine("speech overlapped (s)    " + newR.Overlap.ToString("0", CultureInfo.InvariantCulture).PadLeft(12) + "   " + turnR.Overlap.ToString("0", CultureInfo.InvariantCulture).PadLeft(12));
+            rep.AppendLine("longest wait (s)         " + newR.MaxWait.ToString("0.0", CultureInfo.InvariantCulture).PadLeft(12) + "   " + turnR.MaxWait.ToString("0.0", CultureInfo.InvariantCulture).PadLeft(12));
+            rep.AppendLine("lines that waited > 10 s " + newR.Over10.ToString().PadLeft(12) + "   " + turnR.Over10.ToString().PadLeft(12));
+            Check(rep, turnR.Overlap <= newR.Overlap + 1e-6, "turns: no more speech is overlapped than with all the lanes together");
             Check(rep, newR.MaxWait <= oldR.MaxWait && newR.SumWait <= oldR.SumWait, "the new queue waits no longer than the old one on this log");
             Check(rep, oldR.Err < 3.0, "the model of the old queue follows the log (mean difference under 3 s)");
         }
@@ -606,7 +662,8 @@ namespace HPGMissionCompanion
             public Dictionary<Line, double> Wait = new Dictionary<Line, double>();
             public Dictionary<Line, string> Dropped = new Dictionary<Line, string>();
             public int Played, Over10;
-            public double MaxWait, SumWait, Err;
+            public double MaxWait, SumWait, Err, Overlap;      // Overlap: seconds in which two speech lanes speak together
+            public List<double[]> Spans = new List<double[]>();
         }
         static string Clock(double t)
         {
@@ -614,11 +671,11 @@ namespace HPGMissionCompanion
         }
 
         // the lines of the window through the scheduler in virtual time (oldQueue: one lane, one line at a time, in order, counters dropped after 30 s)
-        static Result Simulate(List<Line> win, bool lanes, bool oldQueue)
+        static Result Simulate(List<Line> win, bool lanes, bool oldQueue, bool turns)
         {
             Result res = new Result();
             SchedCore core = new SchedCore();
-            core.Overlap = lanes;
+            core.Overlap = lanes; core.Turns = turns;
             double[] busyUntil = new double[Lanes.Count];
             SchedItem[] playing = new SchedItem[Lanes.Count];
             List<Line> order = new List<Line>(win);
@@ -656,6 +713,7 @@ namespace HPGMissionCompanion
                         if (it == null) continue;
                         Line ln = map[it];
                         playing[l] = it; busyUntil[l] = t + ln.Dur; res.Played++;
+                        if (l != Lanes.Fx) res.Spans.Add(new double[] { l, t, t + ln.Dur });
                         double wait = t - ln.Arrive;
                         res.Wait[ln] = wait; res.MaxWait = Math.Max(res.MaxWait, wait); res.SumWait += wait;
                         if (wait > 10) res.Over10++;
@@ -674,6 +732,9 @@ namespace HPGMissionCompanion
                 t = nt;
             }
             res.Err = nErr > 0 ? sumErr / nErr : 0;
+            for (int i = 0; i < res.Spans.Count; i++)
+                for (int j = i + 1; j < res.Spans.Count; j++)
+                    if (res.Spans[i][0] != res.Spans[j][0]) res.Overlap += Math.Max(0, Math.Min(res.Spans[i][2], res.Spans[j][2]) - Math.Max(res.Spans[i][1], res.Spans[j][1]));
             return res;
         }
     }

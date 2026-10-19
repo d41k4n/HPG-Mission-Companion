@@ -813,7 +813,7 @@ namespace HPGMissionCompanion
             List<SchedDrop> dropped = new List<SchedDrop>();
             lock (core.Lock)
             {
-                core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapLanes;
+                core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapMode != 0; core.Turns = Ctx.Settings == null || Ctx.Settings.OverlapMode == 1;
                 s.Born = Now;
                 SchedItem cut = core.Add(s, dropped);
                 if (cut != null) StopLane(cut.Lane);
@@ -892,7 +892,7 @@ namespace HPGMissionCompanion
                 List<SchedDrop> dropped = new List<SchedDrop>();
                 lock (core.Lock)
                 {
-                    core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapLanes;
+                    core.Overlap = Ctx.Settings == null || Ctx.Settings.OverlapMode != 0; core.Turns = Ctx.Settings == null || Ctx.Settings.OverlapMode == 1;
                     s = core.Next(lane, Now, dropped);
                     if (s != null) gen = generation[lane];
                     else if (dropped.Count == 0) Monitor.Wait(core.Lock, 250);       // a new line, a line that finished, or the age of the waiting lines to check again
