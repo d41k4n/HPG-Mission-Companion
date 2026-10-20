@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="9" basever="21" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="10" basever="21" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -112,7 +112,7 @@
     <message key="APR.PLT.G" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, a landing spot near the patient is expected">
       <o>Im Anflug auf die Einsatzstelle. Wir erwarten eine Landung nahe am Patienten, also Bodeneinsatz.</o>
       <o>Gleich da. Plan ist, beim Patienten zu landen und am Boden zu arbeiten.</o>
-      <o>Briefing: Wir sollten nah bei ihnen landen können. Bodeneinsatz.</o>
+      <o>Wir sollten nah bei ihnen landen können. Bodeneinsatz.</o>
       <o>Noch zwei Meilen. Wir peilen eine Landung nahe am Patienten an, Bodeneinsatz.</o>
       <o>Zwei Meilen entfernt. Wir sollten nahe beim Patienten aufsetzen, also Einsatz am Boden.</o>
       <o>Fast da, Leute. Landung direkt beim Patienten geplant, Bodeneinsatz.</o>
@@ -120,7 +120,7 @@
     <message key="APR.PLT.H" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, no landing spot near the patient: hoist expected">
       <o>Im Anflug auf die Einsatzstelle. Kein geeigneter Landeplatz nahe am Patienten, wir planen den Windeneinsatz.</o>
       <o>Gleich da. Landung nahe am Patienten nicht möglich: Wir gehen auf Windenbetrieb.</o>
-      <o>Briefing: Kein Landeplatz in der Nähe. Wir bereiten die Rettungswinde vor.</o>
+      <o>Kein Landeplatz in der Nähe. Wir bereiten die Rettungswinde vor.</o>
       <o>Zwei Meilen entfernt. Keine passende Landestelle beim Patienten, wir stellen uns auf Winde ein.</o>
       <o>Noch zwei Meilen. Keine Landemöglichkeit nahe am Patienten, wir machen die Winde klar.</o>
       <o>Fast da, Leute. Können beim Patienten nicht landen, wird also ein Windeneinsatz.</o>
@@ -766,20 +766,20 @@
       <o>Die Crew ist unten bereit, weiter geht's.</o>
     </message>
     <message key="CPL.62" actor="2" radio="auto" lvar="L:CPL{VCP}62" wav="AND.route.unavailable.check.tablet.wav" trigger="routeupdate records a missing or failed destination after its retry.">
-      <o>Route nicht verfügbar. Ziel auf dem Tablet auswählen oder bestätigen.</o>
-      <o>Keine Route verfügbar. Bitte Zielort auf dem Tablet wählen oder bestätigen.</o>
-      <o>Keine Route berechenbar. Ziel auf dem Tablet wählen oder bestätigen.</o>
-      <o>Ich bekomme keine Route rein. Wähle oder bestätige das Ziel auf dem Tablet.</o>
-      <o>Keine Route da, Leute. Bitte das Ziel auf dem Tablet eingeben.</o>
-      <o>Die Route ist nicht verfügbar, bitte Ziel auf dem Tablet auswählen.</o>
+      <o>Das Ziel wird nicht gefunden. Bitt auf dem Tablet auswählen oder bestätigen.</o>
+      <o>Kein Zielort verfügbar. Bitte auf dem Tablet wählen oder bestätigen.</o>
+      <o>Kein Zielort erhalten. Bitte auf dem Tablet wählen oder bestätigen.</o>
+      <o>Der Zielort ist nicht programmiert. Wähle oder bestätige auf dem Tablet.</o>
+      <o>Es konnte kein Zielort berechnet werden. Bitte auf dem Tablet eingeben.</o>
+      <o>Das Ziel ist nicht programmiert. Bitte das Ziel auf dem Tablet auswählen.</o>
     </message>
     <message key="CPL.63" actor="2" radio="auto" lvar="L:CPL{VCP}63" wav="AND.route.changed.check.tablet.wav" trigger="Hospital, pickup, or custom target changes and the route is recalculated.">
-      <o>Zielort geändert. Geänderte Route auf dem Tablet prüfen.</o>
-      <o>Das Ziel hat sich geändert. Neue Route auf dem Tablet überprüfen.</o>
-      <o>Neuer Zielort. Bitte korrigierte Route auf dem Tablet einsehen.</o>
-      <o>Ziel aktualisiert. Schau dir die neue Route auf dem Tablet an.</o>
-      <o>Ziel hat sich geändert, prüfe die neue Route auf dem Tablet.</o>
-      <o>Wir haben ein neues Ziel, wirf einen Blick auf die Route im Tablet.</o>
+      <o>Zielort geändert. Geänderte Strecke auf dem Tablet prüfen.</o>
+      <o>Das Ziel hat sich geändert. Neue Strecke auf dem Tablet überprüfen.</o>
+      <o>Neuer Zielort. Bitte korrigierte Strecke auf dem Tablet einsehen.</o>
+      <o>Ziel aktualisiert. Schau dir die neue Strecke auf dem Tablet an.</o>
+      <o>Ziel hat sich geändert, prüfe die neue Strecke auf dem Tablet.</o>
+      <o>Wir haben ein neues Ziel, wirf einen Blick auf die Strecke im Tablet.</o>
     </message>
     <message key="CPL.64" actor="2" radio="auto" lvar="L:CPL{VCP}64" wav="AND.cockpit.engine.start.hold.wav" trigger="marshall_ground_ops_active or pisteur3_guidance_active blocks a first-pump start request.">
       <o>Triebwerksstart bitte anhalten. Bodenmaßnahmen laufen noch.</o>
@@ -798,11 +798,11 @@
       <o>Copilot fertig, Gurt fest, Tür zu.</o>
     </message>
     <message key="CPL.66" actor="2" radio="auto" group="brief" seq="2" lvar="L:CPL{VCP}66" sleep="0.4" new="1">
-      <o>Verstanden. Ich setze die Route und behalte das Wetter im Auge.</o>
+      <o>Verstanden. Ich setze die Strecke und behalte das Wetter im Auge.</o>
       <o>Copilot verstanden. Navigation und Funk liegen bei mir.</o>
       <o>Ich übernehme Kursführung und Funkverkehr.</o>
-      <o>Verstanden. Ich programmiere die Route und beobachte den Flugverkehr.</o>
-      <o>Kapiert. Ich stelle die Route ein und achte aufs Wetter.</o>
+      <o>Verstanden. Ich programmiere die Strecke und beobachte den Flugverkehr.</o>
+      <o>Verstanden. Ich stelle die Strecke ein und achte aufs Wetter.</o>
       <o>Verstanden. Kurs und Funk gehen auf mich.</o>
     </message>
     <message key="CPL.67" actor="2" radio="auto" group="debriefok" seq="2" lvar="L:CPL{VCP}67" sleep="0.4" new="1" futile="1">
@@ -827,7 +827,7 @@
       <o>Ich kümmere mich um die Navigation und rufe rechtzeitig im Krankenhaus an.</o>
       <o>Navigation eingestellt. Ich rufe im Krankenhaus an, sobald wir näher sind.</o>
       <o>Das Krankenhaus wird informiert. Ich beobachte die Route.</o>
-      <o>Verstanden. Die Route ist festgelegt und ich werde das Krankenhaus informieren.</o>
+      <o>Verstanden. Die Strecke ist festgelegt und ich werde das Krankenhaus informieren.</o>
     </message>
     <message key="CRZ.BACK.DOC" actor="3" radio="auto" group="crzb" seq="2" new="1" futile="1">
       <o silent="1"/>
@@ -1548,7 +1548,7 @@
     <message key="OBJ.SARV" actor="8" radio="on" new="1" trigger="objective of the overdue vehicle search">
       <o>Ab der letzten bekannten Position die mutmaßliche Fahrtroute abfliegen. Fahrzeugführer auffinden, retten und in Klinik bringen.</o>
       <o>Entlang der wahrscheinlichsten Fahrtstrecke suchen. Nach Auffinden Fahrer bergen und ins Krankenhaus transportieren.</o>
-      <o>Mutmaßliche Route ab letzter Sichtung abfliegen und nach dem Kfz suchen. Fahrer auffinden, retten, dann Klinik.</o>
+      <o>Mutmaßliche Strecke ab letzter Sichtung abfliegen und nach dem Kfz suchen. Fahrer auffinden, retten, dann Klinik.</o>
       <o>Verbindung auf dieser Strecke abgerissen. Fahrtroute abfliegen, Fahrzeug und Fahrer finden und in Klinik einfliegen.</o>
       <o>Dem Straßenverlauf des Fahrzeugs folgen, Pkw und Fahrer finden und den Verletzten ins Krankenhaus bringen.</o>
       <o>Auf dieser Straße wird das Fahrzeug vermisst. Abfliegen, Auto und Insassen finden und in die Klinik bringen.</o>
@@ -1572,7 +1572,7 @@
     <message key="PAX1.2" actor="4" radio="auto" lvar="L:{VCP}2" wav="AND.pax1.cabin.preparation.please.wait.wav" sleep="0">
       <o>Kabinenvorbereitung läuft. Bitte warten.</o>
       <o>Die Kabine wird noch vorbereitet. Bitte warten.</o>
-      <o>Bereite die Kabine vor, bitte warten.</o>
+      <o>Ich bereite die Kabine vor, bitte warten.</o>
       <o>Kabinenvorbereitung läuft noch, bitte kurz warten.</o>
       <o>Gebt uns einen Moment, wir richten gerade die Kabine her.</o>
       <o>Kurz warten, ich bin noch mit der Kabine beschäftigt.</o>
@@ -2524,8 +2524,8 @@
     <message key="PAX3.13" actor="3" radio="auto" lvar="L:PAX3{VCP}13" wav="AND.pax3.qpatient.safe.wav" sleep="0">
       <o>Der Patient wurde ausgeladen.</o>
       <o>Patient ausgeladen.</o>
-      <o>Der Patient ist raus.</o>
-      <o>Der Patient hat den Heli verlassen.</o>
+      <o>Der Patient ist draussen.</o>
+      <o>Der Patient wurde übernommen.</o>
       <o>Der Patient wurde ausgeladen.</o>
       <o>Der Patient ist von Bord.</o>
     </message>
@@ -2554,12 +2554,12 @@
       <o>Der RTW ist nahe dran, kommt aber nicht durch.</o>
     </message>
     <message key="PAX3.17" actor="3" radio="auto" lvar="L:PAX3{VCP}17" wav="AND.PAX3.wea.CPR.in.progress.wav" sleep="0">
-      <o>Reanimation läuft. Bitte warten; das kann dauern.</o>
-      <o>Reanimation im Gange. Bitte warten, das kann etwas dauern.</o>
-      <o>Wir führen eine Reanimation durch. Bitte warten; das kann etwas dauern.</o>
+      <o>Reanimation läuft. Bitte warten.</o>
+      <o>Reanimation läuft. Bitte um Geduld.</o>
+      <o>Wir führen eine Reanimation durch. Bitte warten.</o>
       <o>Reanimation läuft. Bitte auf Empfang bleiben, das nimmt noch Zeit in Anspruch.</o>
       <o>Wir reanimieren, kann noch etwas dauern, bitte warten.</o>
-      <o>Reanimation läuft noch, dauert eine Weile, bleibt auf Empfang.</o>
+      <o>Reanimation läuft noch und dauert eine Weile. Bleibt auf Empfang.</o>
     </message>
     <message key="PAX3.18" actor="3" radio="auto" lvar="L:PAX3{VCP}18" wav="AND.PAX3.wea.land.for.CPR.wav">
       <o>Wir müssen für die Reanimation landen.</o>
@@ -2618,12 +2618,12 @@
       <o>Das Organ verschlechtert sich von Minute zu Minute.</o>
     </message>
     <message key="PAX3.25" actor="12" radio="ics" lvar="L:PAX3{VCP}25" wav="AND.pax3.weo.wbriefing.wav" sleep="0">
-      <o>Briefing: Bei Ankunft sichere ich die Einsatzstelle. Nach Freigabe stößt die Besatzung für die medizinischen Maßnahmen dazu. Am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenrettung steige ich zuerst ein.</o>
-      <o>Briefing: Ich sichere bei Ankunft die Einsatzstelle. Sobald sie frei ist, kommt die Besatzung für die medizinische Versorgung nach. Am Ende steigt die medizinische Besatzung zuerst ein; wenn wir per Winde bergen, gehe ich zuerst an Bord.</o>
-      <o>Briefing: Bei Ankunft sichere ich die Stelle, die Besatzung folgt nach Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenbergung steige ich zuerst ein.</o>
-      <o>Briefing: Ich sichere bei Ankunft die Stelle, dann kommt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, bei einer Windenbergung ich.</o>
-      <o>Briefing: Ich gehe zuerst raus und sichere die Stelle. Wenn sie frei ist, folgt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, und ich nur bei einer Windenbergung zuerst.</o>
-      <o>Briefing: Ich sichere zuerst die Stelle, die Besatzung kommt nach meiner Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein, außer bei einer Windenbergung, da gehe ich zuerst.</o>
+      <o> Bei Ankunft sichere ich die Einsatzstelle. Nach Freigabe stößt die Besatzung für die medizinischen Maßnahmen dazu. Am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenrettung steige ich zuerst ein.</o>
+      <o> Ich sichere bei Ankunft die Einsatzstelle. Sobald sie frei ist, kommt die Besatzung für die medizinische Versorgung nach. Am Ende steigt die medizinische Besatzung zuerst ein; wenn wir per Winde bergen, gehe ich zuerst an Bord.</o>
+      <o> Bei Ankunft sichere ich die Stelle, die Besatzung folgt nach Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein; bei einer Windenbergung steige ich zuerst ein.</o>
+      <o> Ich sichere bei Ankunft die Stelle, dann kommt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, bei einer Windenbergung ich.</o>
+      <o> Ich gehe zuerst raus und sichere die Stelle. Wenn sie frei ist, folgt die Besatzung zur medizinischen Arbeit. Am Ende steigt die medizinische Besatzung zuerst ein, und ich nur bei einer Windenbergung zuerst.</o>
+      <o> Ich sichere zuerst die Stelle, die Besatzung kommt nach meiner Freigabe, und am Ende steigt die medizinische Besatzung zuerst ein, außer bei einer Windenbergung, da gehe ich zuerst.</o>
     </message>
     <message key="PAX3.26" actor="3" radio="auto" lvar="L:PAX3{VCP}26" wav="AND.pax3.weo.welcome.wav" sleep="0" futile="1">
       <o silent="1"/>
@@ -3504,7 +3504,7 @@
     <message key="APR.PLT.P" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, the landing spot is far from the patient and the police will drive the crew (argument 0 = distance in meters)">
       <o>Annäherung an den Einsatzort. Wir können nicht in der Nähe des Patienten landen: Wir landen am ausgewählten Landeplatz, etwa {0} Meter entfernt, und die Polizei wird die Besatzung zum Patienten bringen.</o>
       <o>Fast geschafft. Der Landeplatz ist etwa {0} Meter vom Patienten entfernt. Die Polizei wird die Rettungskräfte zum Einsatzort fahren.</o>
-      <o>Briefing: Wir landen an der Stelle, {0} Meter vom Patienten entfernt, und die Polizei übernimmt die Besatzung.</o>
+      <o>Wir landen an der Stelle, {0} Meter vom Patienten entfernt, und die Polizei übernimmt die Besatzung.</o>
       <o>Zwei Meilen entfernt. Wir landen an der Stelle, etwa {0} Meter von ihnen entfernt, und die Polizei bringt Sie zum Patienten.</o>
       <o>Zwei Meilen entfernt. Der Patient befindet sich {0} Meter von unserem Landeplatz entfernt. Die Polizei bringt die Besatzung dorthin.</o>
       <o>Fast da. Wir landen an der Stelle, es sind etwa {0} Meter. Die Polizei wird Sie mitnehmen.</o>
@@ -5485,7 +5485,7 @@
       <o>Ein Angehöriger meldet, dass ein Auto nie am Zielort angekommen ist. Der Fahrer geht nicht ans Telefon.</o>
     </message>
     <message key="DSC.65.2" text="1" actor="8" trigger="dispatch description of incident 65, variant 2">
-      <o>Die Familie meldet einen überfälligen Fahrer. Die Route ist bekannt, aber das Auto wurde noch nicht gesehen.</o>
+      <o>Die Familie meldet einen überfälligen Fahrer. Die Strecke ist bekannt, aber das Auto wurde noch nicht gesehen.</o>
     </message>
     <message key="DSC.65.3" text="1" actor="8" trigger="dispatch description of incident 65, variant 3">
       <o>Die Polizei erhielt eine Meldung über ein überfälliges Fahrzeug. Der Fahrer könnte die Straße verlassen haben. Eine Such- und Rettungsaktion ist erforderlich.</o>
@@ -6216,59 +6216,59 @@
       <o>Florian Center</o>
     </message>
     <message key="HRB.OPEN.ACC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing of the heli rescuers: accident or injured only (argument: injured)">
-      <o>Achtung Retter, hier das Briefing: Gemeldet ist ein Unfall mit {0} Verletzten. Die Lage ist unklar, deshalb planen wir mit dem Schlimmsten.</o>
-      <o>Kurzes Briefing für die Retter: Die Leitstelle meldet einen Unfall mit {0} Verletzten. Wir haben noch kein klares Bild und bereiten uns auf eine schwere Lage vor.</o>
-      <o>Achtung Retter, das Briefing: Wir sind zu einem Unfall mit {0} Verletzten alarmiert. Details fehlen, und wir behandeln es als ernst, bis das Gegenteil feststeht.</o>
+      <o>Achtung Retter, hier die Situation: Gemeldet ist ein Unfall mit {0} Verletzten. Die Lage ist unklar, deshalb planen wir mit dem Schlimmsten.</o>
+      <o>Kurze Orientierung für die Retter: Die Leitstelle meldet einen Unfall mit {0} Verletzten. Wir haben noch kein klares Bild und bereiten uns auf eine schwere Lage vor.</o>
+      <o>Achtung Retter, die Situation: Wir sind zu einem Unfall mit {0} Verletzten alarmiert. Details fehlen, und wir behandeln es als ernst, bis das Gegenteil feststeht.</o>
       <o>Okay, herhören. Unfall, {0} Verletzte, und keiner weiß genau, was da unten los ist. Seid wachsam.</o>
-      <o>Gut, kurzes Briefing. Ein Unfall mit {0} Verletzten und noch kein klares Bild, wir rechnen mit dem Schlimmsten.</o>
+      <o>Gut, kurze Orientierung. Ein Unfall mit {0} Verletzten und noch kein klares Bild, wir rechnen mit dem Schlimmsten.</o>
       <o>Also, Retter, das haben wir: ein Unfall, {0} Verletzte gemeldet, mehr nicht. Alles Weitere sehen wir vor Ort.</o>
     </message>
     <message key="HRB.OPEN.SAR" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: search and rescue (argument: persons)">
-      <o>Achtung Retter, hier das Briefing: Suche und Rettung von {0} Personen. Wir beginnen an der letzten bekannten Position und wissen nicht, wie lange sie schon draußen sind.</o>
-      <o>Kurzes Briefing für die Retter. Das ist eine Suche und Rettung. Zu bergende Personen: {0}. Wir suchen ab der letzten bekannten Position. Die Zeit seit ihrem Verschwinden ist unbekannt.</o>
-      <o>Achtung Retter, das Briefing. Suche und Rettung, {0} zu bergen. Wir starten an der letzten bekannten Position und können nicht sagen, wie lange sie schon draußen sind.</o>
+      <o>Achtung Retter, hier die Situation: Suche und Rettung von {0} Personen. Wir beginnen an der letzten bekannten Position und wissen nicht, wie lange sie schon unterwegs sind.</o>
+      <o>Kurze Orientierung für die Retter. Das ist eine Suche und Rettung. Zu bergende Personen: {0}. Wir suchen ab der letzten bekannten Position. Die Zeit seit ihrem Aufbruch ist unbekannt.</o>
+      <o>Achtung Retter. Wir haben einen Such- und Rettungsauftrag. {0} Personen werden vermisst. Wir starten an der letzten bekannten Position und können nicht sagen, wie lange sie schon unterwegs sind.</o>
       <o>Okay, herhören. Wir suchen {0} Vermisste. Wir starten an der letzten bekannten Position, und es kann eine lange Suche werden.</o>
-      <o>Gut, kurzes Briefing. Suche und Rettung, {0} zu finden, Start an der letzten bekannten Position. Keine Ahnung, wie lange sie schon draußen sind.</o>
+      <o>Gut, kurze Orientierung. Suche und Rettung, {0} Vermisste, Start an der letzten bekannten Position. Keine Ahnung, wie lange sie schon unterwegs sind.</o>
       <o>Also, Retter, wir haben {0} Vermisste und nur eine letzte bekannten Position. Augen auf, es kann dauern.</o>
     </message>
     <message key="HRB.OPEN.SARV" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: overdue vehicle">
-      <o>Achtung Retter, hier das Briefing: Suche und Rettung für ein überfälliges Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position, finden den Fahrer und bergen ihn.</o>
-      <o>Kurzes Briefing für die Retter: Ein Fahrzeug ist überfällig. Wir fliegen die wahrscheinliche Route ab der letzten bekannten Position und suchen das Fahrzeug und den Fahrer.</o>
-      <o>Achtung Retter, hier das Briefing: Überfälliges Fahrzeug an der letzten bekannten Position. Wir folgen der wahrscheinlichen Route, finden den Fahrer und bergen ihn.</o>
-      <o>Okay, bitte herhören. Ein Auto ist nie angekommen. Wir folgen seiner wahrscheinlichen Route ab der letzten bekannten Position und suchen den Fahrer.</o>
-      <o>Gut, kurzes Briefing. Überfälliges Fahrzeug: Wir fliegen die wahrscheinliche Route, finden das Auto, finden den Fahrer und bringen ihn raus.</o>
-      <o>Also, Retter, jemand ist überfällig und keiner weiß, wo. Wir folgen der wahrscheinlichen Route und suchen das Fahrzeug.</o>
+      <o>Achtung Retter, hier die Situation: Suche und Rettung für ein überfälliges Fahrzeug. Wir folgen der wahrscheinlichen Strecke ab der letzten bekannten Position, finden den Fahrer und bergen ihn.</o>
+      <o>Kurze Orientierung für die Retter: Ein Fahrzeug ist überfällig. Wir fliegen die wahrscheinliche Strecke ab der letzten bekannten Position und suchen das Fahrzeug und den Fahrer.</o>
+      <o>Achtung Retter, hier die Situation: Überfälliges Fahrzeug an der letzten bekannten Position. Wir folgen der wahrscheinlichen Route, finden den Fahrer und bergen ihn.</o>
+      <o>Gut, bitte herhören. Ein Auto ist nie angekommen. Wir folgen seiner wahrscheinlichen Strecke ab der letzten bekannten Position und suchen den Fahrer.</o>
+      <o>Gut, kurze Orientierung. Überfälliges Fahrzeug: Wir fliegen die wahrscheinliche Route, finden das Auto, finden den Fahrer und bringen ihn raus.</o>
+      <o>Also, Retter, jemand ist überfällig und keiner weiß, wo. Wir folgen der wahrscheinlichen Strecke und suchen das Fahrzeug.</o>
     </message>
     <message key="HRB.OPEN.SARC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: parked car">
-      <o>Achtung Retter, hier das Briefing: Ein geparktes Auto wurde gefunden, der Besitzer wird vermisst. Wir suchen die Umgebung des Autos ab und bergen die Person.</o>
-      <o>Kurzes Briefing für die Retter: Ein geparktes Fahrzeug wurde gefunden, der Besitzer fehlt. Wir beginnen am Auto, weiten die Suche aus und bergen die Person.</o>
-      <o>Achtung Retter, das Briefing: Geparktes Auto, Besitzer vermisst. Wir suchen rund um das Fahrzeug und bergen die Person, sobald wir sie finden.</o>
-      <o>Okay, bitte herhören. Jemand hat ein Auto abgestellt und ist nie zurückgekommen. Wir beginnen am Auto und suchen die Umgebung ab.</o>
-      <o>Gut, kurzes Briefing. Ein geparktes Auto, und der Besitzer ist weg. Wir fangen dort an und suchen die Umgebung ab.</o>
+      <o>Achtung Retter, hier die Situation: Ein geparktes Fahrzeug wurde gefunden, der Besitzer wird vermisst. Wir suchen die Umgebung des Fahrzeugs ab.</o>
+      <o>Kurze Orientierung für die Retter: Ein geparktes Fahrzeug wurde gefunden, der Besitzer wird vermisst. Wir beginnen am Fahrzeug und weiten die Suche bei Bedarf aus.</o>
+      <o>Achtung Retter, die Situation: Geparktes Auto, Besitzer vermisst. Wir suchen rund um das Fahrzeug.</o>
+      <o>Gut, bitte herhören. Jemand hat ein Auto abgestellt und wird jetzt vermisst. Wir beginnen am Auto und suchen die Umgebung ab.</o>
+      <o>Gut, kurze Orientierung. Ein geparktes Auto, und der Besitzer wird vermisst. Wir fangen dort an und suchen die Umgebung ab.</o>
       <o>Also, Retter, wir haben ein leeres geparktes Auto und einen vermissten Besitzer. Wir beginnen am Auto und weiten die Suche aus.</o>
     </message>
     <message key="HRB.OPEN.SARH" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: person away from a house">
-      <o>Achtung Retter, hier das Briefing: Eine Person hat ihr Zuhause zu Fuß verlassen und wird vermisst. Wir suchen rund um das Haus und bergen sie.</o>
-      <o>Kurzes Briefing für die Retter: Eine vermisste Person ist zu Fuß vom Haus weggegangen. Wir beginnen am Haus, suchen die Umgebung ab und bergen sie.</o>
-      <o>Achtung Retter, das Briefing: Eine Person ist von zu Hause weggelaufen. Wir suchen das Gebiet um das Haus ab und bergen sie, wenn wir sie finden.</o>
-      <o>Okay, bitte herhören. Jemand ist von zu Hause weggegangen und wird vermisst. Wir beginnen am Haus und suchen die Umgebung ab.</o>
-      <o>Gut, kurzes Briefing. Eine Person fehlt von einem Haus, zu Fuß verschwunden. Wir suchen die Umgebung ab.</o>
+      <o>Achtung Retter, hier die Situation: Eine Person hat ihr Zuhause zu Fuß verlassen und wird vermisst. Wir suchen rund um das Haus und bergen sie.</o>
+      <o>Kurze Orientierung für die Retter: Eine vermisste Person ist zu Fuß vom Haus weggegangen. Wir beginnen am Haus, suchen die Umgebung ab und bergen sie.</o>
+      <o>Achtung Retter, die Situation: Eine Person ist von zu Hause weggelaufen. Wir suchen das Gebiet um das Haus ab und bergen sie, wenn wir sie finden.</o>
+      <o>Gut, bitte herhören. Jemand ist von zu Hause weggegangen und wird vermisst. Wir beginnen am Haus und suchen die Umgebung ab.</o>
+      <o>Gut, kurze Orientierung. Eine Person fehlt von einem Haus, zu Fuß verschwunden. Wir suchen die Umgebung ab.</o>
       <o>Also, Retter, eine Person ist von zu Hause losgezogen. Wir beginnen am Haus und schauen uns um.</o>
     </message>
     <message key="HRB.OPEN.TRF" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: patient transfer (argument: patients)">
-      <o>Achtung Retter, hier das Briefing: Eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Es gibt keine Einsatzstelle zu sichern, der Patient ist bereits in ärztlicher Obhut.</o>
-      <o>Briefing für die Retter: Das ist eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Einsatzstelle und keine Winde: Der Patient ist bereits in den Händen des Klinikpersonals.</o>
-      <o>Achtung Retter, das Briefing: Patientenverlegung, Patienten: {0}. Wir übernehmen im abgebenden Krankenhaus und fliegen sie zum Ziel.</o>
-      <o>Okay, bitte herhören. Heute ist es eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Unfallstelle, ein sauberer Job.</o>
-      <o>Gut, kurzes Briefing: Eine Krankenhausverlegung, Patienten: {0}. Nichts zu sichern, wir übernehmen und fliegen.</o>
+      <o>Achtung Retter, hier die Situation: Eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Es gibt keine Einsatzstelle zu sichern, der Patient ist bereits in ärztlicher Obhut.</o>
+      <o>Orientierung für die Retter: Das ist eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Einsatzstelle und keine Winde: Der Patient ist bereits in den Händen des Klinikpersonals.</o>
+      <o>Achtung Retter, die Situation: Patientenverlegung, Patienten: {0}. Wir übernehmen im abgebenden Krankenhaus und fliegen sie zum Ziel.</o>
+      <o>Gut, bitte herhören. Heute ist es eine Verlegung zwischen Krankenhäusern, Patienten: {0}. Keine Unfallstelle, ein sauberer Job.</o>
+      <o>Gut, kurze Vorbesprechung: Eine Krankenhausverlegung, Patienten: {0}. Nichts zu sichern, wir übernehmen und fliegen.</o>
       <o>Also, Retter, das hier ist eine Verlegung, Patienten: {0}. Ein ruhiger Job: abholen, fliegen, übergeben.</o>
     </message>
     <message key="HRB.OPEN.ORG" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing: organ transport">
-      <o>Achtung Retter, hier das Briefing: ein Organtransport. Er ist zeitkritisch: Wir holen den Behälter ab und liefern ihn innerhalb der Frist. Es gibt keine Einsatzstelle zu sichern.</o>
-      <o>Briefing für die Retter: Organtransport, zeitkritisch. Wir holen den Behälter am Abholpunkt ab und liefern ihn vor Ablauf der Frist. Keine Einsatzstelle, keine Winde.</o>
-      <o>Achtung Retter, das Briefing: Wir transportieren ein Organ, und jede Minute zählt. Abholen, laden, liefern, ohne Einsatzstelle zu sichern.</o>
-      <o>Okay, bitte herhören. Organ-Transport. Die Uhr läuft. Direkter Flug zum Abholort. Nach der Aufnahme fliegen wir schnellstmöglich zum Ziel.</o>
-      <o>Gut, kurzes Briefing: Ein Organ auf Zeit: abholen, festschnallen, schnell liefern.</o>
+      <o>Achtung Retter, hier die Situation: ein Organtransport. Er ist zeitkritisch: Wir holen den Behälter ab und liefern ihn innerhalb der Frist. Es gibt keine Einsatzstelle zu sichern.</o>
+      <o>Orientierung für die Retter: Organtransport, zeitkritisch. Wir holen den Behälter am Abholpunkt ab und liefern ihn vor Ablauf der Frist. Keine Einsatzstelle, keine Winde.</o>
+      <o>Achtung Retter, die Situation: Wir transportieren ein Organ, und jede Minute zählt. Abholen, laden, liefern, ohne Einsatzstelle zu sichern.</o>
+      <o>Gut, bitte herhören. Organ-Transport. Die Uhr läuft. Direkter Flug zum Abholort. Nach der Aufnahme fliegen wir schnellstmöglich zum Ziel.</o>
+      <o>Gut. Ein dringender Organ-Transport steht an.</o>
       <o>Also, Retter, wir fliegen ein Organ, und die Zeit ist knapp. Zügig am Boden, vorsichtig mit dem Behälter.</o>
     </message>
     <message key="HRB.ETA" actor="2" radio="auto" group="hrbrief" seq="2" new="1" trigger="the copilot gives the time to the scene (argument: minutes, 2 or more)">
@@ -6304,12 +6304,12 @@
       <o>Hilfe ist unterwegs: {list:0}. Wir sind voraussichtlich zuerst dort.</o>
     </message>
     <message key="HRB.VEH.NONE" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers there are no ground units">
-      <o>Keine Bodenkräfte vor Ort oder auf Anfahrt. Wir sind zuerst da, also sichert ihr die Stelle.</o>
-      <o>Noch keine Rettungsfahrzeuge alarmiert. Wir kommen zuerst an, und die Sicherung der Stelle liegt bei uns.</o>
-      <o>Noch niemand am Boden und keine Einheiten unterwegs. Ihr sichert die Stelle, bevor sich jemand bewegt.</o>
-      <o>Wir sind allein: keine Bodenkräfte, keine auf Anfahrt.</o>
-      <o>Niemand dort und niemand unterwegs, vorerst. Wir sind zuerst vor Ort.</o>
-      <o>Sonst ist niemand am Boden, die Stelle gehört uns. Ihr sichert sie zuerst.</o>
+      <o>Keine Bodenkräfte vor Ort oder auf Anfahrt. Wir sind zuerst da, also sichern wir die Stelle zuerst.</o>
+      <o>Noch keine Rettungsfahrzeuge unterwegs. Wir kommen zuerst an, und die Sicherung der Stelle liegt bei uns.</o>
+      <o>Es sind noch keine anderen Einheiten unterwegs. Wir sichern also zuerst die Unfallstelle.</o>
+      <o>Wir sind allein. Zur Zeit sind keine weiteren Einsatzkräfte verfügbar.</o>
+      <o>Niemand dort und niemand unterwegs, vorerst. Wir sind als Erste vor Ort.</o>
+      <o>Aktuell sind noch keine anderen Einheiten unterwegs. Wir müssen zuerst die Unfallstelle sichern.</o>
     </message>
     <message key="HRB.MED.ACC" actor="3" radio="auto" group="hrbrief" seq="4" new="1" trigger="the doctor tells what is known medically: accident or injured only">
       <o>Notarzt hier. Medizinisch wissen wir noch nichts. Ich beurteile bei Ankunft, der kritischste Patient kommt zuerst, und bei mehreren helft ihr mir bei der Sichtung.</o>
@@ -6522,122 +6522,122 @@
     <message key="HRB.END" actor="1" radio="auto" group="hrbrief" seq="17" new="1" trigger="the pilot closes the briefing">
       <o>Gut. Den Plan wiederhole ich zwei Meilen vorher. Bis dahin Augen nach draußen, und meldet alles, was ihr seht.</o>
       <o>Danke, alle zusammen. Zwei Meilen vorher briefen wir noch einmal. Bis dahin Augen offen.</o>
-      <o>Briefing abgeschlossen. Ich bestätige den Plan bei zwei Meilen, und bis dahin bleiben alle aufmerksam.</o>
+      <o>Orientierung abgeschlossen. Ich bestätige den Plan bei zwei Meilen, und bis dahin bleiben alle aufmerksam.</o>
       <o>Gut. Wir gehen es zwei Meilen vorher noch einmal durch. Seid wachsam.</o>
-      <o>Also, Briefing beendet. Zwei Meilen vorher wiederhole ich es, und jetzt Augen nach draußen.</o>
+      <o>Also, Orientierung beendet. Zwei Meilen vorher wiederhole ich es, und jetzt Augen nach draußen.</o>
       <o>Okay, los geht es. Zwei Meilen vorher wiederhole ich den Plan, und bis dahin bleibt aufmerksam.</o>
     </message>
     <message key="CRT.POL.OUT" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the police car takes the crew from the landing spot to the patient">
-      <o>Doc hier. Die Polizei fährt uns zum Patienten. Wir sind unterwegs.</o>
+      <o>Hier ist der Notarzt. Die Polizei bringt uns zum Patienten. Wir sind unterwegs.</o>
       <o>Die Polizei bringt uns jetzt zum Patienten. Wir melden uns, wenn wir da sind.</o>
-      <o>Wir sitzen im Polizeiwagen und fahren zum Patienten. Haltet den Hubschrauber sicher.</o>
-      <o>Der Polizeiwagen bringt die Besatzung zum Patienten. Wir melden uns.</o>
-      <o>Besatzung im Polizeiwagen, auf dem Weg zum Patienten. Wir rufen euch.</o>
-      <o>Mit der Polizei zum Patienten unterwegs. Bitte warten.</o>
+      <o>Die Polizei bringt uns zum Patienten. Wir melden uns später.</o>
+      <o>Wir werden von der Polizei abgeholt. Wir melden uns später wieder.</o>
+      <o>Wir fahren mit der Polizei zum Patienten. Wir melden uns wieder.</o>
+      <o>Wir sind mit der Polizei unterwegs zum Patienten. Bitte warten.</o>
     </message>
     <message key="CRT.POL.BCK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the police car takes the crew back to the helicopter (visit done, or the closest police car carries the crew)">
-      <o>Einsatz beim Patienten beendet. Der Polizeiwagen bringt uns zurück zum Hubschrauber.</o>
+      <o>Einsatz beim Patienten beendet. Die Polizei bringt uns zurück.</o>
       <o>Wir sind hier fertig. Die Polizei fährt uns zurück zum Landeplatz.</o>
-      <o>Besatzung wieder im Polizeiwagen, wir kehren jetzt zum Hubschrauber zurück.</o>
-      <o>Beim Patienten fertig. Die Polizei bringt uns zurück, haltet euch bereit.</o>
-      <o>Wir fahren mit der Polizei zurück zum Hubschrauber. Bitte warten.</o>
-      <o>Zurück zum Landeplatz im Polizeiwagen. Wir sind in ein paar Minuten da.</o>
+      <o>Wir fahren wieder mit der Polizei mit und kehren jetzt zum Landeplatz zurück.</o>
+      <o>Wir sind mit dem Patienten fertig. Die Polizei bringt uns jetzt zurück.</o>
+      <o>Wir fahren mit der Polizei zurück zum Landeplatz. Bitte warten.</o>
+      <o>Wir sind mit der Polizei auf dem Weg zurück zum Landeplatz. Wir sind bald da.</o>
     </message>
     <message key="CRT.AMB.BCK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the crew and the patient come back to the helicopter in the ambulance">
-      <o>Patient verladen. Der Rettungswagen bringt uns und den Patienten zurück zum Hubschrauber.</o>
+      <o>Patient verladen. Der Rettungswagen bringt uns und den Patienten zurück zum Landeplatz.</o>
       <o>Wir fahren mit dem Patienten im Rettungswagen zurück zum Landeplatz.</o>
-      <o>Der Rettungswagen bringt Besatzung und Patient zum Hubschrauber. Landebereich freihalten.</o>
-      <o>Der Patient ist mit uns im Rettungswagen. Wir kehren zum Hubschrauber zurück.</o>
-      <o>Mit dem Rettungswagen zurück zum Hubschrauber, Patient und Besatzung. Bitte warten.</o>
-      <o>Wir kommen mit dem Rettungswagen zurück, Patient an Bord. Bereitet die Verladung vor.</o>
+      <o>Der Rettungswagen bringt alle zum Landeplatz. Landebereich freihalten.</o>
+      <o>Der Patient ist mit uns im Rettungswagen. Wir kehren zum Landeplatz zurück.</o>
+      <o>Wir bringen den Patienten mit dem Rettungswagen zurück zum Landeplatz. Bitte warten.</o>
+      <o>Wir kommen mit dem Rettungswagen zurück. Der Patient ist an Bord. Bereitet die Verladung vor.</o>
     </message>
     <message key="CRT.POL.OPR" actor="4" radio="auto" group="crt" seq="2" new="1" trigger="the doctor goes with the ambulance and the rear crew comes back to the helicopter with the police">
-      <o>Der Doc fährt mit dem Rettungswagen. Ich komme mit der Polizei zum Hubschrauber zurück.</o>
-      <o>Der Arzt bleibt im Rettungswagen beim Patienten. Die Polizei bringt mich zu euch zurück.</o>
-      <o>Hintere Besatzung hier. Doc fährt im Rettungswagen, ich komme im Polizeiwagen zurück.</o>
-      <o>Doc begleitet den Patienten. Ich komme mit der Polizei zurück.</o>
-      <o>Ich komme mit der Polizei zurück. Der Arzt fährt mit dem Patienten im Rettungswagen.</o>
-      <o>Die hintere Besatzung kommt im Polizeiwagen zurück, der Arzt folgt dem Patienten im Rettungswagen.</o>
+      <o>Der Notarzt fährt mit dem Rettungswagen. Ich komme mit der Polizei zum Landeplatz zurück.</o>
+      <o>Der Notarzt bleibt im Rettungswagen beim Patienten. Die Polizei bringt mich zu euch zurück.</o>
+      <o>Der Notarzt fährt im Rettungswagen, ich komme mit der Polizei zurück.</o>
+      <o>Der Notarzt begleitet den Patienten. Ich komme mit der Polizei zurück.</o>
+      <o>Ich komme mit der Polizei zurück. Der Notarzt fährt mit dem Patienten im Rettungswagen.</o>
+      <o>Die Polizei bringt mich jetzt zurück. Der Notarzt geht mit dem Patienten im Rettungswagen.</o>
     </message>
     <message key="CRT.WALK" actor="3" radio="auto" group="crt" seq="1" new="1" trigger="the closest police car is more than 600 m from the scene: the crew walks">
-      <o>Kein Polizeiwagen in der Nähe. Wir gehen zu Fuß zurück zum Hubschrauber.</o>
-      <o>Der nächste Polizeiwagen ist zu weit weg. Wir gehen zu Fuß zurück.</o>
-      <o>Die Polizei ist zu weit entfernt, also gehen wir zum Landeplatz.</o>
-      <o>Kein Wagen in der Nähe, die Besatzung geht zu Fuß zurück.</o>
-      <o>Der nächste Polizeiwagen ist mehr als sechshundert Meter entfernt. Wir gehen.</o>
-      <o>Zu weit für den Polizeiwagen. Wir kommen zu Fuß zurück.</o>
+      <o>Keine Polizei in der Nähe. Wir kommen zu Fuß zurück.</o>
+      <o>Die Polizei ist nicht verfügbar. Wir gehen zu Fuß zurück.</o>
+      <o>Die Polizei ist zu weit entfernt. Wir machen uns zu Fuß auf den Weg.</o>
+      <o>Es ist kein Transport verfügbar. Wir kommen zu Fuß zurück.</o>
+      <o>Die nächste Polizei ist zu weit entfernt. Wir gehen zu Fuß.</o>
+      <o>Die Polizei ist besetzt. Wir kommen zu Fuß zurück.</o>
     </message>
     <message key="MID.SET" actor="2" radio="auto" group="mid" seq="1" new="1" trigger="the user accepts the meeting point of a midway meeting with the ambulance">
-      <o>Treffpunkt gesetzt. Der Rettungswagen bringt den Patienten dorthin, wir landen daneben.</o>
+      <o>Ein Treffpunkt wurde abgemacht. Der Rettungswagen bringt den Patienten dorthin, wir landen daneben.</o>
       <o>Verstanden, Treffpunkt bestätigt. Wir fliegen hin und übernehmen den Patienten vom Rettungswagen.</o>
-      <o>Treffen auf halber Strecke vereinbart. Wir landen nahe am Rettungswagen und laden den Patienten.</o>
-      <o>Der Treffpunkt ist auf dem Tablet gesetzt. Der Rettungswagen ist unterwegs, wir treffen ihn dort.</o>
-      <o>Route zum Treffpunkt gesetzt. Wir holen den Patienten beim Rettungswagen ab.</o>
+      <o>Treffen auf halber Strecke vereinbart. Wir landen nahe am Rettungswagen und nehmen den Patienten auf.</o>
+      <o>Ein Treffpunkt wurde ausgewählt. Der Rettungswagen ist unterwegs. Wir treffen ihn dort.</o>
+      <o>Es wurde ein Treffpunkt vereinbart. Wir nehmen dort den Patienten vom Rettungswagen auf.</o>
       <o>In Ordnung, wir treffen den Rettungswagen am vereinbarten Punkt und übernehmen den Patienten dort.</o>
     </message>
     <message key="MID.HND" actor="3" radio="auto" group="mid" seq="2" new="1" trigger="midway meeting: the doctor takes the patient over from the ambulance crew">
-      <o>Doc hier. Ich übernehme den Patienten von der Rettungswagenbesatzung. Überwachung läuft, bereit für die Übergabe.</o>
-      <o>Übergabe von der Rettungswagenbesatzung erledigt. Wir verladen den Patienten jetzt.</o>
-      <o>Ich bin bei der Rettungswagenbesatzung und übernehme den Patienten. Die Verladung beginnt.</o>
-      <o>Übergabe läuft. Die Besatzung gibt mir Monitoring und Infusionen.</o>
-      <o>Patient von der Rettungswagenbesatzung übergeben. Wir bereiten die Verladung vor.</o>
-      <o>Die Rettungswagenbesatzung hat mich eingewiesen. Wir bringen den Patienten zum Hubschrauber.</o>
+      <o>Hier ist Notarzt. Ich übernehme den Patienten vom Rettungswagen. Überwachung läuft. Bereit für die Übergabe.</o>
+      <o>Übergabe beim Rettungswagen erledigt. Wir verladen den Patienten jetzt.</o>
+      <o>Ich bin beim Rettungswagen und übernehme den Patienten.</o>
+      <o>Wir übernehmen jetzt den Patienten aus dem Rettungswagen.</o>
+      <o>Der Patient wurde aus dem Rettungswagen übernommen. Wir bereiten die Verladung vor.</o>
+      <o>Der Rettungswagen ist hier. Wir bringen jetzt den Patienten.</o>
     </message>
     <message key="TRF.HND" actor="3" radio="auto" group="trfhnd" seq="1" new="1" trigger="patient transfer: the doctor goes in to take the patient over at the hospital">
-      <o>Doc hier. Ich gehe mit dem Klinikpersonal zur Übergabe, bald mit dem Patienten zurück.</o>
-      <o>Wir übernehmen den Patienten drinnen. Erst Übergabe und Papiere, dann verladen wir.</o>
-      <o>Ich gehe hinein und übernehme den Patienten vom Klinikteam. Bitte warten.</o>
-      <o>Die Besatzung geht zur Übergabe in die Klinik. Wir kommen mit dem Patienten zurück.</o>
-      <o>Übergabe mit dem Klinikpersonal läuft. Bitte warten, wir bringen den Patienten heraus.</o>
-      <o>Wir holen den Patienten jetzt auf der Station ab. Bereit zur Verladung.</o>
+      <o>Notarzt hier. Ich kümmere mich um die Übernahme des Patienten.</o>
+      <o>Wir gehen jetzt hinein und übernehmen den Patienten.</o>
+      <o>Ich übernehme den Patienten vom Klinikpersonal. Bitte warten.</o>
+      <o>Wir gehen zur Übernahme des Patienten in die Klinik.</o>
+      <o>Die Übergabe läuft. Bitte warten, wir bringen den Patienten so schnell wie möglich.</o>
+      <o>Wir holen jetzt den Patienten auf der Station ab. Bitte die Aufnahme vorbereiten.</o>
     </message>
     <message key="ORG.PCK" actor="4" radio="auto" group="orgpck" seq="1" new="1" trigger="organ transport: the rear crew collects the organ container at the pickup point">
-      <o>Hintere Besatzung hier. Wir holen den Organbehälter und prüfen Siegel und Papiere.</o>
-      <o>Wir übernehmen jetzt den Organbehälter. Zuerst Siegel und Papiere prüfen.</o>
-      <o>Der Behälter wird übergeben. Wir prüfen Etikett, Temperatur und Siegel.</o>
-      <o>Organbehälter in der Hand. Wir prüfen die Papiere, bevor wir abfliegen.</o>
-      <o>Wir holen die Organbox. Siegel, Temperatur und Papiere werden geprüft.</o>
-      <o>Wir nehmen die Organbox an Bord, nachdem wir Siegel und Papiere geprüft haben.</o>
+      <o>Wir holen den Organbehälter und machen die letzten Prüfungen.</o>
+      <o>Wir übernehmen jetzt den Organbehälter und machen noch eine letzte Kontrolle.</o>
+      <o>Der Behälter wird übergeben. Wir prüfen noch die Dokumente und Parameter.</o>
+      <o>Organbehälter in der Hand. Wir machen noch eine letzte Kontrolle bevor wir abfliegen.</o>
+      <o>Wir holen den Transportbehälter und machen eine letzte Kontrolle.</o>
+      <o>Wir nehmen den Transportbehälter an Bord. Soweit alles in Ordnung.</o>
     </message>
     <message key="APR.MID.PLT" actor="1" radio="auto" group="aprmid" seq="1" new="1" trigger="two nautical miles from the meeting point of a midway meeting">
       <o>Zwei Meilen bis zum Treffpunkt. Wir landen neben dem Rettungswagen und übernehmen den Patienten.</o>
-      <o>Wir nähern uns dem Treffpunkt, noch zwei Meilen. Erst der Rettungswagen, dann verladen wir.</o>
-      <o>Treffpunkt in zwei Meilen. Wir landen nahe am Rettungswagen und übernehmen dort den Patienten.</o>
-      <o>Zwei Meilen bis zum Treffpunkt. Haltet Ausschau nach dem Rettungswagen und dem Landebereich.</o>
-      <o>Wir sind zwei Meilen vom Treffpunkt entfernt. Neben dem Rettungswagen landen, dann direkt zur Klinik.</o>
-      <o>Treffpunkt bei zwei Meilen. Augen offen nach dem Rettungswagen.</o>
+      <o>Wir nähern uns dem Treffpunkt. Noch zwei Meilen. Wir übnehmen den Patienten vom Rettungswagen.</o>
+      <o>Treffpunkt bei zwei Meilen. Wir landen beim Rettungswagen und übernehmen dort den Patienten.</o>
+      <o>Noch zwei Meilen bis zum Ziel. Ein Rettungswagen steht beim Landeplatz.</o>
+      <o>Wir sind zwei Meilen vom Ziel entfernt. Wir landen beim Rettungswagen und dann direkt weiter zur Klinik.</o>
+      <o>Ziel bei zwei Meilen. Der Rettungswagen steht bereit.</o>
     </message>
     <message key="APR.MID.DOC" actor="3" radio="auto" group="aprmid" seq="2" new="1">
-      <o>Doc bereit. Ich übernehme den Patienten von der Rettungswagenbesatzung und prüfe ihn vor der Verladung.</o>
-      <o>Doc verstanden. Zuerst die Übergabe mit der Rettungswagenbesatzung, Monitore und Infusionen prüfe ich vor dem Umlagern.</o>
-      <o>Ich übernehme den Patienten von der Rettungswagenbesatzung und prüfe die Überwachung, bevor wir verladen.</o>
-      <o>Doc hier. Am Rettungswagen übernehme ich, danach bringen wir den Patienten zum Hubschrauber.</o>
-      <o>Doc bereit. Übergabe von der Rettungswagenbesatzung, danach prüfe ich den Patienten vor der Verladung.</o>
-      <o>Doc verstanden. Ich prüfe Übergabe und Überwachung, dann verladen wir.</o>
+      <o>Notarzt bereit. Ich übernehme den Patienten vom Rettungswagen und bereite den Verlad vor.</o>
+      <o>Notarzt verstanden. Ich kümmere mich um die Übernahme vom Rettungswagen</o>
+      <o>Ich übernehme den Patienten vom Rettungswagen und bereite die Verladung vor.</o>
+      <o>Notarzt hier. Am Rettungswagen übernehme ich, danach bringen wir den Patienten.</o>
+      <o>Notarzt bereit. Übergabe des Patienten beim Rettungswagen. Ich bereite die Verladung vor.</o>
+      <o>Notarzt verstanden. Ich mache die Übergabe, dann verladen wir.</o>
     </message>
     <message key="APR.MID.CHF" actor="4" radio="auto" group="aprmid" seq="3" new="1">
-      <o>Hintere Besatzung bereit. Trage an der Tür für die Übernahme vom Rettungswagen.</o>
-      <o>Leitender hier. Trage vorbereitet, wir übernehmen den Patienten vom Rettungswagen.</o>
-      <o>Hintere Besatzung bereit für die Übernahme. Trage und Gurte an der Tür.</o>
+      <o>Hinten alles bereit. Trage an der Tür für die Übernahme vom Rettungswagen.</o>
+      <o>Kabine hier. Trage vorbereitet, wir übernehmen den Patienten vom Rettungswagen.</o>
+      <o>Hinten alles bereit für die Übernahme. Trage und Gurte an der Tür.</o>
       <o>Die Trage ist bereit, ich helfe beim Umlagern vom Rettungswagen.</o>
-      <o>Hintere Besatzung bereit. Wir nehmen den Patienten vom Rettungswagen auf unsere Trage.</o>
-      <o>Leitender hier. Trage bereit an der Tür für die Verladung.</o>
+      <o>Kabine bereit. Wir nehmen den Patienten vom Rettungswagen auf unsere Trage.</o>
+      <o>Kabine hier. Trage bereit an der Tür für die Verladung.</o>
     </message>
     <message key="APR.MID.END" actor="1" radio="auto" group="aprmid" seq="4" new="1">
-      <o>Gut. Nahe am Rettungswagen landen, dann direkt zur Klinik.</o>
-      <o>Gut. Wir treffen den Rettungswagen, laden und fliegen.</o>
-      <o>Gut. Alle aufmerksam bei der Landung neben dem Rettungswagen.</o>
-      <o>Gut. Beim Rettungswagen landen, Patient verladen und weiter.</o>
-      <o>Okay. Vorsicht am Rettungswagen, dann zum Ziel.</o>
+      <o>Gut. Wir landen beim Rettungswagen. Danach direkt zur Klinik.</o>
+      <o>Gut. Wir nehmen den Patienten beim Rettungswagen auf und von dort direkt weiter.</o>
+      <o>Gut. Wir machen uns bereit für die Übernahme beim Rettungswagen.</o>
+      <o>Gut. Wir landen beim Rettungswagen, nehmen den Patienten auf und gleich weiter.</o>
+      <o>Okay. Wir nehmen beim Rettungswagen auf, danach weiter zum Ziel.</o>
       <o>Gut. Augen offen nach dem Rettungswagen und dem Landebereich.</o>
     </message>
     <message key="APR.MUL" actor="3" radio="auto" group="approach" seq="3" new="1" trigger="more than one patient expected on the accident (HELOVICTIMS 2 or more)">
-      <o>Doc: Es wird mehr als ein Patient erwartet. Ich triagiere bei der Ankunft und wir legen die Reihenfolge gemeinsam fest.</o>
+      <o>Notarzt: Es wird mehr als ein Patient erwartet. Ich triagiere bei der Ankunft und wir legen die Reihenfolge gemeinsam fest.</o>
       <o>Mehrere Patienten erwartet, also triagiere ich, sobald wir vor Ort sind.</o>
       <o>Wir erwarten mehr als einen Patienten. Ich beurteile zuerst alle, dann planen wir den Transport.</o>
-      <o>Doc hier. Es sind mehrere Patienten gemeldet, ich triagiere sie bei der Ankunft.</o>
-      <o>Mehr als ein Patient erwartet. Erst triagiere ich, dann entscheiden wir, wer zuerst fliegt.</o>
-      <o>Mehrere Patienten gemeldet. Triage bei der Ankunft, dann planen wir den Transport.</o>
+      <o>Notarzt hier. Es sind mehrere Patienten gemeldet. Ich werde eine Priorisierung machen.</o>
+      <o>Mehr als ein Patient ist erwartet. Nach der Beurteilung entscheiden wir, wer zuerst fliegt.</o>
+      <o>Mehrere Patienten sind gemeldet. Ich mache zuerst eine Priorisierung, dann planen wir den Transport.</o>
     </message>
     <message key="APR.FIR" actor="2" radio="auto" group="approach" seq="2" new="1" trigger="a fire at the accident scene (random_fire yes or forced)">
       <o>Copilot: Am Einsatzort brennt es. Wir bleiben fern, bis die Feuerwehr Entwarnung gibt.</o>
@@ -6648,67 +6648,67 @@
       <o>Feuer vor Ort. Wir halten Abstand, ich beobachte Rauch und Wind.</o>
     </message>
     <message key="DSA.RB.A" actor="2" radio="off" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
-      <o>Hey Crew, wir haben einen Einsatz auf dem Tablet bekommen. Hört zu.</o>
-      <o>Crew, ein neuer Einsatz ist gerade reingekommen. Ich lese ihn vor:</o>
-      <o>Hey, ein Einsatz ist eingegangen. Das steht drin.</o>
-      <o>Achtung, Crew: Auf dem Tablet ist ein Einsatz eingegangen. Ich lese ihn zurück.</o>
-      <o>Crew, wir haben eine neue Alarmierung auf dem Tablet. Sie lautet:</o>
-      <o>Hey alle zusammen, ein Anruf ist eingegangen. Ich lese ihn euch vor.</o>
+      <o>Alle, wir haben einen Einsatz.</o>
+      <o>Achtung, neuer Einsatz.</o>
+      <o>Wir haben einen Einsatz. Folgendes.</o>
+      <o>Achtung: Neuer Einsatz.</o>
+      <o>Alle, wir haben eine neue Alarmierung.</o>
+      <o>Achtung, Einsatz.</o>
     </message>
     <message key="DSA.RB.Q" actor="2" radio="off" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
-      <o>Also, was machen wir mit dem hier?</o>
+      <o>Also, können wir den akzeptieren?</o>
       <o>Nehmen wir ihn an? Was meint ihr?</o>
-      <o>Was machen wir? Fliegen wir?</o>
-      <o>Meinungen, Crew? Nehmen wir ihn an?</o>
-      <o>Was ist der Plan, Crew? Nehmen wir ihn?</o>
+      <o>Sollen wir fliegen?</o>
+      <o>Was meint ihr? Nehmen wir ihn an?</o>
+      <o>Was ist der Plan? Nehmen wir ihn?</o>
       <o>Also? Fliegen wir oder nicht?</o>
     </message>
     <message key="SAR.TYP.SAR" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the kind of search, SAR">
-      <o>Crew, das ist ein SAR-Einsatz: Wir suchen eine vermisste Person.</o>
-      <o>SAR-Briefing. Wir suchen jemanden, der vermisst wird.</o>
-      <o>Heute Suche und Rettung. Jemand wird vermisst und wir müssen ihn finden.</o>
-      <o>Das hier ist ein SAR: Eine Person wird vermisst, wir suchen zuerst und retten danach.</o>
-      <o>SAR-Auftrag, Crew. Eine vermisste Person, wir müssen sie zuerst finden.</o>
-      <o>Briefing für die Suche: eine vermisste Person, und wir sind es, die sie finden.</o>
+      <o>Alle, das ist ein Such-Einsatz: Wir suchen eine vermisste Person.</o>
+      <o>Such-Einsatz. Eine Person wird vermisst.</o>
+      <o>Heute Suche und Rettung. Jemand wird vermisst.</o>
+      <o>Das hier ist ein Such-Einsatz: Eine Person wird vermisst.</o>
+      <o>Das ist ein Such- und Rettungs-Auftrag. Eine vermisste Person.</o>
+      <o>Das ist eine Such-Mission: Eine vermisste Person.</o>
     </message>
     <message key="SAR.TYP.SARV" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: the overdue vehicle">
-      <o>SAR mit überfälligem Fahrzeug. Wir folgen der wahrscheinlichen Route ab der letzten bekannten Position.</o>
-      <o>Das Fahrzeug ist überfällig. Wir suchen entlang seiner wahrscheinlichen Route, ab dem letzten Kontakt.</o>
-      <o>SAR-Briefing: ein überfälliges Fahrzeug. Wir suchen es und den Fahrer entlang der Route.</o>
+      <o>Suche von überfälligem Fahrzeug. Wir folgen der wahrscheinlichen Strecke ab der letzten bekannten Position.</o>
+      <o>Das Fahrzeug ist überfällig. Wir suchen entlang seiner wahrscheinlichen Strecke, ab dem letzten Kontakt.</o>
+      <o>Wir suchen ein überfälliges Fahrzeug entlang einer erwarteten Strecke.</o>
       <o>Das ist eine Suche nach einem überfälligen Fahrzeug. Wir folgen der Straße ab dem letzten bekannten Punkt.</o>
-      <o>Überfälliges Fahrzeug, Crew. Wir suchen entlang der wahrscheinlichen Route.</o>
-      <o>Wir suchen ein überfälliges Fahrzeug und seinen Fahrer, auf dem Weg, den es hätte nehmen sollen.</o>
+      <o>Überfälliges Fahrzeug. Wir suchen entlang der wahrscheinlichen Strecke.</o>
+      <o>Wir suchen ein überfälliges Fahrzeug und den Fahrer entlang einer erwarteten Strecke</o>
     </message>
     <message key="SAR.TYP.SARC" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a parked car, the owner is missing">
-      <o>SAR, geparktes Auto. Der Besitzer wird vermisst, also suchen wir das Gebiet um das Auto.</o>
-      <o>Ein Auto wurde geparkt gefunden und sein Besitzer wird vermisst. Wir suchen rund um das Auto.</o>
-      <o>SAR-Briefing: geparktes Fahrzeug, vermisster Besitzer. Wir decken das Gelände um das Auto ab.</o>
-      <o>Das Auto steht geparkt und niemand ist dabei. Wir suchen die Umgebung nach dem Besitzer ab.</o>
-      <o>Suche um ein geparktes Auto, Crew. Die Person, die es gefahren hat, wird vermisst.</o>
-      <o>Wir suchen den Besitzer eines geparkten Autos. Die Suche beginnt rund um das Fahrzeug.</o>
+      <o>Such-Einsatz. Geparktes Auto mit vermisstem Besitzer. Wir werden das Gebiet um das Auto absuchen.</o>
+      <o>Ein Auto wurde geparkt gefunden und sein Besitzer wird vermisst. Wir suchen das umliegende Gebiet ab.</o>
+      <o>Such-Einsatz: Der Besitzer eines geparkten Autos wird vermisst. Wir decken das Gelände um das Auto ab.</o>
+      <o>Ein Auto steht geparkt und der Besitzer wurde als vermisst gemeldet. Wir suchen die Umgebung ab.</o>
+      <o>Suche um ein geparktes Auto. Der Besitzer wurde als vermisst gemeldet.</o>
+      <o>Wir suchen den vermissten Besitzer eines geparkten Autos. Die Suche beginnt rund um das Fahrzeug.</o>
     </message>
     <message key="SAR.TYP.SARH" actor="1" radio="auto" group="sarbrf" seq="1" new="1" trigger="briefing of a search and rescue mission: a person who walked away from home">
-      <o>SAR, eine Person, die das Haus verlassen hat und nicht zurückgekommen ist. Wir suchen rund um das Haus.</o>
+      <o>Such-Mission: Eine vermisste Person, die das Haus zu Fuss verlassen hat und nicht zurückgekommen ist. Wir suchen rund um das Haus.</o>
       <o>Jemand ist von zu Hause weggelaufen. Wir suchen das Gebiet um die letzte bekannte Position.</o>
-      <o>SAR-Briefing: eine vermisste Person, die allein das Haus verlassen hat. Wir suchen zuerst rund um das Haus.</o>
-      <o>Eine Person hat das Haus verlassen und ist nicht zurückgekehrt. Das Haus ist die letzte bekannte Position.</o>
-      <o>Diese Suche gilt einer Person, die von zu Hause fort ist. Wir starten am Haus und weiten aus.</o>
-      <o>Wir suchen jemanden, der von zu Hause weggegangen ist. Letzte bekannte Position ist das Haus.</o>
+      <o>Such-Einsatz: Eine Person wird vermisst, die allein das Haus verlassen hat. Wir suchen zuerst rund um das Haus.</o>
+      <o>Eine Person hat das Haus zu Fuss verlassen und ist nicht zurückgekehrt. Das Haus ist die letzte bekannte Position.</o>
+      <o>Diese Suche gilt einer Person, die ein Haus zu Fuss verlassen hat. Wir starten am Haus und weiten aus.</o>
+      <o>Wir suchen jemanden, der ein Haus zu Fuss verlassen hat. Suchgebiet rund um das Haus.</o>
     </message>
     <message key="SAR.INF.R" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: the search ring (argument 0 = its radius in nautical miles)">
-      <o>Information: Das Suchgebiet ist ein Kreis von {0} Seemeilen um die letzte bekannte Position.</o>
-      <o>Das Suchgebiet hat einen Radius von {0} Seemeilen um die letzte bekannte Position.</o>
-      <o>Unser Gebiet ist der Kreis von {0} Seemeilen auf der Karte.</o>
-      <o>Verstanden. Der Ring auf der Karte hat {0} Seemeilen Radius, und die Person ist darin.</o>
-      <o>Wir suchen innerhalb des Rings: {0} Seemeilen von der letzten bekannten Position.</o>
-      <o>Das Gebiet ist ein Ring von {0} Seemeilen um den Punkt, an dem die Person zuletzt bekannt war.</o>
+      <o>Information: Das Suchgebiet ist ein Kreis von {0} Meilen um die letzte bekannte Position.</o>
+      <o>Das Suchgebiet hat einen Radius von {0} Meilen um die letzte bekannte Position.</o>
+      <o>Unser Gebiet ist der Kreis von {0} Meilen auf der Karte.</o>
+      <o>Verstanden. Der Ring auf der Karte hat {0} Meilen Radius, und die Person ist darin.</o>
+      <o>Wir suchen innerhalb des Rings: {0} Meilen von der letzten bekannten Position.</o>
+      <o>Das Gebiet ist ein Ring von {0} Meilen um den Punkt, an dem die Person zuletzt bekannt war.</o>
     </message>
     <message key="SAR.INF.N" actor="2" radio="auto" group="sarbrf" seq="2" new="1" trigger="briefing of a search and rescue mission: no ring, the route and the last contact">
-      <o>Information: Es gibt keinen Suchring. Wir folgen der Route und dem letzten Kontakt auf der Karte.</o>
-      <o>Kein Ring bei diesem Einsatz: Die Suche folgt der Route zwischen dem letzten Kontakt und dem Ende der wahrscheinlichen Route.</o>
-      <o>Wir haben keinen Ring. Die Suche verläuft entlang der wahrscheinlichen Route auf der Karte, ab dem letzten Kontakt.</o>
-      <o>Heute kein Suchkreis: Wir arbeiten entlang der Route und des letzten Kontaktpunkts.</o>
-      <o>Das Gebiet ist die Route auf der Karte, beginnend beim letzten Kontakt.</o>
+      <o>Information: Es gibt keinen Suchring. Wir folgen der Strecke und dem letzten Kontakt auf der Karte.</o>
+      <o>Kein Ring bei diesem Einsatz: Die Suche folgt der Strecke zwischen dem letzten Kontakt und dem Ende der wahrscheinlichen Route.</o>
+      <o>Wir haben keinen Ring. Die Suche verläuft entlang der wahrscheinlichen Strecke auf der Karte, ab dem letzten Kontakt.</o>
+      <o>Heute kein Suchkreis: Wir arbeiten entlang der Strecke und des letzten Kontaktpunkts.</o>
+      <o>Das Gebiet ist die Strecke auf der Karte, beginnend beim letzten Kontakt.</o>
       <o>Es gibt keinen Ring, also folgen wir der auf der Karte markierten Straße ab dem letzten Kontakt.</o>
     </message>
     <message key="SAR.VEH" actor="2" radio="auto" group="sarbrf" seq="3" new="1" trigger="briefing of a search and rescue mission: the vehicle of the dispatch (argument 0 = colour, 1 = model)">
@@ -6736,12 +6736,12 @@
       <o>Suchmuster: Sektoren von 45 Grad, parallele Bahnen {0} Meter auseinander, nichts wird übersprungen.</o>
     </message>
     <message key="SAR.MET.V" actor="3" radio="auto" group="sarbrf" seq="4" new="1" trigger="briefing of a search and rescue mission: the method along a route (argument 0 = the distance between the legs in meters)">
-      <o>Methode: Wir folgen der Route und fliegen Bahnen entlang davon, etwa {0} Meter auseinander, auf beiden Seiten der Straße.</o>
-      <o>Wir suchen entlang der Route, eine Bahn auf jeder Seite der Straße, etwa {0} Meter auseinander.</o>
+      <o>Methode: Wir folgen der Strecke und fliegen Bahnen entlang davon, etwa {0} Meter auseinander, auf beiden Seiten der Straße.</o>
+      <o>Wir suchen entlang der Strecke, eine Bahn auf jeder Seite der Straße, etwa {0} Meter auseinander.</o>
       <o>Die Suche folgt der Straße: parallele Bahnen auf beiden Seiten, etwa {0} Meter voneinander.</o>
-      <o>Plan: Die Route ab dem letzten Kontakt abfliegen, mit Bahnen {0} Meter auseinander, linke und rechte Seite.</o>
-      <o>Wir bleiben auf der Route und decken beide Seiten ab, mit Bahnen von etwa {0} Metern Abstand.</o>
-      <o>Routensuche: Bahnen entlang der Straße, {0} Meter auseinander, und wir schauen auf beide Seiten.</o>
+      <o>Plan: Die Strecke ab dem letzten Kontakt abfliegen, mit Bahnen {0} Meter auseinander, linke und rechte Seite.</o>
+      <o>Wir bleiben auf der Strecke und decken beide Seiten ab, mit Bahnen von etwa {0} Metern Abstand.</o>
+      <o>Streckensuche: Bahnen entlang der Straße, {0} Meter auseinander, und wir schauen auf beide Seiten.</o>
     </message>
     <message key="SAR.CLK" actor="4" radio="auto" group="sarbrf" seq="5" new="1" trigger="briefing of a search and rescue mission: the sides of the crew and the clock positions">
       <o>Augen: Ich nehme die linke Seite, der Copilot die rechte, der Kapitän schaut nach vorn. Alles wird nach Uhrzeit gemeldet.</o>
@@ -6762,8 +6762,8 @@
     <message key="SAR.END" actor="1" radio="auto" group="sarbrf" seq="7" new="1" trigger="briefing of a search and rescue mission: the pilot closes it">
       <o>Gut. Augen auf, und meldet alles, was ihr seht.</o>
       <o>Klar. Finden wir sie.</o>
-      <o>Alles klar, Crew. Sucht sorgfältig und meldet weiter.</o>
-      <o>Gutes Briefing. Gehen wir die Person finden.</o>
+      <o>Alles klar. Sucht sorgfältig und meldet weiter.</o>
+      <o>Alles klar. Gehen wir die Person finden.</o>
       <o>Von allen verstanden? Dann Augen nach draußen.</o>
       <o>Okay. Augen auf, und keine Sichtung ist zu klein.</o>
     </message>
@@ -6816,12 +6816,12 @@
       <o>Leitstelle, {@HEMS}: Absturz, {role:0} kritisch. Wir brauchen ein Krankenhaus und melden unsere Entscheidung.</o>
     </message>
     <message key="CEM.OPS" actor="3" radio="auto" prio="3" new="1" trigger="the crew emergency aborts the ground operations: the doctor says that he comes back and the patient stays for the next unit">
-      <o>Ich breche die Visite ab. Ich komme zum Hubschrauber zurück, der Patient bleibt für die nächste Einheit.</o>
+      <o>Ich breche die Visite ab. Ich komme zurück, der Patient bleibt für die nächste Einheit.</o>
       <o>Ich höre hier auf und komme zurück. Der Patient wartet auf eine andere Einheit.</o>
-      <o>Wir brechen den Einsatz ab. Ich komme jetzt zum Hubschrauber zurück, der Patient bleibt an der Einsatzstelle.</o>
-      <o>Ich lasse den Patienten für die nächste Einheit. Ich bin auf dem Weg zurück zum Hubschrauber.</o>
+      <o>Wir brechen den Einsatz ab. Ich komme jetzt zurück, der Patient bleibt an der Einsatzstelle.</o>
+      <o>Ich lasse den Patienten für die nächste Einheit. Ich bin auf dem Weg zurück.</o>
       <o>Visite abgebrochen. Eine andere Einheit übernimmt den Patienten, ich kehre zum Luftfahrzeug zurück.</o>
-      <o>Zurück zum Hubschrauber, wir hören auf. Der Patient bleibt bei der nächsten Einheit.</o>
+      <o>Wir brechen ab. Der Patient bleibt bei der nächsten Einheit.</o>
     </message>
     <message key="CEM.ABORT" actor="3" radio="auto" prio="2" new="1" trigger="the crew emergency aborts the mission (crew aboard): a crew member says that everybody goes to the hospital">
       <o>Einsatz abgebrochen. Alle an Bord, wir fliegen zum Krankenhaus.</o>
@@ -6835,7 +6835,7 @@
       <o>Verstanden, wir setzen den Einsatz fort. {role:0} kommt beim nächsten Halt ins Krankenhaus.</o>
       <o>Verstanden, der Einsatz geht weiter. Wir übergeben {role:0} beim nächsten Krankenhausstopp.</o>
       <o>Wir machen weiter. {role:0} wird beim nächsten Halt übergeben.</o>
-      <o>Okay, wir fliegen weiter. {role:0} bleibt bei uns bis zum nächsten Krankenhausstopp.</o>
+      <o>Verstanden, wir fliegen weiter. {role:0} bleibt bei uns bis zum nächsten Krankenhausstopp.</o>
       <o>Verstanden: weiter. {role:0} wird beim nächsten Krankenhausstopp versorgt.</o>
       <o>Der Einsatz geht weiter. Wir übergeben {role:0}, sobald wir ein Krankenhaus erreichen.</o>
     </message>
