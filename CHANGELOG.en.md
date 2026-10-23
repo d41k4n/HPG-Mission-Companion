@@ -2,6 +2,7 @@
 
 - Windows error sound (ding) at every log line or voice (testers 2026-10-20 and 2026-10-22, after a long session or after a mission change in the same flight): the log box is a read-only RichTextBox and the trimming of its old half (above 60000 characters) was refused by it, so the text stayed above the limit and every tick that logged tried again, with the error sound. The box is now unlocked for the cut and locked again. Checked with a read-only box of 56890 characters: the cut left the length unchanged, after unlocking it was 54723.
 - Mission 169.68 (the crashed vehicle is created once, the ambulances stop where the injured are). Runtime in the simulator pending.
+- Voice packs EN 24 and DE 12 (no program change; published apart from the program as the releases voicepack-EN and voicepack-DE): EN 23 carries the texts of the mission 169.69 flight report fixes; EN 24 adds HOS.PAP and HOS.PAP.O, the crew saying it goes inside for the report and the paperwork after the hospital handover (organ variant too), six options each. DE 11 and DE 12 (base 24) have the same messages translated by Claude, with the shorter readback lines of Daikan (DSA.RB.A and DSA.RB.Q, PR #2): a German speaker should review them.
 - Version 0.39.
 
 ## Release 0.38
