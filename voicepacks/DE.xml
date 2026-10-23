@@ -7020,15 +7020,15 @@
       <o>Feuer vor Ort. Wir halten Abstand, ich beobachte Rauch und Wind.</o>
     </message>
     <message key="DSA.RB.A" actor="2" radio="ics" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
-      <o>Hey Crew, wir haben einen Einsatz auf dem Tablet bekommen. Hört zu.</o>
-      <o>Crew, ein neuer Einsatz ist gerade reingekommen. Ich lese ihn vor:</o>
-      <o>Hey, ein Einsatz ist eingegangen. Das steht drin.</o>
-      <o>Achtung, Crew: Auf dem Tablet ist ein Einsatz eingegangen. Ich lese ihn zurück.</o>
-      <o>Crew, wir haben eine neue Alarmierung auf dem Tablet. Sie lautet:</o>
-      <o>Hey alle zusammen, ein Anruf ist eingegangen. Ich lese ihn euch vor.</o>
+      <o>Alle, wir haben einen Einsatz.</o>
+      <o>Achtung, neuer Einsatz.</o>
+      <o>Wir haben einen Einsatz. Folgendes.</o>
+      <o>Achtung: Neuer Einsatz.</o>
+      <o>Alle, wir haben eine neue Alarmierung.</o>
+      <o>Achtung, Einsatz.</o>
     </message>
     <message key="DSA.RB.Q" actor="2" radio="ics" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
-      <o>Also, was machen wir mit dem hier?</o>
+      <o>Also, können wir den akzeptieren?</o>
       <o>Nehmen wir ihn an? Was meint ihr?</o>
       <o>Sollen wir fliegen?</o>
       <o>Was meint ihr? Nehmen wir ihn an?</o>
