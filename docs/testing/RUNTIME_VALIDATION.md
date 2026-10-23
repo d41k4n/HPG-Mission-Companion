@@ -163,3 +163,13 @@ User request of 2026-10-18, design in docs/architecture/SHARED_DATA.md. Offline:
 
 Offline (done): `node tools/check.js`, `--queue-test` with the log hmc-20261019-211023 (turns: 0 s of overlapped speech against 28 s, all together; the model of the old queue follows the log within 3 s). The replay reads the lane the player wrote in the log (`[lane radio, ...]`); older logs without it use the mode of the line.
 Simulator (pending): Volume tab, "Voices at the same time": with "take turns" the dispatcher on the external radio and the crew triage on the intercom never speak together at the dispatch reading; callouts (priority 3) and the notification sounds still come over the speech; "everything together" restores the old behaviour; "one line at a time" never has two voices; the choice survives a restart and a saved profile; loading a profile of an older version gives "take turns".
+
+## Radio calls and options of the flight of 2026-10-20 (pending)
+
+Offline (done): `node tools/check.js`; `--expand` with tests/flight-2026-10-20-lines.txt (every new message with realistic arguments: placeholders, capitals, hrp/hrs, comp, organ, name); a message repeated 14 times with the coherent tone never repeats its last options.
+Simulator (pending): the dispatch read back by the copilot is on the intercom with the battery on and in the plain voice with the battery off; the calls of the mission 169.67 (radio reminder, heli rescuer rendezvous, SAR found, hospital, pick-up, organ); the pilot answers the ground updates with different words; the German texts of the packs EN 22 and DE 10 were written by Claude and wait for the review of a German speaker.
+
+## Pause tag and the organ variants of 2026-10-21 (pending)
+
+Offline (done): `node tools/check.js`; --expand with tests/flight-2026-10-21-lines.txt (the report shows pause_before=1 on the second part of CRW.VEH.BOTH; the .T and .B variants with their arguments); --queue-test ALL PASS.
+Simulator (pending): one second of silence between the two parts of the vehicle confirmation; the team and the blood variants of the organ messages (pack EN 22, DE 10: the German texts wait for the review).

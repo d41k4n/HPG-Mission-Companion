@@ -1227,6 +1227,22 @@ namespace HPGMissionCompanion
                 for (int i = 0; i < segs.Count; i++)
                 {
                     Segment s = segs[i];
+                    if (s.Actor >= 1 && s.Actor <= 5 && s.Radio == -1 && ctxValid)
+                    {
+                        // a crew member who reads a text without any effect tag (the readback of a dispatch, user 2026-10-20: read in a plain voice with the helicopter powered):
+                        // the intercom when powered, the voice when not, the radio between inside and outside
+                        Hear h = Decide(s.Actor);
+                        if (h == Hear.Ics) { s.Radio = 1; s.Fx = "ics"; }
+                        else if (h == Hear.Radio) { s.Radio = 1; s.Fx = null; }
+                        else if (h == Hear.Voice) s.Radio = 0;
+                        else if (h == Hear.VoiceFar) { s.Radio = 0; s.Far = true; }
+                        else if (h == Hear.Silent)
+                        {
+                            Ctx.Log("[SAY] crew text not heard: " + SilentReason(s.Actor));
+                            segs.RemoveAt(i--);
+                        }
+                        continue;
+                    }
                     if (s.Actor != 8 || Decide(8) == Hear.None) continue;
                     if (CrewAway)
                     {
@@ -1269,25 +1285,32 @@ namespace HPGMissionCompanion
             return eligible != null ? eligible[pos] : pos;
         }
 
+        // The recent options of a message (user, 2026-10-20: the answers of the pilot to the updates were always the same words): a message does not use again one of its
+        // last options, three with six options and one with three or fewer, so the same sentence comes back only after a few others, even with the coherent tone of a group.
+        static readonly Dictionary<string, List<int>> recentOptions = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase);
+
         static int PickPosition(PackMessage m, int n)
         {
             if (n == 1) return 0;
+            List<int> recent;
+            if (!recentOptions.TryGetValue(m.Key, out recent)) { recent = new List<int>(); recentOptions[m.Key] = recent; }
+            int keep = Math.Min(n - 1, n <= 3 ? 1 : 3);
             int k;
-            if ((coherent || m.Futile) && m.Group.Length > 0)
+            bool grouped = (coherent || m.Futile) && m.Group.Length > 0;
+            if (grouped)
             {
                 if (string.Equals(m.Group, lastGroup, StringComparison.OrdinalIgnoreCase) && (DateTime.UtcNow - lastGroupTime).TotalSeconds < 180)
                     k = Math.Min(lastGroupOption, n - 1);
                 else
                     k = rng.Next(n);
-                lastGroup = m.Group; lastGroupTime = DateTime.UtcNow; lastGroupOption = k;
             }
             else
-            {
-                int last;
-                if (!lastOption.TryGetValue(m.Key, out last)) last = -1;
                 k = rng.Next(n);
-                if (k == last) k = (k + 1 + rng.Next(n - 1)) % n;     // never the same option twice in a row
-            }
+            int guard = 0;
+            while (recent.IndexOf(k, Math.Max(0, recent.Count - keep), Math.Min(keep, recent.Count)) >= 0 && guard++ < 50) k = (k + 1 + rng.Next(n - 1)) % n;
+            recent.Add(k);
+            if (recent.Count > 6) recent.RemoveAt(0);
+            if (grouped) { lastGroup = m.Group; lastGroupTime = DateTime.UtcNow; lastGroupOption = k; }
             lastOption[m.Key] = k;
             return k;
         }
@@ -1313,6 +1336,41 @@ namespace HPGMissionCompanion
                 string key = l == "H" ? "PL_H" : (l == "B" ? "PL_B" : "PL_M"), w;
                 if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
                 return key == "PL_H" ? "the hospital" : (key == "PL_B" ? "the base" : "the meeting point");
+            }
+            if (kind == "mins")      // {mins:N}: minutes with the right word (1 minute, 2 minutes: the names MIN_1 and MIN_N); the log of 2026-10-20 said "about 1 minutes"
+            {
+                int n;
+                if (!int.TryParse(letters.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out n)) return letters.Trim();
+                string key = n == 1 ? "MIN_1" : "MIN_N", w;
+                if (pack == null || !pack.Names.TryGetValue(key, out w) || w.Length == 0) w = n == 1 ? "minute" : "minutes";
+                return n.ToString(CultureInfo.InvariantCulture) + " " + w;
+            }
+            if (kind == "name")      // {name:N}: a person from the name lists (the surnames are in capitals: ROSSI is said as Rossi)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (string w in letters.Split(' '))
+                {
+                    if (w.Length == 0) continue;
+                    if (sb.Length > 0) sb.Append(' ');
+                    bool caps = w.Length >= 2;
+                    foreach (char ch in w) if (!char.IsLetter(ch) || !char.IsUpper(ch)) { caps = false; break; }
+                    sb.Append(caps ? w.Substring(0, 1) + w.Substring(1).ToLowerInvariant() : w);
+                }
+                return sb.ToString();
+            }
+            if (kind == "comp")      // {comp:N}: the argument is N, S, E or W: the names COMP_N, COMP_S, COMP_E and COMP_W (a coordinate said in words)
+            {
+                string l = letters.Trim().ToUpperInvariant();
+                string key = "COMP_" + (l.Length > 0 ? l.Substring(0, 1) : "N"), w;
+                if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
+                return l.StartsWith("S") ? "south" : (l.StartsWith("E") ? "east" : (l.StartsWith("W") ? "west" : "north"));
+            }
+            if (kind == "organ")     // {organ:N}: the argument is H heart, L liver, K kidneys, U lungs, P pancreas: the names ORG_H, ORG_L, ORG_K, ORG_U and ORG_P
+            {
+                string l = letters.Trim().ToUpperInvariant();
+                string key = "ORG_" + (l.Length > 0 ? l.Substring(0, 1) : "H"), w;
+                if (pack != null && pack.Names.TryGetValue(key, out w) && w.Length > 0) return w;
+                return l.StartsWith("L") ? "liver" : (l.StartsWith("K") ? "kidneys" : (l.StartsWith("U") ? "lungs" : (l.StartsWith("P") ? "pancreas" : "heart")));
             }
             List<string> words = new List<string>();
             foreach (char c in letters.ToUpperInvariant())
@@ -1341,6 +1399,29 @@ namespace HPGMissionCompanion
             if (notes != null) notes.Add("unknown placeholder helper {" + kind + ":..}");
             return "";
         }
+        // The pick-up place of the heli rescuers (user request of 2026-10-20, from the guidelines of the mountain rescue rendezvous): the kind A (alpine rescue station),
+        // F (fire station), S (sports field) or M (a meeting point), and its name. {hrp:N} is the place ("the alpine rescue station of Name"), {hrs:N} the one who answers on
+        // the radio ("alpine rescue station Name", for a sports field or a meeting point the heli rescue base). The names PL_A, PL_F, PL_S, PL_M, HRS_A, HRS_F, HRS_S, HRS_M and
+        // the format PL_OF ("{0} of {1}") belong to the pack, so that a translated pack says them its own way. The name counts only for A and F; "-" or nothing is no name.
+        static string HrPlace(bool station, string kind, string name, VoicePack pack)
+        {
+            string k = kind.Length > 0 ? kind.Substring(0, 1).ToUpperInvariant() : "M";
+            if (k != "A" && k != "F" && k != "S") k = "M";
+            string key = (station ? "HRS_" : "PL_") + k, w;
+            if (pack == null || !pack.Names.TryGetValue(key, out w) || w.Length == 0)
+            {
+                if (station) w = k == "A" ? "alpine rescue station" : (k == "F" ? "fire station" : "heli rescue base");
+                else w = k == "A" ? "the alpine rescue station" : (k == "F" ? "the fire station" : (k == "S" ? "the sports field" : "the meeting point"));
+            }
+            if ((k == "A" || k == "F") && name.Length > 1 && name != "-")
+            {
+                string fmt;
+                if (pack == null || !pack.Names.TryGetValue(station ? "HRS_OF" : "PL_OF", out fmt) || fmt.IndexOf("{0}", StringComparison.Ordinal) < 0) fmt = station ? "{0} {1}" : "{0} of {1}";
+                w = string.Format(CultureInfo.InvariantCulture, fmt, w, name);
+            }
+            return w;
+        }
+
         // PLT CPL PAX1 PAX2 PAX3 TECHM TECHF; TECH is the technician of the scene (male or female as the mission says); FRA and SARA are the old names of TECHM and TECHF
         static string RoleOf(string name)
         {
@@ -1365,9 +1446,23 @@ namespace HPGMissionCompanion
             return JobWord(role, pack);
         }
 
+        // the value of a placeholder at the start of a sentence (the start of the text or after . ! ?) starts with a capital letter
+        static string SentenceCap(string option, int index, string value)
+        {
+            if (value.Length == 0 || !char.IsLower(value[0])) return value;
+            int i = index - 1;
+            while (i >= 0 && option[i] == ' ') i--;
+            if (i >= 0 && option[i] != '.' && option[i] != '!' && option[i] != '?') return value;
+            return char.ToUpperInvariant(value[0]) + value.Substring(1);
+        }
+
         static string Fill(string option, string[] args, VoicePack pack, List<string> notes)
         {
-            return HolderRx.Replace(option, delegate (Match m)
+            return HolderRx.Replace(option, delegate (Match m) { return SentenceCap(option, m.Index, FillOne(option, m, args, pack, notes)); });
+        }
+
+        static string FillOne(string option, Match m, string[] args, VoicePack pack, List<string> notes)
+        {
             {
                 string name = m.Groups[1].Value;
                 bool personal = name.StartsWith("@", StringComparison.Ordinal);
@@ -1392,6 +1487,7 @@ namespace HPGMissionCompanion
                         if (notes != null) notes.Add("the message needs argument {" + ai + "} for {" + name + "} but the mission sent " + args.Length);
                         return "";
                     }
+                    if (kind == "hrp" || kind == "hrs") return HrPlace(kind == "hrs", args[ai].Trim(), ai + 1 < args.Length ? args[ai + 1].Trim() : "", pack);      // the argument is the kind of the place, the next one its name
                     return Helper(kind, args[ai].Trim(), pack, notes);
                 }
                 if (int.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
@@ -1404,7 +1500,7 @@ namespace HPGMissionCompanion
                 if (pack != null && pack.Names.TryGetValue(name, out v)) return v;
                 if (notes != null) notes.Add("unknown placeholder {" + name + "}");
                 return "";
-            });
+            }
         }
     }
 }

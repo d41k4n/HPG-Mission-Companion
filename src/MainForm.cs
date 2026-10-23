@@ -543,7 +543,13 @@ namespace HPGMissionCompanion
                 if (logBox.TextLength > 60000)
                 {
                     int cut = logBox.GetFirstCharIndexFromLine(logBox.Lines.Length / 2);
-                    if (cut > 0) { logBox.Select(0, cut); logBox.SelectedText = ""; }
+                    // a read-only RichTextBox refuses the replacement (the text stays above the limit) and rings the Windows error sound at every tick that logs something (tester reports 2026-10-20 and 2026-10-22)
+                    if (cut > 0)
+                    {
+                        logBox.ReadOnly = false;
+                        try { logBox.Select(0, cut); logBox.SelectedText = ""; }
+                        finally { logBox.ReadOnly = true; }
+                    }
                 }
                 logBox.SelectionStart = logBox.TextLength;
                 logBox.ScrollToCaret();

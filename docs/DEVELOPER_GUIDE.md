@@ -26,6 +26,7 @@ Tags are written in the text, in angle brackets or in square brackets (<actor3> 
                            The voice and the usual speed of each actor are chosen in the Actors and voices tab, per language.
   <Microsoft David>        a voice by name (also <voice:ryan>); it wins over the actor voice. A name that is not installed: the actor voice speaks and the log says so.
   <speed:1.2>              speed, 0.5 to 3 (1 = the speed set for the actor)
+  <pause:1>                silence of 1 s (0 to 5) between the part before the tag and the part after it, inside one text (square brackets work too: [pause:1]); the time the voice needs to render the next part counts. Not at the start of a text.
   <vol:70>                 volume 0-100 of this text, multiplied by the master volume of the Volume tab. Pass the mission volume with params: "<vol:{0}>" and [VOLUME_CREW].
   <radio> / <radio:off>    radio effect on / off: start beep, radio hiss, band filter, squelch tail (Radio effect tab)
   <beep:double>            beep type of the radio effect for this text: none, click, beep, double, chirp (or 0-4). Optional: without it the type chosen in the Radio effect tab is used.
@@ -78,104 +79,9 @@ Queue (2026-10-18): the lines of the radio, of the crew (intercom and voices), o
 
 Voices at the same time (user request of 2026-10-19, setting `OverlapMode`, Volume tab, part of the profiles): 1 = turns (default): the speech lanes (radio, crew, checklist) take turns, a better line of another lane goes first, and only the sound files and the time critical lines (priority 3, callouts and warnings) overlap the speech; 2 = everything together (the behaviour of 0.36, lanes speak together); 0 = one line at a time in the whole program, the best waiting line first. The old boolean `OverlapLanes` (JSON only, no menu) is read once: true becomes 2, false becomes 0, and it is kept in sync. The log of 2026-10-19 (71 lines, 219 s of speech) had 9 overlapping pairs, all radio with crew (about 21 s), 3 notification sounds over speech, and bursts at the dispatch reading (the dispatcher on the external radio while the crew triage ran on the intercom). `--queue-test <report> --log <hmc log> --pack EN.xml` replays a log with the old queue, with all together and with turns and prints the seconds of overlapped speech and the waits; on that log: all together 28 s overlapped, turns 0 s (but more lines waiting over 10 s: 11 instead of 4, one line dropped as too old).
 
-Who can speak: the mission publishes L:HMC_CREW_MUTE (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2, as L:HMC_CREW_PRESENT): a dead crew member (or one with a life score under 15) does not speak; the program does not say the lines of that actor (the log shows "not said"). Small talk is also decided by the mission (voice calm): never with a dying patient, an injured crew member, after a death or in an emergency.
-
-Technicians: the mission picks a male or a female technician for each scene (the start of a flight, the arrival at the base) and publishes it in L:HMC_TECH_SEX (0 male, 1 female). A pack message can have options for each: <o sex="m">..</o> and <o sex="f">..</o> (an option without sex is for both); the program uses the options of the technician of the scene and speaks them with actor 6 (Technician male) or 7 (Technician female). The crew lines that greet or answer the technician use {@TECH}.
-
-Variety: <variety:random> (default) picks an option at random for every message and never the same option twice in a row for the same message. <variety:coherent> makes the messages of one conversation (same group="" in the pack) use the same option number, so the alternatives of a dialogue read as one dialogue; a new conversation starts after 3 minutes or with another group. Send the tag when the mission starts (it stays until changed).
-
-Sound-only messages: a pack message with sfx="1" has no text, only a wav name; the program plays that file from the audio folder.
-
-4. VERSIONS
------------
-Every pack has a whole version number that rises at every change of its texts. The mission declares what it needs at the start (or when the voice option is chosen):
-
-  {"speak":"<pack:EN:1>"}          pack EN, at least version 1
-  {"speak":"<dsp:3:Bolzano>"}      who the dispatcher is: group index of the mission (GRPID), city of the base; the pack says it with {DSP} (pack EN 14, see docs/architecture/VOICEPACKS.md)
-  {"speak":"<mission:RE>"}         the identity of the mission (R&E here); the program keeps it and shows it in the log, other missions use their own short id
-
-The program compares and tells the mission through simulator variables (SimConnect, it needs the MSFS SDK SimConnect.dll beside the program):
-
-  L:HMC_VOICE_STATUS       0 nothing declared yet, 1 pack found and not older than needed, 2 pack not installed, 3 pack older than the mission needs (obsolete)
-  L:HMC_VOICEPACK_VERSION  the version of the installed pack (0 = missing)
-  L:HMC_APP_VERSION        the version of this program (0.4 -> 0.4)
-
-  Example: {"wait_for":{"var":["L:HMC_VOICE_STATUS","number"]},"gt":0}  then {"if":{"var":["L:HMC_VOICE_STATUS","number"]},"ge":2, "then":[{"set_message":{"text":"Voice pack missing or obsolete: install it with the Mission Companion"}}]}
-
-The log of the program shows the same as a warning. A newer pack than the mission needs is fine. When a newer version of a pack is installed, the old file moves to voicepacks\obsolete.
-
-The program also keeps L:AUDIOINHIBIT at 1 (option in the Service tab) to silence the wav sounds of the aircraft.
-
-5. WHEN TO USE THE RADIO
-------------------------
-In voice app mode the program decides how a line is heard from the context the mission publishes (section 10), so the mission adds no tag. In short: the dispatcher is an external radio call (double beep, more hiss), heard only when the aircraft is powered (battery master or GPCP power switch on) and the CARLS is connected; the crew uses radios (polycon: a call between inside and outside, or among crew when somebody is outside, also needing power and the CARLS), the intercom (a click) when everybody is aboard and the aircraft is powered, the voice when it is not; with the battery and the GPCP switch off there is no intercom, no radio and no polycon, at the base too; a technician next to the helicopter with the pilot aboard uses the intercom; technician, ground unit and patient speak by voice, heard from inside up to 30 m, very low up to 100 m, not beyond. With a plain speak text the tags are yours: <radio>, <ics>, <radio:ext> or <radio:off> before the text; a message with radio="on", "off", "ics", "ext" or "ext-near" in the pack applies it only when the mission sent no radio tag.
-
-6. TIMING
----------
-speak returns at once and the speeches wait in a queue, one after the other. A line is 15-18 characters of text per second of speech at speed 1.0. The pack keeps the options of a message at about the same length where the mission waits only a short time after it (tight="1"). If the mission fires lines faster than they are spoken they pile up: space them with sleep, or use interrupt for what must not wait. <stop> with interrupt 1 clears everything (for example when the player aborts).
-
-7. THE PACK FILE
-----------------
-voicepacks\EN.xml (any file name; the pack name is the name="" attribute, or the file name when there is none; the installed copy is always saved as <pack name>.xml):
-
-  <?xml version="1.0" encoding="utf-8"?>
-  <voicepack name="EN" language="EN" version="1" title="English crew voices">
-    <names>
-      <name role="PLT">Pilot</name>   <name role="CPL">Copilot</name>   <name role="PAX1">Chief</name>
-      <name role="PAX2">Paramedic</name> <name role="PAX3">Doc</name>
-    </names>
-    <message key="CPL.5" actor="2" radio="auto" group="" seq="0" lvar="L:CPLAND5" wav="AND.cpl.comm.chk.wav" sleep="2" tight="1" trigger="when ...">
-      <o>Copilot here, comm check.</o>
-      <o>This is the copilot, radio check.</o>
-    </message>
-  </voicepack>
-
-voicepack: name (optional: letters, digits, _ -, up to 24; when it is missing the name of the file is used, so any XML file can be dropped in), language (EN FR IT DE), version (whole number from 1), title.
-message: key (unique; letters, digits . _ -), actor 1-11, radio auto|on|off|ics|ext|ext-near, group (conversation name) and seq (position in it), sfx="1" for a sound-only message with a wav (vol="0-100" plays it at that level at most). lvar, wav, sleep, tight, trigger, draft are information for the author and the tools.
-<o>: one text option (any number; 4-5 is good; sex="m" or "f" for the technicians). Texts may contain {0}.. {PLT}.. {@PLT}.. and the normal tags (for example <speed:1.1>).
-
-Install a pack: drag the XML file onto the Voice packs tab (or Browse), or copy it into the voicepacks folder and press Reload. A pack of the same name and an older or equal version asks before replacing. Command line: HPGMissionCompanion.exe --install-pack file.xml.
-The key of the messages of the HEMS pack: ROLE.NUMBER, with ROLE = PLT pilot, CPL copilot, PAX1 crew chief, PAX2 hoist operator, PAX3 medical crew, FRA the technician at the start of a flight, SARA the technician at the arrival (both with options for the male and the female technician), MAR marshal, HW emergency events, SYS system sounds. The number is the one of the wav pack LVAR (L:CPL<pack>5 -> CPL.5).
-
-8. TESTING
-----------
-  HPGMissionCompanion.exe --expand report.txt --text "<pack:EN:1><radio:chirp><say:PLT.30>"       what the text becomes, no sound
-  HPGMissionCompanion.exe --expand report.txt --lines lines.txt --repeat 5 --seed 3                 a list of texts in order (one per line)
-  HPGMissionCompanion.exe --packs-check report.txt                                                   packs found and their problems
-The Service tab has a box to try a text, and the log shows [RAW] (the text as it arrived), [SAY] (message and option chosen), [VOICE] (actor, voice, speed, volume, radio) and warnings. The standalone test mission tests\voicepack-say-test.json exercises every tag.
-
-9. A SMALL MISSION
-------------------
-  "start": [
-    {"connect_voice_server":{"on_connected":[{"speak":"<pack:EN:1><variety:coherent>"},{"speak":"<names:PLT=Mark,CPL=Anna,PAX3=Sue>"}],"on_disconnected":[]}},
-    {"sleep":2},
-    {"speak":"<radio><say:CPL.5>"},
-    {"sleep":3},
-    {"speak":{"text":"<actor8><radio><plain>{0}","params":[{"local":"DISPATCH_TEXT"}]}},
-    {"speak":"<actor11><plain>Checklist: interior check."}
-  ]
-
-10. VOICE APP MODE: THE MISSION INCREMENTS LVARS
-------------------------------------------------
-The HEMS mission does not call speak for its crew lines. Each line is a counter: L:CPL{VCP}5 += 1, where {VCP} is the voice code of the mission. With a wav voice pack the code is the name of the pack and the aircraft sound.xml plays the wav. When L:AUDIOINHIBIT is not 0 (the program sets it to 1: option of the Service tab) the mission uses the code APP: no sound.xml knows L:CPLAPP5, so no wav plays, and the program, which watches those variables through SimConnect, speaks the message of the pack whose lvar template is L:CPL{VCP}5.
-
-  message lvar="L:CPL{VCP}5"   -> read as L:CPLAPP5 (the vcp="" attribute of the pack, APP when missing)
-  a counter that rises          -> the message is spoken (random option, or the coherent one)
-  first value after connecting  -> baseline: nothing is spoken; a reset to 0 is silent
-  sounds without voice          -> sfx messages: the wav of the audio folder is played (dispatch ringtones, new message tone, tablet alarm)
-  a line waiting more than 30 s -> dropped ([DROP] in the log)
-
-To add a message to the mission: choose a free number for the role (the pack lists the used ones), add the message to the pack (key ROLE.NUMBER, lvar="L:ROLE{VCP}NUMBER"), and in the mission increment L:ROLE{local:VCP}NUMBER where the line happens. Space the lines of a conversation by 0.4 s at least: the program sees the counters in order only if they change in different simulator frames.
-
-How a line is heard is decided by the program from the variables the mission publishes: L:HMC_CREW_PRESENT and L:HMC_CREW_EXIST (bit 0 pilot, 1 copilot, 2 doctor, 3 HEMS1, 4 HEMS2: aboard, and existing), L:HMC_AT_BASE (1 = at the departure base, in wifi range; log only), L:HMC_ZONE_TECH / L:HMC_ZONE_GROUND / L:HMC_ZONE_PATIENT (distance from the helicopter: 1 up to 5 m, 2 up to 30 m, 3 up to 100 m, 4 beyond), L:HMC_HELI_OFF, and L:HMC_CTX_VALID (1 = the context is published; without it no tag is added). The power is not published: the program reads the variables of the aircraft, L:H145_SDK_OH_BATTERY_MASTER and L:H145_SDK_GPCP_PWR_SWITCH (powered = either is 1), and L:CARLS_CONNECTED (1 = connected) that the CARLS thread of the mission keeps. The rules are in section 5. A message with radio="on", "off", "ics", "ext" or "ext-near" in the pack ignores them.
-
-The checklists of the mission are untagged speak texts: the mission sends {"speak":"<defaultactor:11>"} once (voice code APP only, the old audio service would read the tag aloud) and the program speaks every text without an actor tag with actor 11.
-
-Free texts do not go through counters: use speak with <plain> (the dispatcher reading the dispatch:  {"speak":{"text":"<actor8><radio><plain>{0}. {1}","params":[...]}} ) or <say:KEY>args. The crew names: the mission sends {"speak":"<names:random>"} at a new shift; the program draws names only when the user chose Random names in the Voice packs tab.
-## Main actors always have a voice (user request of 2026-10-19)
-
-- The main actors are the five of the crew (1-5), the dispatcher (8), the ground unit (9) and the heli rescuer (12) (`ActorRules.Main`, src/Core.cs). For them there is no "none".
-- `EnsureActors` (src/MainForm.cs) runs at the start, before the service starts, at every start of the service, when the Actors tab is filled, every 30 seconds and when a main actor is spoken without an installed voice (`Ctx.ActorAlert`, raised by `Resolver`). An actor without a voice, or whose voice is no longer installed, gets a default at once and the settings are saved: a Microsoft (Windows) voice of the language by the number of the actor, else an installed Piper voice (never an online one); the dispatcher, the ground unit and the heli rescuer are set to draw at random (like the recommended profile). The voice of the user is never replaced while it is installed.
-- The program shows nothing in its own tabs: it tells the mission by two simulator variables (SimConnect, independent of the service) and the tablet shows the message on its dispatch, briefing, audio options and checklist pages: `L:HMC_ACTORS_MISSING` = the main actors that have no voice and cannot get one (a language that the service needs, the default language and the language of the pack of the mission, has no voice at all: the red message, `[ERROR]` in the log, the service stops and does not start, and a popup advises the default voices: Service tab, Show advanced options, One click; or a Windows voice), `L:HMC_ACTORS_DEFAULTED` = the main actors that got a default since the settings were last saved (the amber message; Save settings clears it). When voices appear the service starts again by itself (30 s check).
-- The recommended profile (profiles/Recommended.json) was saved again from the author's settings of 2026-10-19: the dispatcher, the ground unit and the heli rescuer draw at random; the pools are left empty (every voice of the language) so that the one-click setup does not download a pool of thirty voices.
-- Test: `HPGMissionCompanion.exe --actors-test report.txt` (rules on made-up voice lists: no voice, Microsoft voices, Piper only, a voice no longer installed, random actors, the language the service needs). Runtime in the window (the strip, the popup, the service that stops and restarts) PENDING.
+Options, helpers and radio rules added after the flight of 2026-10-20 (sources, not released):
+- A message does not use again one of its last options (`PickPosition`: the last three with six options, the last one with three or fewer), also inside the coherent tone of a group: the same sentence comes back only after a few others.
+- The plain text of a crew member without any effect tag (the readback of a dispatch, `<actor2><text:DSC...>`) follows the radio rules like a pack message (`Say.ApplyDelivery`): the intercom when powered, the voice when not, the radio between inside and outside; the pack messages `DSA.RB.A` and `DSA.RB.Q` say `radio="ics"`.
+- A placeholder at the start of a sentence (the start of the text or after . ! ?) starts with a capital letter whatever its helper says (`{hr:0}` = "one heli rescuer" after a full stop).
+- New helpers: `{hrp:N}` and `{hrs:N}` (the pick-up place of the heli rescuers and who answers on the radio; the argument N is the kind A alpine rescue station, F fire station, S sports field, M meeting point, the next argument is its name; the names PL_A, PL_F, PL_S, PL_M, HRS_A, HRS_F, HRS_S, HRS_M and the formats PL_OF and HRS_OF belong to the pack), `{comp:N}` (N, S, E or W: COMP_N ...), `{organ:N}` (H heart, L liver, K kidneys, U lungs, P pancreas: ORG_H ...), `{name:N}` (a name written in capitals, ROSSI, is said as Rossi).
+- Scenario of the new messages: `tests/flight-2026-10-20-lines.txt` (`--expand <report> --lines tests/flight-2026-10-20-lines.txt`).

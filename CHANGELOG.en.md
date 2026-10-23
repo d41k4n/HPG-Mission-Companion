@@ -1,3 +1,16 @@
+## Release 0.39
+
+- Windows error sound (ding) at every log line or voice (testers 2026-10-20 and 2026-10-22, after a long session or after a mission change in the same flight): the log box is a read-only RichTextBox and the trimming of its old half (above 60000 characters) was refused by it, so the text stayed above the limit and every tick that logged tried again, with the error sound. The box is now unlocked for the cut and locked again. Checked with a read-only box of 56890 characters: the cut left the length unchanged, after unlocking it was 54723.
+- Mission 169.68 (the crashed vehicle is created once, the ambulances stop where the injured are). Runtime in the simulator pending.
+- Version 0.39.
+
+## Release 0.38
+
+- New tag `[pause:N]` (0 to 5 seconds) in a pack text: silence between two parts of one text (`Segment.PauseBefore`, the speaker waits N seconds minus the time the part took to render). `CRW.VEH.BOTH` uses it: one second between "on scene" and "on the way". `--expand` and the self test print `pause_before`.
+- Voice packs EN 22 and DE 10 (no pack version step in this build): the pilot acknowledgements mix copy, roger and okay with and without thanks (`GRD.PLT.OK`, `PLT.4`); 13 messages for the team transport (`.T`) and the blood supply (`.B`) variants of the organ missions, six options each; dispatch descriptions `DSC.69` to `DSC.74`, `DSC.101` and `DSC.102`. The German texts need a review. Mission 169.67.
+- Documents: docs/DEVELOPER_GUIDE.md, docs/architecture/TAGS_AND_PROTOCOL.md, docs/testing/RUNTIME_VALIDATION.md. Runtime in the simulator pending.
+- Version 0.38.
+
 ## Release 0.37
 
 - Voices at the same time (user request of 2026-10-19, after the log hmc-20261019-211023: 71 lines, 219 s of speech, 9 overlapping pairs of radio and crew for about 21 s, 3 notification sounds over speech, bursts at the reading of a dispatch). New setting `OverlapMode` (Volume tab, "Voices at the same time", part of the settings profiles, 1 in the recommended profile): 1 = take turns (the new standard): the speech lanes (radio, crew, checklist) speak one after the other, a better line of another lane goes first, and only the sound files and the time critical lines (priority 3, callouts and warnings) overlap the speech; 2 = everything together (the behaviour of 0.36); 0 = one line at a time in the whole program, the best waiting line first. The old setting `OverlapLanes` (JSON only, no menu) is read once: true becomes 2, false becomes 0. `SchedCore.Turns`, `MustWait`; 8 new scheduler checks in `--queue-test`.

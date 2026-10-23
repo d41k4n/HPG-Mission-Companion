@@ -37,8 +37,8 @@ using System.Windows.Forms;
 // keep in step with AppInfo.Version in Core.cs
 [assembly: AssemblyTitle("HPG Mission Companion")]
 [assembly: AssemblyProduct("HPG Mission Companion")]
-[assembly: AssemblyVersion("0.37.0.0")]
-[assembly: AssemblyFileVersion("0.37.0.0")]
+[assembly: AssemblyVersion("0.39.0.0")]
+[assembly: AssemblyFileVersion("0.39.0.0")]
 
 namespace HPGMissionCompanion
 {
@@ -598,7 +598,7 @@ namespace HPGMissionCompanion
                     foreach (Segment s in parsed)
                     {
                         Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
-                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " level=" + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + " radio=" + p.Radio + (p.Radio && p.Fx != null ? " fx=" + p.Fx : "") + (p.Far ? " far=1" : "") + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + " text=" + s.Text);
+                        rep.AppendLine("segment: actor=" + p.Actor + " voice=" + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " vol=" + p.Volume + " level=" + (p.Volume * Mixer.MissionFactor(p.Actor) * Mixer.SpatialFactor(p.Radio, Say.SpeakerInside(p.Actor))).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + " radio=" + p.Radio + (p.Radio && p.Fx != null ? " fx=" + p.Fx : "") + (p.Far ? " far=1" : "") + (p.Radio && p.Beep != null ? " beep=" + p.Beep : "") + (s.PauseBefore > 0 ? " pause_before=" + s.PauseBefore.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) : "") + " text=" + s.Text);
                     }
                     foreach (string n in notes) rep.AppendLine("note: " + n);
                 }
@@ -629,7 +629,7 @@ namespace HPGMissionCompanion
                     foreach (Segment s in segs)
                     {
                         Plan p = Resolver.Resolve(s, Ctx.Settings, Ctx.Voices);
-                        report.AppendLine("segment: actor=" + s.Actor + " voice=" + s.Voice + " lang=" + s.Lang + " speed=" + s.Speed + " vol=" + s.Volume + " radio=" + s.Radio + " text=" + s.Text);
+                        report.AppendLine("segment: actor=" + s.Actor + " voice=" + s.Voice + " lang=" + s.Lang + " speed=" + s.Speed + " vol=" + s.Volume + " radio=" + s.Radio + (s.PauseBefore > 0 ? " pause_before=" + s.PauseBefore.ToString("0.##", CultureInfo.InvariantCulture) : "") + " text=" + s.Text);
                         report.AppendLine("  plan: " + (p.Voice != null ? p.Voice.Display : "(none)") + " speed=" + p.Speed + " lang=" + p.Lang + " " + p.Note);
                     }
                     int code = 1;

@@ -24,6 +24,7 @@ Tags are written in angle brackets, or in square brackets with the same meaning.
 | `<actor3>` | actor 1 to 11 (11 = Checklist): the voice and the usual speed the user chose for that actor in the chosen language |
 | `<Microsoft David>`, `<ryan>`, `<en_US-ryan-medium>`, `<voice:ryan>` | a voice by name (exact name first, then part of a name; the language of the text wins, then the best quality); it forces the voice |
 | `<speed:1.2>` (also `<rate:..>`) | speed 0.5 to 3.0; it forces the speed, otherwise the actor's slider is used (1.0 for a forced voice with no actor) |
+| `<pause:1>` (also `[pause:1]`) | silence of 0 to 5 seconds between the part before the tag and the part after it (a pack message with two sentences, for instance CRW.VEH.BOTH); the render time of the next part counts; ignored at the start of a text (user, 2026-10-21) |
 | `<vol:60>` (also `<volume:..>`) | volume 0 to 100 of the text; the gain is the volume times the master volume of the Volume tab; without the tag 100 |
 | `<radio>`, `<radio:on>`, `<radio:off>` | radio call on or off: beep of the user, radio hiss of the user, band filter, squelch tail; without the tag the voice is clean |
 | `<ics>`, `<ics:off>` | the wired intercom of the helicopter: a click, no beep, the intercom hiss of the user, no squelch tail |

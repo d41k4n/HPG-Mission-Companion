@@ -12,7 +12,7 @@ namespace HPGMissionCompanion
     internal static class AppInfo
     {
         public const string Name = "HPG Mission Companion";
-        public const string Version = "0.37";            // 0.1, 0.2, ... one step per delivered build
+        public const string Version = "0.39";            // 0.1, 0.2, ... one step per delivered build
         public const string Author = "Andrea Daviero";
         public const string DiscordInvite = "https://discord.gg/eUqz49jXzT";
         public const string DiscordChannel = "https://discord.com/channels/1285277168103981197/1295684278084173885";
@@ -273,6 +273,7 @@ namespace HPGMissionCompanion
     // ---- tags in the mission text -------------------------------------------------------------
     // <actor3>  actor 1..11         <Microsoft David> / <ryan>  voice by name        <speed:1.2>  speed
     // <vol:70>  volume 0-100 of this text (the mission volume_crew can be passed with the speak params)   <radio>  radio effect (<radio:off> ends it)
+    // <pause:1>  silence of 1 s (0 to 5) between the part before it and the part after it, inside one text (a pack message with two sentences)
     // <EN> <FR> <IT> <DE>  language (also <language:us>). Square brackets work like the angle brackets: [actor3] [speed:1.2].
     // The tags apply to the text that follows them, until the next tag of the same kind.
     internal sealed class Segment
@@ -287,6 +288,7 @@ namespace HPGMissionCompanion
         public string Beep;        // beep type of the radio effect (None, Click, Beep, Double beep, Chirp), null = the type chosen in the program
         public string Fx;          // with Radio = 1: null = radio call, "ics" = intercom, "ext" = external radio call
         public bool Far;           // <zone:far>: a voice heard from inside that comes from 30 to 100 m away (RadioRules.FarVolume)
+        public double PauseBefore; // <pause:1>: seconds of silence between the end of the previous segment and the start of this one (0 = none)
     }
 
     internal static class TagParser
@@ -304,17 +306,18 @@ namespace HPGMissionCompanion
         static readonly Regex BeepRx = new Regex("^beep\\s*[:=]\\s*([A-Za-z0-9 ]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex VoiceRx = new Regex("^voice\\s*[:=]\\s*(.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex TwoLettersRx = new Regex("^[A-Za-z]{2}$", RegexOptions.Compiled);
+        static readonly Regex PauseRx = new Regex("^pause\\s*[:=]\\s*([0-9]+(?:[.,][0-9]+)?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         static readonly Regex HtmlRx = new Regex("^/?(?:br|b|i|u|p|em|strong|span|font)\\b.*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         public static List<Segment> Parse(string input, List<string> notes)
         {
             List<Segment> result = new List<Segment>();
             if (input == null) return result;
-            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1; string beep = null; string fx = null; bool far = false;
+            int actor = 0; string voice = null; string lang = null; double speed = 0; double vol = -1; int radio = -1; string beep = null; string fx = null; bool far = false; double pause = 0;
             int pos = 0;
             foreach (Match m in TagRx.Matches(input))
             {
-                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio, beep, fx, far);
+                Add(result, input.Substring(pos, m.Index - pos), actor, voice, lang, speed, vol, radio, beep, fx, far, ref pause);
                 pos = m.Index + m.Length;
                 string tag = m.Groups[1].Value.Trim();
                 Match g;
@@ -324,6 +327,12 @@ namespace HPGMissionCompanion
                     int n = int.Parse(g.Groups[1].Value, CultureInfo.InvariantCulture);
                     if (n >= 1 && n <= Actors.Count) actor = n;
                     else if (notes != null) notes.Add("actor " + n + " does not exist (1-" + Actors.Count + ")");
+                }
+                else if ((g = PauseRx.Match(tag)).Success)
+                {
+                    double v;
+                    if (double.TryParse(g.Groups[1].Value.Replace(',','.'), NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                        pause = Math.Max(0, Math.Min(5.0, v));
                 }
                 else if ((g = SpeedRx.Match(tag)).Success)
                 {
@@ -372,16 +381,18 @@ namespace HPGMissionCompanion
                 else if ((g = VoiceRx.Match(tag)).Success) voice = g.Groups[1].Value.Trim();
                 else voice = tag;
             }
-            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio, beep, fx, far);
+            Add(result, input.Substring(pos), actor, voice, lang, speed, vol, radio, beep, fx, far, ref pause);
             return result;
         }
 
-        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio, string beep, string fx, bool far)
+        static void Add(List<Segment> list, string text, int actor, string voice, string lang, double speed, double vol, int radio, string beep, string fx, bool far, ref double pause)
         {
             string t = Regex.Replace(text, "\\s+", " ").Trim();
             if (t.Length == 0) return;
             Segment s = new Segment();
             s.Text = t; s.Actor = actor; s.Voice = voice; s.Lang = lang; s.Speed = speed; s.Volume = vol; s.Radio = radio; s.Beep = beep; s.Fx = radio == 1 ? fx : null; s.Far = far;
+            if (list.Count > 0) s.PauseBefore = pause;          // a pause before the first segment of a text is not a pause between two parts
+            pause = 0;
             list.Add(s);
         }
     }

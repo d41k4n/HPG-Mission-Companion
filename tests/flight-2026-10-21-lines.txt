@@ -1,0 +1,14 @@
+@settings variety=random bridge=EN
+<pack:EN:22>
+<say:CRW.VEH.BOTH>AP//F
+<say:CRW.VEH.BOTH>A//FP
+<say:ORG.INF.T>H//Anna Rossi//46//Pescara Ospedale Civile
+<say:ORG.INF.B>H//Marco Bianchi//61//Chieti SS Annunziata
+<say:ORG.PCK.G.T>H//Anna Rossi//46//23
+<say:ORG.PCK.G.B>H//Marco Bianchi//61//12
+<say:PCK.CALL.ORG.T>4
+<say:PCK.CALL.ORG.B>3
+<say:PCK.REPLY.ORG.T>
+<say:HOS.ORG.LT.B>
+<say:OBJ.ORG.T>
+<say:DSP.ANS.ORG.B>

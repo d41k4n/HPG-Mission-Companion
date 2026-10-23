@@ -1,0 +1,51 @@
+@settings variety=coherent bridge=EN
+<pack:EN:22>
+<say:RAD.REM>
+<say:HRQ.DSP>2//A//Soccorso Alpino Pescara
+<say:HRQ.DSP>1//F//Distaccamento Teramo
+<say:HRQ.DSP>1//S//-
+<say:HRQ.DSP>1//M//-
+<say:HRQ.PLT.Q>1//A//Soccorso Alpino Pescara
+<say:HRQ.BASE.A>2//F//Distaccamento Teramo
+<say:HRQ.BRF.ACC>3//S//-
+<say:HRQ.BASE.OK>0//M//-
+<say:HRQ.COR.PLT>2//A//Gran Sasso
+<say:HRQ.ARR.PLT>0//F//Teramo
+<say:HRQ.ARR.A>0//S//-
+<say:HRQ.APR.PLT>3//A//Gran Sasso
+<say:HRQ.APR.A>70//A//Gran Sasso//6
+<say:SAR.FND.PLT>42//29//N//13//34//E
+<say:SAR.FND.A>42//29//N//13//34//W
+<say:HOS.MAR.P>
+<say:HOS.MAR.A>
+<say:HOS.FIN.P>
+<say:HOS.FIN.A>70//6
+<say:HOS.PAD.P>
+<say:HOS.PAD.A>
+<say:HOS.Q>
+<say:HOS.A>
+<say:HOS.DEP.P>
+<say:HOS.DEP.A>
+<say:HOS.ORG.LT>
+<say:PCK.CALL.TRF>4
+<say:PCK.CALL.ORG>3
+<say:PCK.REPLY.TRF>
+<say:PCK.REPLY.ORG>
+<say:ORG.INF>H//Maria ROSSI//54//Ospedale Civile
+<say:ORG.INF>K//Paolo BIANCHI//31//Ospedale Civile
+<say:ORG.TIM.OK>45//30
+<say:ORG.TIM.TG>32//30
+<say:ORG.TIM.LT>20//30
+<say:ORG.RCT.OK>
+<say:ORG.RCT.TG>
+<say:ORG.RCT.LT>
+<say:ORG.WARN>12//18
+<say:ORG.LATE>
+<say:ORG.PCK.G>L//Anna VERDI//62//38
+<say:ORG.PCK.R>
+<say:ORG.DEL.OK>
+<say:ORG.DEL.LT>
+<say:TRF.INF>Ospedale Civile
+<say:WXB.OK>70//6//20//10
+<say:WXB.RH>250//12//8//4
+<say:GRD.PLT.OK>

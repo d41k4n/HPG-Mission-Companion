@@ -944,6 +944,13 @@ namespace HPGMissionCompanion
             byte[] wav = Synth.Render(p.Voice, p.Speed, seg.Text);
             Ctx.Log("[RENDER] " + (int)(DateTime.UtcNow - t0).TotalMilliseconds + " ms, " + (wav.Length / 1024) + " KB");
             if (Stale(lane, gen)) return;
+            if (seg.PauseBefore > 0)
+            {
+                // [pause:N]: N seconds of silence after the previous part; the time the voice needed to render already counts
+                int wait = (int)(seg.PauseBefore * 1000) - (int)(DateTime.UtcNow - t0).TotalMilliseconds;
+                while (wait > 0 && !Stale(lane, gen)) { int step = Math.Min(wait, 100); Thread.Sleep(step); wait -= step; }
+                if (Stale(lane, gen)) return;
+            }
             RadioSettings rs = FxSettings(p);
             byte[] fx = AudioFx.Apply(wav, level, Ctx.Settings.MasterVolume, p.Radio, rs);
             PlayBytes(lane, gen, fx, null, cat);

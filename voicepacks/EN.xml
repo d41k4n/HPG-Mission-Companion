@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="21" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="24" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -20,6 +20,26 @@
     <name role="PL_H">the hospital</name>
     <name role="PL_B">the base</name>
     <name role="PL_M">the meeting point</name>
+    <name role="COMP_N">north</name>
+    <name role="COMP_S">south</name>
+    <name role="COMP_E">east</name>
+    <name role="COMP_W">west</name>
+    <name role="ORG_H">heart</name>
+    <name role="ORG_L">liver</name>
+    <name role="ORG_K">kidneys</name>
+    <name role="ORG_U">lungs</name>
+    <name role="ORG_P">pancreas</name>
+    <name role="PL_A">the alpine rescue station</name>
+    <name role="PL_F">the fire station</name>
+    <name role="PL_S">the sports field</name>
+    <name role="HRS_A">alpine rescue station</name>
+    <name role="HRS_F">fire station</name>
+    <name role="HRS_S">heli rescue base</name>
+    <name role="HRS_M">heli rescue base</name>
+    <name role="PL_OF">{0} of {1}</name>
+    <name role="HRS_OF">{0} {1}</name>
+    <name role="MIN_1">minute</name>
+    <name role="MIN_N">minutes</name>
   </names>
     <message key="APR.CHF.G" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="ground operation expected">
       <o>Rear crew: stretcher and bag ready, I follow Doc on the ground.</o>
@@ -878,12 +898,12 @@
       <o>{list:1} {be:1} there already, {list:0} {be:0} coming.</o>
     </message>
     <message key="CRW.VEH.BOTH" actor="3" radio="auto" new="1" trigger="the crew confirms the vehicles: some on scene (argument 1), others on the way (argument 0), one sentence">
-      <o>{list:1} on scene, {list:0} on the way.</o>
-      <o>We have {list:1} on scene and {list:0} on the way.</o>
-      <o>On scene: {list:1}. On the way: {list:0}.</o>
-      <o>{list:1} {be:1} already here, {list:0} {be:0} coming.</o>
-      <o>We see {list:1} on scene, {list:0} still on the way.</o>
-      <o>{list:1} on location, and {list:0} on the way.</o>
+      <o>{list:1} on scene. [pause:1] {list:0} on the way.</o>
+      <o>We have {list:1} on scene. [pause:1] And {list:0} on the way.</o>
+      <o>On scene: {list:1}. [pause:1] On the way: {list:0}.</o>
+      <o>{list:1} {be:1} already here. [pause:1] {list:0} {be:0} coming.</o>
+      <o>We see {list:1} on scene. [pause:1] {list:0} still on the way.</o>
+      <o>{list:1} on location. [pause:1] And {list:0} on the way.</o>
     </message>
     <message key="CRW.VEH.SCENE" actor="3" radio="auto" new="1" trigger="the crew confirms the vehicles already on scene (argument 1 = letters), one sentence">
       <o>{list:1} on scene.</o>
@@ -1138,12 +1158,12 @@
       <o>One more minute and we are done.</o>
     </message>
     <message key="GRD.ETA.N" actor="4" radio="auto" group="grd" seq="4" new="1" trigger="remaining ground time, {0} minutes">
-      <o>About {0} minutes before we are ready.</o>
+      <o>About {mins:0} before we are ready.</o>
       <o>We need about {0} more minutes.</o>
-      <o>Roughly {0} minutes to go.</o>
-      <o>Give us about {0} minutes.</o>
+      <o>Roughly {mins:0} to go.</o>
+      <o>Give us about {mins:0}.</o>
       <o>About {0} more minutes, then we are ready.</o>
-      <o>Another {0} minutes or so and we are done.</o>
+      <o>Another {mins:0} or so and we are done.</o>
     </message>
     <message key="GRD.LOAD.CHF" actor="4" radio="auto" group="grd" seq="2" new="1" trigger="stage patient loading">
       <o>The patient is packaged and we are loading.</o>
@@ -1153,13 +1173,13 @@
       <o>The patient is packaged, we are heading to the helicopter.</o>
       <o>Patient is packaged, we are bringing them over now.</o>
     </message>
-    <message key="GRD.PLT.OK" actor="1" radio="auto" group="grd" seq="5" new="1" futile="1">
+        <message key="GRD.PLT.OK" actor="1" radio="auto" group="grd" seq="5" new="1" futile="1">
       <o silent="1"/>
       <o silent="1"/>
       <o>Copy, thanks.</o>
-      <o>Understood. We stay ready.</o>
-      <o>Good. We are here.</o>
-      <o>Copy. Call me when you are ready.</o>
+      <o>Roger, standing by.</o>
+      <o>Okay. Call me when you are ready.</o>
+      <o>Understood, thanks. We stay ready.</o>
     </message>
     <message key="GRD.PLT.Q" actor="1" radio="auto" group="grdq" seq="1" new="1">
       <o>Doc, how are we doing down there?</o>
@@ -1242,28 +1262,28 @@
       <o>Everyone okay back there? Report!</o>
     </message>
     <message key="HOS.CALL.D" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a deceased patient aboard">
-      <o>Hospital, {@HEMS} inbound, ETA about {0} minutes. The patient died during the mission.</o>
-      <o>Hospital, {@HEMS} inbound in about {0} minutes. We have a deceased patient on board.</o>
-      <o>Hospital, {@HEMS}, ETA {0} minutes, patient deceased in flight.</o>
-      <o>Hospital, we arrive in about {0} minutes. The patient did not survive.</o>
-      <o>Hospital, {@HEMS} inbound, about {0} minutes. We have a deceased patient aboard.</o>
-      <o>Hospital, {@HEMS} here, about {0} minutes out. I am afraid the patient did not make it.</o>
+      <o>Hospital, {@HEMS} inbound, ETA about {mins:0}. The patient died during the mission.</o>
+      <o>Hospital, {@HEMS} inbound in about {mins:0}. We have a deceased patient on board.</o>
+      <o>Hospital, {@HEMS}, ETA {mins:0}, patient deceased in flight.</o>
+      <o>Hospital, we arrive in about {mins:0}. The patient did not survive.</o>
+      <o>Hospital, {@HEMS} inbound, about {mins:0}. We have a deceased patient aboard.</o>
+      <o>Hospital, {@HEMS} here, about {mins:0} out. I am afraid the patient did not make it.</o>
     </message>
     <message key="HOS.CALL.O" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with an organ aboard">
-      <o>Hospital, {@HEMS} inbound with the organ, ETA about {0} minutes.</o>
-      <o>Hospital, we bring the organ, about {0} minutes out. Please have the team ready.</o>
-      <o>Hospital, {@HEMS} is inbound with the organ, ETA {0} minutes.</o>
-      <o>Hospital, organ on board, we will be with you in about {0} minutes.</o>
-      <o>Hospital, {@HEMS} inbound with the organ, about {0} minutes. Please have the team ready.</o>
-      <o>Hospital, {@HEMS} here with the organ, we are about {0} minutes out.</o>
+      <o>Hospital, {@HEMS} inbound with the organ, ETA about {mins:0}.</o>
+      <o>Hospital, we bring the organ, about {mins:0} out. Please have the team ready.</o>
+      <o>Hospital, {@HEMS} is inbound with the organ, ETA {mins:0}.</o>
+      <o>Hospital, organ on board, we will be with you in about {mins:0}.</o>
+      <o>Hospital, {@HEMS} inbound with the organ, about {mins:0}. Please have the team ready.</o>
+      <o>Hospital, {@HEMS} here with the organ, we are about {mins:0} out.</o>
     </message>
     <message key="HOS.CALL.P" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a patient aboard; {0}: minutes to go">
-      <o>Hospital, {@HEMS} is inbound with one patient, ETA about {0} minutes.</o>
-      <o>Hospital, {@HEMS} inbound with a patient on board, about {0} minutes out.</o>
-      <o>Hospital, we are {@HEMS} with one patient, ETA {0} minutes.</o>
-      <o>Hospital, {@HEMS} is inbound, one patient aboard, expect us in about {0} minutes.</o>
-      <o>Hospital, {@HEMS} inbound with one patient, about {0} minutes.</o>
-      <o>Hospital, {@HEMS} here, one patient aboard, we will be with you in about {0} minutes.</o>
+      <o>Hospital, {@HEMS} is inbound with one patient, ETA about {mins:0}.</o>
+      <o>Hospital, {@HEMS} inbound with a patient on board, about {mins:0} out.</o>
+      <o>Hospital, we are {@HEMS} with one patient, ETA {mins:0}.</o>
+      <o>Hospital, {@HEMS} is inbound, one patient aboard, expect us in about {mins:0}.</o>
+      <o>Hospital, {@HEMS} inbound with one patient, about {mins:0}.</o>
+      <o>Hospital, {@HEMS} here, one patient aboard, we will be with you in about {mins:0}.</o>
     </message>
     <message key="HOS.HND" actor="3" radio="auto" group="hoshnd" seq="2" new="1">
       <o>Doc here. Handover: the patient is stable, treated and monitored. All yours.</o>
@@ -1272,6 +1292,22 @@
       <o>Handover done. Everything we did is on the report, thank you for taking them.</o>
       <o>Doc here. Handover: treated and monitored, the report goes with the patient.</o>
       <o>Here you go: treated, monitored, and everything is in the report. They are all yours.</o>
+    </message>
+    <message key="HOS.PAP" actor="3" radio="auto" group="hospap" seq="3" new="1" trigger="the doctor goes inside the hospital for the report and the paperwork">
+      <o>We are heading inside for the report and the paperwork. Back shortly.</o>
+      <o>Doc here. We go inside now for the report and the paperwork, we will be quick.</o>
+      <o>Handover done, now we complete the paperwork inside. Stand by, pilot.</o>
+      <o>The patient is in good hands. We go in to finish the report and the paperwork.</o>
+      <o>Going inside for the report and the paperwork. Pilot, please wait for us at the helicopter.</o>
+      <o>We finish the paperwork inside and come straight back. Stand by.</o>
+    </message>
+    <message key="HOS.PAP.O" actor="4" radio="auto" group="hospap" seq="3" new="1" trigger="the operator follows the hospital team inside after the organ delivery">
+      <o>Chief here. I follow the hospital team inside for the report and the paperwork. Back shortly.</o>
+      <o>Organ delivered. I go in with the team for the paperwork, I will be quick.</o>
+      <o>Delivery done, now the paperwork inside. Stand by, pilot.</o>
+      <o>The organ is with the team. I go in to sign the report and come straight back.</o>
+      <o>Going inside for the delivery report. Pilot, please wait at the helicopter.</o>
+      <o>I finish the paperwork inside and return. Stand by.</o>
     </message>
     <message key="HOS.ORG" actor="9" radio="ext-near" group="hoshnd" seq="2" new="1" trigger="the hospital receives the organ">
       <o>We have the organ. Thank you, the team will take it from here.</o>
@@ -2782,8 +2818,8 @@
       <o>Copy that.</o>
       <o>Roger.</o>
       <o>Understood.</o>
-      <o>Got it.</o>
-      <o>All right.</o>
+      <o>Copy, thanks.</o>
+      <o>Roger, thanks.</o>
     </message>
     <message key="PLT.5" actor="1" radio="auto" lvar="L:PLT{VCP}5" wav="AND.plt.u.hi.sarah.wav" sleep="6" to="tech">
       <o>Hi {@TECH}, how are you? The helicopter is good, but it needs refuelling.</o>
@@ -3532,6 +3568,214 @@
       <o>Companion ready, running in the background.</o>
       <o>All set. HPG Companion is running minimized.</o>
       <o>Voices ready. HPG Companion is in the background.</o>
+    </message>
+    <message key="OBJ.ORG.T" actor="8" radio="on" trigger="objective of an organ transport (medical team transport)" new="1">
+      <o>Pick up the medical team at the designated point and bring it to the destination before the time limit. The operation is waiting.</o>
+      <o>Collect the surgical team and its equipment at the designated point and fly it to the destination in time. Every minute counts.</o>
+      <o>Load the medical team at the pick-up point and deliver it to the hospital before the deadline.</o>
+      <o>The team must arrive before the time limit. Pick it up at the designated point and fly straight to the destination.</o>
+      <o>Quick job: get the doctors to the destination before the deadline, they are needed there.</o>
+      <o>The team is counting on you. Pick them up, fly straight, and be on time.</o>
+    </message>
+    <message key="OBJ.ORG.B" actor="8" radio="on" trigger="objective of an organ transport (blood supply transport)" new="1">
+      <o>Collect the blood supply at the designated point and deliver it to the destination within the time limit.</o>
+      <o>Pick up the blood units at the designated point and fly them to the hospital before the deadline. Keep the container level.</o>
+      <o>Take the urgent blood supply from the pick-up point to the destination as fast as possible, within the time limit.</o>
+      <o>The hospital is waiting for the blood. Collect it at the designated point and deliver it in time.</o>
+      <o>Blood run: collect it, keep it cold and level, and bring it before the deadline.</o>
+      <o>They are waiting for the blood. Quick pick-up, straight flight, on time.</o>
+    </message>
+    <message key="BRF.ORG.PLT.T" actor="1" radio="auto" group="brforg" seq="1" trigger="BRF.ORG.PLT for the medical team transport" new="1">
+      <o>Team transport. The operation cannot start without them: we pick up the team and deliver it before the time limit.</o>
+      <o>This is a team run, crew. We collect the doctors and their equipment and fly them to the hospital on time.</o>
+      <o>Medical team transport, time critical. Pick-up, load and straight to the destination.</o>
+      <o>Crew, we carry a surgical team. The clock is running, so we keep everything tight.</o>
+      <o>Right, a team run: doctors in, cases secured, and we go as fast as we safely can.</o>
+      <o>We are the taxi of the surgeons today. Quick and clean, crew.</o>
+    </message>
+    <message key="BRF.ORG.PLT.B" actor="1" radio="auto" group="brforg" seq="1" trigger="BRF.ORG.PLT for the blood supply transport" new="1">
+      <o>Blood supply run. Time is critical: we collect the units and deliver them within the time limit.</o>
+      <o>This is an urgent blood delivery, crew. We keep the container level and we do not lose a minute.</o>
+      <o>Blood transport, time critical. Pick-up, load, and straight to the hospital.</o>
+      <o>Crew, the hospital needs this blood. We collect it and fly it there on time.</o>
+      <o>Blood run, crew: we load it carefully and then we fly as fast as we safely can.</o>
+      <o>A cold box with lives in it. Quick and smooth, crew.</o>
+    </message>
+    <message key="APR.ORG.PLT.T" actor="1" radio="auto" group="aprorg" seq="1" trigger="two nautical miles from the pickup point of an organ transport (medical team transport)" new="1">
+      <o>Two miles to the team pick-up. We land, load the team and leave straight away.</o>
+      <o>Pick-up point in two miles. The team is waiting, let us be quick.</o>
+      <o>Two miles to the pick-up. Team and equipment, load and go.</o>
+      <o>Approaching the team pick-up, two miles. Time is tight.</o>
+      <o>Team pick-up ahead, two miles. Let us be on the ground and away in no time.</o>
+      <o>Two miles, the doctors are waiting. Short stop, quick departure.</o>
+    </message>
+    <message key="APR.ORG.PLT.B" actor="1" radio="auto" group="aprorg" seq="1" trigger="two nautical miles from the pickup point of an organ transport (blood supply transport)" new="1">
+      <o>Two miles to the blood pick-up. We land, load the container and leave.</o>
+      <o>Pick-up in two miles. The blood is ready, let us not waste time.</o>
+      <o>Two miles to the pick-up. Load the container and go.</o>
+      <o>Approaching the pick-up, two miles. The container is waiting.</o>
+      <o>Blood pick-up ahead, two miles. Down, load, up again.</o>
+      <o>Two miles to the container. Short stop and straight on.</o>
+    </message>
+    <message key="DSP.ANS.ORG.T" actor="8" radio="on" trigger="the dispatcher answers the pilot: organ transport (medical team transport)" new="1">
+      <o>{@HEMS}, {@DSP}. Copy. The team is ready at the pick-up with its equipment. The hospital is waiting, report your estimated arrival.</o>
+      <o>{@HEMS}, copy. The doctors are gathered at the pick-up point. The operating room is prepared, report your ETA when you can.</o>
+      <o>{@HEMS}, {@DSP}. Understood. The team waits on the pad. Please keep the time limit in mind and report the ETA.</o>
+      <o>{@HEMS}, copy. The team and the equipment are ready for boarding. The hospital expects you before the time limit.</o>
+      <o>{@HEMS}, copy. The team is waiting, please keep the time limit in mind. Report when you are airborne with the team.</o>
+      <o>{@HEMS}, {@DSP}. Understood. The doctors are ready to board. The hospital asks for your arrival time.</o>
+    </message>
+    <message key="DSP.ANS.ORG.B" actor="8" radio="on" trigger="the dispatcher answers the pilot: organ transport (blood supply transport)" new="1">
+      <o>{@HEMS}, {@DSP}. Copy. The blood container is ready at the pick-up. The hospital is waiting, report your estimated arrival.</o>
+      <o>{@HEMS}, copy. The blood units are packed and ready for collection. The ward is waiting, report your ETA when you can.</o>
+      <o>{@HEMS}, {@DSP}. Understood. The container waits on the pad. Please keep the time limit in mind and report the ETA.</o>
+      <o>{@HEMS}, copy. The blood supply is ready for loading. The hospital expects you before the time limit.</o>
+      <o>{@HEMS}, copy. The container is waiting, please keep the time limit in mind. Report when you are airborne.</o>
+      <o>{@HEMS}, {@DSP}. Understood. The blood is ready for loading. The hospital asks for your arrival time.</o>
+    </message>
+    <message key="ORG.PCK.T" actor="4" radio="auto" group="orgpck" seq="1" trigger="organ transport: the rear crew collects the organ container at the pickup point (medical team transport)" new="1">
+      <o>Rear crew here. We meet the team at the pick-up point and check names and equipment first.</o>
+      <o>Taking over the team and its equipment now. Names and cases checked first.</o>
+      <o>Rear crew at the pick-up. The team boards with its equipment, we count the cases.</o>
+      <o>Here we are. We receive the team and secure the equipment for the flight.</o>
+      <o>Rear crew: the doctors are in, the cases are strapped down. We can go.</o>
+      <o>Team received, equipment secured. Rear crew ready.</o>
+    </message>
+    <message key="ORG.PCK.B" actor="4" radio="auto" group="orgpck" seq="1" trigger="organ transport: the rear crew collects the organ container at the pickup point (blood supply transport)" new="1">
+      <o>Rear crew here. We collect the blood container and check seal and documents.</o>
+      <o>Picking up the blood units now. Seal, temperature and paperwork checked first.</o>
+      <o>Rear crew at the pick-up. The container goes in the cabin and we check the label.</o>
+      <o>Here we are. We receive the blood supply and secure the container for the flight.</o>
+      <o>Rear crew: the container is in and strapped down. We can go.</o>
+      <o>Blood received, container secured. Rear crew ready.</o>
+    </message>
+    <message key="ORG.INF.T" actor="3" radio="ics" group="orgb" seq="1" prio="2" age="90" trigger="organ transport briefing: the organ, the recipient and the hospital (args: organ H L K U P, name, age, hospital) (medical team transport)" new="1">
+      <o>We carry the surgical team for {name:1}, {2} years old, who is waiting at {3}. The operation is prepared.</o>
+      <o>The team is for {name:1}, age {2}, at {3}. They cannot start without the doctors.</o>
+      <o>Team transport for the patient {name:1}, {2} years old. The operating room at {3} is ready.</o>
+      <o>We take the medical team to {3}, for {name:1}, age {2}. The surgeon is counting on us.</o>
+      <o>Team run for {name:1}, {2} years old, at {3}. The earlier we land, the earlier they start.</o>
+      <o>The doctors are for {name:1}, age {2}. At {3} the operating room is waiting.</o>
+    </message>
+    <message key="ORG.INF.B" actor="3" radio="ics" group="orgb" seq="1" prio="2" age="90" trigger="organ transport briefing: the organ, the recipient and the hospital (args: organ H L K U P, name, age, hospital) (blood supply transport)" new="1">
+      <o>We carry the blood units for {name:1}, {2} years old, who is waiting at {3}. The transfusion is prepared.</o>
+      <o>The blood is for {name:1}, age {2}, at {3}. The stock there is empty.</o>
+      <o>Blood transport for the patient {name:1}, {2} years old. The ward at {3} is waiting.</o>
+      <o>We take the blood supply to {3}, for {name:1}, age {2}. They count on us.</o>
+      <o>Blood run for {name:1}, {2} years old, at {3}. Every unit counts.</o>
+      <o>The blood is for {name:1}, age {2}. At {3} they are waiting for it.</o>
+    </message>
+    <message key="ORG.PCK.G.T" actor="9" radio="ext-near" group="orgp" seq="1" prio="2" age="60" trigger="organ pick-up: the ground team tells the crew what it is, for whom and how much time is left (args: organ, name, age, minutes left) (medical team transport)" new="1">
+      <o>This is the medical team for {name:1}, {2} years old. It is very important, you have {mins:3}. Please go straight to the hospital.</o>
+      <o>Team and equipment for {name:1}, age {2}. The time limit is {mins:3}, the operation waits for them.</o>
+      <o>The doctors are ready: patient {name:1}, {2} years old. You have {mins:3}. Good flight.</o>
+      <o>Surgical team on board, patient {name:1}, {2} years old. The deadline is in {mins:3}. Do not lose time.</o>
+      <o>Here they are: patient {name:1}, {2} years old. {mins:3} to the deadline. Fly safe.</o>
+      <o>Everything is ready for {name:1}, {2} years old. You have {mins:3}, the doctors know what to do.</o>
+    </message>
+    <message key="ORG.PCK.G.B" actor="9" radio="ext-near" group="orgp" seq="1" prio="2" age="60" trigger="organ pick-up: the ground team tells the crew what it is, for whom and how much time is left (args: organ, name, age, minutes left) (blood supply transport)" new="1">
+      <o>This is the blood supply for {name:1}, {2} years old. It is very important, you have {mins:3}. Keep the container level.</o>
+      <o>Blood units for {name:1}, age {2}. The time limit is {mins:3}, please go straight to the hospital.</o>
+      <o>Container ready: patient {name:1}, {2} years old. You have {mins:3}. Good flight.</o>
+      <o>Blood supply for {name:1}, {2} years old. The deadline is in {mins:3}. Do not lose time.</o>
+      <o>Here it is: blood for {name:1}, {2} years old. {mins:3} to the deadline. Fly safe.</o>
+      <o>Everything is ready for {name:1}, {2} years old. You have {mins:3}, keep the box cold and level.</o>
+    </message>
+    <message key="ORG.PCK.R.T" actor="4" radio="auto" group="orgp" seq="2" prio="2" age="60" trigger="organ pick-up: the rear crew answers the ground team (medical team transport)" new="1">
+      <o>Understood. The team is aboard, we will not lose a minute. Thank you.</o>
+      <o>Copy, team and equipment secured. We go straight to the hospital.</o>
+      <o>Received. Everyone is strapped in, we leave now.</o>
+      <o>Thank you, we have them. Straight to the destination.</o>
+      <o>Team on board and strapped in. Leaving now.</o>
+      <o>Got them, thank you. We fly them straight there.</o>
+    </message>
+    <message key="ORG.PCK.R.B" actor="4" radio="auto" group="orgp" seq="2" prio="2" age="60" trigger="organ pick-up: the rear crew answers the ground team (blood supply transport)" new="1">
+      <o>Understood. The container is secured, we will not lose a minute. Thank you.</o>
+      <o>Copy, the blood is strapped in. We go straight to the hospital.</o>
+      <o>Received. The container is level and secured, we leave now.</o>
+      <o>Thank you, we have it. Straight to the destination.</o>
+      <o>Container on board and strapped in. Leaving now.</o>
+      <o>Got it, thank you. We fly it straight there.</o>
+    </message>
+    <message key="HOS.ORG.T" actor="9" radio="ext-near" group="hoshnd" seq="2" trigger="the hospital receives the organ (medical team transport)" new="1">
+      <o>The team has arrived. Thank you, the operating room is ready, they will go straight in.</o>
+      <o>Received. The doctors arrived on time, the patient is already prepared.</o>
+      <o>We welcome the team. Thank you for the quick flight.</o>
+      <o>Team received. Thank you, crew, the operation can start now.</o>
+      <o>Great, the team is here. The patient is on the table, they go straight in.</o>
+      <o>Team arrived, thank you. Everything is ready for them.</o>
+    </message>
+    <message key="HOS.ORG.B" actor="9" radio="ext-near" group="hoshnd" seq="2" trigger="the hospital receives the organ (blood supply transport)" new="1">
+      <o>We have the blood. Thank you, the ward will take it from here.</o>
+      <o>Received. The blood units arrived on time, the transfusion starts now.</o>
+      <o>We take the container. Thank you for the quick flight.</o>
+      <o>Blood supply received. Thank you, crew, the stock is saved.</o>
+      <o>Great, the blood is here. We start the transfusion at once.</o>
+      <o>Blood arrived, thank you. The ward has been waiting for it.</o>
+    </message>
+    <message key="HOS.ORG.LT.T" actor="9" radio="ext-near" group="hoshnd" seq="2" trigger="the hospital receives the organ after the deadline (medical team transport)" new="1">
+      <o>The team arrived, but the time limit is over. The surgeon will decide how to proceed.</o>
+      <o>Received. It is beyond the deadline, the operation was postponed, the team goes in now.</o>
+      <o>We welcome the team, a little late. We will do what we can.</o>
+      <o>Team received after the deadline. The surgeon will evaluate the situation.</o>
+      <o>The team is here, late but safe. The surgeon decides what is possible.</o>
+      <o>Received. Late, but they are here. We do what we can.</o>
+    </message>
+    <message key="HOS.ORG.LT.B" actor="9" radio="ext-near" group="hoshnd" seq="2" trigger="the hospital receives the organ after the deadline (blood supply transport)" new="1">
+      <o>We have the blood, but the time is over. The doctor will decide if it can still be used.</o>
+      <o>Received. It is beyond the deadline, the team will check the units now.</o>
+      <o>We take the container, a little late. We will check it at once.</o>
+      <o>Blood supply received after the deadline. The laboratory will evaluate it.</o>
+      <o>The blood is here, late but intact. The laboratory checks it now.</o>
+      <o>Received. Late, but it is here. We check it at once.</o>
+    </message>
+    <message key="ORG.DEL.LT.T" actor="2" radio="auto" group="orgd" seq="1" prio="1" age="60" trigger="organ transport: the organ was delivered after the deadline, the copilot comments (medical team transport)" new="1">
+      <o>We were late. We did everything we could.</o>
+      <o>Delivered after the deadline. Let us hope the operation can still go on.</o>
+      <o>The team arrived late. Next time we will be faster.</o>
+      <o>Too late, I am sorry. The team is there now.</o>
+      <o>We missed the time. At least they are there.</o>
+      <o>A pity, we were late. The team is in good hands now.</o>
+    </message>
+    <message key="ORG.DEL.LT.B" actor="2" radio="auto" group="orgd" seq="1" prio="1" age="60" trigger="organ transport: the organ was delivered after the deadline, the copilot comments (blood supply transport)" new="1">
+      <o>We were late. We did everything we could.</o>
+      <o>Delivered after the deadline. Let us hope the blood is still useful.</o>
+      <o>The blood arrived late. Next time we will be faster.</o>
+      <o>Too late, I am sorry. The supply is there now.</o>
+      <o>We missed the time. At least the blood is there.</o>
+      <o>A pity, we were late. The blood is in good hands now.</o>
+    </message>
+    <message key="PCK.CALL.ORG.T" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (medical team transport)" new="1">
+      <o>Pick-up point, {@HEMS} inbound for the team, ETA {mins:0}. Please have the doctors and the equipment ready.</o>
+      <o>Pick-up point, {@HEMS}, about {mins:0} out. The team must be ready for boarding, please.</o>
+      <o>Pick-up point, {@HEMS}, we arrive in {mins:0}. Team and cases ready at the pad, please.</o>
+      <o>{@HEMS} to the pick-up point, {mins:0} to go. Please keep the team waiting at the landing area.</o>
+      <o>Pick-up point, {@HEMS}, {mins:0} out. Doctors and cases at the pad, please, so we can leave at once.</o>
+      <o>{@HEMS} inbound, {mins:0} to the pick-up. Team ready to board on landing, please.</o>
+    </message>
+    <message key="PCK.CALL.ORG.B" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (blood supply transport)" new="1">
+      <o>Pick-up point, {@HEMS} inbound for the blood supply, ETA {mins:0}. Please have the container ready.</o>
+      <o>Pick-up point, {@HEMS}, about {mins:0} out. The blood must be ready for loading, please.</o>
+      <o>Pick-up point, {@HEMS}, we arrive in {mins:0}. Container ready at the pad, please.</o>
+      <o>{@HEMS} to the pick-up point, {mins:0} to go. Please keep the container ready at the landing area.</o>
+      <o>Pick-up point, {@HEMS}, {mins:0} out. Container at the pad, please, so we can leave at once.</o>
+      <o>{@HEMS} inbound, {mins:0} to the pick-up. Blood ready to load on landing, please.</o>
+    </message>
+    <message key="PCK.REPLY.ORG.T" actor="9" radio="ext" group="pcko" seq="2" prio="2" age="90" trigger="organ transport: the pick-up place answers that the organ is ready (external radio) (medical team transport)" new="1">
+      <o>{@HEMS}, copy. The team is gathered and waits on the pad.</o>
+      <o>Copy, {@HEMS}. The doctors are ready with their equipment, the pad is clear.</o>
+      <o>{@HEMS}, understood. The team will board as soon as you land.</o>
+      <o>Copy. Team and cases are at the landing area, we wait for you.</o>
+      <o>{@HEMS}, copy. Doctors and cases are at the pad, we wait for you.</o>
+      <o>Copy. The team is ready to board as soon as the rotors allow.</o>
+    </message>
+    <message key="PCK.REPLY.ORG.B" actor="9" radio="ext" group="pcko" seq="2" prio="2" age="90" trigger="organ transport: the pick-up place answers that the organ is ready (external radio) (blood supply transport)" new="1">
+      <o>{@HEMS}, copy. The container is packed and waits on the pad.</o>
+      <o>Copy, {@HEMS}. The blood units are ready for transport, the pad is clear.</o>
+      <o>{@HEMS}, understood. The container will be handed over as soon as you land.</o>
+      <o>Copy. The blood supply is at the landing area, we wait for you.</o>
+      <o>{@HEMS}, copy. The container is at the pad, we wait for you.</o>
+      <o>Copy. The blood is ready to load as soon as the rotors allow.</o>
     </message>
   <!-- MISSION TEXTS BEGIN: generated by node tools/sync-pack-texts.js from the mission tools/voice-texts.json. Do not edit this block by hand: translate it in your own pack. -->
     <message key="CHK.afterengstartckl.01" text="1" actor="11" trigger="checklist afterengstartckl">
@@ -5529,6 +5773,102 @@
     <message key="DSC.68.4" text="1" actor="8" trigger="dispatch description of incident 68, variant 4">
       <o>Received a call about a missing person who left home alone and did not come back.</o>
     </message>
+    <message key="DSC.69.1" text="1" actor="8" trigger="dispatch description of incident 69, variant 1">
+      <o>Multi-vehicle pile-up on the motorway. Several vehicles involved, traffic blocked and people trapped.</o>
+    </message>
+    <message key="DSC.69.2" text="1" actor="8" trigger="dispatch description of incident 69, variant 2">
+      <o>Chain collision on the motorway in poor visibility. Many vehicles involved and several injured.</o>
+    </message>
+    <message key="DSC.69.3" text="1" actor="8" trigger="dispatch description of incident 69, variant 3">
+      <o>Motorway pile-up with a truck involved. Multiple patients, one vehicle on fire.</o>
+    </message>
+    <message key="DSC.69.4" text="1" actor="8" trigger="dispatch description of incident 69, variant 4">
+      <o>Several cars collided on the motorway at high speed. Rescue crews are on their way.</o>
+    </message>
+    <message key="DSC.70.1" text="1" actor="8" trigger="dispatch description of incident 70, variant 1">
+      <o>A mountain biker fell on a forest trail and cannot continue. Companions are with the injured rider.</o>
+    </message>
+    <message key="DSC.70.2" text="1" actor="8" trigger="dispatch description of incident 70, variant 2">
+      <o>Mountain biker crashed on a downhill trail. Possible head injury.</o>
+    </message>
+    <message key="DSC.70.3" text="1" actor="8" trigger="dispatch description of incident 70, variant 3">
+      <o>A cyclist went over the handlebars on a rocky trail. Pain in the arm and the shoulder.</o>
+    </message>
+    <message key="DSC.70.4" text="1" actor="8" trigger="dispatch description of incident 70, variant 4">
+      <o>Biker down on a mountain path, conscious but unable to move. Friends are waiting on the trail.</o>
+    </message>
+    <message key="DSC.71.1" text="1" actor="8" trigger="dispatch description of incident 71, variant 1">
+      <o>A player collapsed during a football match. Bystanders have started resuscitation.</o>
+    </message>
+    <message key="DSC.71.2" text="1" actor="8" trigger="dispatch description of incident 71, variant 2">
+      <o>Sudden collapse of a spectator at a sports field. Many people around, the ambulance is delayed.</o>
+    </message>
+    <message key="DSC.71.3" text="1" actor="8" trigger="dispatch description of incident 71, variant 3">
+      <o>Player unresponsive on the pitch after a sprint. Chest compressions in progress.</o>
+    </message>
+    <message key="DSC.71.4" text="1" actor="8" trigger="dispatch description of incident 71, variant 4">
+      <o>An amateur athlete collapsed during training. Bystanders and their bags are around the field.</o>
+    </message>
+    <message key="DSC.72.1" text="1" actor="8" trigger="dispatch description of incident 72, variant 1">
+      <o>A person fell from a ladder while working on the house. Pain in the back, unable to stand.</o>
+    </message>
+    <message key="DSC.72.2" text="1" actor="8" trigger="dispatch description of incident 72, variant 2">
+      <o>Fall from a ladder in a garden while pruning. The patient is conscious but confused.</o>
+    </message>
+    <message key="DSC.72.3" text="1" actor="8" trigger="dispatch description of incident 72, variant 3">
+      <o>A person fell from a ladder from about three meters. Suspected head and spine injuries.</o>
+    </message>
+    <message key="DSC.72.4" text="1" actor="8" trigger="dispatch description of incident 72, variant 4">
+      <o>A painter fell from a ladder. Neighbours called for help, the patient is on the ground.</o>
+    </message>
+    <message key="DSC.73.1" text="1" actor="8" trigger="dispatch description of incident 73, variant 1">
+      <o>Explosion with fire in a workshop. A worker has severe burns on the arms and the face.</o>
+    </message>
+    <message key="DSC.73.2" text="1" actor="8" trigger="dispatch description of incident 73, variant 2">
+      <o>Worker burned by a flash fire in a workshop. The fire was put out, the patient is in pain.</o>
+    </message>
+    <message key="DSC.73.3" text="1" actor="8" trigger="dispatch description of incident 73, variant 3">
+      <o>Industrial accident with burns in a shed. Colleagues are using extinguishers.</o>
+    </message>
+    <message key="DSC.73.4" text="1" actor="8" trigger="dispatch description of incident 73, variant 4">
+      <o>A worker caught fire during welding in a workshop. Burns on the torso and the legs.</o>
+    </message>
+    <message key="DSC.74.1" text="1" actor="8" trigger="dispatch description of incident 74, variant 1">
+      <o>A rider fell from a horse at a riding school. Possible spine injury, the horse is nearby.</o>
+    </message>
+    <message key="DSC.74.2" text="1" actor="8" trigger="dispatch description of incident 74, variant 2">
+      <o>Horse riding accident during a ride. The rider is on the ground and does not move the legs.</o>
+    </message>
+    <message key="DSC.74.3" text="1" actor="8" trigger="dispatch description of incident 74, variant 3">
+      <o>The horse threw its rider on a riding track. Head injury, the helmet is damaged.</o>
+    </message>
+    <message key="DSC.74.4" text="1" actor="8" trigger="dispatch description of incident 74, variant 4">
+      <o>A young rider was kicked by a horse in the paddock. Pain in the chest and the arm.</o>
+    </message>
+    <message key="DSC.101.1" text="1" actor="8" trigger="dispatch description of incident 101, variant 1">
+      <o>Secondary mission: Medical team transport has been requested. The team must arrive before a given time.</o>
+    </message>
+    <message key="DSC.101.2" text="1" actor="8" trigger="dispatch description of incident 101, variant 2">
+      <o>Secondary mission: A surgical team must reach another hospital for an urgent operation.</o>
+    </message>
+    <message key="DSC.101.3" text="1" actor="8" trigger="dispatch description of incident 101, variant 3">
+      <o>Secondary mission: Urgent transport of a medical team and its equipment, the operation cannot start without them.</o>
+    </message>
+    <message key="DSC.101.4" text="1" actor="8" trigger="dispatch description of incident 101, variant 4">
+      <o>Secondary mission: A specialist team is waiting for pick-up. The arrival time limit is strict.</o>
+    </message>
+    <message key="DSC.102.1" text="1" actor="8" trigger="dispatch description of incident 102, variant 1">
+      <o>Secondary mission: Urgent blood and plasma transport has been requested.</o>
+    </message>
+    <message key="DSC.102.2" text="1" actor="8" trigger="dispatch description of incident 102, variant 2">
+      <o>Secondary mission: A hospital ran out of blood units and asks for an urgent delivery.</o>
+    </message>
+    <message key="DSC.102.3" text="1" actor="8" trigger="dispatch description of incident 102, variant 3">
+      <o>Secondary mission: Blood supply for a mass casualty event must be delivered as soon as possible.</o>
+    </message>
+    <message key="DSC.102.4" text="1" actor="8" trigger="dispatch description of incident 102, variant 4">
+      <o>Secondary mission: Urgent delivery of blood products has been requested, the container is ready at the pick-up point.</o>
+    </message>
     <message key="DSC.VEH" text="1" actor="8" trigger="dispatch: the vehicle of the search missions (values {0} colour, {1} model)">
       <o>Vehicle: {0} {1}.</o>
     </message>
@@ -6005,6 +6345,38 @@
       <o>Down and safe. The area is secure, go ahead.</o>
       <o>On the ground, area secured. All okay, you are clear to proceed.</o>
     </message>
+    <message key="HRS.W.POS" actor="12" radio="on" group="hrsw" seq="1" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is not on the skid point or not inside the landing spot">
+      <o>Pilot, I am waiting at the skid point. Land on the skid point, inside the landing spot.</o>
+      <o>Pilot, you are not on the skid point yet. Put the helicopter down on it, inside the landing spot.</o>
+      <o>I cannot reach you. Land on the skid point inside the landing spot, then I come aboard.</o>
+      <o>Pilot, heli rescuer here. Reposition on the skid point, inside the landing spot.</o>
+      <o>Waiting for you at the skid point. Land inside the landing spot and I board.</o>
+      <o>Pilot, I need you on the skid point, inside the landing spot, to get in.</o>
+    </message>
+    <message key="HRS.W.GND" actor="12" radio="on" group="hrsw" seq="2" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is not fully on the ground">
+      <o>Pilot, put the helicopter fully on the ground, then I come aboard.</o>
+      <o>I cannot board yet. Set the skids down on the ground, please.</o>
+      <o>Pilot, you are still too high. Skids on the ground and I get in.</o>
+      <o>Heli rescuer waiting. Get the helicopter down on the ground first.</o>
+      <o>Please land fully. I board as soon as the skids are down.</o>
+      <o>Pilot, I need the skids on the ground before I can board.</o>
+    </message>
+    <message key="HRS.W.STILL" actor="12" radio="on" group="hrsw" seq="3" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is still moving">
+      <o>Pilot, the helicopter is still moving. Hold it still and I come aboard.</o>
+      <o>I cannot board while you move. Keep the helicopter still, please.</o>
+      <o>Pilot, hold the position. The helicopter must be completely still.</o>
+      <o>Heli rescuer waiting. Stop all movement and I get in.</o>
+      <o>Hold it still, pilot. I board as soon as the helicopter stops moving.</o>
+      <o>Pilot, no movement please. Hold the helicopter steady for me.</o>
+    </message>
+    <message key="HRS.W.COLL" actor="12" radio="on" group="hrsw" seq="4" new="1" trigger="the heli rescuer waits at the skid point and the collective is not up">
+      <o>Pilot, hold the collective up and I come aboard.</o>
+      <o>Collective up, please. Then I can board.</o>
+      <o>Pilot, I need the collective up before I walk to the door.</o>
+      <o>Heli rescuer waiting. Raise the collective and keep it there.</o>
+      <o>Keep the collective up, pilot. I board right after.</o>
+      <o>Pilot, collective up please, then I get in.</o>
+    </message>
     <message key="HRD.PLT" actor="1" radio="auto" group="hrd" seq="1" new="1" trigger="the heli rescuers have left the helicopter: the pilot thanks them">
       <o>Thank you for the help. Take care.</o>
       <o>Thanks for the support. See you next time.</o>
@@ -6037,101 +6409,101 @@
       <o>{@HEMS}, heli rescue base. Copy that, {hr:0} at {place:1}. Thanks for the lift.</o>
       <o>{@HEMS}, heli rescue base. Noted, {hr:0} at {place:1}. Thank you, fly safe.</o>
     </message>
-    <message key="HRQ.PLT.Q" actor="1" radio="on" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
-      <o>Heli rescue base, {@HEMS}. Please provide {hr:0} for the mission. Are they available?</o>
-      <o>Heli rescue base, {@HEMS}. We request {hr:0} for this mission. Are they available?</o>
-      <o>Heli rescue base, {@HEMS}. Can you provide {hr:0} at the meeting point?</o>
-      <o>Heli rescue base, {@HEMS}. We need {hr:0} on this one. Do you have them ready?</o>
-      <o>Heli rescue base, {@HEMS}. Do you have {hr:0} for us?</o>
-      <o>Heli rescue base, {@HEMS}. Any chance of {hr:0} for this mission?</o>
+        <message key="HRQ.PLT.Q" actor="1" radio="on" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
+      <o>{hrs:1}, {@HEMS}. We are coming to pick up {hr:0}. Please confirm that you are ready.</o>
+      <o>{hrs:1}, {@HEMS}. Rendezvous for {hr:0}: are you ready on your side?</o>
+      <o>{hrs:1}, {@HEMS}. We are inbound for {hr:0}. Please stand by for boarding.</o>
+      <o>{hrs:1}, {@HEMS}. We take {hr:0} on board at your location. Can you confirm?</o>
+      <o>{hrs:1}, {@HEMS}. Request {hr:0} for boarding, are they ready?</o>
+      <o>{hrs:1}, {@HEMS}. We come for {hr:0}. Please confirm the landing area.</o>
     </message>
-    <message key="HRQ.BASE.A" actor="12" radio="ext" group="hrq" seq="2" new="1" trigger="the heli rescue base answers that {hr:0} are available (external radio; arg: 1 or 2)">
-      <o>{@HEMS}, heli rescue base. Affirm, {hr:0} available. They are waiting at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. Yes, {hr:0} ready and waiting at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. {hr:0} available, standing by at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. We have {hr:0} for you, ready at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. You got it, {hr:0} waiting for you at the meeting point.</o>
+        <message key="HRQ.BASE.A" actor="12" radio="ext" group="hrq" seq="2" new="1" trigger="the heli rescue base answers that {hr:0} are available (external radio; arg: 1 or 2)">
+      <o>{@HEMS}, {hrs:1}. Loud and clear. {hr:0} ready, the landing area is free.</o>
+      <o>{@HEMS}, {hrs:1}. Affirm, {hr:0} waiting at the pad. Area clear of obstacles.</o>
+      <o>{@HEMS}, {hrs:1}. We read you well. {hr:0} ready to board, no obstacles on the pad.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, {hr:0} standing by. The landing area is free.</o>
+      <o>{@HEMS}, {hrs:1}. Roger, {hr:0} ready. Pad is clear, we are waiting for you.</o>
+      <o>{@HEMS}, {hrs:1}. Received. {hr:0} ready for boarding, landing area free.</o>
     </message>
     <message key="HRQ.BRF.ACC" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
-      <o>Heli rescue base, {@HEMS}. The mission is an accident with {0} injured. Brief the rescuers.</o>
-      <o>Heli rescue base, {@HEMS}. Accident on scene, {0} injured reported. Please brief them.</o>
-      <o>Heli rescue base, {@HEMS}. It is a road accident, about {0} injured. Tell them to be ready.</o>
-      <o>Heli rescue base, {@HEMS}. We go to an accident, {0} injured. Please pass it on.</o>
-      <o>Heli rescue base, {@HEMS}. Accident with {0} injured. Rescuers, get ready.</o>
-      <o>Heli rescue base, {@HEMS}. Heads up: accident, {0} injured. Brief the team.</o>
+      <o>{hrs:1}, {@HEMS}. The mission is an accident with {0} injured. Brief the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. Accident on scene, {0} injured reported. Please brief them.</o>
+      <o>{hrs:1}, {@HEMS}. It is a road accident, about {0} injured. Tell them to be ready.</o>
+      <o>{hrs:1}, {@HEMS}. We go to an accident, {0} injured. Please pass it on.</o>
+      <o>{hrs:1}, {@HEMS}. Accident with {0} injured. Rescuers, get ready.</o>
+      <o>{hrs:1}, {@HEMS}. Heads up: accident, {0} injured. Brief the team.</o>
     </message>
     <message key="HRQ.BRF.SAR" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
-      <o>Heli rescue base, {@HEMS}. The mission is a search and rescue, {0} to recover. Brief the rescuers.</o>
-      <o>Heli rescue base, {@HEMS}. Search and rescue, {0} to recover. Please brief them.</o>
-      <o>Heli rescue base, {@HEMS}. It is a search and rescue with {0} persons to recover. Tell them to be ready.</o>
-      <o>Heli rescue base, {@HEMS}. We go to a search and rescue, {0} to recover. Please pass it on.</o>
-      <o>Heli rescue base, {@HEMS}. Search and rescue, {0} persons. Rescuers, get ready.</o>
-      <o>Heli rescue base, {@HEMS}. Heads up: search and rescue, {0} to recover. Brief the team.</o>
+      <o>{hrs:1}, {@HEMS}. The mission is a search and rescue, {0} to recover. Brief the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. Search and rescue, {0} to recover. Please brief them.</o>
+      <o>{hrs:1}, {@HEMS}. It is a search and rescue with {0} persons to recover. Tell them to be ready.</o>
+      <o>{hrs:1}, {@HEMS}. We go to a search and rescue, {0} to recover. Please pass it on.</o>
+      <o>{hrs:1}, {@HEMS}. Search and rescue, {0} persons. Rescuers, get ready.</o>
+      <o>{hrs:1}, {@HEMS}. Heads up: search and rescue, {0} to recover. Brief the team.</o>
     </message>
     <message key="HRQ.BRF.TRF" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
-      <o>Heli rescue base, {@HEMS}. The mission is a transfer with {0} patients. Brief the rescuers.</o>
-      <o>Heli rescue base, {@HEMS}. Patient transfer, {0} patients. Please brief them.</o>
-      <o>Heli rescue base, {@HEMS}. It is an inter hospital transfer, {0} patients. Tell them to be ready.</o>
-      <o>Heli rescue base, {@HEMS}. We go for a transfer, {0} patients. Please pass it on.</o>
-      <o>Heli rescue base, {@HEMS}. Transfer with {0} patients. Rescuers, get ready.</o>
-      <o>Heli rescue base, {@HEMS}. Heads up: transfer, {0} patients. Brief the team.</o>
+      <o>{hrs:1}, {@HEMS}. The mission is a transfer with {0} patients. Brief the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. Patient transfer, {0} patients. Please brief them.</o>
+      <o>{hrs:1}, {@HEMS}. It is an inter hospital transfer, {0} patients. Tell them to be ready.</o>
+      <o>{hrs:1}, {@HEMS}. We go for a transfer, {0} patients. Please pass it on.</o>
+      <o>{hrs:1}, {@HEMS}. Transfer with {0} patients. Rescuers, get ready.</o>
+      <o>{hrs:1}, {@HEMS}. Heads up: transfer, {0} patients. Brief the team.</o>
     </message>
     <message key="HRQ.BRF.ORG" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
-      <o>Heli rescue base, {@HEMS}. The mission is an organ transport. Brief the rescuers.</o>
-      <o>Heli rescue base, {@HEMS}. Organ transport, time critical. Please brief them.</o>
-      <o>Heli rescue base, {@HEMS}. It is an organ transport, we cannot lose time. Tell them to be ready.</o>
-      <o>Heli rescue base, {@HEMS}. We carry an organ, time is short. Please pass it on.</o>
-      <o>Heli rescue base, {@HEMS}. Organ transport. Rescuers, get ready.</o>
-      <o>Heli rescue base, {@HEMS}. Heads up: organ transport. Brief the team.</o>
+      <o>{hrs:1}, {@HEMS}. The mission is an organ transport. Brief the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. Organ transport, time critical. Please brief them.</o>
+      <o>{hrs:1}, {@HEMS}. It is an organ transport, we cannot lose time. Tell them to be ready.</o>
+      <o>{hrs:1}, {@HEMS}. We carry an organ, time is short. Please pass it on.</o>
+      <o>{hrs:1}, {@HEMS}. Organ transport. Rescuers, get ready.</o>
+      <o>{hrs:1}, {@HEMS}. Heads up: organ transport. Brief the team.</o>
     </message>
     <message key="HRQ.BRF.INJ" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
-      <o>Heli rescue base, {@HEMS}. The mission has {0} injured. Brief the rescuers.</o>
-      <o>Heli rescue base, {@HEMS}. We have {0} injured. Please brief them.</o>
-      <o>Heli rescue base, {@HEMS}. About {0} injured on scene. Tell them to be ready.</o>
-      <o>Heli rescue base, {@HEMS}. We go to {0} injured. Please pass it on.</o>
-      <o>Heli rescue base, {@HEMS}. {0} injured. Rescuers, get ready.</o>
-      <o>Heli rescue base, {@HEMS}. Heads up: {0} injured. Brief the team.</o>
+      <o>{hrs:1}, {@HEMS}. The mission has {0} injured. Brief the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. We have {0} injured. Please brief them.</o>
+      <o>{hrs:1}, {@HEMS}. About {0} injured on scene. Tell them to be ready.</o>
+      <o>{hrs:1}, {@HEMS}. We go to {0} injured. Please pass it on.</o>
+      <o>{hrs:1}, {@HEMS}. {0} injured. Rescuers, get ready.</o>
+      <o>{hrs:1}, {@HEMS}. Heads up: {0} injured. Brief the team.</o>
     </message>
     <message key="HRQ.BASE.OK" actor="12" radio="ext" group="hrq" seq="4" new="1" trigger="the heli rescue base acknowledges the brief (external radio)">
-      <o>{@HEMS}, heli rescue base. Copy, the rescuers are informed.</o>
-      <o>{@HEMS}, heli rescue base. Roger, the team is briefed.</o>
-      <o>{@HEMS}, heli rescue base. Understood, they know. See you at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. Copy all, they are briefed.</o>
-      <o>{@HEMS}, heli rescue base. Message received, the rescuers are ready.</o>
-      <o>{@HEMS}, heli rescue base. Copy, we pass it on. Fly safe.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, the rescuers are informed.</o>
+      <o>{@HEMS}, {hrs:1}. Roger, the team is briefed.</o>
+      <o>{@HEMS}, {hrs:1}. Understood, they know. See you at the meeting point.</o>
+      <o>{@HEMS}, {hrs:1}. Copy all, they are briefed.</o>
+      <o>{@HEMS}, {hrs:1}. Message received, the rescuers are ready.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, we pass it on. Fly safe.</o>
     </message>
     <message key="HRQ.COR.PLT" actor="1" radio="on" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
-      <o>Heli rescue base, {@HEMS}. Correction: we need {hr:0}.</o>
-      <o>Heli rescue base, {@HEMS}. Correction, the request is now {hr:0}.</o>
-      <o>Heli rescue base, {@HEMS}. We changed our mind: {hr:0} please.</o>
-      <o>Heli rescue base, {@HEMS}. Update on the request, we need {hr:0}.</o>
-      <o>Heli rescue base, {@HEMS}. Sorry, correction: {hr:0} for this mission.</o>
-      <o>Heli rescue base, {@HEMS}. Change of plans, we will take {hr:0}.</o>
+      <o>{hrs:1}, {@HEMS}. Correction: we need {hr:0}.</o>
+      <o>{hrs:1}, {@HEMS}. Correction, the request is now {hr:0}.</o>
+      <o>{hrs:1}, {@HEMS}. We changed our mind: {hr:0} please.</o>
+      <o>{hrs:1}, {@HEMS}. Update on the request, we need {hr:0}.</o>
+      <o>{hrs:1}, {@HEMS}. Sorry, correction: {hr:0} for this mission.</o>
+      <o>{hrs:1}, {@HEMS}. Change of plans, we will take {hr:0}.</o>
     </message>
     <message key="HRQ.COR.A" actor="12" radio="ext" group="hrqc" seq="2" new="1" trigger="the heli rescue base answers the correction (external radio; arg: 1 or 2)">
-      <o>{@HEMS}, heli rescue base. Copy, {hr:0} at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. Roger, {hr:0} then.</o>
-      <o>{@HEMS}, heli rescue base. Understood, {hr:0} will be there.</o>
-      <o>{@HEMS}, heli rescue base. No problem, {hr:0} at the meeting point.</o>
-      <o>{@HEMS}, heli rescue base. Copy the change, {hr:0}.</o>
-      <o>{@HEMS}, heli rescue base. Noted, {hr:0} ready for you.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, {hr:0} at the meeting point.</o>
+      <o>{@HEMS}, {hrs:1}. Roger, {hr:0} then.</o>
+      <o>{@HEMS}, {hrs:1}. Understood, {hr:0} will be there.</o>
+      <o>{@HEMS}, {hrs:1}. No problem, {hr:0} at the meeting point.</o>
+      <o>{@HEMS}, {hrs:1}. Copy the change, {hr:0}.</o>
+      <o>{@HEMS}, {hrs:1}. Noted, {hr:0} ready for you.</o>
     </message>
     <message key="HRQ.ARR.PLT" actor="1" radio="auto" group="hrqa" seq="1" new="1" trigger="the helicopter reaches the meeting point of the heli rescuers">
-      <o>Heli rescue base, {@HEMS}. We are at the meeting point.</o>
-      <o>Heli rescue base, {@HEMS}. Meeting point reached, ready to pick them up.</o>
-      <o>Heli rescue base, {@HEMS}. We are arriving at the meeting point.</o>
-      <o>Heli rescue base, {@HEMS}. Over the meeting point now.</o>
-      <o>Heli rescue base, {@HEMS}. At the meeting point, we see them.</o>
-      <o>Heli rescue base, {@HEMS}. We are here, ready for the rescuers.</o>
+      <o>{hrs:1}, {@HEMS}. We are at the meeting point.</o>
+      <o>{hrs:1}, {@HEMS}. Meeting point reached, ready to pick them up.</o>
+      <o>{hrs:1}, {@HEMS}. We are arriving at the meeting point.</o>
+      <o>{hrs:1}, {@HEMS}. Over the meeting point now.</o>
+      <o>{hrs:1}, {@HEMS}. At the meeting point, we see them.</o>
+      <o>{hrs:1}, {@HEMS}. We are here, ready for the rescuers.</o>
     </message>
     <message key="HRQ.ARR.A" actor="12" radio="ext" group="hrqa" seq="2" new="1" trigger="the heli rescue base answers the arrival (external radio)">
-      <o>{@HEMS}, heli rescue base. Copy, the rescuers are ready to board.</o>
-      <o>{@HEMS}, heli rescue base. Roger, they are ready.</o>
-      <o>{@HEMS}, heli rescue base. Understood, they are boarding now.</o>
-      <o>{@HEMS}, heli rescue base. They are coming to you. Fly safe.</o>
-      <o>{@HEMS}, heli rescue base. Copy, the team is coming over.</o>
-      <o>{@HEMS}, heli rescue base. Welcome, the team is on its way to the helicopter.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, the rescuers are ready to board.</o>
+      <o>{@HEMS}, {hrs:1}. Roger, they are ready.</o>
+      <o>{@HEMS}, {hrs:1}. Understood, they are boarding now.</o>
+      <o>{@HEMS}, {hrs:1}. They are coming to you. Fly safe.</o>
+      <o>{@HEMS}, {hrs:1}. Copy, the team is coming over.</o>
+      <o>{@HEMS}, {hrs:1}. Welcome, the team is on its way to the helicopter.</o>
     </message>
     <message key="HRB.OPEN.ACC" actor="1" radio="auto" group="hrbrief" seq="1" new="1" trigger="the pilot opens the briefing of the heli rescuers: accident or injured only (argument: injured)">
       <o>Rescuers, here is the briefing: an accident with {0} injured reported. The situation is unclear, so we plan for the worst case.</o>
@@ -6190,12 +6562,12 @@
       <o>Right, rescuers, we are carrying an organ and time is short. Quick on the ground, careful with the container.</o>
     </message>
     <message key="HRB.ETA" actor="2" radio="auto" group="hrbrief" seq="2" new="1" trigger="the copilot gives the time to the scene (argument: minutes, 2 or more)">
-      <o>Estimated time to the scene is about {0} minutes.</o>
-      <o>ETA to the scene about {0} minutes at the current speed.</o>
-      <o>We are about {0} minutes from the scene.</o>
-      <o>About {0} minutes to go.</o>
-      <o>Around {0} minutes and we are there.</o>
-      <o>Roughly {0} minutes out.</o>
+      <o>Estimated time to the scene is about {mins:0}.</o>
+      <o>ETA to the scene about {mins:0} at the current speed.</o>
+      <o>We are about {mins:0} from the scene.</o>
+      <o>About {mins:0} to go.</o>
+      <o>Around {mins:0} and we are there.</o>
+      <o>Roughly {mins:0} out.</o>
     </message>
     <message key="HRB.VEH.BOTH" actor="2" radio="auto" group="hrbrief" seq="3" new="1" trigger="the copilot tells the rescuers the ground units: some on scene (argument 1), others on the way (argument 0)">
       <o>On the ground: {list:1} {be:1} already on scene and {list:0} {be:0} on the way, so we coordinate with them.</o>
@@ -6646,7 +7018,7 @@
       <o>A fire is burning at the scene. We stay away until the area is cleared.</o>
       <o>Fire on scene. We keep clear, I watch the smoke and the wind.</o>
     </message>
-    <message key="DSA.RB.A" actor="2" radio="off" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
+    <message key="DSA.RB.A" actor="2" radio="ics" group="dsarb" seq="1" new="1" trigger="a dispatch arrived while the radio is off (no power or the CARLS not connected): a crew member aboard reads it back to the crew, the lead-in">
       <o>Hey crew, we got a dispatch on the tablet. Listen.</o>
       <o>Crew, a new dispatch just came in. I read it out:</o>
       <o>Hey, a dispatch has arrived. Here is what it says.</o>
@@ -6654,7 +7026,7 @@
       <o>Crew, we have a new tasking on the tablet. It says:</o>
       <o>Hey everybody, a call has come in. I read it to you.</o>
     </message>
-    <message key="DSA.RB.Q" actor="2" radio="off" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
+    <message key="DSA.RB.Q" actor="2" radio="ics" group="dsarb" seq="2" new="1" trigger="the readback of a dispatch heard with the radio off: the question to the crew">
       <o>So, what do we do with this one?</o>
       <o>Do we take it? What do you think?</o>
       <o>What do we do? Are we going?</o>
@@ -6887,11 +7259,11 @@
       <o sex="f">Morning, {@PLT}, morning, {@CPL}. Ready for the shift?</o>
       <o sex="f">Good morning, team. Nice to see you, {@PLT} and {@CPL}. Ready to go?</o>
       <o sex="f">Good morning, you two. The coffee is ready in the hangar, {@PLT}, help yourself.</o>
-          <o sex="m">Morning, {@PLT}, morning, {@CPL}. Another day, another shift.</o>
+      <o sex="m">Morning, {@PLT}, morning, {@CPL}. Another day, another shift.</o>
       <o sex="m">Good morning, crew. Everything is ready for you, {@PLT}.</o>
       <o sex="f">Good morning, you two! Ready to save some lives today?</o>
       <o sex="f">Morning, {@PLT}, morning, {@CPL}. The hangar is quiet, enjoy it while it lasts.</o>
-</message>
+    </message>
     <message key="GRT.TEC.A" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, afternoon of the simulator: the technician greets the crew by name">
       <o sex="m">Good afternoon, {@PLT}! Good afternoon, {@CPL}. Welcome back.</o>
       <o sex="m">Afternoon, {@PLT}. Afternoon, {@CPL}. Ready for the rest of the shift?</o>
@@ -6901,11 +7273,11 @@
       <o sex="f">Afternoon, {@PLT}, afternoon, {@CPL}. Ready for the shift?</o>
       <o sex="f">Good afternoon, team. Good to see you, {@PLT} and {@CPL}. Ready to go?</o>
       <o sex="f">Good afternoon, you two. I hope the day has been kind so far, {@PLT}.</o>
-          <o sex="m">Afternoon, crew. Good to have you here, {@PLT}.</o>
+      <o sex="m">Afternoon, crew. Good to have you here, {@PLT}.</o>
       <o sex="m">Good afternoon, {@PLT}, {@CPL}. All quiet on the ramp so far.</o>
       <o sex="f">Afternoon, {@PLT}, afternoon, {@CPL}. Ready when you are.</o>
       <o sex="f">Good afternoon, crew. Everything is in order here.</o>
-</message>
+    </message>
     <message key="GRT.TEC.E" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, evening or night of the simulator: the technician greets the crew by name">
       <o sex="m">Good evening, {@PLT}! Good evening, {@CPL}. Welcome.</o>
       <o sex="m">Evening, {@PLT}. Evening, {@CPL}. Ready for the shift?</o>
@@ -6915,11 +7287,11 @@
       <o sex="f">Evening, {@PLT}, evening, {@CPL}. Ready for the shift?</o>
       <o sex="f">Good evening, team. Good to see you, {@PLT} and {@CPL}. Ready to go?</o>
       <o sex="f">Good evening, you two. Let us hope for a quiet night, {@PLT}.</o>
-          <o sex="m">Evening, crew. Good to see you, {@PLT}.</o>
+      <o sex="m">Evening, crew. Good to see you, {@PLT}.</o>
       <o sex="m">Good evening, {@PLT}, {@CPL}. All quiet on the ramp so far.</o>
       <o sex="f">Evening, {@PLT}, evening, {@CPL}. Ready when you are.</o>
       <o sex="f">Good evening, crew. Everything is in order here.</o>
-</message>
+    </message>
     <message key="GRT.CPL.M" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, morning: the copilot answers the technician by name">
       <o>Good morning, {@TECH}! All fine here?</o>
       <o>Morning, {@TECH}. Did you have a quiet night?</o>
@@ -6927,7 +7299,7 @@
       <o>Good morning! Always nice to see you, {@TECH}.</o>
       <o>Morning, {@TECH}. How is the helicopter today?</o>
       <o>Hi, {@TECH}, good morning. Everything good with you?</o>
-</message>
+    </message>
     <message key="GRT.CPL.A" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, afternoon: the copilot answers the technician by name">
       <o>Good afternoon, {@TECH}! All fine here?</o>
       <o>Afternoon, {@TECH}. Has it been a busy day?</o>
@@ -6935,7 +7307,7 @@
       <o>Good afternoon! Always nice to see you, {@TECH}.</o>
       <o>Afternoon, {@TECH}. How is the helicopter today?</o>
       <o>Hi, {@TECH}, good afternoon. Everything good with you?</o>
-</message>
+    </message>
     <message key="GRT.CPL.E" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, evening or night: the copilot answers the technician by name">
       <o>Good evening, {@TECH}! All fine here?</o>
       <o>Evening, {@TECH}. Has it been a quiet day?</o>
@@ -6943,7 +7315,7 @@
       <o>Good evening! Always nice to see you, {@TECH}.</o>
       <o>Evening, {@TECH}. How is the helicopter tonight?</o>
       <o>Hi, {@TECH}, good evening. Everything good with you?</o>
-</message>
+    </message>
     <message key="GRT.PLT.M" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, morning: the pilot greets the technician by name">
       <o>Good morning, {@TECH}. How is she?</o>
       <o>Morning, {@TECH}. Anything I should know about the helicopter?</o>
@@ -6951,7 +7323,7 @@
       <o>Morning, {@TECH}. All set on your side?</o>
       <o>Good morning, {@TECH}. Ready when you are.</o>
       <o>Hello, {@TECH}. Good morning, and thank you for the preparation.</o>
-</message>
+    </message>
     <message key="GRT.PLT.A" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, afternoon: the pilot greets the technician by name">
       <o>Good afternoon, {@TECH}. How is she?</o>
       <o>Afternoon, {@TECH}. Anything I should know about the helicopter?</o>
@@ -6959,7 +7331,7 @@
       <o>Afternoon, {@TECH}. All set on your side?</o>
       <o>Good afternoon, {@TECH}. Ready when you are.</o>
       <o>Hello, {@TECH}. Good afternoon, and thank you for the preparation.</o>
-</message>
+    </message>
     <message key="GRT.PLT.E" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, evening or night: the pilot greets the technician by name">
       <o>Good evening, {@TECH}. How is she?</o>
       <o>Evening, {@TECH}. Anything I should know about the helicopter?</o>
@@ -6967,7 +7339,7 @@
       <o>Evening, {@TECH}. All set on your side?</o>
       <o>Good evening, {@TECH}. Ready when you are.</o>
       <o>Hello, {@TECH}. Good evening, and thank you for the preparation.</o>
-</message>
+    </message>
     <message key="CHT.TEC" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="4" new="1" trigger="hangar: the technician tells how the helicopter is (the circumstances)">
       <o sex="m">She is in good shape. The tanks are full, the oil is fine and the logbook is signed.</o>
       <o sex="m">Everything is checked: rotor, doors, tires. Nothing is open on the list.</o>
@@ -6977,11 +7349,11 @@
       <o sex="f">I checked everything: rotor, doors, tires. Nothing is left open on the list.</o>
       <o sex="f">No defects and no open items. The helicopter is ready when you are.</o>
       <o sex="f">I cleaned the windscreen and checked the cabin. She is all yours.</o>
-          <o sex="m">Everything is in order. Hydraulics, fuel, tires: all checked.</o>
+      <o sex="m">Everything is in order. Hydraulics, fuel, tires: all checked.</o>
       <o sex="m">She is clean, fuelled and ready. Nothing to report.</o>
       <o sex="f">She is fuelled and checked. Nothing to report.</o>
       <o sex="f">All systems checked, no warnings on the list. You are good to go.</o>
-</message>
+    </message>
     <message key="CHT.CPL" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="5" new="1" trigger="hangar: the copilot thanks the technician">
       <o>Great, thank you, {@TECH}. You always take good care of her.</o>
       <o>Perfect. Then we have nothing to worry about.</o>
@@ -6989,7 +7361,7 @@
       <o>Good to hear. Thank you for the work, {@TECH}.</o>
       <o>Excellent. We will call you if anything comes up.</o>
       <o>Thanks a lot, {@TECH}. See you later.</o>
-</message>
+    </message>
     <message key="CHT.TEC2" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="6" new="1" trigger="hangar: the technician wishes the crew a good flight">
       <o sex="m">Have a good flight, and be careful out there.</o>
       <o sex="m">Fly safe. The weather can change quickly.</o>
@@ -6999,337 +7371,617 @@
       <o sex="f">Fly safe, and watch the weather.</o>
       <o sex="f">Good luck today, and bring everybody home safe.</o>
       <o sex="f">Enjoy the flight. I will be waiting right here when you are back.</o>
-          <o sex="m">Take care out there, and call me if you need anything.</o>
+      <o sex="m">Take care out there, and call me if you need anything.</o>
       <o sex="m">Safe flight. I will be here when you land.</o>
       <o sex="f">Look after yourselves, and call me if you need anything.</o>
       <o sex="f">Have a safe flight. I will be here when you land.</o>
-</message>
+    </message>
     <message key="WXH.RL" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (light rain)">
       <o>A bit of drizzle out there today. Bring a jacket, {@PLT}.</o>
       <o>It is raining a little. Nothing serious, but the ramp is wet.</o>
       <o>Light rain today, so mind the wet ground when you walk around.</o>
       <o>A light rain, nothing the helicopter cannot handle.</o>
-          <o>A drizzle today. The ramp is slippery, so mind your step.</o>
+      <o>A drizzle today. The ramp is slippery, so mind your step.</o>
       <o>A little rain out there, nothing to worry about.</o>
-</message>
+    </message>
     <message key="WXD.RL" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (light rain)">
       <o>You came back in the drizzle. Go inside and dry off.</o>
       <o>A light rain out there, I saw. The helicopter will dry in the hangar.</o>
       <o>Back through the rain. At least it was only a light one.</o>
       <o>The ramp is wet again. Mind your step on the way in.</o>
-          <o>Back from the drizzle. Go and dry off, I take care of her.</o>
+      <o>Back from the drizzle. Go and dry off, I take care of her.</o>
       <o>A light rain, so no problem. Welcome back.</o>
-</message>
+    </message>
     <message key="WXC.RL" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (light rain)">
       <o>Yes, a bit wet, but fine.</o>
       <o>A little rain never hurt anybody.</o>
       <o>True. At least it is not heavy.</o>
       <o>We will manage, thanks.</o>
-          <o>Just a little water, no problem.</o>
+      <o>Just a little water, no problem.</o>
       <o>It is only drizzle, I will live.</o>
-</message>
+    </message>
     <message key="WXH.RH" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (heavy rain)">
       <o>It is pouring today! Bad luck to be out here in this rain.</o>
       <o>What a downpour. You will not envy me out here under the water.</o>
       <o>Heavy rain today. I hope the call is worth getting wet for.</o>
       <o>It is coming down in buckets. Fly safe, and stay dry if you can.</o>
-          <o>Look at this rain! You could not pay me to fly in this.</o>
+      <o>Look at this rain! You could not pay me to fly in this.</o>
       <o>It is raining cats and dogs. At least the hangar is dry.</o>
-</message>
+    </message>
     <message key="WXD.RH" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (heavy rain)">
       <o>It is still pouring! You must be soaked, come inside.</o>
       <o>What a downpour. Bad luck to be out in that.</o>
       <o>You flew through all this rain? I would not have liked it.</o>
       <o>Heavy rain on the ramp. Get in quickly, I take care of the helicopter.</o>
-          <o>You must be soaked. Go in and get dry, I take over here.</o>
+      <o>You must be soaked. Go in and get dry, I take over here.</o>
       <o>That is a lot of rain. Well done for getting her back.</o>
-</message>
+    </message>
     <message key="WXC.RH" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (heavy rain)">
       <o>Tell me about it. Not the best day to be outside.</o>
       <o>Yes, and we have to fly in that.</o>
       <o>Let us hope it clears soon.</o>
       <o>I will take the helicopter roof over this any day.</o>
-          <o>I just want a dry towel and a hot coffee.</o>
+      <o>I just want a dry towel and a hot coffee.</o>
       <o>It was heavy, but the helicopter did not mind.</o>
-</message>
+    </message>
     <message key="WXH.SN" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (snow)">
       <o>Snow today! It looks beautiful, but it is cold and slippery out here.</o>
       <o>It is snowing. Watch the ramp, it is slippery.</o>
       <o>Snowfall today. I cleared what I could, but be careful on the ice.</o>
       <o>A white day out there. Beautiful to look at, less so to work in.</o>
-          <o>Snow on the ramp. Mind the ice, and fly carefully.</o>
+      <o>Snow on the ramp. Mind the ice, and fly carefully.</o>
       <o>It is snowing. The cold will not help the engines start, so be patient.</o>
-</message>
+    </message>
     <message key="WXD.SN" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (snow)">
       <o>Welcome back in the snow. Get inside and warm up.</o>
       <o>It keeps snowing. I will clean the helicopter and check for ice.</o>
       <o>A white landing, how nice. Mind the slippery ramp.</o>
       <o>Snow on the ramp again. Go and get a hot drink.</o>
-          <o>Snow everywhere. I will clear the helicopter, you go inside.</o>
+      <o>Snow everywhere. I will clear the helicopter, you go inside.</o>
       <o>Welcome back. Warm up, and let me brush the snow off her.</o>
-</message>
+    </message>
     <message key="WXC.SN" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (snow)">
       <o>Beautiful, but cold. We will be careful.</o>
       <o>Yes, a white day. We keep a close eye on the ice.</o>
       <o>At least it looks nice from above.</o>
       <o>Thanks for clearing the ramp.</o>
-          <o>It looks great, and it is freezing.</o>
+      <o>It looks great, and it is freezing.</o>
       <o>We will go slowly. Thanks for the warning.</o>
-</message>
+    </message>
     <message key="WXH.HT" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (heat)">
       <o>It is hot today! I am already melting out here.</o>
       <o>What a heat. Drink plenty of water, {@PLT}.</o>
       <o>A hot one today. The engines will not love the heat either.</o>
       <o>The sun is burning. Good weather for a swim, bad weather for working on the ramp.</o>
-          <o>Hot today. Drink water and keep the cabin cool.</o>
+      <o>Hot today. Drink water and keep the cabin cool.</o>
       <o>It is scorching out here. I could fry an egg on the ramp.</o>
-</message>
+    </message>
     <message key="WXD.HT" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (heat)">
       <o>Back in this heat. Come in the shade, I have cold water.</o>
       <o>It is still so hot. The helicopter will need time to cool down.</o>
       <o>What a heat, and you were flying in it. Have some water.</o>
       <o>The ramp is burning. I will put the helicopter in the shade.</o>
-          <o>Back in the heat. Get some water, you earned it.</o>
+      <o>Back in the heat. Get some water, you earned it.</o>
       <o>It is boiling out here. Go inside and cool off.</o>
-</message>
+    </message>
     <message key="WXC.HT" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (heat)">
       <o>I know. A cold drink will be welcome.</o>
       <o>It is really hot. We will keep hydrated.</o>
       <o>At least the cabin has some air.</o>
       <o>True. Thanks for the water.</o>
-          <o>The cabin was an oven. I need a shower.</o>
+      <o>The cabin was an oven. I need a shower.</o>
       <o>I know. We will drink a lot of water.</o>
-</message>
+    </message>
     <message key="WXH.CD" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (cold)">
       <o>It is cold today! My fingers are frozen already.</o>
       <o>Chilly out here. Dress warm if you walk around.</o>
       <o>A cold one today. At least the helicopter does not mind.</o>
       <o>It is cold, but dry. It could be worse.</o>
-          <o>It is cold. Do not forget your gloves.</o>
+      <o>It is cold. Do not forget your gloves.</o>
       <o>A cold wind today. Warm up well before you go.</o>
-</message>
+    </message>
     <message key="WXD.CD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (cold)">
       <o>Welcome back. It is cold, go inside and get something hot.</o>
       <o>It is chilly out here. I will take care of the helicopter, go in.</o>
       <o>Cold day, hot coffee. You know where it is.</o>
       <o>The wind is cold on the ramp. Go inside, quickly.</o>
-          <o>You must be frozen. There is hot tea waiting inside.</o>
+      <o>You must be frozen. There is hot tea waiting inside.</o>
       <o>Cold day. Go in and warm up, I take care of her.</o>
-</message>
+    </message>
     <message key="WXC.CD" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (cold)">
       <o>Yes, it is cold. Thanks for the warning.</o>
       <o>We will dress warm.</o>
       <o>At least the air is smooth.</o>
       <o>I hope the hangar has hot coffee.</o>
-          <o>Cold, but the air is clear at least.</o>
+      <o>Cold, but the air is clear at least.</o>
       <o>I will put on another layer.</o>
-</message>
+    </message>
     <message key="WXH.FZ" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (freezing cold)">
       <o>It is freezing today! My hands are numb.</o>
       <o>Brutal cold. Mind the ice on the ramp and on the rotor.</o>
       <o>Below zero and I am working outdoors. Tell me again why I love this job.</o>
       <o>Freezing out here. Stay warm, and check for ice when you fly.</o>
-          <o>Below zero today. Check for ice before you lift.</o>
+      <o>Below zero today. Check for ice before you lift.</o>
       <o>It is so cold my coffee freezes. Take care out there.</o>
-</message>
+    </message>
     <message key="WXD.FZ" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (freezing cold)">
       <o>Freezing out here! Get inside and warm up, I will manage the helicopter.</o>
       <o>It is below zero. I will check the rotor and the doors for ice.</o>
       <o>You flew in this cold? Brave. Come in and warm your hands.</o>
       <o>It is bitter. Go in, there is hot coffee in the hangar.</o>
-          <o>You must be frozen solid. Go in, I will handle her.</o>
+      <o>You must be frozen solid. Go in, I will handle her.</o>
       <o>Frost everywhere. I will check her for ice.</o>
-</message>
+    </message>
     <message key="WXC.FZ" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (freezing cold)">
       <o>Brrr, freezing. Thanks for looking after her in this cold.</o>
       <o>Absolutely. We will check for ice.</o>
       <o>You deserve a hot coffee.</o>
       <o>Stay warm, we will be quick.</o>
-          <o>My nose is frozen. Thanks for caring.</o>
+      <o>My nose is frozen. Thanks for caring.</o>
       <o>I will check for ice after the start.</o>
-</message>
+    </message>
     <message key="WXH.FG" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (fog or low visibility)">
       <o>The visibility is bad today. You can barely see the end of the ramp.</o>
       <o>Foggy today. Take it easy out there.</o>
       <o>Thick air today. I hope you have good eyes.</o>
       <o>Low visibility, so fly carefully.</o>
-          <o>Fog on the ramp. Fly slow and keep your eyes open.</o>
+      <o>Fog on the ramp. Fly slow and keep your eyes open.</o>
       <o>You cannot see anything out there. Good luck with that.</o>
-</message>
+    </message>
     <message key="WXD.FG" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (fog or low visibility)">
       <o>Back in this fog. I am glad you found the way home.</o>
       <o>The visibility is terrible. Well done to land in this.</o>
       <o>It is very foggy. I will guide you with the lights next time.</o>
       <o>Thick fog on the ramp. Welcome back, and be careful on the way in.</o>
-          <o>Good to see you back out of that fog.</o>
+      <o>Good to see you back out of that fog.</o>
       <o>Thick fog on the ramp. Well done for finding the pad.</o>
-</message>
+    </message>
     <message key="WXC.FG" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (fog or low visibility)">
       <o>We will take it easy, thanks.</o>
       <o>Yes, we will fly carefully.</o>
       <o>Let us hope it lifts.</o>
       <o>Good point. Eyes outside.</o>
-          <o>We will go by the instruments, thanks.</o>
+      <o>We will go by the instruments, thanks.</o>
       <o>I hope it clears out soon.</o>
-</message>
+    </message>
     <message key="WXH.WD" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (strong wind)">
       <o>It is windy today! Watch out when you start up.</o>
       <o>Strong wind out there. Hold on to your hat.</o>
       <o>The wind is up today. The rotor start will be fun.</o>
       <o>Gusty today. Keep your eyes open when you take off.</o>
-          <o>The wind is howling today. Be careful with the doors.</o>
+      <o>The wind is howling today. Be careful with the doors.</o>
       <o>Strong wind: tie everything down. And you, hold on tight.</o>
-</message>
+    </message>
     <message key="WXD.WD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (strong wind)">
       <o>Windy landing, I guess. Welcome back.</o>
       <o>The wind is strong on the ramp. Mind the doors.</o>
       <o>It is gusty. I will tie the helicopter down.</o>
       <o>What a wind today. Well done to bring her in.</o>
-          <o>Strong wind, I saw her coming in. Nice landing.</o>
+      <o>Strong wind, I saw her coming in. Nice landing.</o>
       <o>Gusts on the ramp. I will secure her right away.</o>
-</message>
+    </message>
     <message key="WXC.WD" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (strong wind)">
       <o>Yes, we noticed. We will be careful.</o>
       <o>Thanks, we will keep an eye on the wind.</o>
       <o>I will keep a firm grip.</o>
       <o>Always something, right?</o>
-          <o>We will manage the wind, do not worry.</o>
+      <o>We will manage the wind, do not worry.</o>
       <o>Let us hope it calms down.</o>
-</message>
+    </message>
     <message key="WXH.FR" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (fine weather)">
       <o>Beautiful weather today. A good day for flying.</o>
       <o>Great weather. Enjoy it while it lasts.</o>
       <o>Clear and calm. Perfect for flying.</o>
       <o>Not a cloud in sight, well, almost. A nice day for a flight.</o>
-          <o>Lovely day. Make the most of it.</o>
+      <o>Lovely day. Make the most of it.</o>
       <o>Sun and no wind. Honestly, a pilot's dream.</o>
-</message>
+    </message>
     <message key="WXD.FR" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (fine weather)">
       <o>Welcome back. Beautiful weather for it.</o>
       <o>What a nice day. I hope the mission went as well as the weather.</o>
       <o>Clear skies all day. Welcome back.</o>
       <o>A good day for flying, and a good day to be back.</o>
-          <o>Lovely weather to come back to.</o>
+      <o>Lovely weather to come back to.</o>
       <o>A beautiful day. I hope the mission was as good.</o>
-</message>
+    </message>
     <message key="WXC.FR" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (fine weather)">
       <o>Absolutely, nice weather for a change.</o>
       <o>Beautiful. I could do this every day.</o>
       <o>We should enjoy it.</o>
       <o>A good day for flying, indeed.</o>
-          <o>Not bad at all, really.</o>
+      <o>Not bad at all, really.</o>
       <o>I will not complain about this one.</o>
-</message>
-    <message key="WXB.OK" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather, no remarkable condition (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Weather: wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers.</o>
-      <o>The weather: wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-      <o>Weather check: {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers.</o>
-      <o>Wind {0} at {1} knots, temperature {2} degrees, visibility {3} kilometers.</o>
-          <o>Weather overview: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-      <o>Quick weather: {0} degrees, {1} knots, temperature {2}, visibility {3} kilometers.</o>
-</message>
-    <message key="WXB.RL" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (light rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Light rain: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. The landing area may be wet.</o>
-      <o>Weather: light rain, wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers.</o>
-      <o>A bit of rain: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Mind the wet ground.</o>
-      <o>Light rain on the way: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-          <o>A little rain: temperature {2}, wind {0} at {1} knots, visibility {3} kilometers.</o>
-      <o>Light rain, visibility {3} kilometers, wind {0} at {1} knots, {2} degrees.</o>
-</message>
-    <message key="WXB.RH" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heavy rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Heavy rain: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Expect a slippery landing area and reduced visibility.</o>
-      <o>Weather: heavy rain, wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers. Careful on the ground.</o>
-      <o>It is pouring: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Visibility can drop quickly.</o>
-      <o>Heavy rain on the route: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Expect a wet scene.</o>
-          <o>Heavy rain, visibility {3} kilometers, wind {0} at {1} knots, {2} degrees. Expect a wet and slippery scene.</o>
-      <o>It is raining hard: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Careful out there.</o>
-</message>
-    <message key="WXB.SN" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (snow) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Snow: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Watch for white-out and a slippery landing area.</o>
-      <o>Weather: snowfall, wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers. Careful with the snow around the helicopter.</o>
-      <o>It is snowing: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. Expect ice on the ground.</o>
-      <o>Snow on the route: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. A white-out is possible at the landing.</o>
-          <o>Snow, {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Mind the ice.</o>
-      <o>Snowfall: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. The ground may be slippery.</o>
-</message>
-    <message key="WXB.HT" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heat) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Hot: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Mind the engine power in the heat, and drink water.</o>
-      <o>Weather: high temperature, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Performance will be lower.</o>
-      <o>It is hot: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Watch the power margin.</o>
-      <o>Heat today: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Keep hydrated, crew.</o>
-          <o>High temperature, {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Drink water and watch the performance.</o>
-      <o>Hot weather: {2} degrees, wind {0} at {1} knots. The engines will have less power.</o>
-</message>
-    <message key="WXB.CD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Cold: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Dress warm.</o>
-      <o>Weather: cold, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers.</o>
-      <o>It is cold: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. The patient will need a blanket.</o>
-      <o>Cold day: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers.</o>
-          <o>Cold: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Keep the patient warm.</o>
-      <o>Cold weather, {2} degrees, wind {0} at {1} knots, visibility {3} kilometers.</o>
-</message>
-    <message key="WXB.FZ" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (freezing cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Freezing: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Watch for ice on the rotor and on the ground.</o>
-      <o>Weather: freezing, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Icing is possible.</o>
-      <o>Below zero: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Keep the patient warm and watch for ice.</o>
-      <o>Bitter cold: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Be careful about icing.</o>
-          <o>Freezing, {2} degrees, wind {0} at {1} knots, visibility {3} kilometers. Check for ice before the start.</o>
-      <o>Below zero: {2} degrees, wind {0} at {1} knots. Possible ice on the rotor and the ground.</o>
-</message>
-    <message key="WXB.FG" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fog or low visibility) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Poor visibility: only {3} kilometers, wind {0} at {1} knots, {2} degrees. We take it slowly.</o>
-      <o>Weather: fog or haze, visibility {3} kilometers, wind {0} degrees at {1} knots, temperature {2}.</o>
-      <o>Low visibility: {3} kilometers, wind {0} at {1} knots, {2} degrees. Eyes outside, everybody.</o>
-      <o>Visibility is bad, {3} kilometers: wind {0} at {1} knots, {2} degrees. Careful on the approach.</o>
-          <o>Fog: visibility {3} kilometers, wind {0} at {1} knots, {2} degrees. We take it slow.</o>
-      <o>Low visibility, {3} kilometers, wind {0} at {1} knots, {2} degrees. Eyes outside.</o>
-</message>
-    <message key="WXB.WD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (strong wind) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Strong wind: {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. Expect turbulence and a demanding landing.</o>
-      <o>Weather: windy, wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers. Careful at the landing.</o>
-      <o>It is windy: {0} at {1} knots, {2} degrees, visibility {3} kilometers. We will feel it near the ground.</o>
-      <o>Gusty wind: {0} at {1} knots, {2} degrees, visibility {3} kilometers. Mind the rotor start and the landing.</o>
-          <o>Windy: {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. Expect a bumpy ride.</o>
-      <o>Strong wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers. Careful at the landing.</o>
-</message>
-    <message key="WXB.FR" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fine weather) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
-      <o>Weather is fine: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers. A good day for flying.</o>
-      <o>Good weather today. Wind {0} at {1} knots, temperature {2}, visibility {3} kilometers.</o>
-      <o>Fine weather: wind {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-      <o>Clear and calm: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-          <o>Nice weather for the mission: wind {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
-      <o>Weather is good: {2} degrees, wind {0} at {1} knots, visibility {3} kilometers.</o>
-</message>
+    </message>
+        <message key="WXB.OK" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather, no remarkable condition (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Weather overview: wind from {0} degrees at {1} knots, temperature {2} degrees, visibility {3} kilometers.</o>
+      <o>Quick weather: wind {0} degrees at {1} knots, {2} degrees Celsius, visibility {3} kilometers.</o>
+      <o>Weather is fine: wind from {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>Weather check: wind {0} degrees, {1} knots, temperature {2} degrees, visibility {3} kilometers.</o>
+      <o>Weather for the mission: wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers.</o>
+      <o>Weather: wind {0} degrees at {1} knots, {2} degrees Celsius, visibility {3} kilometers.</o>
+    </message>
+        <message key="WXB.RL" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (light rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>A little rain: temperature {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers.</o>
+      <o>Light rain, visibility {3} kilometers, wind {0} degrees at {1} knots, {2} degrees.</o>
+      <o>Light rain on the way: wind from {0} at {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>It is drizzling: wind {0} degrees, {1} knots, {2} degrees, visibility {3} kilometers.</o>
+      <o>A bit of rain: wind from {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers.</o>
+      <o>Light rain, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers.</o>
+    </message>
+        <message key="WXB.RH" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heavy rain) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Heavy rain, visibility {3} kilometers, wind from {0} degrees at {1} knots, temperature {2} degrees. Expect a wet and slippery scene.</o>
+      <o>It is raining hard: {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Careful out there.</o>
+      <o>Heavy rain: wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers. The ground will be slippery.</o>
+      <o>Rain is heavy: wind {0} degrees, {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>Strong rain on the route: wind from {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers.</o>
+      <o>Heavy rain, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Take care on landing.</o>
+    </message>
+        <message key="WXB.SN" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (snow) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Snow, {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Mind the ice.</o>
+      <o>Snowfall: wind {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. The ground may be slippery.</o>
+      <o>It is snowing: wind from {0} at {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>Snow on the route, {2} degrees, wind {0} degrees, {1} knots, visibility {3} kilometers.</o>
+      <o>Snow and {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Watch the ice.</o>
+      <o>Snowing: wind {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers.</o>
+    </message>
+        <message key="WXB.HT" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (heat) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>High temperature, {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Drink water and watch the performance.</o>
+      <o>Hot weather: {2} degrees, wind {0} degrees at {1} knots. The engines will have less power.</o>
+      <o>It is hot: {2} degrees, wind from {0} at {1} knots, visibility {3} kilometers. Mind the power margin.</o>
+      <o>Very warm today, {2} degrees, wind {0} degrees, {1} knots, visibility {3} kilometers.</o>
+      <o>Heat: {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Performance will be reduced.</o>
+      <o>Hot: {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Drink water.</o>
+    </message>
+        <message key="WXB.CD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Cold: {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Keep the patient warm.</o>
+      <o>Cold weather, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers.</o>
+      <o>It is cold: {2} degrees, wind from {0} at {1} knots, visibility {3} kilometers. Blankets for the patient.</o>
+      <o>Cold day: {2} degrees, wind {0} degrees, {1} knots, visibility {3} kilometers.</o>
+      <o>Cold out there, {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers.</o>
+      <o>Chilly: {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Keep the patient warm.</o>
+    </message>
+        <message key="WXB.FZ" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (freezing cold) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Freezing, {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers. Check for ice before the start.</o>
+      <o>Below zero: {2} degrees, wind {0} degrees at {1} knots. Possible ice on the rotor and the ground.</o>
+      <o>Frost: {2} degrees, wind from {0} at {1} knots, visibility {3} kilometers. Watch the ice.</o>
+      <o>It is freezing: {2} degrees, wind {0} degrees, {1} knots, visibility {3} kilometers.</o>
+      <o>Icy conditions, {2} degrees, wind from {0} degrees at {1} knots, visibility {3} kilometers.</o>
+      <o>Below zero, {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers. Check for ice.</o>
+    </message>
+        <message key="WXB.FG" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fog or low visibility) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Fog: visibility {3} kilometers, wind from {0} degrees at {1} knots, {2} degrees. We take it slow.</o>
+      <o>Low visibility, {3} kilometers, wind {0} degrees at {1} knots, {2} degrees. Eyes outside.</o>
+      <o>Fog on the route: visibility {3} kilometers, wind from {0} at {1} knots, temperature {2}.</o>
+      <o>Poor visibility, {3} kilometers, wind {0} degrees, {1} knots, {2} degrees.</o>
+      <o>Foggy: visibility {3} kilometers, wind from {0} degrees at {1} knots, {2} degrees. Careful.</o>
+      <o>Fog, visibility {3} kilometers, wind {0} degrees at {1} knots, {2} degrees. Eyes outside.</o>
+    </message>
+        <message key="WXB.WD" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (strong wind) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Windy: wind from {0} degrees at {1} knots, temperature {2} degrees, visibility {3} kilometers. Expect a bumpy ride.</o>
+      <o>Strong wind from {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. Careful at the landing.</o>
+      <o>It is windy: wind {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. Turbulence ahead.</o>
+      <o>Strong wind: {0} degrees, {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>Gusty: wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers. Watch the approach.</o>
+      <o>Wind from {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers. A bumpy flight.</o>
+    </message>
+        <message key="WXB.FR" actor="2" radio="auto" group="wxb" seq="1" prio="1" age="90" new="1" trigger="briefing: the copilot reads the weather (fine weather) with a remark (arguments 0 = wind direction, 1 = wind knots, 2 = temperature, 3 = visibility km)">
+      <o>Nice weather for the mission: wind from {0} degrees at {1} knots, temperature {2} degrees, visibility {3} kilometers.</o>
+      <o>Weather is good: {2} degrees, wind {0} degrees at {1} knots, visibility {3} kilometers.</o>
+      <o>Weather is fine: wind from {0} at {1} knots, {2} degrees, visibility {3} kilometers. A good day for flying.</o>
+      <o>Good weather today. Wind {0} degrees at {1} knots, temperature {2}, visibility {3} kilometers.</o>
+      <o>Clear and calm: wind from {0} degrees at {1} knots, {2} degrees, visibility {3} kilometers.</o>
+      <o>Fine weather: wind {0} degrees at {1} knots, temperature {2} degrees, visibility {3} kilometers.</o>
+    </message>
     <message key="DEB.BYE.TEC.M" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, morning: the technician says goodbye to the pilot by name">
       <o>Have a good day, {@PLT}.</o>
       <o>Go and get a coffee, you earned it. Have a good day.</o>
       <o>Rest well, and have a good day.</o>
       <o>I take care of the helicopter. Enjoy your day.</o>
-          <o>Take it easy, {@PLT}. Have a good day.</o>
+      <o>Take it easy, {@PLT}. Have a good day.</o>
       <o>Well done today. Have a good day.</o>
-</message>
+    </message>
     <message key="DEB.BYE.TEC.A" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, afternoon: the technician says goodbye to the pilot by name">
       <o>Have a good afternoon, {@PLT}.</o>
       <o>Go and get something to eat, you earned it. Have a good afternoon.</o>
       <o>Rest well, and enjoy the rest of the day.</o>
       <o>I take care of the helicopter. Enjoy your afternoon.</o>
-          <o>Take it easy, {@PLT}. Have a good afternoon.</o>
+      <o>Take it easy, {@PLT}. Have a good afternoon.</o>
       <o>Well done today. Have a good afternoon.</o>
-</message>
+    </message>
     <message key="DEB.BYE.TEC.E" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight, evening or night: the technician says goodbye to the pilot by name">
       <o>Have a good evening, {@PLT}.</o>
       <o>Go and get some rest, you earned it. Good night.</o>
       <o>Rest well, and good night.</o>
       <o>I take care of the helicopter. Enjoy your evening.</o>
-          <o>Take it easy, {@PLT}. Have a good evening.</o>
+      <o>Take it easy, {@PLT}. Have a good evening.</o>
       <o>Well done today. Good night.</o>
-</message>
+    </message>
     <message key="DEB.BYE.PLT" actor="1" radio="auto" group="wxd" seq="3" prio="1" age="90" to="tech" new="1" trigger="hangar, after the flight: the pilot answers the goodbye of the technician">
       <o>Thanks, {@TECH}. See you next time.</o>
       <o>Thank you. You too, {@TECH}.</o>
       <o>Thanks for everything. Take care.</o>
       <o>Thanks, {@TECH}. See you at the next shift.</o>
-          <o>Thank you, {@TECH}. Have a good one.</o>
+      <o>Thank you, {@TECH}. Have a good one.</o>
       <o>Thanks, {@TECH}. Take care.</o>
-</message>
+    </message>
+    <message key="RAD.REM" actor="2" radio="ics" group="radrem" seq="1" prio="2" age="60" new="1" trigger="minutes after the dispatch was accepted: the helicopter is on but the CARLS is not connected, a crew member reminds the pilot to switch the radio on">
+      <o>Captain, the radio is still off. Switch on the CARLS so we can talk to the dispatcher.</o>
+      <o>Pilot, we are not connected to dispatch. Please switch the radio on.</o>
+      <o>Heads up, captain: the CARLS is not connected, we cannot call dispatch.</o>
+      <o>Captain, nobody can hear us out there. Can you connect the CARLS, please?</o>
+      <o>We are still without radio, captain. Connect the CARLS when you can.</o>
+      <o>Captain, remember the radio: dispatch cannot reach us until the CARLS is connected.</o>
+    </message>
+    <message key="HRQ.DSP" actor="8" radio="ext" group="hrq" seq="0" new="1" trigger="the dispatcher gives the rendezvous at the pick-up place of the heli rescuers (external radio; args: number, kind of the place A F S M, name)">
+      <o>{@HEMS}, dispatch. Rendezvous at {hrp:1} to board {hr:0}. They are alerted.</o>
+      <o>{@HEMS}, dispatch. Proceed to {hrp:1} and pick up {hr:0}.</o>
+      <o>{@HEMS}, dispatch. Meet {hr:0} at {hrp:1} before the scene. They are waiting for you.</o>
+      <o>{@HEMS}, dispatch. Please divert to {hrp:1} for the boarding of {hr:0}, then continue to the scene.</o>
+      <o>{@HEMS}, dispatch. The rescuers are alerted. Rendezvous at {hrp:1} for {hr:0}.</o>
+      <o>{@HEMS}, dispatch. Specialists are waiting at {hrp:1}. Land there, board {hr:0} and continue.</o>
+    </message>
+    <message key="HRQ.APR.PLT" actor="1" radio="on" group="hrqp" seq="1" new="1" trigger="a few minutes before the pick-up place of the heli rescuers: the pilot gives the minutes to go and asks for the state of the landing area (args: minutes, kind, name)">
+      <o>{hrs:1}, {@HEMS}. Arriving in {mins:0} for the boarding of the rescuers and the equipment. Please confirm the landing area.</o>
+      <o>{hrs:1}, {@HEMS}. We are {mins:0} out for the rescuer and equipment pick-up. Is the area free?</o>
+      <o>{hrs:1}, {@HEMS}. ETA {mins:0} to {hrp:1}. Please confirm the conditions of the landing area.</o>
+      <o>{hrs:1}, {@HEMS}. Inbound, {mins:0}. Please have the rescuers and the gear ready to board.</o>
+      <o>{hrs:1}, {@HEMS}. About {mins:0} to your position for the boarding. Confirm the landing area.</o>
+      <o>{hrs:1}, {@HEMS}. We arrive in {mins:0}. Confirm the pad conditions and be ready to board.</o>
+    </message>
+    <message key="HRQ.APR.A" actor="12" radio="ext" group="hrqp" seq="2" new="1" trigger="the pick-up place of the heli rescuers answers: the landing area is free, the wind (external radio; args: wind direction, kind, name, wind knots)">
+      <o>{@HEMS}, {hrs:1}. Loud and clear. Landing area free, wind from {0} degrees at {3} knots. We are ready to board.</o>
+      <o>{@HEMS}, {hrs:1}. We receive you well. Area free, wind {0} degrees, {3} knots. Ready for the boarding.</o>
+      <o>{@HEMS}, {hrs:1}. Copy. Pad clear, wind from {0} at {3} knots, no obstacles. Ready to board.</o>
+      <o>{@HEMS}, {hrs:1}. Roger. Landing area free of obstacles, wind {0} degrees at {3} knots. We are waiting for you.</o>
+      <o>{@HEMS}, {hrs:1}. Received. The area is free, wind {0} degrees {3} knots. The rescuers are ready.</o>
+      <o>{@HEMS}, {hrs:1}. Affirm. Pad free, wind from {0} degrees at {3} knots. Ready for boarding.</o>
+    </message>
+    <message key="SAR.FND.PLT" actor="2" radio="on" group="sarf" seq="1" prio="2" age="90" new="1" trigger="search and rescue: the target is found, the copilot tells the dispatcher with the position (args: latitude degrees, minutes, N or S, longitude degrees, minutes, E or W)">
+      <o>Dispatch, {@HEMS}. Target found. Position {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}.</o>
+      <o>Dispatch, {@HEMS}. We have the target in sight, at {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}.</o>
+      <o>Dispatch, {@HEMS}. Search target located, approximate position {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}. We go down to assess.</o>
+      <o>Dispatch, {@HEMS}. Contact: the target is found at {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}.</o>
+      <o>Dispatch, {@HEMS}. Visual on the target, around {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}. Preparing the approach.</o>
+      <o>Dispatch, {@HEMS}. Found. Position {0} degrees {mins:1} {comp:2} by {3} degrees {mins:4} {comp:5}.</o>
+    </message>
+    <message key="SAR.FND.A" actor="8" radio="ext" group="sarf" seq="2" prio="2" age="90" new="1" trigger="search and rescue: the dispatcher answers the report of the find (external radio; same args)">
+      <o>{@HEMS}, dispatch. Copy, target found at {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}. Keep us informed on the condition.</o>
+      <o>{@HEMS}, dispatch. Well done. We note the position, {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}. Tell us what you find.</o>
+      <o>{@HEMS}, dispatch. Copy the find. Do you need ground units or a second helicopter?</o>
+      <o>{@HEMS}, dispatch. Understood, position logged. Report the condition of the person as soon as you can.</o>
+      <o>{@HEMS}, dispatch. Great, copy the position. I alert the ambulance for the hospital leg.</o>
+      <o>{@HEMS}, dispatch. Received, position {0} degrees {mins:1} {comp:2}, {3} degrees {mins:4} {comp:5}. Proceed with your assessment.</o>
+    </message>
+    <message key="HOS.MAR.P" actor="2" radio="on" group="hosm" seq="1" prio="2" age="90" new="1" trigger="the hospital marshal is expected: the copilot asks the hospital to send him to the helipad">
+      <o>Hospital, {@HEMS}. We request the marshal on the helipad, please.</o>
+      <o>Hospital, {@HEMS}. Can you send the marshal to the pad for our landing?</o>
+      <o>Hospital, {@HEMS}. We would like the marshal at the helipad, please.</o>
+      <o>Hospital, {@HEMS}. Please have the marshal ready on the pad.</o>
+      <o>Hospital, {@HEMS}. Marshal on the helipad, please, we land in a few minutes.</o>
+      <o>Hospital, {@HEMS}. Request marshal for the landing, please.</o>
+    </message>
+    <message key="HOS.MAR.A" actor="9" radio="ext" group="hosm" seq="2" prio="2" age="90" new="1" trigger="the hospital answers that the marshal is going to the helipad (external radio)">
+      <o>{@HEMS}, copy. The marshal is on his way to the helipad.</o>
+      <o>Copy, {@HEMS}. The marshal will be on the pad when you arrive.</o>
+      <o>{@HEMS}, understood. The marshal is going to the helipad now.</o>
+      <o>Copy. We send the marshal at once, he will wait for you on the pad.</o>
+      <o>{@HEMS}, copy. Marshal on the helipad in a minute.</o>
+      <o>Understood, {@HEMS}. Marshal is coming to the pad.</o>
+    </message>
+    <message key="HOS.FIN.P" actor="2" radio="on" group="hosf" seq="1" prio="2" age="90" new="1" trigger="final approach to the hospital helipad (about 900 m): the copilot asks to land">
+      <o>Hospital, {@HEMS}. Short final, requesting to land on the helipad.</o>
+      <o>Hospital, {@HEMS}. We are on final for the helipad, request landing clearance.</o>
+      <o>Hospital, {@HEMS}. Final approach, please confirm the helipad is clear.</o>
+      <o>Hospital, {@HEMS}. About one minute from the pad, ready to land. Confirm clear.</o>
+      <o>Hospital, {@HEMS}. Final for the helipad. Landing clearance, please.</o>
+      <o>Hospital, {@HEMS}. We are in short final, request to land.</o>
+    </message>
+    <message key="HOS.FIN.A" actor="9" radio="ext" group="hosf" seq="2" prio="2" age="90" new="1" trigger="the hospital clears the landing with the wind (external radio; args: wind direction, wind knots)">
+      <o>{@HEMS}, cleared to land on the helipad. Wind {0} degrees at {1} knots.</o>
+      <o>Copy, {@HEMS}. The pad is clear, wind {0} at {1} knots. Land at your discretion.</o>
+      <o>{@HEMS}, helipad free. Wind from {0} degrees, {1} knots. Cleared to land.</o>
+      <o>{@HEMS}, you are cleared to land. Wind {0}, {1} knots. The team is ready.</o>
+      <o>Copy, {@HEMS}. Helipad clear, wind {0} degrees {1} knots. Welcome.</o>
+      <o>{@HEMS}, landing is approved. Wind {0} at {1} knots.</o>
+    </message>
+    <message key="HOS.PAD.P" actor="2" radio="on" group="hosp" seq="1" prio="2" age="90" new="1" trigger="the helicopter is on the hospital helipad: the copilot announces the handover">
+      <o>Hospital, {@HEMS}. On the helipad. We start the handover now.</o>
+      <o>Hospital, {@HEMS}. We are down on the pad. Please send the team.</o>
+      <o>Hospital, {@HEMS}. Landed. Ready for the handover.</o>
+      <o>Hospital, {@HEMS}. On the ground. Team to the helicopter, please.</o>
+      <o>Hospital, {@HEMS}. Down and safe on the pad. Start of the handover.</o>
+      <o>Hospital, {@HEMS}. On the pad. We open the doors for the team.</o>
+    </message>
+    <message key="HOS.PAD.A" actor="9" radio="ext-near" group="hosp" seq="2" prio="2" age="90" new="1" trigger="the hospital answers that the team is coming to the helicopter (external radio, near)">
+      <o>{@HEMS}, copy. The team is coming to the helicopter.</o>
+      <o>Copy. The team is on its way.</o>
+      <o>{@HEMS}, understood. The team will be with you in a moment.</o>
+      <o>Copy, {@HEMS}. We are coming, stay on the pad.</o>
+      <o>Understood. The team is at the helicopter in a minute.</o>
+      <o>{@HEMS}, copy. Team on the way, doors open please.</o>
+    </message>
+    <message key="HOS.Q" actor="9" radio="ext-near" group="hosq" seq="1" prio="1" age="45" new="1" trigger="the handover of a patient: the hospital asks a question (near)">
+      <o>Any known allergies or regular medication?</o>
+      <o>How was the patient during the flight? Any change?</o>
+      <o>When did it happen, and how long was the transport?</o>
+      <o>Did you give any drugs or fluids on the way?</o>
+      <o>Has the patient lost consciousness at any time?</o>
+      <o>What are the last vital signs you recorded?</o>
+    </message>
+    <message key="HOS.A" actor="3" radio="auto" group="hosq" seq="2" prio="1" age="45" new="1" trigger="the handover of a patient: the doctor answers the question of the hospital">
+      <o>No known allergies. The full report is in the folder, you have the last values.</o>
+      <o>Stable during the flight, no changes. Everything is in the report.</o>
+      <o>A short transport, treated on scene and monitored all the way. Details in the report.</o>
+      <o>Fluids and pain relief on scene, nothing new on the way. It is all written down.</o>
+      <o>Conscious on and off, stable at the end. The report has the details.</o>
+      <o>Last vitals are on the monitor and in the report. Nothing unexpected.</o>
+    </message>
+    <message key="HOS.DEP.P" actor="2" radio="on" group="hosd" seq="1" prio="2" age="90" new="1" trigger="the handover is done and the crew is aboard: the copilot tells the hospital that the helicopter leaves">
+      <o>Hospital, {@HEMS}. Handover complete, we are ready to depart.</o>
+      <o>Hospital, {@HEMS}. Crew aboard, ready for departure. Thank you for your help.</o>
+      <o>Hospital, {@HEMS}. We are leaving the helipad now, back to base.</o>
+      <o>Hospital, {@HEMS}. Ready to depart, request clearance to lift off.</o>
+      <o>Hospital, {@HEMS}. All done, we take off in a moment.</o>
+      <o>Hospital, {@HEMS}. Departing now. Thank you, have a good day.</o>
+    </message>
+    <message key="HOS.DEP.A" actor="9" radio="ext" group="hosd" seq="2" prio="2" age="90" new="1" trigger="the hospital clears the departure (external radio)">
+      <o>{@HEMS}, copy. Clear to depart. Thank you for the transport.</o>
+      <o>Copy, {@HEMS}. Helipad is yours, clear to take off. Good flight.</o>
+      <o>{@HEMS}, understood. Clear to depart, thanks for everything.</o>
+      <o>Copy. You are clear to lift off, safe flight back.</o>
+      <o>{@HEMS}, departure approved. Thank you, crew.</o>
+      <o>Copy, {@HEMS}. Good flight, and well done.</o>
+    </message>
+    <message key="HOS.ORG.LT" actor="9" radio="ext-near" group="hoshnd" seq="2" new="1" trigger="the hospital receives the organ after the deadline">
+      <o>We have the organ, but the time is over. The surgeon will decide if it can be used.</o>
+      <o>Received. It is beyond the deadline, the team will evaluate it now.</o>
+      <o>We take it, but we are late. The surgical team will see what can be done.</o>
+      <o>The organ is here. Past the limit, the transplant team will decide.</o>
+      <o>Thank you, crew. The time has run out, we will do our best with it.</o>
+      <o>Got it. Late, but we try. The team takes it from here.</o>
+    </message>
+    <message key="PCK.CALL.TRF" actor="2" radio="on" group="pckt" seq="1" prio="2" age="90" new="1" trigger="patient transfer: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
+      <o>Pick-up point, {@HEMS} inbound for the patient, ETA {mins:0}. Please have the patient and the paperwork ready.</o>
+      <o>Pick-up point, {@HEMS}, about {mins:0} out for the transfer. Please be ready with the patient.</o>
+      <o>Pick-up point, {@HEMS}, arriving in {mins:0} for the patient transfer. Is the patient ready for loading?</o>
+      <o>Pick-up point, {@HEMS} here, {mins:0} to your helipad. Please prepare the patient for the transfer.</o>
+      <o>Pick-up point, {@HEMS}, {mins:0} for the transfer. The stretcher team ready, please.</o>
+      <o>Pick-up point, {@HEMS} on approach, {mins:0}. Patient and documents ready, please.</o>
+    </message>
+    <message key="PCK.CALL.ORG" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" new="1" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
+      <o>Pick-up point, {@HEMS} inbound for the organ, ETA {mins:0}. Please have the container ready.</o>
+      <o>Pick-up point, {@HEMS}, about {mins:0} out. The organ must be ready for loading, please.</o>
+      <o>Pick-up point, {@HEMS}, arriving in {mins:0} for the organ transport. Is the container ready?</o>
+      <o>Pick-up point, {@HEMS} here, {mins:0} to your helipad. Please have the organ and the documents ready.</o>
+      <o>Pick-up point, {@HEMS}, {mins:0} for the organ. Time is short, be ready on the pad.</o>
+      <o>Pick-up point, {@HEMS} on approach, {mins:0}. Organ container ready, please.</o>
+    </message>
+    <message key="PCK.REPLY.TRF" actor="9" radio="ext" group="pckt" seq="2" prio="2" age="90" new="1" trigger="patient transfer: the pick-up place answers that the patient is ready (external radio)">
+      <o>{@HEMS}, copy. The patient is ready and the team is waiting on the pad.</o>
+      <o>Copy, {@HEMS}. We are preparing the patient, you will find everything ready.</o>
+      <o>Understood, {@HEMS}. The helipad is clear and the stretcher team will be on the pad.</o>
+      <o>{@HEMS}, copy. Patient stable and ready for loading. We expect you.</o>
+      <o>Copy. The pad is free, the patient will be ready when you land.</o>
+      <o>{@HEMS}, understood. The team and the paperwork are ready for you.</o>
+    </message>
+    <message key="PCK.REPLY.ORG" actor="9" radio="ext" group="pcko" seq="2" prio="2" age="90" new="1" trigger="organ transport: the pick-up place answers that the organ is ready (external radio)">
+      <o>{@HEMS}, copy. The container is packed and the team waits on the pad.</o>
+      <o>Copy, {@HEMS}. The organ is ready for transport, the pad is clear.</o>
+      <o>Understood, {@HEMS}. The box is sealed and waiting, you can land.</o>
+      <o>{@HEMS}, copy. Organ container ready, the surgeon will hand it over personally.</o>
+      <o>Copy. The pad is free, the container will be ready when you land.</o>
+      <o>{@HEMS}, understood. The organ and its documents are ready for you.</o>
+    </message>
+    <message key="ORG.INF" actor="3" radio="ics" group="orgb" seq="1" prio="2" age="90" new="1" trigger="organ transport briefing: the organ, the recipient and the hospital (args: organ H L K U P, name, age, hospital)">
+      <o>The organ is the {organ:0}, for {name:1}, {2} years old, waiting at {3}.</o>
+      <o>We carry the {organ:0} for {name:1}, age {2}. The operating team at {3} is preparing the patient.</o>
+      <o>Organ on this mission: {organ:0}. Recipient: {name:1}, {2} years old, at {3}.</o>
+      <o>Transplant of the {organ:0}. The patient is {name:1}, {2} years old, destination {3}.</o>
+      <o>{name:1}, {2} years old, is waiting for the {organ:0} at {3}. The team is ready.</o>
+      <o>The recipient is {name:1}, {2} years old, waiting at {3} for the {organ:0}.</o>
+    </message>
+    <message key="ORG.TIM.OK" actor="2" radio="ics" group="orgb" seq="2" prio="2" age="90" new="1" trigger="organ transport briefing: there is enough time (args: minutes left, minutes needed)">
+      <o>We have {mins:0} and the flight needs about {1}. It is comfortable, but we do not waste time.</o>
+      <o>Time is fine: {mins:0} left, about {1} needed. Let us keep a steady pace.</o>
+      <o>{mins:0} to the deadline, the flight takes about {1}. We have some margin.</o>
+      <o>We have {mins:0} against about {1} of flight. A good margin, but no stops.</o>
+      <o>The deadline is in {mins:0} and we need about {1}. We make it with room to spare.</o>
+      <o>Plenty of time: {mins:0}, and about {1} to fly. Still, we go direct.</o>
+    </message>
+    <message key="ORG.TIM.TG" actor="2" radio="ics" group="orgb" seq="2" prio="2" age="90" new="1" trigger="organ transport briefing: the time is tight (args: minutes left, minutes needed)">
+      <o>{mins:0} left and we need about {1}. It is tight, every minute counts.</o>
+      <o>Only {mins:0} against about {1} of flight. The margin is thin, no delays.</o>
+      <o>The deadline is in {mins:0}, the flight takes about {1}. Tight, we must be quick.</o>
+      <o>We have {mins:0} and need about {1}. Little room, let us go.</o>
+      <o>{mins:0} to the limit, about {1} to fly. It will be close.</o>
+      <o>About {mins:1} of flight and {0} on the clock. Tight, we cannot lose time at the pick-up.</o>
+    </message>
+    <message key="ORG.TIM.LT" actor="2" radio="ics" group="orgb" seq="2" prio="2" age="90" new="1" trigger="organ transport briefing: the time is not enough (args: minutes left, minutes needed)">
+      <o>Only {mins:0} and the flight needs {1}. We cannot make it in time, but we try.</o>
+      <o>The deadline is in {mins:0} and we need {1}. We are already late, we do what we can.</o>
+      <o>{mins:0} left against {1} of flight. We will not arrive in time, but let us go anyway.</o>
+      <o>We have {mins:0} and need {1}. It is not enough. We fly as fast as we can.</o>
+      <o>The time is short: {mins:0}, {1} needed. We will be late, but the hospital still waits.</o>
+      <o>Against {mins:1} of flight we only have {0}. Late from the start, let us do our best.</o>
+    </message>
+    <message key="ORG.RCT.OK" actor="4" radio="ics" group="orgb" seq="3" prio="1" age="60" new="1" trigger="organ transport briefing: the chief answers when there is enough time">
+      <o>Good, so a clean pick-up without rushing. Let us be precise.</o>
+      <o>Fine. We do the pick-up by the book and then we go.</o>
+      <o>With this margin we keep the container safe and calm. Understood.</o>
+      <o>Understood. No stress, but no chatting either.</o>
+      <o>Good news. I will check the container twice, then we fly.</o>
+      <o>All right, a normal pick-up and a direct flight.</o>
+    </message>
+    <message key="ORG.RCT.TG" actor="4" radio="ics" group="orgb" seq="3" prio="1" age="60" new="1" trigger="organ transport briefing: the chief answers when the time is tight">
+      <o>Understood. No delays at the pick-up, everybody stays ready.</o>
+      <o>Then I am ready at the door before you land. We take it and go.</o>
+      <o>Copy. I tell the ground team we have no time for paperwork.</o>
+      <o>Tight, then. I stay by the door, ready to take the box.</o>
+      <o>Understood. Quick and careful, both.</o>
+      <o>Fine. I will not move from the door until we have it.</o>
+    </message>
+    <message key="ORG.RCT.LT" actor="4" radio="ics" group="orgb" seq="3" prio="1" age="60" new="1" trigger="organ transport briefing: the chief answers when the time is not enough">
+      <o>Then we go as fast as we can. The ground team must be quick and we do not stop.</o>
+      <o>Understood. We tell the ground team to have the box in their hands when we land.</o>
+      <o>Late or not, the container gets the best care. We hurry.</o>
+      <o>Copy. I will hurry the handover, it is the only place we can win time.</o>
+      <o>Then every second counts. I am ready at the door.</o>
+      <o>Understood. We do not give up, we try to win back what we can.</o>
+    </message>
+    <message key="ORG.WARN" actor="2" radio="ics" group="orgw" seq="1" prio="2" age="60" new="1" trigger="organ transport: the time the flight needs is now more than the time left (args: minutes left, minutes needed)">
+      <o>Heads up: {mins:0} left and the flight still needs {1}. We are running late, let us speed up.</o>
+      <o>Captain, we have {mins:0} and need {1}. We cannot lose any more time.</o>
+      <o>Careful, the deadline is in {mins:0} and we still need {1}. Let us push on.</o>
+      <o>We are behind: {mins:0} on the clock, {1} to go. Please keep a high speed.</o>
+      <o>Time check: {mins:0} left, {1} needed. We are going to be late if we do not hurry.</o>
+      <o>Captain, the margin is gone. {mins:0} left, about {1} to the hospital.</o>
+    </message>
+    <message key="ORG.LATE" actor="2" radio="ics" group="orgw" seq="2" prio="2" age="60" new="1" trigger="organ transport: the deadline has passed">
+      <o>The deadline has passed. We continue anyway, the hospital will decide.</o>
+      <o>Captain, the time limit is over. We keep going to the hospital.</o>
+      <o>We are past the deadline. Let us deliver it, the surgeons decide.</o>
+      <o>Time is up for the organ. We go on, it is not our decision now.</o>
+      <o>The limit is behind us. We keep flying, maybe it is still usable.</o>
+      <o>We lost the race against time. Let us get it there anyway.</o>
+    </message>
+    <message key="ORG.PCK.G" actor="9" radio="ext-near" group="orgp" seq="1" prio="2" age="60" new="1" trigger="organ pick-up: the ground team tells the crew what it is, for whom and how much time is left (args: organ, name, age, minutes left)">
+      <o>This is the {organ:0} for {name:1}, {2} years old. It is very important, you have {mins:3}. Handle it with care.</o>
+      <o>Organ container: {organ:0}, recipient {name:1}, {2} years old. The time limit is {mins:3}, please go straight to the hospital.</o>
+      <o>Here is the {organ:0} for {name:1}. Every minute counts, {3} left. Good luck.</o>
+      <o>The {organ:0} for {name:1}, {2} years old, is in the box. You have about {mins:3}, please do not stop on the way.</o>
+      <o>Careful with it: the {organ:0} of {name:1}, {2} years old. The deadline is in {mins:3}.</o>
+      <o>Organ handover: {organ:0}, for {name:1}. {mins:3} to the deadline. Thank you for coming so fast.</o>
+    </message>
+    <message key="ORG.PCK.R" actor="4" radio="auto" group="orgp" seq="2" prio="2" age="60" new="1" trigger="organ pick-up: the rear crew answers the ground team">
+      <o>Understood. We will not lose a minute. Thank you.</o>
+      <o>Copy, the container is secured. We go straight to the hospital.</o>
+      <o>Got it, we take good care of it. See you.</o>
+      <o>Received. We know how important it is, we are on our way.</o>
+      <o>Thank you. We secure it and fly directly.</o>
+      <o>Understood, no stops. Thanks for the quick handover.</o>
+    </message>
+    <message key="ORG.DEL.OK" actor="2" radio="auto" group="orgd" seq="1" prio="1" age="60" new="1" trigger="organ transport: the organ was delivered in time, the copilot comments">
+      <o>On time, good. That was a clean transport.</o>
+      <o>Delivered within the time. Good work, everyone.</o>
+      <o>We made it with time to spare. Well done, crew.</o>
+      <o>The organ is delivered in time. Great job.</o>
+      <o>Handover done, and within the deadline. Perfect.</o>
+      <o>In time, as planned. Thanks, everyone.</o>
+    </message>
+    <message key="ORG.DEL.LT" actor="2" radio="auto" group="orgd" seq="1" prio="1" age="60" new="1" trigger="organ transport: the organ was delivered after the deadline, the copilot comments">
+      <o>We were late. We did everything we could.</o>
+      <o>Delivered after the deadline. Let us hope it can still be used.</o>
+      <o>We missed the time, but we tried. It is up to the surgeons now.</o>
+      <o>Late, I am sorry. We flew as fast as we could.</o>
+      <o>Beyond the limit, but delivered. The team will decide.</o>
+      <o>We did not make it in time. We did our best.</o>
+    </message>
+    <message key="TRF.INF" actor="3" radio="ics" group="brft" seq="9" prio="1" age="90" new="1" trigger="patient transfer briefing: where the patient goes (arg: the destination hospital)">
+      <o>We transfer the patient to {0}. Stable and monitored, the report goes with us.</o>
+      <o>Destination of the transfer: {0}. I will keep an eye on the monitor all the way.</o>
+      <o>The patient goes to {0}. A normal transfer, but I stay next to the stretcher.</o>
+      <o>Transfer to {0}. The doctors there already have the file.</o>
+      <o>We bring the patient to {0}. Everything is ready for the handover at arrival.</o>
+      <o>Our destination is {0}. The patient is stable, let us keep the flight smooth.</o>
+    </message>
 </voicepack>
