@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="24" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="25" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -7983,5 +7983,45 @@
       <o>Transfer to {0}. The doctors there already have the file.</o>
       <o>We bring the patient to {0}. Everything is ready for the handover at arrival.</o>
       <o>Our destination is {0}. The patient is stable, let us keep the flight smooth.</o>
+    </message>
+    <message key="SVC.REQ" actor="2" radio="on" new="1" trigger="back at the base damaged or with a failure, the crew is taken by the van: the copilot asks the dispatcher for technical assistance">
+      <o>{@DSP}, {@HEMS}. We are back with damage and failures on the helicopter. Request technical assistance at the landing point.</o>
+      <o>{@DSP}, {@HEMS}. The helicopter is damaged. Please send the technicians to our position.</o>
+      <o>{@DSP} from {@HEMS}. We have failures on board, request technical assistance.</o>
+      <o>{@DSP}, {@HEMS}. Helicopter damaged after the flight, technical assistance requested at the landing point.</o>
+      <o>{@DSP}, {@HEMS}. We need the technicians here, the helicopter has damage and failures.</o>
+      <o>{@HEMS} to {@DSP}. Damage and failures after the mission, please send technical assistance.</o>
+    </message>
+    <message key="SVC.ACK" actor="8" radio="on" new="1" trigger="the dispatcher confirms the technical assistance: the technician comes with the service truck">
+      <o>{@HEMS}, {@DSP}. Copy, the technician is on the way with the service truck.</o>
+      <o>{@DSP} to {@HEMS}. Technical assistance is dispatched, the service truck leaves the hangar now.</o>
+      <o>{@HEMS}, {@DSP}. Understood, the technician is coming with the service truck.</o>
+      <o>{@HEMS}, {@DSP}. Copy the damage, the service truck is on its way to you.</o>
+      <o>{@DSP} to {@HEMS}. Technical assistance confirmed, the truck is leaving the hangar.</o>
+      <o>{@HEMS}, {@DSP}. Roger, the technician drives out to your position now.</o>
+    </message>
+    <message key="SVC.ARR" actor="8" radio="on" new="1" trigger="the service truck is parked behind the helicopter">
+      <o>{@HEMS}, {@DSP}. The service truck is on site, the technician is waiting for you.</o>
+      <o>{@DSP} to {@HEMS}. The technician has arrived with the service truck.</o>
+      <o>{@HEMS}, {@DSP}. Technical assistance is on location behind your helicopter.</o>
+      <o>{@HEMS}, {@DSP}. The service truck has arrived at your position.</o>
+      <o>{@DSP} to {@HEMS}. The technician is on scene with the service truck.</o>
+      <o>{@HEMS}, {@DSP}. The truck is parked behind you, the technician is ready.</o>
+    </message>
+    <message key="SCN.POL.AMB" actor="8" radio="on" new="1" trigger="crew casualty at the landing point: the dispatcher says that ambulance and police are waiting there">
+      <o>{@HEMS}, {@DSP}. An ambulance and the police are waiting at the landing point.</o>
+      <o>{@DSP} to {@HEMS}. Ambulance and police are on location, you can land.</o>
+      <o>{@HEMS}, {@DSP}. The ambulance and the police are already at the landing point.</o>
+      <o>{@HEMS}, {@DSP}. Ambulance and police will be waiting for you at the landing point.</o>
+      <o>{@DSP} to {@HEMS}. Ambulance and police are ready at the landing point.</o>
+      <o>{@HEMS}, {@DSP}. Both ambulance and police are on scene at your landing point.</o>
+    </message>
+    <message key="SCN.POL" actor="8" radio="on" new="1" trigger="the police is waiting at the landing point (deceased patient or crew casualty without ambulance)">
+      <o>{@HEMS}, {@DSP}. The police is waiting at the landing point.</o>
+      <o>{@DSP} to {@HEMS}. Police is on location, you can land.</o>
+      <o>{@HEMS}, {@DSP}. A police unit is already at the landing point.</o>
+      <o>{@HEMS}, {@DSP}. The police will be waiting for you at the landing point.</o>
+      <o>{@DSP} to {@HEMS}. A police patrol is ready at the landing point.</o>
+      <o>{@HEMS}, {@DSP}. Police is on scene at your landing point.</o>
     </message>
 </voicepack>

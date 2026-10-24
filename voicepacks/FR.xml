@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack FR. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="FR" language="FR" version="14" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="24">
+<voicepack name="FR" language="FR" version="15" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="25">
   <names>
     <name role="PLT">Pilote</name>
     <name role="CPL">Copilote</name>
@@ -7983,5 +7983,45 @@
       <o>Transfert vers {0}. Les médecins là-bas ont déjà le dossier.</o>
       <o>On amène le patient vers {0}. Tout est prêt pour la transmission à l'arrivée.</o>
       <o>Notre destination : {0}. Le patient est stable, gardons un vol en douceur.</o>
+    </message>
+    <message key="SVC.REQ" actor="2" radio="on" new="1" trigger="back at the base damaged or with a failure, the crew is taken by the van: the copilot asks the dispatcher for technical assistance">
+      <o>{@DSP}, {@HEMS}. Nous sommes de retour avec des dommages et des pannes sur l'hélicoptère. Demande d'assistance technique au point de poser.</o>
+      <o>{@DSP}, {@HEMS}. L'hélicoptère est endommagé. Envoyez les techniciens à notre position, s'il vous plaît.</o>
+      <o>{@DSP} de {@HEMS}. Nous avons des pannes à bord, assistance technique demandée.</o>
+      <o>{@DSP}, {@HEMS}. Hélicoptère endommagé après le vol, assistance technique demandée au point de poser.</o>
+      <o>{@DSP}, {@HEMS}. Nous avons besoin des techniciens ici, l'hélicoptère a des dommages et des pannes.</o>
+      <o>{@HEMS} à {@DSP}. Dommages et pannes après la mission, envoyez une assistance technique.</o>
+    </message>
+    <message key="SVC.ACK" actor="8" radio="on" new="1" trigger="the dispatcher confirms the technical assistance: the technician comes with the service truck">
+      <o>{@HEMS}, {@DSP}. Reçu, le technicien arrive avec le camion de service.</o>
+      <o>{@DSP} à {@HEMS}. L'assistance technique est envoyée, le camion de service quitte le hangar.</o>
+      <o>{@HEMS}, {@DSP}. Compris, le technicien arrive avec le camion de service.</o>
+      <o>{@HEMS}, {@DSP}. Dommages reçus, le camion de service est en route vers vous.</o>
+      <o>{@DSP} à {@HEMS}. Assistance technique confirmée, le camion quitte le hangar.</o>
+      <o>{@HEMS}, {@DSP}. Reçu, le technicien roule vers votre position.</o>
+    </message>
+    <message key="SVC.ARR" actor="8" radio="on" new="1" trigger="the service truck is parked behind the helicopter">
+      <o>{@HEMS}, {@DSP}. Le camion de service est sur place, le technicien vous attend.</o>
+      <o>{@DSP} à {@HEMS}. Le technicien est arrivé avec le camion de service.</o>
+      <o>{@HEMS}, {@DSP}. L'assistance technique est derrière votre hélicoptère.</o>
+      <o>{@HEMS}, {@DSP}. Le camion de service est arrivé à votre position.</o>
+      <o>{@DSP} à {@HEMS}. Le technicien est sur place avec le camion de service.</o>
+      <o>{@HEMS}, {@DSP}. Le camion est garé derrière vous, le technicien est prêt.</o>
+    </message>
+    <message key="SCN.POL.AMB" actor="8" radio="on" new="1" trigger="crew casualty at the landing point: the dispatcher says that ambulance and police are waiting there">
+      <o>{@HEMS}, {@DSP}. Une ambulance et la police attendent au point de poser.</o>
+      <o>{@DSP} à {@HEMS}. Ambulance et police sont sur place, vous pouvez vous poser.</o>
+      <o>{@HEMS}, {@DSP}. L'ambulance et la police sont déjà au point de poser.</o>
+      <o>{@HEMS}, {@DSP}. Ambulance et police vous attendront au point de poser.</o>
+      <o>{@DSP} à {@HEMS}. Ambulance et police sont prêtes au point de poser.</o>
+      <o>{@HEMS}, {@DSP}. L'ambulance et la police sont toutes deux sur votre point de poser.</o>
+    </message>
+    <message key="SCN.POL" actor="8" radio="on" new="1" trigger="the police is waiting at the landing point (deceased patient or crew casualty without ambulance)">
+      <o>{@HEMS}, {@DSP}. La police attend au point de poser.</o>
+      <o>{@DSP} à {@HEMS}. La police est sur place, vous pouvez vous poser.</o>
+      <o>{@HEMS}, {@DSP}. Une patrouille de police est déjà au point de poser.</o>
+      <o>{@HEMS}, {@DSP}. La police vous attendra au point de poser.</o>
+      <o>{@DSP} à {@HEMS}. Une patrouille est prête au point de poser.</o>
+      <o>{@HEMS}, {@DSP}. La police est sur votre point de poser.</o>
     </message>
 </voicepack>
