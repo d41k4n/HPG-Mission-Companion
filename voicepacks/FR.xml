@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack FR. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="FR" language="FR" version="15" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="25">
+<voicepack name="FR" language="FR" version="17" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="27">
   <names>
     <name role="PLT">Pilote</name>
     <name role="CPL">Copilote</name>
@@ -647,7 +647,7 @@
       <o>vitesse meilleur taux de montée</o>
       <o>vitesse meilleur taux de montée</o>
       <o>vitesse meilleur taux de montée</o>
-      <o>V Y.</o>
+      <o>Vee why.</o>
     </message>
     <message key="CPL.45" actor="2" radio="auto" lvar="L:CPL{VCP}45" wav="AND.cpl.x.we.crashed.wav" sleep="0">
       <o>On s'est écrasés. Tout le monde va bien ?</o>
@@ -889,7 +889,7 @@
       <o>L'air est calme. Pourvu que ça dure.</o>
       <o>Vol tranquille jusqu'ici. Espérons que le poser soit aussi facile.</o>
     </message>
-    <message key="DSP.VEH.BOTH" actor="8" radio="on" new="1" trigger="some vehicles on scene (argument 1), others on the way (argument 0)">
+    <message key="DSP.VEH.BOTH" actor="8" radio="ext" new="1" trigger="some vehicles on scene (argument 1), others on the way (argument 0)">
       <o>{list:1} {be:1} déjà sur place, {list:0} {be:0} en route.</o>
       <o>Sur place : {list:1}. En route : {list:0}.</o>
       <o>{list:1} {be:1} sur place, {list:0} {be:0} encore en route.</o>
@@ -937,7 +937,7 @@
       <o>Pas d'hôpital à proximité, on choisit la destination manuellement.</o>
       <o>Pas de chance pour les hôpitaux à proximité, on en sélectionne un à la main.</o>
     </message>
-    <message key="DSP.VEH.NONE" actor="8" radio="on" new="1" trigger="no rescue vehicles">
+    <message key="DSP.VEH.NONE" actor="8" radio="ext" new="1" trigger="no rescue vehicles">
       <o>Aucun véhicule de secours sur place. Vous serez les premiers sur les lieux.</o>
       <o>Aucune équipe au sol n'est en route. Vous arriverez les premiers.</o>
       <o>Il n'y a aucun véhicule de secours sur place. Vous êtes les premiers sur les lieux.</o>
@@ -945,7 +945,7 @@
       <o>Aucun véhicule sur place, vous serez les premiers sur les lieux.</o>
       <o>Personne n'est en route, vous serez les premiers là-bas.</o>
     </message>
-    <message key="DSP.VEH.SCENE" actor="8" radio="on" new="1" trigger="vehicles already on scene (argument 1 = letters)">
+    <message key="DSP.VEH.SCENE" actor="8" radio="ext" new="1" trigger="vehicles already on scene (argument 1 = letters)">
       <o>{list:1} {be:1} déjà sur place.</o>
       <o>{list:1} {be:1} sur les lieux.</o>
       <o>{list:1} {be:1} sur place.</o>
@@ -953,7 +953,7 @@
       <o>Vous trouverez {list:1} sur place.</o>
       <o>{list:1} {be:1} déjà là.</o>
     </message>
-    <message key="DSP.VEH.WAY" actor="8" radio="on" new="1" trigger="vehicles dispatched, still on the way (argument 0 = letters)">
+    <message key="DSP.VEH.WAY" actor="8" radio="ext" new="1" trigger="vehicles dispatched, still on the way (argument 0 = letters)">
       <o>{list:0} {be:0} en route vers les lieux.</o>
       <o>{list:0} {be:0} en route vers votre position.</o>
       <o>{list:0} {be:0} en route.</o>
@@ -1261,7 +1261,7 @@
       <o>Tout le monde va bien ? Au rapport !</o>
       <o>Tout le monde va bien à l'arrière ? Au rapport !</o>
     </message>
-    <message key="HOS.CALL.D" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a deceased patient aboard">
+    <message key="HOS.CALL.D" actor="2" radio="ext" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a deceased patient aboard">
       <o>Hôpital, {@HEMS} en approche, arrivée prévue dans environ {mins:0}. Le patient est décédé pendant la mission.</o>
       <o>Hôpital, {@HEMS} en approche dans environ {mins:0}. Nous avons un patient décédé à bord.</o>
       <o>Hôpital, {@HEMS}, arrivée dans {mins:0}, patient décédé en vol.</o>
@@ -1269,7 +1269,7 @@
       <o>Hôpital, {@HEMS} en approche, environ {mins:0}. Nous avons un patient décédé à bord.</o>
       <o>Hôpital, ici {@HEMS}, à environ {mins:0}. J'ai bien peur que le patient n'ait pas survécu.</o>
     </message>
-    <message key="HOS.CALL.O" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with an organ aboard">
+    <message key="HOS.CALL.O" actor="2" radio="ext" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with an organ aboard">
       <o>Hôpital, {@HEMS} en approche avec l'organe, arrivée prévue dans environ {mins:0}.</o>
       <o>Hôpital, nous apportons l'organe, à environ {mins:0}. Merci de tenir l'équipe prête.</o>
       <o>Hôpital, {@HEMS} est en approche avec l'organe, arrivée dans {mins:0}.</o>
@@ -1277,7 +1277,7 @@
       <o>Hôpital, {@HEMS} en approche avec l'organe, environ {mins:0}. Merci de tenir l'équipe prête.</o>
       <o>Hôpital, ici {@HEMS} avec l'organe, nous sommes à environ {mins:0}.</o>
     </message>
-    <message key="HOS.CALL.P" actor="2" radio="on" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a patient aboard; {0}: minutes to go">
+    <message key="HOS.CALL.P" actor="2" radio="ext" group="hos" seq="1" new="1" trigger="the copilot calls the hospital with a patient aboard; {0}: minutes to go">
       <o>Hôpital, {@HEMS} est en approche avec un patient, arrivée prévue dans environ {mins:0}.</o>
       <o>Hôpital, {@HEMS} en approche avec un patient à bord, à environ {mins:0}.</o>
       <o>Hôpital, ici {@HEMS} avec un patient, arrivée dans {mins:0}.</o>
@@ -1517,7 +1517,7 @@
       <o>Tout est dégagé, vous pouvez vous poser.</o>
       <o>Tout est dégagé, descendez.</o>
     </message>
-    <message key="MAR.NTC.H" actor="8" radio="on" new="1" trigger="marshal present at the hospital, said some time before the arrival">
+    <message key="MAR.NTC.H" actor="8" radio="ext" new="1" trigger="marshal present at the hospital, said some time before the arrival">
       <o>Pour information, un placeur vous guidera sur l'hélisurface de l'hôpital.</o>
       <o>L'hôpital a un placeur sur l'hélisurface pour vous guider.</o>
       <o>Un placeur vous attendra sur l'hélisurface.</o>
@@ -1525,7 +1525,7 @@
       <o>Il y a un placeur sur l'hélisurface, il vous guidera.</o>
       <o>Un placeur vous guidera de la main sur l'hélisurface.</o>
     </message>
-    <message key="MAR.NTC.S" actor="8" radio="on" new="1" trigger="marshal present on the scene">
+    <message key="MAR.NTC.S" actor="8" radio="ext" new="1" trigger="marshal present on the scene">
       <o>Un placeur sera sur place pour vous guider.</o>
       <o>Sur place, il y a un placeur qui dirigera votre poser.</o>
       <o>Pour information, un placeur est sur place et vous guidera.</o>
@@ -1533,7 +1533,7 @@
       <o>Il y a un placeur sur place, il vous guidera de la main.</o>
       <o>Un placeur est sur place, il vous guidera jusqu'au poser.</o>
     </message>
-    <message key="OBJ.ACC" actor="8" radio="on" new="1" trigger="the dispatcher reads the objective of an accident mission">
+    <message key="OBJ.ACC" actor="8" radio="ext" new="1" trigger="the dispatcher reads the objective of an accident mission">
       <o>Rejoignez les lieux, faites le bilan du patient et tenez-nous informés. Si nécessaire, transportez-le vers l'hôpital le plus proche.</o>
       <o>Votre mission : rejoindre les lieux, donner les premiers soins et nous dire ce que vous trouvez. Transport vers un hôpital proche si nécessaire.</o>
       <o>Rejoignez les lieux et évaluez la situation. Soignez le patient et, si nécessaire, transportez-le vers l'hôpital le plus proche.</o>
@@ -1541,7 +1541,7 @@
       <o>Rendez-vous sur les lieux, faites le bilan du patient et tenez-nous au courant. S'il lui faut un hôpital, emmenez-le au plus proche.</o>
       <o>Allez voir ce qui se passe, occupez-vous du patient et tenez-nous au courant. Hôpital s'il le faut.</o>
     </message>
-    <message key="OBJ.INJ" actor="8" radio="on" new="1" trigger="objective of an injured only mission">
+    <message key="OBJ.INJ" actor="8" radio="ext" new="1" trigger="objective of an injured only mission">
       <o>Choisissez votre point de poser, secourez la victime et emmenez-la vers la destination de votre choix.</o>
       <o>Rejoignez la victime, choisissez le point de poser qui vous convient et amenez-la à l'hôpital de votre choix.</o>
       <o>Secourez la victime là où elle se trouve et transportez-la vers la destination de votre choix.</o>
@@ -1549,7 +1549,7 @@
       <o>Vous choisissez le point de poser : secourez la victime et emmenez-la où vous le jugez le mieux.</o>
       <o>Trouvez un bon point de poser, secourez la victime et amenez-la où vous préférez.</o>
     </message>
-    <message key="OBJ.ORG" actor="8" radio="on" new="1" trigger="objective of an organ transport">
+    <message key="OBJ.ORG" actor="8" radio="ext" new="1" trigger="objective of an organ transport">
       <o>Récupérez l'organe au point désigné et amenez-le à destination dans le délai imparti. Chaque minute compte.</o>
       <o>Récupérez l'organe au point désigné et emmenez-le à destination avant la limite de temps. Soyez rapides et prudents.</o>
       <o>Transport d'organe : récupérez-le au point indiqué et livrez-le à temps. Le chrono tourne déjà.</o>
@@ -1557,7 +1557,7 @@
       <o>Récupérez l'organe et amenez-le à destination à temps. Ils l'attendent.</o>
       <o>Allez chercher l'organe et amenez-le vite. L'équipe receveuse attend et le chrono tourne.</o>
     </message>
-    <message key="OBJ.SAR" actor="8" radio="on" new="1" trigger="objective of a search and rescue mission">
+    <message key="OBJ.SAR" actor="8" radio="ext" new="1" trigger="objective of a search and rescue mission">
       <o>Rejoignez la dernière position connue et commencez la recherche. Quand vous trouvez la personne, secourez-la et emmenez-la à l'hôpital.</o>
       <o>Rendez-vous à la dernière position connue et commencez la recherche. Secourez la personne retrouvée et transportez-la à l'hôpital.</o>
       <o>Commencez la recherche depuis la dernière position signalée. Trouvez la personne, secourez-la et amenez-la dans un hôpital proche.</o>
@@ -1565,7 +1565,7 @@
       <o>Allez à la dernière position connue et commencez la recherche. Secourez qui vous trouvez et emmenez-le à l'hôpital.</o>
       <o>Allez là où elle a été vue pour la dernière fois et commencez à chercher. Trouvez-la, secourez-la et amenez-la à l'hôpital.</o>
     </message>
-    <message key="OBJ.SARC" actor="8" radio="on" new="1" trigger="objective of the parked car search">
+    <message key="OBJ.SARC" actor="8" radio="ext" new="1" trigger="objective of the parked car search">
       <o>Le véhicule a été retrouvé stationné : rejoignez-le et fouillez la zone autour. Trouvez le propriétaire, secourez-le et emmenez-le à l'hôpital.</o>
       <o>Allez au véhicule stationné et fouillez les alentours. Quand vous trouvez le propriétaire, récupérez-le et amenez-le à l'hôpital.</o>
       <o>Partez de la voiture stationnée et élargissez la recherche. Trouvez et secourez le propriétaire, puis transportez-le vers un hôpital.</o>
@@ -1573,7 +1573,7 @@
       <o>Une voiture stationnée et personne autour : fouillez la zone, trouvez le propriétaire et emmenez-le à l'hôpital.</o>
       <o>La voiture est garée et le propriétaire a disparu. Cherchez autour, trouvez-le et amenez-le à l'hôpital.</o>
     </message>
-    <message key="OBJ.SARH" actor="8" radio="on" new="1" trigger="objective of the search around a house">
+    <message key="OBJ.SARH" actor="8" radio="ext" new="1" trigger="objective of the search around a house">
       <o>Rejoignez la maison et fouillez la zone autour. Trouvez la personne disparue, secourez-la et emmenez-la à l'hôpital.</o>
       <o>Partez de la maison et fouillez les environs. Quand vous trouvez la personne, récupérez-la et transportez-la à l'hôpital.</o>
       <o>La personne a quitté la maison à pied. Fouillez les alentours, trouvez-la et amenez-la dans un hôpital.</o>
@@ -1581,7 +1581,7 @@
       <o>Partez de la maison et cherchez tout autour. Trouvez la personne et emmenez-la à l'hôpital.</o>
       <o>Elle s'est éloignée de la maison. Cherchez autour, trouvez-la et amenez-la à l'hôpital.</o>
     </message>
-    <message key="OBJ.SARV" actor="8" radio="on" new="1" trigger="objective of the overdue vehicle search">
+    <message key="OBJ.SARV" actor="8" radio="ext" new="1" trigger="objective of the overdue vehicle search">
       <o>Partez de la dernière position connue et suivez l'itinéraire probable du véhicule. Trouvez le conducteur, secourez-le et emmenez-le à l'hôpital.</o>
       <o>Cherchez le long de l'itinéraire le plus probable du véhicule. Quand vous trouvez le conducteur, secourez-le et transportez-le à l'hôpital.</o>
       <o>Suivez l'itinéraire probable depuis la dernière position connue et cherchez le véhicule. Trouvez et secourez le conducteur, puis direction l'hôpital.</o>
@@ -1589,7 +1589,7 @@
       <o>Suivez la route qu'empruntait le véhicule, trouvez-le ainsi que son conducteur, et emmenez le conducteur à l'hôpital.</o>
       <o>Il a disparu sur cette route. Suivez-la, trouvez la voiture et le conducteur, et amenez le conducteur à l'hôpital.</o>
     </message>
-    <message key="OBJ.TRF" actor="8" radio="on" new="1" trigger="objective of a patient transfer">
+    <message key="OBJ.TRF" actor="8" radio="ext" new="1" trigger="objective of a patient transfer">
       <o>Récupérez le patient au point désigné et transférez-le en sécurité vers la destination. Un vol en douceur est la priorité.</o>
       <o>Votre mission : prendre en charge le patient au point de récupération et le transférer en sécurité vers l'hôpital receveur.</o>
       <o>Récupérez le patient au point désigné et emmenez-le à destination. Gardez un vol en douceur.</o>
@@ -3441,7 +3441,7 @@
       <o>Commandant, c'est vous qui voyez : on accepte, ou on rentre d'abord à la base ?</o>
       <o>Alors, commandant, on y va ou on rentre d'abord à la base ?</o>
     </message>
-    <message key="DSA.NUDGE" actor="8" radio="on" new="1" trigger="a minute after the question and the dispatch is still not accepted: the dispatcher asks for an answer">
+    <message key="DSA.NUDGE" actor="8" radio="ext" new="1" trigger="a minute after the question and the dispatch is still not accepted: the dispatcher asks for an answer">
       <o>{@HEMS}, {@DSP}. Vous prenez la mission ? Merci de confirmer sur la tablette.</o>
       <o>{@DSP} à {@HEMS}. On attend votre réponse pour la mission.</o>
       <o>{@HEMS}, {@DSP}. Vous avez bien reçu la mission ? Merci de confirmer si vous la prenez.</o>
@@ -3449,7 +3449,7 @@
       <o>{@HEMS}, {@DSP}. Vous pouvez prendre l'appel ? On a besoin d'une réponse.</o>
       <o>{@HEMS}, {@DSP}. J'ai besoin de savoir si vous prenez celle-ci.</o>
     </message>
-    <message key="DSA.REASSIGN" actor="8" radio="on" new="1" trigger="a new dispatch arrives while the previous one was not accepted: the dispatcher says it was reassigned">
+    <message key="DSA.REASSIGN" actor="8" radio="ext" new="1" trigger="a new dispatch arrives while the previous one was not accepted: the dispatcher says it was reassigned">
       <o>{@HEMS}, {@DSP}. La mission précédente a été réattribuée à une autre équipe. J'en ai une nouvelle pour vous.</o>
       <o>{@DSP} à {@HEMS}. J'ai confié l'appel précédent à une autre équipe. Nouvelle mission à suivre.</o>
       <o>{@HEMS}, {@DSP}. Oubliez la mission précédente, une autre équipe l'a prise. Nouvel appel pour vous.</o>
@@ -3457,7 +3457,7 @@
       <o>{@HEMS}, {@DSP}. Appel précédent réattribué, une autre équipe s'en occupe. En voici un nouveau.</o>
       <o>{@HEMS}, {@DSP}. Une autre équipe a pris l'appel précédent. En voici un nouveau.</o>
     </message>
-    <message key="DSP.RQ" actor="2" radio="on" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
+    <message key="DSP.RQ" actor="2" radio="ext" new="1" trigger="the pilot asks the dispatcher for an update after the tasking">
       <o>{@DSP}, {@HEMS}. Mission reçue. Demandons toute mise à jour sur le patient et les équipes au sol.</o>
       <o>{@DSP}, {@HEMS}, nous avons bien reçu la mission. Merci de nous informer de l'état du patient et des équipes sur place.</o>
       <o>{@HEMS} à {@DSP}, mission reçue. Avez-vous d'autres informations pour nous ?</o>
@@ -3465,7 +3465,7 @@
       <o>{@DSP}, {@HEMS}. Mission reçue, des mises à jour pour nous avant de partir ?</o>
       <o>{@DSP}, {@HEMS}. C'est noté. Autre chose à nous dire avant le décollage ?</o>
     </message>
-    <message key="DSP.ANS.ACC" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: accident">
+    <message key="DSP.ANS.ACC" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: accident">
       <o>{@HEMS}, {@DSP}. Reçu. Des blessés sont signalés sur les lieux et des équipes au sol sont engagées. Je vous tiens informés dès que j'en sais plus.</o>
       <o>{@HEMS}, reçu. L'appelant signale des blessés sur les lieux. Les équipes au sol sont en route, et je vous transmets toute nouvelle information.</o>
       <o>{@HEMS}, {@DSP}. Pas d'autres détails pour l'instant. Des équipes au sol sont engagées, je vous tiens informés.</o>
@@ -3473,7 +3473,7 @@
       <o>Reçu {@HEMS}. Rien de nouveau pour l'instant, les équipes sont en route. Je vous appelle si j'en ai plus.</o>
       <o>Rien de plus pour l'instant, {@HEMS}. Les équipes au sol roulent, je vous préviens dès que j'ai du nouveau.</o>
     </message>
-    <message key="DSP.ANS.INJ" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: injured only, the pilot chooses landing point and destination">
+    <message key="DSP.ANS.INJ" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: injured only, the pilot chooses landing point and destination">
       <o>{@HEMS}, {@DSP}. La victime est à la position signalée. Vous choisissez le point de poser et la destination, et je vous assiste à la radio.</o>
       <o>{@HEMS}, reçu. Le blessé est à la position indiquée dans la mission. Le point de poser et l'hôpital de destination sont à votre choix.</o>
       <o>{@HEMS}, {@DSP}. Aucune équipe au sol n'est engagée. Vous décidez de la zone de poser et de l'hôpital, appelez-moi pour tout besoin.</o>
@@ -3481,7 +3481,7 @@
       <o>Reçu {@HEMS}. C'est vous qui décidez : le point de poser et l'hôpital sont à vous. Je suis là si besoin.</o>
       <o>{@HEMS}, celle-ci est pour vous. Choisissez votre zone et votre hôpital, et appelez si vous avez besoin de quoi que ce soit.</o>
     </message>
-    <message key="DSP.ANS.SAR" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: search and rescue">
+    <message key="DSP.ANS.SAR" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: search and rescue">
       <o>{@HEMS}, {@DSP}. Reçu. Pas d'autres informations sur la personne : la recherche se base sur la dernière position connue. Signalez-vous dès que vous avez un contact.</o>
       <o>{@HEMS}, reçu. La dernière position connue est la seule information dont nous disposons. Signalez tout contact, s'il vous plaît.</o>
       <o>{@HEMS}, {@DSP}. Rien de nouveau sur la recherche. Signalez-vous quand vous avez un contact visuel.</o>
@@ -3489,7 +3489,7 @@
       <o>Reçu {@HEMS}. C'est tout ce qu'on a, c'est la dernière position connue. Appelez-moi quand vous les voyez.</o>
       <o>C'est tout ce qu'on sait, {@HEMS}. Bonne chance, et appelez-moi dès que vous les trouvez.</o>
     </message>
-    <message key="DSP.ANS.TRF" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: patient transfer">
+    <message key="DSP.ANS.TRF" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: patient transfer">
       <o>{@HEMS}, {@DSP}. Reçu. L'hôpital de départ vous attend et le patient est prêt pour le transfert. L'hôpital receveur a été prévenu.</o>
       <o>{@HEMS}, reçu. Le patient est prêt à l'hôpital de départ et la destination a été prévenue de votre arrivée.</o>
       <o>{@HEMS}, {@DSP}. Les deux hôpitaux sont prévenus. Le patient sera prêt à votre arrivée.</o>
@@ -3497,7 +3497,7 @@
       <o>Reçu {@HEMS}. Ils vous attendent au point de récupération, et la destination sait que vous êtes en route.</o>
       <o>Tout est prêt des deux côtés, {@HEMS}. On vous attend au point de récupération et la destination est prête.</o>
     </message>
-    <message key="DSP.ANS.ORG" actor="8" radio="on" new="1" trigger="the dispatcher answers the pilot: organ transport">
+    <message key="DSP.ANS.ORG" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: organ transport">
       <o>{@HEMS}, {@DSP}. Reçu. Le conteneur est prêt au point de récupération et l'équipe receveuse attend. Communiquez votre heure d'arrivée estimée, s'il vous plaît.</o>
       <o>{@HEMS}, reçu. L'organe est conditionné et prêt à être récupéré. L'équipe de greffe attend, communiquez votre heure d'arrivée dès que possible.</o>
       <o>{@HEMS}, {@DSP}. Le point de récupération est prêt et la destination est en attente. Le délai est serré, communiquez votre heure d'arrivée.</o>
@@ -3569,7 +3569,7 @@
       <o>Tout est prêt. HPG Companion tourne en mode réduit.</o>
       <o>Voix prêtes. HPG Companion est en arrière-plan.</o>
     </message>
-    <message key="OBJ.ORG.T" actor="8" radio="on" trigger="objective of an organ transport (medical team transport)" new="1">
+    <message key="OBJ.ORG.T" actor="8" radio="ext" trigger="objective of an organ transport (medical team transport)" new="1">
       <o>Récupérez l'équipe médicale au point désigné et amenez-la à destination avant la limite de temps. L'opération attend.</o>
       <o>Récupérez l'équipe chirurgicale et son matériel au point désigné et emmenez-les à destination à temps. Chaque minute compte.</o>
       <o>Embarquez l'équipe médicale au point de récupération et déposez-la à l'hôpital avant l'échéance.</o>
@@ -3577,7 +3577,7 @@
       <o>Mission rapide : amenez les médecins à destination avant l'échéance, on a besoin d'eux là-bas.</o>
       <o>L'équipe compte sur vous. Récupérez-les, volez direct, et soyez à l'heure.</o>
     </message>
-    <message key="OBJ.ORG.B" actor="8" radio="on" trigger="objective of an organ transport (blood supply transport)" new="1">
+    <message key="OBJ.ORG.B" actor="8" radio="ext" trigger="objective of an organ transport (blood supply transport)" new="1">
       <o>Récupérez les produits sanguins au point désigné et livrez-les à destination dans le délai imparti.</o>
       <o>Récupérez les poches de sang au point désigné et emmenez-les à l'hôpital avant l'échéance. Gardez le conteneur à plat.</o>
       <o>Transportez les produits sanguins urgents du point de récupération à la destination le plus vite possible, dans le délai imparti.</o>
@@ -3617,7 +3617,7 @@
       <o>Récupération du sang deux milles devant. On se pose, on charge, on redécolle.</o>
       <o>Deux milles jusqu'au conteneur. Arrêt court et on continue.</o>
     </message>
-    <message key="DSP.ANS.ORG.T" actor="8" radio="on" trigger="the dispatcher answers the pilot: organ transport (medical team transport)" new="1">
+    <message key="DSP.ANS.ORG.T" actor="8" radio="ext" trigger="the dispatcher answers the pilot: organ transport (medical team transport)" new="1">
       <o>{@HEMS}, {@DSP}. Reçu. L'équipe est prête au point de récupération avec son matériel. L'hôpital attend, communiquez votre heure d'arrivée estimée.</o>
       <o>{@HEMS}, reçu. Les médecins sont réunis au point de récupération. Le bloc opératoire est prêt, communiquez votre heure d'arrivée dès que possible.</o>
       <o>{@HEMS}, {@DSP}. Compris. L'équipe attend sur l'hélisurface. Gardez la limite de temps en tête et communiquez l'heure d'arrivée.</o>
@@ -3625,7 +3625,7 @@
       <o>{@HEMS}, reçu. L'équipe attend, gardez la limite de temps en tête. Signalez-vous quand vous êtes en vol avec l'équipe.</o>
       <o>{@HEMS}, {@DSP}. Compris. Les médecins sont prêts à embarquer. L'hôpital demande votre heure d'arrivée.</o>
     </message>
-    <message key="DSP.ANS.ORG.B" actor="8" radio="on" trigger="the dispatcher answers the pilot: organ transport (blood supply transport)" new="1">
+    <message key="DSP.ANS.ORG.B" actor="8" radio="ext" trigger="the dispatcher answers the pilot: organ transport (blood supply transport)" new="1">
       <o>{@HEMS}, {@DSP}. Reçu. Le conteneur de sang est prêt au point de récupération. L'hôpital attend, communiquez votre heure d'arrivée estimée.</o>
       <o>{@HEMS}, reçu. Les poches de sang sont conditionnées et prêtes à être récupérées. Le service attend, communiquez votre heure d'arrivée dès que possible.</o>
       <o>{@HEMS}, {@DSP}. Compris. Le conteneur attend sur l'hélisurface. Gardez la limite de temps en tête et communiquez l'heure d'arrivée.</o>
@@ -3745,7 +3745,7 @@
       <o>On a raté l'heure. Au moins, le sang est là-bas.</o>
       <o>Dommage, on était en retard. Le sang est entre de bonnes mains maintenant.</o>
     </message>
-    <message key="PCK.CALL.ORG.T" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (medical team transport)" new="1">
+    <message key="PCK.CALL.ORG.T" actor="2" radio="ext" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (medical team transport)" new="1">
       <o>Point de récupération, {@HEMS} en approche pour l'équipe, arrivée dans {mins:0}. Merci de tenir les médecins et le matériel prêts.</o>
       <o>Point de récupération, {@HEMS}, à environ {mins:0}. L'équipe doit être prête à embarquer, s'il vous plaît.</o>
       <o>Point de récupération, {@HEMS}, nous arrivons dans {mins:0}. Équipe et valises prêtes sur l'hélisurface, s'il vous plaît.</o>
@@ -3753,7 +3753,7 @@
       <o>Point de récupération, {@HEMS}, à {mins:0}. Médecins et valises sur l'hélisurface, s'il vous plaît, pour qu'on reparte aussitôt.</o>
       <o>{@HEMS} en approche, {mins:0} avant la récupération. Équipe prête à embarquer dès le poser, s'il vous plaît.</o>
     </message>
-    <message key="PCK.CALL.ORG.B" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (blood supply transport)" new="1">
+    <message key="PCK.CALL.ORG.B" actor="2" radio="ext" group="pcko" seq="1" prio="2" age="90" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready (blood supply transport)" new="1">
       <o>Point de récupération, {@HEMS} en approche pour les produits sanguins, arrivée dans {mins:0}. Merci de tenir le conteneur prêt.</o>
       <o>Point de récupération, {@HEMS}, à environ {mins:0}. Le sang doit être prêt à charger, s'il vous plaît.</o>
       <o>Point de récupération, {@HEMS}, nous arrivons dans {mins:0}. Conteneur prêt sur l'hélisurface, s'il vous plaît.</o>
@@ -6257,15 +6257,127 @@
       <o>Et il est aussi dans les profils, vous pouvez donc avoir un profil qui sait tout et un profil qui veut le silence.</o>
       <o>Et il est dans les profils, donc un profil peut être un monsieur je-sais-tout et un autre un moine.</o>
     </message>
-    <message key="AMB.DEP.DSP" actor="8" radio="on" group="ambdep" seq="1" new="1" trigger="the ambulance has loaded the patient and leaves for the hospital (the dispatcher tells it)">
-      <o>{@PLT}, {@DSP}. L'ambulance a chargé le patient et part vers l'hôpital.</o>
+    <message key="AMB.DEP.DSP" actor="8" radio="ext" group="ambdep" seq="1" new="1" trigger="the ambulance has loaded the patient and leaves for the hospital (the dispatcher tells it)">
+      <o>{@HEMS}, {@DSP}. L'ambulance a chargé le patient et part vers l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. L'équipe au sol a le patient à bord et le transporte à l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. L'ambulance quitte les lieux avec le patient, direction l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. Patient chargé dans l'ambulance, ils partent maintenant vers l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. L'ambulance a pris le patient et roule vers l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. Bonne nouvelle, l'ambulance a le patient et roule vers l'hôpital.</o>
     </message>
-    <message key="AMB.CAN.DSP" actor="8" radio="on" group="ambcan" seq="1" new="1" trigger="the dispatch is cancelled because the ground units take every patient">
+    <message key="CMD.101" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 101)">
+      <o>Reçu, opération de treuillage.</o>
+      <o>Roger, opération de treuillage.</o>
+      <o>Affirmatif, opération de treuillage.</o>
+      <o>Compris, opération de treuillage.</o>
+      <o>opération de treuillage, bien reçu.</o>
+      <o>On s'en occupe : opération de treuillage.</o>
+    </message>
+    <message key="CMD.102" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 102)">
+      <o>Reçu, treuil en haut.</o>
+      <o>Roger, treuil en haut.</o>
+      <o>Affirmatif, treuil en haut.</o>
+      <o>Compris, treuil en haut.</o>
+      <o>treuil en haut, bien reçu.</o>
+      <o>On s'en occupe : treuil en haut.</o>
+    </message>
+    <message key="CMD.103" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 103)">
+      <o>Reçu, treuil en bas.</o>
+      <o>Roger, treuil en bas.</o>
+      <o>Affirmatif, treuil en bas.</o>
+      <o>Compris, treuil en bas.</o>
+      <o>treuil en bas, bien reçu.</o>
+      <o>On s'en occupe : treuil en bas.</o>
+    </message>
+    <message key="CMD.104" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 104)">
+      <o>Reçu, chargement au sol.</o>
+      <o>Roger, chargement au sol.</o>
+      <o>Affirmatif, chargement au sol.</o>
+      <o>Compris, chargement au sol.</o>
+      <o>chargement au sol, bien reçu.</o>
+      <o>On s'en occupe : chargement au sol.</o>
+    </message>
+    <message key="CMD.105" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 105)">
+      <o>Reçu, posé sur les patins.</o>
+      <o>Roger, posé sur les patins.</o>
+      <o>Affirmatif, posé sur les patins.</o>
+      <o>Compris, posé sur les patins.</o>
+      <o>posé sur les patins, bien reçu.</o>
+      <o>On s'en occupe : posé sur les patins.</o>
+    </message>
+    <message key="CMD.106" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 106)">
+      <o>Reçu, décision, on continue.</o>
+      <o>Roger, décision, on continue.</o>
+      <o>Affirmatif, décision, on continue.</o>
+      <o>Compris, décision, on continue.</o>
+      <o>décision, on continue, bien reçu.</o>
+      <o>On s'en occupe : décision, on continue.</o>
+    </message>
+    <message key="CMD.107" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 107)">
+      <o>Reçu, deuxième décision, on continue.</o>
+      <o>Roger, deuxième décision, on continue.</o>
+      <o>Affirmatif, deuxième décision, on continue.</o>
+      <o>Compris, deuxième décision, on continue.</o>
+      <o>deuxième décision, on continue, bien reçu.</o>
+      <o>On s'en occupe : deuxième décision, on continue.</o>
+    </message>
+    <message key="CMD.108" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 108)">
+      <o>Reçu, brancard verrouillé dans l'ambulance.</o>
+      <o>Roger, brancard verrouillé dans l'ambulance.</o>
+      <o>Affirmatif, brancard verrouillé dans l'ambulance.</o>
+      <o>Compris, brancard verrouillé dans l'ambulance.</o>
+      <o>brancard verrouillé dans l'ambulance, bien reçu.</o>
+      <o>On s'en occupe : brancard verrouillé dans l'ambulance.</o>
+    </message>
+    <message key="CMD.109" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 109)">
+      <o>Reçu, treuil dehors.</o>
+      <o>Roger, treuil dehors.</o>
+      <o>Affirmatif, treuil dehors.</o>
+      <o>Compris, treuil dehors.</o>
+      <o>treuil dehors, bien reçu.</o>
+      <o>On s'en occupe : treuil dehors.</o>
+    </message>
+    <message key="CMD.110" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 110)">
+      <o>Reçu, treuil rentré.</o>
+      <o>Roger, treuil rentré.</o>
+      <o>Affirmatif, treuil rentré.</o>
+      <o>Compris, treuil rentré.</o>
+      <o>treuil rentré, bien reçu.</o>
+      <o>On s'en occupe : treuil rentré.</o>
+    </message>
+    <message key="CMD.111" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 111)">
+      <o>Reçu, sauvetage ici.</o>
+      <o>Roger, sauvetage ici.</o>
+      <o>Affirmatif, sauvetage ici.</o>
+      <o>Compris, sauvetage ici.</o>
+      <o>sauvetage ici, bien reçu.</o>
+      <o>On s'en occupe : sauvetage ici.</o>
+    </message>
+    <message key="CMD.112" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 112)">
+      <o>Reçu, sauvetage retour.</o>
+      <o>Roger, sauvetage retour.</o>
+      <o>Affirmatif, sauvetage retour.</o>
+      <o>Compris, sauvetage retour.</o>
+      <o>sauvetage retour, bien reçu.</o>
+      <o>On s'en occupe : sauvetage retour.</o>
+    </message>
+    <message key="CMD.113" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 113)">
+      <o>Reçu, seconde ambulance.</o>
+      <o>Roger, seconde ambulance.</o>
+      <o>Affirmatif, seconde ambulance.</o>
+      <o>Compris, seconde ambulance.</o>
+      <o>seconde ambulance, bien reçu.</o>
+      <o>On s'en occupe : seconde ambulance.</o>
+    </message>
+    <message key="CMD.114" actor="2" radio="auto" group="cmdrb" seq="1" new="1" trigger="the copilot reads back an accepted spoken command (speech bridge code 114)">
+      <o>Reçu, déchargement de l'ambulance.</o>
+      <o>Roger, déchargement de l'ambulance.</o>
+      <o>Affirmatif, déchargement de l'ambulance.</o>
+      <o>Compris, déchargement de l'ambulance.</o>
+      <o>déchargement de l'ambulance, bien reçu.</o>
+      <o>On s'en occupe : déchargement de l'ambulance.</o>
+    </message>
+    <message key="AMB.CAN.DSP" actor="8" radio="ext" group="ambcan" seq="1" new="1" trigger="the dispatch is cancelled because the ground units take every patient">
       <o>{@HEMS}, {@DSP}. Votre mission est annulée, l'ambulance prend en charge tous les patients. Merci, retour à la base.</o>
       <o>{@HEMS}, {@DSP}. Annulez la mission, les équipes au sol transportent tout le monde. Retour à la base, merci.</o>
       <o>{@HEMS}, {@DSP}. On annule votre mission : les patients sont dans l'ambulance. Vous pouvez rentrer à la base.</o>
@@ -7170,7 +7282,7 @@
       <o>{role:0} a besoin d'un médecin tout de suite. C'est grave.</o>
       <o>{role:0} ne va pas bien du tout. Il faut rejoindre un hôpital.</o>
     </message>
-    <message key="CEM.RAD.D" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is dead (argument 0 = the role)">
+    <message key="CEM.RAD.D" actor="2" radio="ext" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is dead (argument 0 = the role)">
       <o>Régulation, ici {@HEMS}. On a eu un crash et {role:0} est décédé. On annule la mission et on part vers l'hôpital.</o>
       <o>{@HEMS} à régulation : {role:0} est mort dans l'impact. Mission annulée, on part à l'hôpital.</o>
       <o>Régulation, ici {@HEMS}, accident à bord. {role:0} est décédé. On annule la mission.</o>
@@ -7178,7 +7290,7 @@
       <o>{@HEMS} à régulation, {role:0} n'a pas survécu à l'impact. On annule la mission.</o>
       <o>Régulation, ici {@HEMS} : crash, {role:0} décédé. On annule la mission et on vole vers l'hôpital.</o>
     </message>
-    <message key="CEM.RAD.C" actor="2" radio="on" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is critical (argument 0 = the role)">
+    <message key="CEM.RAD.C" actor="2" radio="ext" prio="3" new="1" trigger="the designated member (the copilot, else the surviving one) calls the dispatcher: a crew member is critical (argument 0 = the role)">
       <o>Régulation, ici {@HEMS}. On a eu un crash et {role:0} est dans un état critique. On a besoin d'un hôpital.</o>
       <o>{@HEMS} à régulation : {role:0} est dans un état critique après l'impact. Demandons un hôpital.</o>
       <o>Régulation, ici {@HEMS}, accident à bord. {role:0} est dans un état critique.</o>
@@ -7210,7 +7322,7 @@
       <o>Compris : on continue. {role:0} recevra des soins au prochain arrêt à l'hôpital.</o>
       <o>La mission continue. On confiera {role:0} à l'hôpital dès qu'on en atteindra un.</o>
     </message>
-    <message key="CEM.DSP" actor="8" radio="on" prio="3" new="1" trigger="the dispatcher answers the report of a crew member dead or critical: mission cancelled, another unit for the patient">
+    <message key="CEM.DSP" actor="8" radio="ext" prio="3" new="1" trigger="the dispatcher answers the report of a crew member dead or critical: mission cancelled, another unit for the patient">
       <o>{@HEMS}, {@DSP}. Reçu, votre mission est annulée. Une autre équipe est engagée pour le patient. Dirigez-vous vers l'hôpital.</o>
       <o>{@DSP} à {@HEMS}. Accident bien reçu. Le patient sur place aura une autre équipe. Dirigez-vous vers l'hôpital.</o>
       <o>{@HEMS}, {@DSP}. Bien reçu, mission annulée. Une autre équipe prend le patient. Volez vers l'hôpital.</o>
@@ -7226,7 +7338,7 @@
       <o>On se pose immédiatement ! Préparez-vous à l'impact !</o>
       <o>En bas, en bas, en bas ! Posez-vous maintenant !</o>
     </message>
-    <message key="MAY.CALL.F" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, engine fire">
+    <message key="MAY.CALL.F" actor="2" radio="ext" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, engine fire">
       <o>Mayday, mayday, mayday, {@HEMS}. Feu moteur. On se pose immédiatement et on coupe tout. Demandons assistance.</o>
       <o>Mayday, mayday, mayday, ici {@HEMS} : feu dans le moteur, on se pose maintenant, demandons les secours.</o>
       <o>{@HEMS}, mayday, mayday, mayday. Feu moteur, on se pose tout de suite. Envoyez de l'aide.</o>
@@ -7234,7 +7346,7 @@
       <o>Mayday, {@HEMS} : on a un feu moteur. On se pose immédiatement, demandons de l'aide au sol.</o>
       <o>Mayday, mayday, mayday, {@HEMS}, feu à bord, on se pose maintenant. Les secours, s'il vous plaît.</o>
     </message>
-    <message key="MAY.CALL.G" actor="2" radio="on" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, damaged gearbox or transmission">
+    <message key="MAY.CALL.G" actor="2" radio="ext" prio="3" new="1" trigger="critical failure: the designated member calls the mayday, damaged gearbox or transmission">
       <o>Mayday, mayday, mayday, {@HEMS}. Panne de boîte de transmission. On se pose immédiatement et on coupe tout. Demandons assistance.</o>
       <o>Mayday, mayday, mayday, ici {@HEMS} : boîte de transmission endommagée, on se pose maintenant, demandons les secours.</o>
       <o>{@HEMS}, mayday, mayday, mayday. Problème de transmission, on se pose tout de suite. Envoyez de l'aide.</o>
@@ -7242,7 +7354,7 @@
       <o>Mayday, {@HEMS} : on a un problème de boîte de transmission. On se pose immédiatement, demandons de l'aide au sol.</o>
       <o>Mayday, mayday, mayday, {@HEMS}, panne de transmission, on se pose maintenant. Les secours, s'il vous plaît.</o>
     </message>
-    <message key="MAY.DSP" actor="8" radio="on" prio="3" new="1" trigger="critical failure: the dispatcher answers the mayday">
+    <message key="MAY.DSP" actor="8" radio="ext" prio="3" new="1" trigger="critical failure: the dispatcher answers the mayday">
       <o>{@HEMS}, {@DSP}. Mayday reçu. Les secours sont alertés sur votre position. Posez-vous et coupez tout.</o>
       <o>{@DSP} à {@HEMS} : mayday reçu. Les secours sont en route. Posez-vous et coupez tout.</o>
       <o>{@HEMS}, {@DSP}. Nous recevons votre mayday. L'aide est en route, posez-vous et coupez tout.</o>
@@ -7291,6 +7403,48 @@
       <o sex="m">Bonsoir, {@PLT}, {@CPL}. Tout est calme sur l'aire de trafic pour l'instant.</o>
       <o sex="f">Bonsoir, {@PLT}, bonsoir, {@CPL}. Prête quand vous l'êtes.</o>
       <o sex="f">Bonsoir, l'équipage. Tout est en ordre ici.</o>
+    </message>
+    <message key="GRT.TEC.R3" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="2" new="1" trigger="hangar, 3 or more in the crew: the technician greets the doctor too">
+      <o sex="m">Et content de vous voir aussi, {@PAX3}. Bienvenue dans l'équipe.</o>
+      <o sex="m">{@PAX3}, bienvenue. Tout est prêt pour vous trois.</o>
+      <o sex="m">Bonjour {@PAX3} ! Content que vous soyez aussi de service.</o>
+      <o sex="m">{@PAX3}, vous voilà. L'hélicoptère est vérifié et prêt.</o>
+      <o sex="m">Content de vous avoir à bord aujourd'hui, {@PAX3}.</o>
+      <o sex="m">Salut {@PAX3}, bienvenue. Le plein et les vérifications sont faits.</o>
+      <o sex="f">Et bonjour à vous, {@PAX3} ! Ravie de vous avoir de service.</o>
+      <o sex="f">{@PAX3}, bienvenue, ravie de vous voir aussi.</o>
+      <o sex="f">Salut {@PAX3} ! L'hélicoptère est prêt pour vous tous.</o>
+      <o sex="f">Bonjour {@PAX3}, bienvenue à la base.</o>
+      <o sex="f">{@PAX3}, ravie de vous voir. Tout est prêt pour le vol.</o>
+      <o sex="f">Ravie de vous avoir avec nous aujourd'hui, {@PAX3} !</o>
+    </message>
+    <message key="GRT.TEC.R4" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="2" new="1" trigger="hangar, 4 or more in the crew: the technician greets the doctor and the chief too">
+      <o sex="m">Bonjour {@PAX3}, bonjour {@PAX1}, content de vous voir tous les deux aussi.</o>
+      <o sex="m">{@PAX3}, {@PAX1}, bienvenue. Tout est prêt pour vous quatre.</o>
+      <o sex="m">Et bonjour à {@PAX3} et {@PAX1} ! Content que vous soyez de service.</o>
+      <o sex="m">{@PAX3}, {@PAX1}, vous voilà. L'hélicoptère est prêt.</o>
+      <o sex="m">Bienvenue, {@PAX3} et {@PAX1}. Les vérifications sont faites.</o>
+      <o sex="m">Content de vous voir, {@PAX3} et {@PAX1} !</o>
+      <o sex="f">Salut {@PAX3}, salut {@PAX1} ! Ravie de vous avoir tous les deux de service.</o>
+      <o sex="f">{@PAX3}, {@PAX1}, bienvenue, ravie de vous voir aussi.</o>
+      <o sex="f">Et bonjour à vous deux à l'arrière, {@PAX3} et {@PAX1} !</o>
+      <o sex="f">Bonjour {@PAX3}, bonjour {@PAX1}, bienvenue à la base.</o>
+      <o sex="f">{@PAX3} et {@PAX1}, ravie de vous avoir à bord aujourd'hui.</o>
+      <o sex="f">Salut vous deux, {@PAX3} et {@PAX1}, tout est prêt.</o>
+    </message>
+    <message key="GRT.TEC.R5" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="2" new="1" trigger="hangar, 5 in the crew: the technician greets the whole rear crew too">
+      <o sex="m">Bonjour {@PAX3}, {@PAX1} et {@PAX2}, content de vous voir tous.</o>
+      <o sex="m">{@PAX3}, {@PAX1}, {@PAX2}, bienvenue. Toute l'équipe est là, tout est prêt.</o>
+      <o sex="m">Et bonjour à {@PAX3}, {@PAX1} et {@PAX2} ! Un équipage complet aujourd'hui.</o>
+      <o sex="m">{@PAX3}, {@PAX1}, {@PAX2}, vous voilà. L'hélicoptère est prêt pour vous tous.</o>
+      <o sex="m">Bienvenue, {@PAX3}, {@PAX1} et {@PAX2}. Les vérifications sont faites.</o>
+      <o sex="m">Content de voir toute l'équipe, {@PAX3}, {@PAX1} et {@PAX2} !</o>
+      <o sex="f">Salut {@PAX3}, {@PAX1} et {@PAX2} ! Ravie d'avoir toute l'équipe ici.</o>
+      <o sex="f">{@PAX3}, {@PAX1}, {@PAX2}, bienvenue, ravie de vous voir tous.</o>
+      <o sex="f">Et bonjour à vous trois à l'arrière, {@PAX3}, {@PAX1} et {@PAX2} !</o>
+      <o sex="f">Bonjour {@PAX3}, {@PAX1} et {@PAX2}, bienvenue à la base.</o>
+      <o sex="f">{@PAX3}, {@PAX1}, {@PAX2}, ravie de vous avoir tous à bord aujourd'hui.</o>
+      <o sex="f">Salut vous trois, {@PAX3}, {@PAX1} et {@PAX2}, tout est prêt.</o>
     </message>
     <message key="GRT.CPL.M" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, morning: the copilot answers the technician by name">
       <o>Bonjour, {@TECH} ! Tout va bien ici ?</o>
@@ -7736,7 +7890,7 @@
       <o>{@HEMS}, ici {hrs:1}. Bien reçu. La zone est libre, vent {0} degrés {3} noeuds. Les secouristes sont prêts.</o>
       <o>{@HEMS}, ici {hrs:1}. Affirmatif. Hélisurface libre, vent du {0} degrés pour {3} noeuds. Prêts pour l'embarquement.</o>
     </message>
-    <message key="SAR.FND.PLT" actor="2" radio="on" group="sarf" seq="1" prio="2" age="90" new="1" trigger="search and rescue: the target is found, the copilot tells the dispatcher with the position (args: latitude degrees, minutes, N or S, longitude degrees, minutes, E or W)">
+    <message key="SAR.FND.PLT" actor="2" radio="ext" group="sarf" seq="1" prio="2" age="90" new="1" trigger="search and rescue: the target is found, the copilot tells the dispatcher with the position (args: latitude degrees, minutes, N or S, longitude degrees, minutes, E or W)">
       <o>Régulation, ici {@HEMS}. Cible trouvée. Position {0} degrés {mins:1} {comp:2}, {3} degrés {mins:4} {comp:5}.</o>
       <o>Régulation, ici {@HEMS}. Nous avons la cible en vue, à {0} degrés {mins:1} {comp:2}, {3} degrés {mins:4} {comp:5}.</o>
       <o>Régulation, ici {@HEMS}. Cible de la recherche localisée, position approximative {0} degrés {mins:1} {comp:2}, {3} degrés {mins:4} {comp:5}. Nous descendons évaluer.</o>
@@ -7752,7 +7906,7 @@
       <o>{@HEMS}, ici la régulation. Parfait, position reçue. J'alerte l'ambulance pour le trajet vers l'hôpital.</o>
       <o>{@HEMS}, ici la régulation. Bien reçu, position {0} degrés {mins:1} {comp:2}, {3} degrés {mins:4} {comp:5}. Poursuivez votre évaluation.</o>
     </message>
-    <message key="HOS.MAR.P" actor="2" radio="on" group="hosm" seq="1" prio="2" age="90" new="1" trigger="the hospital marshal is expected: the copilot asks the hospital to send him to the helipad">
+    <message key="HOS.MAR.P" actor="2" radio="ext" group="hosm" seq="1" prio="2" age="90" new="1" trigger="the hospital marshal is expected: the copilot asks the hospital to send him to the helipad">
       <o>Hôpital, ici {@HEMS}. Nous demandons le placeur sur l'hélisurface, s'il vous plaît.</o>
       <o>Hôpital, ici {@HEMS}. Pouvez-vous envoyer le placeur sur l'hélisurface pour notre poser ?</o>
       <o>Hôpital, ici {@HEMS}. Nous souhaiterions le placeur sur l'hélisurface, s'il vous plaît.</o>
@@ -7768,7 +7922,7 @@
       <o>{@HEMS}, reçu. Placeur sur l'hélisurface dans une minute.</o>
       <o>Compris, {@HEMS}. Le placeur arrive sur l'hélisurface.</o>
     </message>
-    <message key="HOS.FIN.P" actor="2" radio="on" group="hosf" seq="1" prio="2" age="90" new="1" trigger="final approach to the hospital helipad (about 900 m): the copilot asks to land">
+    <message key="HOS.FIN.P" actor="2" radio="ext" group="hosf" seq="1" prio="2" age="90" new="1" trigger="final approach to the hospital helipad (about 900 m): the copilot asks to land">
       <o>Hôpital, ici {@HEMS}. Courte finale, demandons à nous poser sur l'hélisurface.</o>
       <o>Hôpital, ici {@HEMS}. Nous sommes en finale pour l'hélisurface, demandons l'autorisation de nous poser.</o>
       <o>Hôpital, ici {@HEMS}. Approche finale, merci de confirmer que l'hélisurface est dégagée.</o>
@@ -7784,7 +7938,7 @@
       <o>Reçu, {@HEMS}. Hélisurface dégagée, vent {0} degrés {1} noeuds. Bienvenue.</o>
       <o>{@HEMS}, poser approuvé. Vent {0} pour {1} noeuds.</o>
     </message>
-    <message key="HOS.PAD.P" actor="2" radio="on" group="hosp" seq="1" prio="2" age="90" new="1" trigger="the helicopter is on the hospital helipad: the copilot announces the handover">
+    <message key="HOS.PAD.P" actor="2" radio="ext" group="hosp" seq="1" prio="2" age="90" new="1" trigger="the helicopter is on the hospital helipad: the copilot announces the handover">
       <o>Hôpital, ici {@HEMS}. Sur l'hélisurface. Nous commençons la transmission.</o>
       <o>Hôpital, ici {@HEMS}. Nous sommes posés sur l'hélisurface. Envoyez l'équipe, s'il vous plaît.</o>
       <o>Hôpital, ici {@HEMS}. Posés. Prêts pour la transmission.</o>
@@ -7816,7 +7970,7 @@
       <o>Conscience fluctuante, stable à la fin. Le rapport contient les détails.</o>
       <o>Les dernières constantes sont sur le moniteur et dans le rapport. Rien d'inattendu.</o>
     </message>
-    <message key="HOS.DEP.P" actor="2" radio="on" group="hosd" seq="1" prio="2" age="90" new="1" trigger="the handover is done and the crew is aboard: the copilot tells the hospital that the helicopter leaves">
+    <message key="HOS.DEP.P" actor="2" radio="ext" group="hosd" seq="1" prio="2" age="90" new="1" trigger="the handover is done and the crew is aboard: the copilot tells the hospital that the helicopter leaves">
       <o>Hôpital, ici {@HEMS}. Transmission terminée, nous sommes prêts à partir.</o>
       <o>Hôpital, ici {@HEMS}. Équipage à bord, prêts au départ. Merci pour votre aide.</o>
       <o>Hôpital, ici {@HEMS}. Nous quittons l'hélisurface, retour à la base.</o>
@@ -7840,7 +7994,7 @@
       <o>Merci, l'équipage. Le temps est écoulé, nous ferons de notre mieux avec.</o>
       <o>C'est noté. En retard, mais on essaie. L'équipe prend le relais.</o>
     </message>
-    <message key="PCK.CALL.TRF" actor="2" radio="on" group="pckt" seq="1" prio="2" age="90" new="1" trigger="patient transfer: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
+    <message key="PCK.CALL.TRF" actor="2" radio="ext" group="pckt" seq="1" prio="2" age="90" new="1" trigger="patient transfer: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
       <o>Point de récupération, {@HEMS} en approche pour le patient, arrivée dans {mins:0}. Merci de tenir le patient et les documents prêts.</o>
       <o>Point de récupération, {@HEMS}, à environ {mins:0} pour le transfert. Merci d'être prêts avec le patient.</o>
       <o>Point de récupération, {@HEMS}, arrivée dans {mins:0} pour le transfert du patient. Le patient est-il prêt à être chargé ?</o>
@@ -7848,7 +8002,7 @@
       <o>Point de récupération, {@HEMS}, {mins:0} avant le transfert. L'équipe de brancardage prête, s'il vous plaît.</o>
       <o>Point de récupération, {@HEMS} en approche, {mins:0}. Patient et documents prêts, s'il vous plaît.</o>
     </message>
-    <message key="PCK.CALL.ORG" actor="2" radio="on" group="pcko" seq="1" prio="2" age="90" new="1" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
+    <message key="PCK.CALL.ORG" actor="2" radio="ext" group="pcko" seq="1" prio="2" age="90" new="1" trigger="organ transport: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
       <o>Point de récupération, {@HEMS} en approche pour l'organe, arrivée dans {mins:0}. Merci de tenir le conteneur prêt.</o>
       <o>Point de récupération, {@HEMS}, à environ {mins:0}. L'organe doit être prêt à charger, s'il vous plaît.</o>
       <o>Point de récupération, {@HEMS}, arrivée dans {mins:0} pour le transport d'organe. Le conteneur est-il prêt ?</o>
@@ -7984,7 +8138,7 @@
       <o>On amène le patient vers {0}. Tout est prêt pour la transmission à l'arrivée.</o>
       <o>Notre destination : {0}. Le patient est stable, gardons un vol en douceur.</o>
     </message>
-    <message key="SVC.REQ" actor="2" radio="on" new="1" trigger="back at the base damaged or with a failure, the crew is taken by the van: the copilot asks the dispatcher for technical assistance">
+    <message key="SVC.REQ" actor="2" radio="ext" new="1" trigger="back at the base damaged or with a failure, the crew is taken by the van: the copilot asks the dispatcher for technical assistance">
       <o>{@DSP}, {@HEMS}. Nous sommes de retour avec des dommages et des pannes sur l'hélicoptère. Demande d'assistance technique au point de poser.</o>
       <o>{@DSP}, {@HEMS}. L'hélicoptère est endommagé. Envoyez les techniciens à notre position, s'il vous plaît.</o>
       <o>{@DSP} de {@HEMS}. Nous avons des pannes à bord, assistance technique demandée.</o>
@@ -7992,7 +8146,7 @@
       <o>{@DSP}, {@HEMS}. Nous avons besoin des techniciens ici, l'hélicoptère a des dommages et des pannes.</o>
       <o>{@HEMS} à {@DSP}. Dommages et pannes après la mission, envoyez une assistance technique.</o>
     </message>
-    <message key="SVC.ACK" actor="8" radio="on" new="1" trigger="the dispatcher confirms the technical assistance: the technician comes with the service truck">
+    <message key="SVC.ACK" actor="8" radio="ext" new="1" trigger="the dispatcher confirms the technical assistance: the technician comes with the service truck">
       <o>{@HEMS}, {@DSP}. Reçu, le technicien arrive avec le camion de service.</o>
       <o>{@DSP} à {@HEMS}. L'assistance technique est envoyée, le camion de service quitte le hangar.</o>
       <o>{@HEMS}, {@DSP}. Compris, le technicien arrive avec le camion de service.</o>
@@ -8000,7 +8154,7 @@
       <o>{@DSP} à {@HEMS}. Assistance technique confirmée, le camion quitte le hangar.</o>
       <o>{@HEMS}, {@DSP}. Reçu, le technicien roule vers votre position.</o>
     </message>
-    <message key="SVC.ARR" actor="8" radio="on" new="1" trigger="the service truck is parked behind the helicopter">
+    <message key="SVC.ARR" actor="8" radio="ext" new="1" trigger="the service truck is parked behind the helicopter">
       <o>{@HEMS}, {@DSP}. Le camion de service est sur place, le technicien vous attend.</o>
       <o>{@DSP} à {@HEMS}. Le technicien est arrivé avec le camion de service.</o>
       <o>{@HEMS}, {@DSP}. L'assistance technique est derrière votre hélicoptère.</o>
@@ -8008,7 +8162,7 @@
       <o>{@DSP} à {@HEMS}. Le technicien est sur place avec le camion de service.</o>
       <o>{@HEMS}, {@DSP}. Le camion est garé derrière vous, le technicien est prêt.</o>
     </message>
-    <message key="SCN.POL.AMB" actor="8" radio="on" new="1" trigger="crew casualty at the landing point: the dispatcher says that ambulance and police are waiting there">
+    <message key="SCN.POL.AMB" actor="8" radio="ext" new="1" trigger="crew casualty at the landing point: the dispatcher says that ambulance and police are waiting there">
       <o>{@HEMS}, {@DSP}. Une ambulance et la police attendent au point de poser.</o>
       <o>{@DSP} à {@HEMS}. Ambulance et police sont sur place, vous pouvez vous poser.</o>
       <o>{@HEMS}, {@DSP}. L'ambulance et la police sont déjà au point de poser.</o>
@@ -8016,7 +8170,7 @@
       <o>{@DSP} à {@HEMS}. Ambulance et police sont prêtes au point de poser.</o>
       <o>{@HEMS}, {@DSP}. L'ambulance et la police sont toutes deux sur votre point de poser.</o>
     </message>
-    <message key="SCN.POL" actor="8" radio="on" new="1" trigger="the police is waiting at the landing point (deceased patient or crew casualty without ambulance)">
+    <message key="SCN.POL" actor="8" radio="ext" new="1" trigger="the police is waiting at the landing point (deceased patient or crew casualty without ambulance)">
       <o>{@HEMS}, {@DSP}. La police attend au point de poser.</o>
       <o>{@DSP} à {@HEMS}. La police est sur place, vous pouvez vous poser.</o>
       <o>{@HEMS}, {@DSP}. Une patrouille de police est déjà au point de poser.</o>
