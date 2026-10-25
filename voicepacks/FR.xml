@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack FR. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="FR" language="FR" version="17" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="27">
+<voicepack name="FR" language="FR" version="19" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="30">
   <names>
     <name role="PLT">Pilote</name>
     <name role="CPL">Copilote</name>
@@ -6505,7 +6505,7 @@
       <o>Merci, content d'avoir aidé. Bon vol.</o>
       <o>Toujours un plaisir. Volez prudemment.</o>
     </message>
-    <message key="HRD.BASE.Q" actor="1" radio="on" group="hrd" seq="3" new="1" trigger="the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)">
+    <message key="HRD.BASE.Q" actor="1" radio="ext" group="hrd" seq="3" new="1" trigger="the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)">
       <o>Base des secouristes, ici {@HEMS}. On a laissé {hr:0} à {place:1}.</o>
       <o>Base des secouristes, ici {@HEMS}. Nous avons laissé {hr:0} à {place:1}.</o>
       <o>Base des secouristes, ici {@HEMS}. Pour information, on a laissé {hr:0} à {place:1}.</o>
@@ -6521,7 +6521,7 @@
       <o>{@HEMS}, ici la base des secouristes. Bien noté, {hr:0} à {place:1}. Merci pour le transport.</o>
       <o>{@HEMS}, ici la base des secouristes. Noté, {hr:0} à {place:1}. Merci, bon vol.</o>
     </message>
-        <message key="HRQ.PLT.Q" actor="1" radio="on" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
+        <message key="HRQ.PLT.Q" actor="1" radio="ext" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
       <o>{hrs:1}, ici {@HEMS}. Nous venons récupérer {hr:0}. Merci de confirmer que vous êtes prêts.</o>
       <o>{hrs:1}, ici {@HEMS}. Rendez-vous pour {hr:0} : vous êtes prêts de votre côté ?</o>
       <o>{hrs:1}, ici {@HEMS}. Nous arrivons pour {hr:0}. Tenez-vous prêts pour l'embarquement.</o>
@@ -6537,7 +6537,7 @@
       <o>{@HEMS}, ici {hrs:1}. Roger, {hr:0} prêt. Hélisurface dégagée, nous vous attendons.</o>
       <o>{@HEMS}, ici {hrs:1}. Bien reçu. {hr:0} prêt à embarquer, zone de poser libre.</o>
     </message>
-    <message key="HRQ.BRF.ACC" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
+    <message key="HRQ.BRF.ACC" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
       <o>{hrs:1}, ici {@HEMS}. La mission est un accident avec {0} blessés. Briefez les secouristes.</o>
       <o>{hrs:1}, ici {@HEMS}. Accident sur place, {0} blessés signalés. Briefez-les, s'il vous plaît.</o>
       <o>{hrs:1}, ici {@HEMS}. C'est un accident de la route, environ {0} blessés. Dites-leur de se tenir prêts.</o>
@@ -6545,7 +6545,7 @@
       <o>{hrs:1}, ici {@HEMS}. Accident avec {0} blessés. Secouristes, tenez-vous prêts.</o>
       <o>{hrs:1}, ici {@HEMS}. Pour info : accident, {0} blessés. Briefez l'équipe.</o>
     </message>
-    <message key="HRQ.BRF.SAR" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
+    <message key="HRQ.BRF.SAR" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
       <o>{hrs:1}, ici {@HEMS}. La mission est une recherche et sauvetage, {0} personnes à récupérer. Briefez les secouristes.</o>
       <o>{hrs:1}, ici {@HEMS}. Recherche et sauvetage, {0} personnes à récupérer. Briefez-les, s'il vous plaît.</o>
       <o>{hrs:1}, ici {@HEMS}. C'est une recherche et sauvetage avec {0} personnes à récupérer. Dites-leur de se tenir prêts.</o>
@@ -6553,7 +6553,7 @@
       <o>{hrs:1}, ici {@HEMS}. Recherche et sauvetage, {0} personnes. Secouristes, tenez-vous prêts.</o>
       <o>{hrs:1}, ici {@HEMS}. Pour info : recherche et sauvetage, {0} personnes à récupérer. Briefez l'équipe.</o>
     </message>
-    <message key="HRQ.BRF.TRF" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
+    <message key="HRQ.BRF.TRF" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
       <o>{hrs:1}, ici {@HEMS}. La mission est un transfert avec {0} patients. Briefez les secouristes.</o>
       <o>{hrs:1}, ici {@HEMS}. Transfert de patients, {0} patients. Briefez-les, s'il vous plaît.</o>
       <o>{hrs:1}, ici {@HEMS}. C'est un transfert interhospitalier, {0} patients. Dites-leur de se tenir prêts.</o>
@@ -6561,7 +6561,7 @@
       <o>{hrs:1}, ici {@HEMS}. Transfert avec {0} patients. Secouristes, tenez-vous prêts.</o>
       <o>{hrs:1}, ici {@HEMS}. Pour info : transfert, {0} patients. Briefez l'équipe.</o>
     </message>
-    <message key="HRQ.BRF.ORG" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
+    <message key="HRQ.BRF.ORG" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
       <o>{hrs:1}, ici {@HEMS}. La mission est un transport d'organe. Briefez les secouristes.</o>
       <o>{hrs:1}, ici {@HEMS}. Transport d'organe, le temps est critique. Briefez-les, s'il vous plaît.</o>
       <o>{hrs:1}, ici {@HEMS}. C'est un transport d'organe, on ne peut pas perdre de temps. Dites-leur de se tenir prêts.</o>
@@ -6569,7 +6569,7 @@
       <o>{hrs:1}, ici {@HEMS}. Transport d'organe. Secouristes, tenez-vous prêts.</o>
       <o>{hrs:1}, ici {@HEMS}. Pour info : transport d'organe. Briefez l'équipe.</o>
     </message>
-    <message key="HRQ.BRF.INJ" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
+    <message key="HRQ.BRF.INJ" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
       <o>{hrs:1}, ici {@HEMS}. La mission compte {0} blessés. Briefez les secouristes.</o>
       <o>{hrs:1}, ici {@HEMS}. Nous avons {0} blessés. Briefez-les, s'il vous plaît.</o>
       <o>{hrs:1}, ici {@HEMS}. Environ {0} blessés sur place. Dites-leur de se tenir prêts.</o>
@@ -6585,7 +6585,7 @@
       <o>{@HEMS}, ici {hrs:1}. Message reçu, les secouristes sont prêts.</o>
       <o>{@HEMS}, ici {hrs:1}. Reçu, nous faisons passer. Bon vol.</o>
     </message>
-    <message key="HRQ.COR.PLT" actor="1" radio="on" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
+    <message key="HRQ.COR.PLT" actor="1" radio="ext" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
       <o>{hrs:1}, ici {@HEMS}. Correction : il nous faut {hr:0}.</o>
       <o>{hrs:1}, ici {@HEMS}. Correction, la demande est maintenant de {hr:0}.</o>
       <o>{hrs:1}, ici {@HEMS}. Changement d'avis : {hr:0}, s'il vous plaît.</o>
@@ -7874,7 +7874,7 @@
       <o>{@HEMS}, ici la régulation. Les secouristes sont alertés. Rendez-vous : {hrp:1}, pour {hr:0}.</o>
       <o>{@HEMS}, ici la régulation. Des spécialistes vous attendent. Rendez-vous : {hrp:1}. Posez-vous, embarquez {hr:0} et continuez.</o>
     </message>
-    <message key="HRQ.APR.PLT" actor="1" radio="on" group="hrqp" seq="1" new="1" trigger="a few minutes before the pick-up place of the heli rescuers: the pilot gives the minutes to go and asks for the state of the landing area (args: minutes, kind, name)">
+    <message key="HRQ.APR.PLT" actor="1" radio="ext" group="hrqp" seq="1" new="1" trigger="a few minutes before the pick-up place of the heli rescuers: the pilot gives the minutes to go and asks for the state of the landing area (args: minutes, kind, name)">
       <o>{hrs:1}, ici {@HEMS}. Arrivée dans {mins:0} pour l'embarquement des secouristes et du matériel. Merci de confirmer la zone de poser.</o>
       <o>{hrs:1}, ici {@HEMS}. Nous sommes à {mins:0} pour récupérer les secouristes et le matériel. La zone est-elle libre ?</o>
       <o>{hrs:1}, ici {@HEMS}. Arrivée dans {mins:0}, destination : {hrp:1}. Merci de confirmer l'état de la zone de poser.</o>
@@ -7962,7 +7962,7 @@
       <o>Le patient a-t-il perdu connaissance à un moment ?</o>
       <o>Quelles sont les dernières constantes que vous avez relevées ?</o>
     </message>
-    <message key="HOS.A" actor="3" radio="auto" group="hosq" seq="2" prio="1" age="45" new="1" trigger="the handover of a patient: the doctor answers the question of the hospital">
+    <message key="HOS.A" actor="3" radio="ext" group="hosq" seq="2" prio="1" age="45" new="1" trigger="the handover of a patient: the doctor answers the question of the hospital">
       <o>Pas d'allergie connue. Le rapport complet est dans le dossier, vous avez les dernières valeurs.</o>
       <o>Stable pendant le vol, aucun changement. Tout est dans le rapport.</o>
       <o>Un transport court, soigné sur place et surveillé tout du long. Les détails sont dans le rapport.</o>
@@ -8177,5 +8177,427 @@
       <o>{@HEMS}, {@DSP}. La police vous attendra au point de poser.</o>
       <o>{@DSP} à {@HEMS}. Une patrouille est prête au point de poser.</o>
       <o>{@HEMS}, {@DSP}. La police est sur votre point de poser.</o>
+    </message>
+    <message key="FLT.GEN" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 2: one crew member says that there is a failure">
+      <o>Panne !</o>
+      <o>On a une panne !</o>
+      <o>Panne à bord !</o>
+      <o>Une panne ici !</o>
+      <o>Attention, panne !</o>
+      <o>On a un problème !</o>
+    </message>
+    <message key="FLT.CHK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 1: the other crew member verifies">
+      <o>Check.</o>
+      <o>Vérifié.</o>
+      <o>Contrôlé.</o>
+      <o>Confirmé.</o>
+      <o>Je le vois, check.</o>
+      <o>Reçu, vérifié.</o>
+    </message>
+    <message key="FLT.CHIPV" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="MGB chip: the other crew member verifies and proposes the chip burn">
+      <o>Check. Particules confirmées, faisons le chip burn.</o>
+      <o>Vérifié. On fait le chip burn ?</o>
+      <o>Contrôlé. Je propose le chip burn.</o>
+      <o>Confirmé. On lance un chip burn ?</o>
+      <o>Je le vois, check. Chip burn ?</o>
+      <o>Vérifié, tentons le chip burn.</o>
+    </message>
+    <message key="FLT.ENG" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type ENG announced by a crew member (the speaker is drawn)">
+      <o>Moteur {0} en panne !</o>
+      <o>On a perdu le moteur {0} !</o>
+      <o>Le moteur {0} est tombé en panne !</o>
+      <o>Panne du moteur {0} !</o>
+      <o>Le moteur {0} est coupé !</o>
+      <o>Le moteur {0} vient de lâcher !</o>
+    </message>
+    <message key="FLT.FAD1" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FAD1 announced by a crew member (the speaker is drawn)">
+      <o>Problèmes de FADEC sur le moteur {0}.</o>
+      <o>On a des problèmes de FADEC sur le moteur {0}.</o>
+      <o>Le FADEC du moteur {0} nous pose problème.</o>
+      <o>Souci de FADEC sur le moteur {0}.</o>
+      <o>Défaut FADEC sur le moteur {0}.</o>
+      <o>On dirait un problème de FADEC sur le moteur {0}.</o>
+    </message>
+    <message key="FLT.FAD2" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FAD2 announced by a crew member (the speaker is drawn)">
+      <o>FADEC du moteur {0} en panne !</o>
+      <o>Le FADEC du moteur {0} a lâché !</o>
+      <o>On a perdu le FADEC du moteur {0} !</o>
+      <o>Panne FADEC sur le moteur {0} !</o>
+      <o>Le FADEC du moteur {0} est mort !</o>
+      <o>Le FADEC du moteur {0} vient de tomber en panne !</o>
+    </message>
+    <message key="FLT.FIRE" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FIRE announced by a crew member (the speaker is drawn)">
+      <o>Feu moteur {0} !</o>
+      <o>Feu sur le moteur {0} !</o>
+      <o>On a un feu sur le moteur {0} !</o>
+      <o>Le moteur {0} est en feu !</o>
+      <o>Alarme feu moteur {0} !</o>
+      <o>Incendie, moteur {0} !</o>
+    </message>
+    <message key="FLT.HYD" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type HYD announced by a crew member (the speaker is drawn)">
+      <o>Panne du circuit hydraulique {0} !</o>
+      <o>On a perdu le circuit hydraulique {0} !</o>
+      <o>Panne hydraulique {0} !</o>
+      <o>Le circuit hydraulique {0} est en panne !</o>
+      <o>Perte de pression sur le circuit hydraulique {0} !</o>
+      <o>On a une panne sur le circuit hydraulique {0} !</o>
+    </message>
+    <message key="FLT.FPF" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FPF announced by a crew member (the speaker is drawn)">
+      <o>Problème de pompe carburant avant.</o>
+      <o>On a un problème avec la pompe carburant avant.</o>
+      <o>Souci sur la pompe carburant avant.</o>
+      <o>Défaut de la pompe carburant avant.</o>
+      <o>Problème sur la pompe carburant avant.</o>
+      <o>On dirait que la pompe carburant avant a un problème.</o>
+    </message>
+    <message key="FLT.FPA" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FPA announced by a crew member (the speaker is drawn)">
+      <o>Problème de pompe carburant arrière.</o>
+      <o>On a un problème avec la pompe carburant arrière.</o>
+      <o>Souci sur la pompe carburant arrière.</o>
+      <o>Défaut de la pompe carburant arrière.</o>
+      <o>Problème sur la pompe carburant arrière.</o>
+      <o>On dirait que la pompe carburant arrière a un problème.</o>
+    </message>
+    <message key="FLT.LEAK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type LEAK announced by a crew member (the speaker is drawn)">
+      <o>On a probablement un problème de carburant, le carburant baisse trop vite.</o>
+      <o>Je pense qu'on a un problème de carburant, il baisse trop vite.</o>
+      <o>Probablement un problème de carburant, il baisse trop vite.</o>
+      <o>Le carburant baisse trop vite, on a probablement un problème de carburant.</o>
+      <o>Il y a un problème avec le carburant, il baisse trop vite.</o>
+      <o>Le carburant baisse trop vite, je soupçonne un problème de carburant.</o>
+    </message>
+    <message key="FLT.FMAIN" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FMAIN announced by a crew member (the speaker is drawn)">
+      <o>Problèmes de carburant sur le réservoir principal.</o>
+      <o>On a des problèmes de carburant sur le réservoir principal.</o>
+      <o>Problème de carburant sur le réservoir principal.</o>
+      <o>Souci de carburant sur le réservoir principal.</o>
+      <o>Défaut du réservoir principal.</o>
+      <o>On dirait des problèmes de carburant sur le réservoir principal.</o>
+    </message>
+    <message key="FLT.FSUP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FSUP announced by a crew member (the speaker is drawn)">
+      <o>On a des problèmes d'alimentation carburant du moteur {0}.</o>
+      <o>Problème d'alimentation carburant du moteur {0}.</o>
+      <o>Souci avec l'alimentation carburant du moteur {0}.</o>
+      <o>Ennuis d'alimentation carburant sur le moteur {0}.</o>
+      <o>Le moteur {0} n'est plus alimenté en carburant.</o>
+      <o>On a un problème d'alimentation carburant sur le moteur {0}.</o>
+    </message>
+    <message key="FLT.UPM" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type UPM announced by a crew member (the speaker is drawn)">
+      <o>On a perdu les modes supérieurs.</o>
+      <o>Modes supérieurs perdus.</o>
+      <o>Les modes supérieurs sont partis.</o>
+      <o>Les modes supérieurs ont disparu.</o>
+      <o>Plus de modes supérieurs.</o>
+      <o>Les modes supérieurs ont décroché.</o>
+    </message>
+    <message key="FLT.BKUP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type BKUP announced by a crew member (the speaker is drawn)">
+      <o>On a perdu les modes supérieurs et de base ! Les mains sur les commandes !</o>
+      <o>Modes supérieurs et de base perdus ! Les mains sur les commandes !</o>
+      <o>Les modes supérieurs et de base sont partis, les mains sur les commandes !</o>
+      <o>On a perdu les deux, supérieurs et de base ! Les mains dessus !</o>
+      <o>Plus de modes supérieurs ni de base ! Les mains sur les commandes !</o>
+      <o>Modes supérieurs et de base décrochés ! Les mains sur les commandes !</o>
+    </message>
+    <message key="FLT.APCP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type APCP announced by a crew member (the speaker is drawn)">
+      <o>Le panneau de commande du pilote automatique ne fonctionne pas.</o>
+      <o>Panne du panneau de commande du pilote automatique.</o>
+      <o>Panne APCP, le panneau du pilote automatique ne marche pas.</o>
+      <o>On a perdu le panneau de commande du pilote automatique.</o>
+      <o>L'APCP ne fonctionne pas.</o>
+      <o>Aucune réponse du panneau de commande du pilote automatique.</o>
+    </message>
+    <message key="FLT.CHIP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type CHIP announced by a crew member (the speaker is drawn)">
+      <o>MGB chip !</o>
+      <o>Alarme MGB chip !</o>
+      <o>On a un MGB chip !</o>
+      <o>Voyant MGB chip !</o>
+      <o>Particules dans la boîte principale !</o>
+      <o>Avertissement MGB chip !</o>
+    </message>
+    <message key="FLT.DMGM" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type DMGM announced by a crew member (the speaker is drawn)">
+      <o>Dégâts MGB, il faut se poser au plus vite !</o>
+      <o>On a des dégâts MGB, posons-nous dès que possible !</o>
+      <o>Dégâts MGB ! Il faut atterrir au plus vite !</o>
+      <o>Dégâts sur la boîte principale, il faut se poser au plus vite !</o>
+      <o>La MGB est endommagée, il faut se poser maintenant !</o>
+      <o>Dommages sur la MGB, atterrissons au plus vite !</o>
+    </message>
+    <message key="FLT.DMGT" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type DMGT announced by a crew member (the speaker is drawn)">
+      <o>Dégâts TGB, il faut se poser au plus vite !</o>
+      <o>On a des dégâts TGB, posons-nous dès que possible !</o>
+      <o>Dégâts TGB ! Il faut atterrir au plus vite !</o>
+      <o>Dégâts sur la boîte arrière, il faut se poser au plus vite !</o>
+      <o>La TGB est endommagée, il faut se poser maintenant !</o>
+      <o>Dommages sur la TGB, atterrissons au plus vite !</o>
+    </message>
+    <message key="FLT.SEMA" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type SEMA announced by a crew member (the speaker is drawn)">
+      <o>Problème de trim, vérifiez pilote automatique et stabilisation. Les mains sur les commandes !</o>
+      <o>Problème de trims ! Vérification pilote automatique et stabilisation, les mains dessus !</o>
+      <o>On a un problème de trim, vérifiez pilote automatique et stabilisation. Les mains sur les commandes.</o>
+      <o>Souci de trim sur le pilote automatique, vérification de la stabilisation. Les mains dessus !</o>
+      <o>Les trims déconnent, vérifiez pilote automatique et stabilisation. Les mains dessus !</o>
+      <o>Problème de trim, vérification de la stabilisation. Les mains sur les commandes !</o>
+    </message>
+    <message key="FTR.ENG" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type ENG verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le moteur {0}, il faut compter environ quatre heures.</o>
+      <o sex="m">Noté. Pour le moteur {0}, comptez environ quatre heures de réparation.</o>
+      <o sex="m">Le moteur {0} : environ quatre heures de réparation.</o>
+      <o sex="m">D'accord, pour le moteur {0} il faut environ quatre heures.</o>
+      <o sex="m">Bien reçu. Pour le moteur {0}, réparation en environ quatre heures.</o>
+      <o sex="m">Entendu. Pour le moteur {0}, prévoyez environ quatre heures.</o>
+      <o sex="f">Compris. Pour le moteur {0}, il faut compter environ quatre heures.</o>
+      <o sex="f">Noté. Pour le moteur {0}, comptez environ quatre heures de réparation.</o>
+      <o sex="f">Le moteur {0} : environ quatre heures de réparation.</o>
+      <o sex="f">D'accord, pour le moteur {0} il faut environ quatre heures.</o>
+      <o sex="f">Bien reçu. Pour le moteur {0}, réparation en environ quatre heures.</o>
+      <o sex="f">Entendu. Pour le moteur {0}, prévoyez environ quatre heures.</o>
+    </message>
+    <message key="FTR.FAD1" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FAD1 verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le FADEC du moteur {0}, il faut compter environ trente minutes.</o>
+      <o sex="m">Noté. Pour le FADEC du moteur {0}, comptez environ trente minutes de réparation.</o>
+      <o sex="m">Le FADEC du moteur {0} : environ trente minutes de réparation.</o>
+      <o sex="m">D'accord, pour le FADEC du moteur {0} il faut environ trente minutes.</o>
+      <o sex="m">Bien reçu. Pour le FADEC du moteur {0}, réparation en environ trente minutes.</o>
+      <o sex="m">Entendu. Pour le FADEC du moteur {0}, prévoyez environ trente minutes.</o>
+      <o sex="f">Compris. Pour le FADEC du moteur {0}, il faut compter environ trente minutes.</o>
+      <o sex="f">Noté. Pour le FADEC du moteur {0}, comptez environ trente minutes de réparation.</o>
+      <o sex="f">Le FADEC du moteur {0} : environ trente minutes de réparation.</o>
+      <o sex="f">D'accord, pour le FADEC du moteur {0} il faut environ trente minutes.</o>
+      <o sex="f">Bien reçu. Pour le FADEC du moteur {0}, réparation en environ trente minutes.</o>
+      <o sex="f">Entendu. Pour le FADEC du moteur {0}, prévoyez environ trente minutes.</o>
+    </message>
+    <message key="FTR.FAD2" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FAD2 verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le FADEC du moteur {0}, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour le FADEC du moteur {0}, comptez environ une heure de réparation.</o>
+      <o sex="m">Le FADEC du moteur {0} : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour le FADEC du moteur {0} il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour le FADEC du moteur {0}, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour le FADEC du moteur {0}, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour le FADEC du moteur {0}, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour le FADEC du moteur {0}, comptez environ une heure de réparation.</o>
+      <o sex="f">Le FADEC du moteur {0} : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour le FADEC du moteur {0} il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour le FADEC du moteur {0}, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour le FADEC du moteur {0}, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.FIRE" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FIRE verified in flight, with the repair time">
+      <o sex="m">Compris. Pour les dégâts de l'incendie du moteur {0}, il faut compter environ six heures.</o>
+      <o sex="m">Noté. Pour les dégâts de l'incendie du moteur {0}, comptez environ six heures de réparation.</o>
+      <o sex="m">Les dégâts de l'incendie du moteur {0} : environ six heures de réparation.</o>
+      <o sex="m">D'accord, pour les dégâts de l'incendie du moteur {0} il faut environ six heures.</o>
+      <o sex="m">Bien reçu. Pour les dégâts de l'incendie du moteur {0}, réparation en environ six heures.</o>
+      <o sex="m">Entendu. Pour les dégâts de l'incendie du moteur {0}, prévoyez environ six heures.</o>
+      <o sex="f">Compris. Pour les dégâts de l'incendie du moteur {0}, il faut compter environ six heures.</o>
+      <o sex="f">Noté. Pour les dégâts de l'incendie du moteur {0}, comptez environ six heures de réparation.</o>
+      <o sex="f">Les dégâts de l'incendie du moteur {0} : environ six heures de réparation.</o>
+      <o sex="f">D'accord, pour les dégâts de l'incendie du moteur {0} il faut environ six heures.</o>
+      <o sex="f">Bien reçu. Pour les dégâts de l'incendie du moteur {0}, réparation en environ six heures.</o>
+      <o sex="f">Entendu. Pour les dégâts de l'incendie du moteur {0}, prévoyez environ six heures.</o>
+    </message>
+    <message key="FTR.HYD" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type HYD verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le circuit hydraulique {0}, il faut compter environ deux heures.</o>
+      <o sex="m">Noté. Pour le circuit hydraulique {0}, comptez environ deux heures de réparation.</o>
+      <o sex="m">Le circuit hydraulique {0} : environ deux heures de réparation.</o>
+      <o sex="m">D'accord, pour le circuit hydraulique {0} il faut environ deux heures.</o>
+      <o sex="m">Bien reçu. Pour le circuit hydraulique {0}, réparation en environ deux heures.</o>
+      <o sex="m">Entendu. Pour le circuit hydraulique {0}, prévoyez environ deux heures.</o>
+      <o sex="f">Compris. Pour le circuit hydraulique {0}, il faut compter environ deux heures.</o>
+      <o sex="f">Noté. Pour le circuit hydraulique {0}, comptez environ deux heures de réparation.</o>
+      <o sex="f">Le circuit hydraulique {0} : environ deux heures de réparation.</o>
+      <o sex="f">D'accord, pour le circuit hydraulique {0} il faut environ deux heures.</o>
+      <o sex="f">Bien reçu. Pour le circuit hydraulique {0}, réparation en environ deux heures.</o>
+      <o sex="f">Entendu. Pour le circuit hydraulique {0}, prévoyez environ deux heures.</o>
+    </message>
+    <message key="FTR.FPF" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FPF verified in flight, with the repair time">
+      <o sex="m">Compris. Pour la pompe carburant avant, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour la pompe carburant avant, comptez environ une heure de réparation.</o>
+      <o sex="m">La pompe carburant avant : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour la pompe carburant avant il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour la pompe carburant avant, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour la pompe carburant avant, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour la pompe carburant avant, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour la pompe carburant avant, comptez environ une heure de réparation.</o>
+      <o sex="f">La pompe carburant avant : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour la pompe carburant avant il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour la pompe carburant avant, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour la pompe carburant avant, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.FPA" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FPA verified in flight, with the repair time">
+      <o sex="m">Compris. Pour la pompe carburant arrière, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour la pompe carburant arrière, comptez environ une heure de réparation.</o>
+      <o sex="m">La pompe carburant arrière : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour la pompe carburant arrière il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour la pompe carburant arrière, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour la pompe carburant arrière, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour la pompe carburant arrière, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour la pompe carburant arrière, comptez environ une heure de réparation.</o>
+      <o sex="f">La pompe carburant arrière : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour la pompe carburant arrière il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour la pompe carburant arrière, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour la pompe carburant arrière, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.LEAK" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type LEAK verified in flight, with the repair time">
+      <o sex="m">Compris. Pour la fuite de carburant, il faut compter environ deux heures.</o>
+      <o sex="m">Noté. Pour la fuite de carburant, comptez environ deux heures de réparation.</o>
+      <o sex="m">La fuite de carburant : environ deux heures de réparation.</o>
+      <o sex="m">D'accord, pour la fuite de carburant il faut environ deux heures.</o>
+      <o sex="m">Bien reçu. Pour la fuite de carburant, réparation en environ deux heures.</o>
+      <o sex="m">Entendu. Pour la fuite de carburant, prévoyez environ deux heures.</o>
+      <o sex="f">Compris. Pour la fuite de carburant, il faut compter environ deux heures.</o>
+      <o sex="f">Noté. Pour la fuite de carburant, comptez environ deux heures de réparation.</o>
+      <o sex="f">La fuite de carburant : environ deux heures de réparation.</o>
+      <o sex="f">D'accord, pour la fuite de carburant il faut environ deux heures.</o>
+      <o sex="f">Bien reçu. Pour la fuite de carburant, réparation en environ deux heures.</o>
+      <o sex="f">Entendu. Pour la fuite de carburant, prévoyez environ deux heures.</o>
+    </message>
+    <message key="FTR.FMAIN" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FMAIN verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le réservoir principal, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour le réservoir principal, comptez environ une heure de réparation.</o>
+      <o sex="m">Le réservoir principal : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour le réservoir principal il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour le réservoir principal, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour le réservoir principal, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour le réservoir principal, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour le réservoir principal, comptez environ une heure de réparation.</o>
+      <o sex="f">Le réservoir principal : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour le réservoir principal il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour le réservoir principal, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour le réservoir principal, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.FSUP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FSUP verified in flight, with the repair time">
+      <o sex="m">Compris. Pour l'alimentation carburant du moteur {0}, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour l'alimentation carburant du moteur {0}, comptez environ une heure de réparation.</o>
+      <o sex="m">L'alimentation carburant du moteur {0} : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour l'alimentation carburant du moteur {0} il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour l'alimentation carburant du moteur {0}, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour l'alimentation carburant du moteur {0}, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour l'alimentation carburant du moteur {0}, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour l'alimentation carburant du moteur {0}, comptez environ une heure de réparation.</o>
+      <o sex="f">L'alimentation carburant du moteur {0} : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour l'alimentation carburant du moteur {0} il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour l'alimentation carburant du moteur {0}, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour l'alimentation carburant du moteur {0}, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.UPM" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type UPM verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le pilote automatique, il faut compter environ quarante-cinq minutes.</o>
+      <o sex="m">Noté. Pour le pilote automatique, comptez environ quarante-cinq minutes de réparation.</o>
+      <o sex="m">Le pilote automatique : environ quarante-cinq minutes de réparation.</o>
+      <o sex="m">D'accord, pour le pilote automatique il faut environ quarante-cinq minutes.</o>
+      <o sex="m">Bien reçu. Pour le pilote automatique, réparation en environ quarante-cinq minutes.</o>
+      <o sex="m">Entendu. Pour le pilote automatique, prévoyez environ quarante-cinq minutes.</o>
+      <o sex="f">Compris. Pour le pilote automatique, il faut compter environ quarante-cinq minutes.</o>
+      <o sex="f">Noté. Pour le pilote automatique, comptez environ quarante-cinq minutes de réparation.</o>
+      <o sex="f">Le pilote automatique : environ quarante-cinq minutes de réparation.</o>
+      <o sex="f">D'accord, pour le pilote automatique il faut environ quarante-cinq minutes.</o>
+      <o sex="f">Bien reçu. Pour le pilote automatique, réparation en environ quarante-cinq minutes.</o>
+      <o sex="f">Entendu. Pour le pilote automatique, prévoyez environ quarante-cinq minutes.</o>
+    </message>
+    <message key="FTR.BKUP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type BKUP verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le pilote automatique de secours, il faut compter environ quarante-cinq minutes.</o>
+      <o sex="m">Noté. Pour le pilote automatique de secours, comptez environ quarante-cinq minutes de réparation.</o>
+      <o sex="m">Le pilote automatique de secours : environ quarante-cinq minutes de réparation.</o>
+      <o sex="m">D'accord, pour le pilote automatique de secours il faut environ quarante-cinq minutes.</o>
+      <o sex="m">Bien reçu. Pour le pilote automatique de secours, réparation en environ quarante-cinq minutes.</o>
+      <o sex="m">Entendu. Pour le pilote automatique de secours, prévoyez environ quarante-cinq minutes.</o>
+      <o sex="f">Compris. Pour le pilote automatique de secours, il faut compter environ quarante-cinq minutes.</o>
+      <o sex="f">Noté. Pour le pilote automatique de secours, comptez environ quarante-cinq minutes de réparation.</o>
+      <o sex="f">Le pilote automatique de secours : environ quarante-cinq minutes de réparation.</o>
+      <o sex="f">D'accord, pour le pilote automatique de secours il faut environ quarante-cinq minutes.</o>
+      <o sex="f">Bien reçu. Pour le pilote automatique de secours, réparation en environ quarante-cinq minutes.</o>
+      <o sex="f">Entendu. Pour le pilote automatique de secours, prévoyez environ quarante-cinq minutes.</o>
+    </message>
+    <message key="FTR.APCP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type APCP verified in flight, with the repair time">
+      <o sex="m">Compris. Pour le panneau de commande du pilote automatique, il faut compter environ une heure.</o>
+      <o sex="m">Noté. Pour le panneau de commande du pilote automatique, comptez environ une heure de réparation.</o>
+      <o sex="m">Le panneau de commande du pilote automatique : environ une heure de réparation.</o>
+      <o sex="m">D'accord, pour le panneau de commande du pilote automatique il faut environ une heure.</o>
+      <o sex="m">Bien reçu. Pour le panneau de commande du pilote automatique, réparation en environ une heure.</o>
+      <o sex="m">Entendu. Pour le panneau de commande du pilote automatique, prévoyez environ une heure.</o>
+      <o sex="f">Compris. Pour le panneau de commande du pilote automatique, il faut compter environ une heure.</o>
+      <o sex="f">Noté. Pour le panneau de commande du pilote automatique, comptez environ une heure de réparation.</o>
+      <o sex="f">Le panneau de commande du pilote automatique : environ une heure de réparation.</o>
+      <o sex="f">D'accord, pour le panneau de commande du pilote automatique il faut environ une heure.</o>
+      <o sex="f">Bien reçu. Pour le panneau de commande du pilote automatique, réparation en environ une heure.</o>
+      <o sex="f">Entendu. Pour le panneau de commande du pilote automatique, prévoyez environ une heure.</o>
+    </message>
+    <message key="FTR.CHIP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type CHIP verified in flight, with the repair time">
+      <o sex="m">Compris. Pour l'alarme particules de la boîte de transmission principale, il faut compter environ trois heures.</o>
+      <o sex="m">Noté. Pour l'alarme particules de la boîte de transmission principale, comptez environ trois heures de réparation.</o>
+      <o sex="m">L'alarme particules de la boîte de transmission principale : environ trois heures de réparation.</o>
+      <o sex="m">D'accord, pour l'alarme particules de la boîte de transmission principale il faut environ trois heures.</o>
+      <o sex="m">Bien reçu. Pour l'alarme particules de la boîte de transmission principale, réparation en environ trois heures.</o>
+      <o sex="m">Entendu. Pour l'alarme particules de la boîte de transmission principale, prévoyez environ trois heures.</o>
+      <o sex="f">Compris. Pour l'alarme particules de la boîte de transmission principale, il faut compter environ trois heures.</o>
+      <o sex="f">Noté. Pour l'alarme particules de la boîte de transmission principale, comptez environ trois heures de réparation.</o>
+      <o sex="f">L'alarme particules de la boîte de transmission principale : environ trois heures de réparation.</o>
+      <o sex="f">D'accord, pour l'alarme particules de la boîte de transmission principale il faut environ trois heures.</o>
+      <o sex="f">Bien reçu. Pour l'alarme particules de la boîte de transmission principale, réparation en environ trois heures.</o>
+      <o sex="f">Entendu. Pour l'alarme particules de la boîte de transmission principale, prévoyez environ trois heures.</o>
+    </message>
+    <message key="FTR.DMGM" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type DMGM verified in flight, with the repair time">
+      <o sex="m">Compris. Pour la boîte de transmission principale, il faut compter environ huit heures.</o>
+      <o sex="m">Noté. Pour la boîte de transmission principale, comptez environ huit heures de réparation.</o>
+      <o sex="m">La boîte de transmission principale : environ huit heures de réparation.</o>
+      <o sex="m">D'accord, pour la boîte de transmission principale il faut environ huit heures.</o>
+      <o sex="m">Bien reçu. Pour la boîte de transmission principale, réparation en environ huit heures.</o>
+      <o sex="m">Entendu. Pour la boîte de transmission principale, prévoyez environ huit heures.</o>
+      <o sex="f">Compris. Pour la boîte de transmission principale, il faut compter environ huit heures.</o>
+      <o sex="f">Noté. Pour la boîte de transmission principale, comptez environ huit heures de réparation.</o>
+      <o sex="f">La boîte de transmission principale : environ huit heures de réparation.</o>
+      <o sex="f">D'accord, pour la boîte de transmission principale il faut environ huit heures.</o>
+      <o sex="f">Bien reçu. Pour la boîte de transmission principale, réparation en environ huit heures.</o>
+      <o sex="f">Entendu. Pour la boîte de transmission principale, prévoyez environ huit heures.</o>
+    </message>
+    <message key="FTR.DMGT" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type DMGT verified in flight, with the repair time">
+      <o sex="m">Compris. Pour la boîte de transmission arrière, il faut compter environ huit heures.</o>
+      <o sex="m">Noté. Pour la boîte de transmission arrière, comptez environ huit heures de réparation.</o>
+      <o sex="m">La boîte de transmission arrière : environ huit heures de réparation.</o>
+      <o sex="m">D'accord, pour la boîte de transmission arrière il faut environ huit heures.</o>
+      <o sex="m">Bien reçu. Pour la boîte de transmission arrière, réparation en environ huit heures.</o>
+      <o sex="m">Entendu. Pour la boîte de transmission arrière, prévoyez environ huit heures.</o>
+      <o sex="f">Compris. Pour la boîte de transmission arrière, il faut compter environ huit heures.</o>
+      <o sex="f">Noté. Pour la boîte de transmission arrière, comptez environ huit heures de réparation.</o>
+      <o sex="f">La boîte de transmission arrière : environ huit heures de réparation.</o>
+      <o sex="f">D'accord, pour la boîte de transmission arrière il faut environ huit heures.</o>
+      <o sex="f">Bien reçu. Pour la boîte de transmission arrière, réparation en environ huit heures.</o>
+      <o sex="f">Entendu. Pour la boîte de transmission arrière, prévoyez environ huit heures.</o>
+    </message>
+    <message key="FTR.SEMA" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type SEMA verified in flight, with the repair time">
+      <o sex="m">Compris. Pour les actionneurs de trim et de stabilisation, il faut compter environ quatre-vingt-dix minutes.</o>
+      <o sex="m">Noté. Pour les actionneurs de trim et de stabilisation, comptez environ quatre-vingt-dix minutes de réparation.</o>
+      <o sex="m">Les actionneurs de trim et de stabilisation : environ quatre-vingt-dix minutes de réparation.</o>
+      <o sex="m">D'accord, pour les actionneurs de trim et de stabilisation il faut environ quatre-vingt-dix minutes.</o>
+      <o sex="m">Bien reçu. Pour les actionneurs de trim et de stabilisation, réparation en environ quatre-vingt-dix minutes.</o>
+      <o sex="m">Entendu. Pour les actionneurs de trim et de stabilisation, prévoyez environ quatre-vingt-dix minutes.</o>
+      <o sex="f">Compris. Pour les actionneurs de trim et de stabilisation, il faut compter environ quatre-vingt-dix minutes.</o>
+      <o sex="f">Noté. Pour les actionneurs de trim et de stabilisation, comptez environ quatre-vingt-dix minutes de réparation.</o>
+      <o sex="f">Les actionneurs de trim et de stabilisation : environ quatre-vingt-dix minutes de réparation.</o>
+      <o sex="f">D'accord, pour les actionneurs de trim et de stabilisation il faut environ quatre-vingt-dix minutes.</o>
+      <o sex="f">Bien reçu. Pour les actionneurs de trim et de stabilisation, réparation en environ quatre-vingt-dix minutes.</o>
+      <o sex="f">Entendu. Pour les actionneurs de trim et de stabilisation, prévoyez environ quatre-vingt-dix minutes.</o>
+    </message>
+    <message key="IMP.ASK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="after an impact that hurt somebody: the pilot asks the crew for their status">
+      <o>Tout le monde va bien ? Équipage, rapport !</o>
+      <o>Tout le monde est OK ? Rapport !</o>
+      <o>Équipage, ça va ? Statut !</o>
+      <o>Tout va bien derrière ? Donnez-moi un statut !</o>
+      <o>Quelqu'un est blessé ? Répondez !</o>
+      <o>Rapport, tout le monde ! Ça va ?</o>
+    </message>
+    <message key="IMP.PAT" actor="2" radio="auto" group="flt" seq="1" new="1" trigger="after an impact that hurt somebody, with a patient aboard: the copilot asks the doctor">
+      <o>Doc, comment va le patient ?</o>
+      <o>Doc, dans quel état est le patient ?</o>
+      <o>Doc, vérifiez le patient, comment va-t-il ?</o>
+      <o>Doc, le patient va bien ?</o>
+      <o>Comment va le patient, Doc ?</o>
+      <o>Doc, statut du patient ?</o>
+    </message>
+    <message key="IMP.DOC" actor="3" radio="auto" group="flt" seq="1" new="1" trigger="after an impact, with a patient aboard: the doctor answers about the patient">
+      <o>Je le vérifie maintenant.</o>
+      <o>Je contrôle le patient.</o>
+      <o>Un instant, je le vérifie.</o>
+      <o>Je l'examine.</o>
+      <o>Je m'en occupe, je vérifie ses constantes.</o>
+      <o>Je contrôle ses signes vitaux.</o>
     </message>
 </voicepack>

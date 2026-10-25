@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="27" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="30" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -6505,7 +6505,7 @@
       <o>Thanks, glad to help. Safe flight.</o>
       <o>Always a pleasure. Fly safe.</o>
     </message>
-    <message key="HRD.BASE.Q" actor="1" radio="on" group="hrd" seq="3" new="1" trigger="the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)">
+    <message key="HRD.BASE.Q" actor="1" radio="ext" group="hrd" seq="3" new="1" trigger="the pilot tells the heli rescue base where the heli rescuers were left (args: number, place)">
       <o>Heli rescue base, {@HEMS}. We left {hr:0} at {place:1}.</o>
       <o>Heli rescue base, {@HEMS}. {hr:0} left at {place:1}.</o>
       <o>Heli rescue base, {@HEMS}. For your information, we left {hr:0} at {place:1}.</o>
@@ -6521,7 +6521,7 @@
       <o>{@HEMS}, heli rescue base. Copy that, {hr:0} at {place:1}. Thanks for the lift.</o>
       <o>{@HEMS}, heli rescue base. Noted, {hr:0} at {place:1}. Thank you, fly safe.</o>
     </message>
-        <message key="HRQ.PLT.Q" actor="1" radio="on" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
+        <message key="HRQ.PLT.Q" actor="1" radio="ext" group="hrq" seq="1" new="1" trigger="the pilot asks the heli rescue base if {hr:0} are available (arg: 1 or 2)">
       <o>{hrs:1}, {@HEMS}. We are coming to pick up {hr:0}. Please confirm that you are ready.</o>
       <o>{hrs:1}, {@HEMS}. Rendezvous for {hr:0}: are you ready on your side?</o>
       <o>{hrs:1}, {@HEMS}. We are inbound for {hr:0}. Please stand by for boarding.</o>
@@ -6537,7 +6537,7 @@
       <o>{@HEMS}, {hrs:1}. Roger, {hr:0} ready. Pad is clear, we are waiting for you.</o>
       <o>{@HEMS}, {hrs:1}. Received. {hr:0} ready for boarding, landing area free.</o>
     </message>
-    <message key="HRQ.BRF.ACC" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
+    <message key="HRQ.BRF.ACC" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: accident (arg: number of injured)">
       <o>{hrs:1}, {@HEMS}. The mission is an accident with {0} injured. Brief the rescuers.</o>
       <o>{hrs:1}, {@HEMS}. Accident on scene, {0} injured reported. Please brief them.</o>
       <o>{hrs:1}, {@HEMS}. It is a road accident, about {0} injured. Tell them to be ready.</o>
@@ -6545,7 +6545,7 @@
       <o>{hrs:1}, {@HEMS}. Accident with {0} injured. Rescuers, get ready.</o>
       <o>{hrs:1}, {@HEMS}. Heads up: accident, {0} injured. Brief the team.</o>
     </message>
-    <message key="HRQ.BRF.SAR" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
+    <message key="HRQ.BRF.SAR" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: search and rescue (arg: number of injured)">
       <o>{hrs:1}, {@HEMS}. The mission is a search and rescue, {0} to recover. Brief the rescuers.</o>
       <o>{hrs:1}, {@HEMS}. Search and rescue, {0} to recover. Please brief them.</o>
       <o>{hrs:1}, {@HEMS}. It is a search and rescue with {0} persons to recover. Tell them to be ready.</o>
@@ -6553,7 +6553,7 @@
       <o>{hrs:1}, {@HEMS}. Search and rescue, {0} persons. Rescuers, get ready.</o>
       <o>{hrs:1}, {@HEMS}. Heads up: search and rescue, {0} to recover. Brief the team.</o>
     </message>
-    <message key="HRQ.BRF.TRF" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
+    <message key="HRQ.BRF.TRF" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: patient transfer (arg: number of patients)">
       <o>{hrs:1}, {@HEMS}. The mission is a transfer with {0} patients. Brief the rescuers.</o>
       <o>{hrs:1}, {@HEMS}. Patient transfer, {0} patients. Please brief them.</o>
       <o>{hrs:1}, {@HEMS}. It is an inter hospital transfer, {0} patients. Tell them to be ready.</o>
@@ -6561,7 +6561,7 @@
       <o>{hrs:1}, {@HEMS}. Transfer with {0} patients. Rescuers, get ready.</o>
       <o>{hrs:1}, {@HEMS}. Heads up: transfer, {0} patients. Brief the team.</o>
     </message>
-    <message key="HRQ.BRF.ORG" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
+    <message key="HRQ.BRF.ORG" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: organ transport">
       <o>{hrs:1}, {@HEMS}. The mission is an organ transport. Brief the rescuers.</o>
       <o>{hrs:1}, {@HEMS}. Organ transport, time critical. Please brief them.</o>
       <o>{hrs:1}, {@HEMS}. It is an organ transport, we cannot lose time. Tell them to be ready.</o>
@@ -6569,7 +6569,7 @@
       <o>{hrs:1}, {@HEMS}. Organ transport. Rescuers, get ready.</o>
       <o>{hrs:1}, {@HEMS}. Heads up: organ transport. Brief the team.</o>
     </message>
-    <message key="HRQ.BRF.INJ" actor="1" radio="on" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
+    <message key="HRQ.BRF.INJ" actor="1" radio="ext" group="hrq" seq="3" new="1" trigger="the pilot briefs the base: injured person (arg: number of injured)">
       <o>{hrs:1}, {@HEMS}. The mission has {0} injured. Brief the rescuers.</o>
       <o>{hrs:1}, {@HEMS}. We have {0} injured. Please brief them.</o>
       <o>{hrs:1}, {@HEMS}. About {0} injured on scene. Tell them to be ready.</o>
@@ -6585,7 +6585,7 @@
       <o>{@HEMS}, {hrs:1}. Message received, the rescuers are ready.</o>
       <o>{@HEMS}, {hrs:1}. Copy, we pass it on. Fly safe.</o>
     </message>
-    <message key="HRQ.COR.PLT" actor="1" radio="on" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
+    <message key="HRQ.COR.PLT" actor="1" radio="ext" group="hrqc" seq="1" new="1" trigger="the pilot corrects the request: now {hr:0} are needed (arg: 1 or 2)">
       <o>{hrs:1}, {@HEMS}. Correction: we need {hr:0}.</o>
       <o>{hrs:1}, {@HEMS}. Correction, the request is now {hr:0}.</o>
       <o>{hrs:1}, {@HEMS}. We changed our mind: {hr:0} please.</o>
@@ -7874,7 +7874,7 @@
       <o>{@HEMS}, dispatch. The rescuers are alerted. Rendezvous at {hrp:1} for {hr:0}.</o>
       <o>{@HEMS}, dispatch. Specialists are waiting at {hrp:1}. Land there, board {hr:0} and continue.</o>
     </message>
-    <message key="HRQ.APR.PLT" actor="1" radio="on" group="hrqp" seq="1" new="1" trigger="a few minutes before the pick-up place of the heli rescuers: the pilot gives the minutes to go and asks for the state of the landing area (args: minutes, kind, name)">
+    <message key="HRQ.APR.PLT" actor="1" radio="ext" group="hrqp" seq="1" new="1" trigger="a few minutes before the pick-up place of the heli rescuers: the pilot gives the minutes to go and asks for the state of the landing area (args: minutes, kind, name)">
       <o>{hrs:1}, {@HEMS}. Arriving in {mins:0} for the boarding of the rescuers and the equipment. Please confirm the landing area.</o>
       <o>{hrs:1}, {@HEMS}. We are {mins:0} out for the rescuer and equipment pick-up. Is the area free?</o>
       <o>{hrs:1}, {@HEMS}. ETA {mins:0} to {hrp:1}. Please confirm the conditions of the landing area.</o>
@@ -7962,7 +7962,7 @@
       <o>Has the patient lost consciousness at any time?</o>
       <o>What are the last vital signs you recorded?</o>
     </message>
-    <message key="HOS.A" actor="3" radio="auto" group="hosq" seq="2" prio="1" age="45" new="1" trigger="the handover of a patient: the doctor answers the question of the hospital">
+    <message key="HOS.A" actor="3" radio="ext" group="hosq" seq="2" prio="1" age="45" new="1" trigger="the handover of a patient: the doctor answers the question of the hospital">
       <o>No known allergies. The full report is in the folder, you have the last values.</o>
       <o>Stable during the flight, no changes. Everything is in the report.</o>
       <o>A short transport, treated on scene and monitored all the way. Details in the report.</o>
@@ -8177,5 +8177,427 @@
       <o>{@HEMS}, {@DSP}. The police will be waiting for you at the landing point.</o>
       <o>{@DSP} to {@HEMS}. A police patrol is ready at the landing point.</o>
       <o>{@HEMS}, {@DSP}. Police is on scene at your landing point.</o>
+    </message>
+    <message key="FLT.GEN" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 2: one crew member says that there is a failure">
+      <o>Failure!</o>
+      <o>We have a failure!</o>
+      <o>Failure on board!</o>
+      <o>Got a failure here!</o>
+      <o>Warning, failure!</o>
+      <o>We have a problem!</o>
+    </message>
+    <message key="FLT.CHK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 1: the other crew member verifies">
+      <o>Check.</o>
+      <o>Verified.</o>
+      <o>Checked.</o>
+      <o>Confirmed.</o>
+      <o>I see it, check.</o>
+      <o>Copy, verified.</o>
+    </message>
+    <message key="FLT.CHIPV" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="MGB chip: the other crew member verifies and proposes the chip burn">
+      <o>Check. Chip confirmed, let us do the chip burn.</o>
+      <o>Verified. Shall we do the chip burn?</o>
+      <o>Checked. I suggest the chip burn.</o>
+      <o>Confirmed. Do we run a chip burn?</o>
+      <o>I see it, check. Chip burn?</o>
+      <o>Verified, let us try the chip burn.</o>
+    </message>
+    <message key="FLT.ENG" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type ENG announced by a crew member (the speaker is drawn)">
+      <o>Engine {0} failed!</o>
+      <o>We lost engine {0}!</o>
+      <o>Engine {0} has failed!</o>
+      <o>Engine {0} failure!</o>
+      <o>Engine {0} is out!</o>
+      <o>Engine {0} just failed!</o>
+    </message>
+    <message key="FLT.FAD1" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FAD1 announced by a crew member (the speaker is drawn)">
+      <o>FADEC issues on engine {0}.</o>
+      <o>We have FADEC issues on engine {0}.</o>
+      <o>Engine {0} FADEC is giving us trouble.</o>
+      <o>FADEC problem on engine {0}.</o>
+      <o>Engine {0} FADEC fault.</o>
+      <o>Looks like FADEC issues on engine {0}.</o>
+    </message>
+    <message key="FLT.FAD2" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FAD2 announced by a crew member (the speaker is drawn)">
+      <o>FADEC failed on engine {0}!</o>
+      <o>Engine {0} FADEC has failed!</o>
+      <o>We lost the FADEC of engine {0}!</o>
+      <o>FADEC failure on engine {0}!</o>
+      <o>Engine {0} FADEC is dead!</o>
+      <o>The FADEC of engine {0} just failed!</o>
+    </message>
+    <message key="FLT.FIRE" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FIRE announced by a crew member (the speaker is drawn)">
+      <o>Engine {0} fire!</o>
+      <o>Fire on engine {0}!</o>
+      <o>We have a fire on engine {0}!</o>
+      <o>Engine {0} is on fire!</o>
+      <o>Engine {0} fire warning!</o>
+      <o>Fire, engine {0}!</o>
+    </message>
+    <message key="FLT.HYD" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type HYD announced by a crew member (the speaker is drawn)">
+      <o>Hydraulic system {0} failure!</o>
+      <o>We lost hydraulic system {0}!</o>
+      <o>Hydraulic {0} failure!</o>
+      <o>Hydraulic system {0} has failed!</o>
+      <o>Hydraulic pressure lost on system {0}!</o>
+      <o>We have a failure on hydraulic system {0}!</o>
+    </message>
+    <message key="FLT.FPF" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FPF announced by a crew member (the speaker is drawn)">
+      <o>Forward fuel pump issue.</o>
+      <o>We have an issue with the forward fuel pump.</o>
+      <o>Forward fuel pump problem.</o>
+      <o>Forward fuel pump fault.</o>
+      <o>Problem with the forward fuel pump.</o>
+      <o>Looks like the forward fuel pump has an issue.</o>
+    </message>
+    <message key="FLT.FPA" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FPA announced by a crew member (the speaker is drawn)">
+      <o>Aft fuel pump issue.</o>
+      <o>We have an issue with the aft fuel pump.</o>
+      <o>Aft fuel pump problem.</o>
+      <o>Aft fuel pump fault.</o>
+      <o>Problem with the aft fuel pump.</o>
+      <o>Looks like the aft fuel pump has an issue.</o>
+    </message>
+    <message key="FLT.LEAK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type LEAK announced by a crew member (the speaker is drawn)">
+      <o>We probably have a fuel problem, the fuel is dropping too fast.</o>
+      <o>I think we have a fuel problem, the fuel is going down too fast.</o>
+      <o>Probably a fuel problem, the fuel is dropping too fast.</o>
+      <o>Fuel is dropping too fast, we probably have a fuel problem.</o>
+      <o>Something is wrong with the fuel, it is going down too fast.</o>
+      <o>The fuel is dropping too fast, I suspect a fuel problem.</o>
+    </message>
+    <message key="FLT.FMAIN" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FMAIN announced by a crew member (the speaker is drawn)">
+      <o>Main tank fuel issues.</o>
+      <o>We have fuel issues on the main tank.</o>
+      <o>Main tank fuel problem.</o>
+      <o>Fuel problem on the main tank.</o>
+      <o>Main fuel tank fault.</o>
+      <o>Looks like fuel issues on the main tank.</o>
+    </message>
+    <message key="FLT.FSUP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type FSUP announced by a crew member (the speaker is drawn)">
+      <o>We are having issues with engine {0} fuel supply.</o>
+      <o>Engine {0} fuel supply issue.</o>
+      <o>Problem with the fuel supply of engine {0}.</o>
+      <o>Fuel supply trouble on engine {0}.</o>
+      <o>Engine {0} is not getting its fuel supply.</o>
+      <o>We have a fuel supply issue on engine {0}.</o>
+    </message>
+    <message key="FLT.UPM" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type UPM announced by a crew member (the speaker is drawn)">
+      <o>We have lost upper modes.</o>
+      <o>Upper modes lost.</o>
+      <o>We lost the upper modes.</o>
+      <o>Upper modes are gone.</o>
+      <o>No more upper modes.</o>
+      <o>The upper modes dropped out.</o>
+    </message>
+    <message key="FLT.BKUP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type BKUP announced by a crew member (the speaker is drawn)">
+      <o>We lost upper and basic modes! Hands on!</o>
+      <o>Upper and basic modes lost! Hands on!</o>
+      <o>Upper and basic modes are gone, hands on!</o>
+      <o>We lost both upper and basic modes! Hands on!</o>
+      <o>No upper, no basic modes! Hands on!</o>
+      <o>Upper and basic modes dropped! Hands on the controls!</o>
+    </message>
+    <message key="FLT.APCP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type APCP announced by a crew member (the speaker is drawn)">
+      <o>The autopilot control panel does not work.</o>
+      <o>Autopilot control panel failure.</o>
+      <o>APCP failure, the autopilot control panel does not work.</o>
+      <o>We lost the autopilot control panel.</o>
+      <o>The APCP is not working.</o>
+      <o>No response from the autopilot control panel.</o>
+    </message>
+    <message key="FLT.CHIP" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type CHIP announced by a crew member (the speaker is drawn)">
+      <o>MGB chip!</o>
+      <o>MGB chip warning!</o>
+      <o>We have an MGB chip!</o>
+      <o>MGB chip light!</o>
+      <o>Chip on the main gearbox!</o>
+      <o>MGB chip caution!</o>
+    </message>
+    <message key="FLT.DMGM" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type DMGM announced by a crew member (the speaker is drawn)">
+      <o>MGB damage, we need to land ASAP!</o>
+      <o>We have MGB damage, land as soon as possible!</o>
+      <o>MGB damage! We need to land ASAP!</o>
+      <o>Main gearbox damage, we must land ASAP!</o>
+      <o>MGB is damaged, we need to land now!</o>
+      <o>Damage on the MGB, land ASAP!</o>
+    </message>
+    <message key="FLT.DMGT" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type DMGT announced by a crew member (the speaker is drawn)">
+      <o>TGB damage, we need to land ASAP!</o>
+      <o>We have TGB damage, land as soon as possible!</o>
+      <o>TGB damage! We need to land ASAP!</o>
+      <o>Tail gearbox damage, we must land ASAP!</o>
+      <o>TGB is damaged, we need to land now!</o>
+      <o>Damage on the TGB, land ASAP!</o>
+    </message>
+    <message key="FLT.SEMA" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure of type SEMA announced by a crew member (the speaker is drawn)">
+      <o>Trim problem, check the autopilot and stabilization. Hands on!</o>
+      <o>Trims problem! Autopilot and stabilization check, hands on!</o>
+      <o>We have a trim problem, check autopilot and stabilization. Hands on.</o>
+      <o>Trim issue on the autopilot, stabilization check. Hands on!</o>
+      <o>Trims are off, check autopilot and stabilization. Hands on!</o>
+      <o>Trim problem, stabilization check. Hands on!</o>
+    </message>
+    <message key="FTR.ENG" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type ENG verified in flight, with the repair time">
+      <o sex="m">Understood. Engine {0} will need about 4 hours.</o>
+      <o sex="m">Noted: engine {0}. Repair time about 4 hours.</o>
+      <o sex="m">I will take care of engine {0}, it needs about 4 hours.</o>
+      <o sex="m">Engine {0}: about 4 hours to repair.</o>
+      <o sex="m">OK, engine {0} needs about 4 hours of work.</o>
+      <o sex="m">Copy, we will repair engine {0} in about 4 hours.</o>
+      <o sex="f">Understood. Engine {0} will need about 4 hours.</o>
+      <o sex="f">Noted: engine {0}. Repair time about 4 hours.</o>
+      <o sex="f">I will take care of engine {0}, it needs about 4 hours.</o>
+      <o sex="f">Engine {0}: about 4 hours to repair.</o>
+      <o sex="f">OK, engine {0} needs about 4 hours of work.</o>
+      <o sex="f">Copy, we will repair engine {0} in about 4 hours.</o>
+    </message>
+    <message key="FTR.FAD1" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FAD1 verified in flight, with the repair time">
+      <o sex="m">Understood. The FADEC of engine {0} will need about 30 minutes.</o>
+      <o sex="m">Noted: the FADEC of engine {0}. Repair time about 30 minutes.</o>
+      <o sex="m">I will take care of the FADEC of engine {0}, it needs about 30 minutes.</o>
+      <o sex="m">The FADEC of engine {0}: about 30 minutes to repair.</o>
+      <o sex="m">OK, the FADEC of engine {0} needs about 30 minutes of work.</o>
+      <o sex="m">Copy, we will repair the FADEC of engine {0} in about 30 minutes.</o>
+      <o sex="f">Understood. The FADEC of engine {0} will need about 30 minutes.</o>
+      <o sex="f">Noted: the FADEC of engine {0}. Repair time about 30 minutes.</o>
+      <o sex="f">I will take care of the FADEC of engine {0}, it needs about 30 minutes.</o>
+      <o sex="f">The FADEC of engine {0}: about 30 minutes to repair.</o>
+      <o sex="f">OK, the FADEC of engine {0} needs about 30 minutes of work.</o>
+      <o sex="f">Copy, we will repair the FADEC of engine {0} in about 30 minutes.</o>
+    </message>
+    <message key="FTR.FAD2" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FAD2 verified in flight, with the repair time">
+      <o sex="m">Understood. The FADEC of engine {0} will need about one hour.</o>
+      <o sex="m">Noted: the FADEC of engine {0}. Repair time about one hour.</o>
+      <o sex="m">I will take care of the FADEC of engine {0}, it needs about one hour.</o>
+      <o sex="m">The FADEC of engine {0}: about one hour to repair.</o>
+      <o sex="m">OK, the FADEC of engine {0} needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the FADEC of engine {0} in about one hour.</o>
+      <o sex="f">Understood. The FADEC of engine {0} will need about one hour.</o>
+      <o sex="f">Noted: the FADEC of engine {0}. Repair time about one hour.</o>
+      <o sex="f">I will take care of the FADEC of engine {0}, it needs about one hour.</o>
+      <o sex="f">The FADEC of engine {0}: about one hour to repair.</o>
+      <o sex="f">OK, the FADEC of engine {0} needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the FADEC of engine {0} in about one hour.</o>
+    </message>
+    <message key="FTR.FIRE" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FIRE verified in flight, with the repair time">
+      <o sex="m">Understood. The engine {0} fire damage will need about 6 hours.</o>
+      <o sex="m">Noted: the engine {0} fire damage. Repair time about 6 hours.</o>
+      <o sex="m">I will take care of the engine {0} fire damage, it needs about 6 hours.</o>
+      <o sex="m">The engine {0} fire damage: about 6 hours to repair.</o>
+      <o sex="m">OK, the engine {0} fire damage needs about 6 hours of work.</o>
+      <o sex="m">Copy, we will repair the engine {0} fire damage in about 6 hours.</o>
+      <o sex="f">Understood. The engine {0} fire damage will need about 6 hours.</o>
+      <o sex="f">Noted: the engine {0} fire damage. Repair time about 6 hours.</o>
+      <o sex="f">I will take care of the engine {0} fire damage, it needs about 6 hours.</o>
+      <o sex="f">The engine {0} fire damage: about 6 hours to repair.</o>
+      <o sex="f">OK, the engine {0} fire damage needs about 6 hours of work.</o>
+      <o sex="f">Copy, we will repair the engine {0} fire damage in about 6 hours.</o>
+    </message>
+    <message key="FTR.HYD" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type HYD verified in flight, with the repair time">
+      <o sex="m">Understood. Hydraulic system {0} will need about two hours.</o>
+      <o sex="m">Noted: hydraulic system {0}. Repair time about two hours.</o>
+      <o sex="m">I will take care of hydraulic system {0}, it needs about two hours.</o>
+      <o sex="m">Hydraulic system {0}: about two hours to repair.</o>
+      <o sex="m">OK, hydraulic system {0} needs about two hours of work.</o>
+      <o sex="m">Copy, we will repair hydraulic system {0} in about two hours.</o>
+      <o sex="f">Understood. Hydraulic system {0} will need about two hours.</o>
+      <o sex="f">Noted: hydraulic system {0}. Repair time about two hours.</o>
+      <o sex="f">I will take care of hydraulic system {0}, it needs about two hours.</o>
+      <o sex="f">Hydraulic system {0}: about two hours to repair.</o>
+      <o sex="f">OK, hydraulic system {0} needs about two hours of work.</o>
+      <o sex="f">Copy, we will repair hydraulic system {0} in about two hours.</o>
+    </message>
+    <message key="FTR.FPF" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FPF verified in flight, with the repair time">
+      <o sex="m">Understood. The forward fuel pump will need about one hour.</o>
+      <o sex="m">Noted: the forward fuel pump. Repair time about one hour.</o>
+      <o sex="m">I will take care of the forward fuel pump, it needs about one hour.</o>
+      <o sex="m">The forward fuel pump: about one hour to repair.</o>
+      <o sex="m">OK, the forward fuel pump needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the forward fuel pump in about one hour.</o>
+      <o sex="f">Understood. The forward fuel pump will need about one hour.</o>
+      <o sex="f">Noted: the forward fuel pump. Repair time about one hour.</o>
+      <o sex="f">I will take care of the forward fuel pump, it needs about one hour.</o>
+      <o sex="f">The forward fuel pump: about one hour to repair.</o>
+      <o sex="f">OK, the forward fuel pump needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the forward fuel pump in about one hour.</o>
+    </message>
+    <message key="FTR.FPA" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FPA verified in flight, with the repair time">
+      <o sex="m">Understood. The aft fuel pump will need about one hour.</o>
+      <o sex="m">Noted: the aft fuel pump. Repair time about one hour.</o>
+      <o sex="m">I will take care of the aft fuel pump, it needs about one hour.</o>
+      <o sex="m">The aft fuel pump: about one hour to repair.</o>
+      <o sex="m">OK, the aft fuel pump needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the aft fuel pump in about one hour.</o>
+      <o sex="f">Understood. The aft fuel pump will need about one hour.</o>
+      <o sex="f">Noted: the aft fuel pump. Repair time about one hour.</o>
+      <o sex="f">I will take care of the aft fuel pump, it needs about one hour.</o>
+      <o sex="f">The aft fuel pump: about one hour to repair.</o>
+      <o sex="f">OK, the aft fuel pump needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the aft fuel pump in about one hour.</o>
+    </message>
+    <message key="FTR.LEAK" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type LEAK verified in flight, with the repair time">
+      <o sex="m">Understood. The fuel leak will need about two hours.</o>
+      <o sex="m">Noted: the fuel leak. Repair time about two hours.</o>
+      <o sex="m">I will take care of the fuel leak, it needs about two hours.</o>
+      <o sex="m">The fuel leak: about two hours to repair.</o>
+      <o sex="m">OK, the fuel leak needs about two hours of work.</o>
+      <o sex="m">Copy, we will repair the fuel leak in about two hours.</o>
+      <o sex="f">Understood. The fuel leak will need about two hours.</o>
+      <o sex="f">Noted: the fuel leak. Repair time about two hours.</o>
+      <o sex="f">I will take care of the fuel leak, it needs about two hours.</o>
+      <o sex="f">The fuel leak: about two hours to repair.</o>
+      <o sex="f">OK, the fuel leak needs about two hours of work.</o>
+      <o sex="f">Copy, we will repair the fuel leak in about two hours.</o>
+    </message>
+    <message key="FTR.FMAIN" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FMAIN verified in flight, with the repair time">
+      <o sex="m">Understood. The main fuel tank will need about one hour.</o>
+      <o sex="m">Noted: the main fuel tank. Repair time about one hour.</o>
+      <o sex="m">I will take care of the main fuel tank, it needs about one hour.</o>
+      <o sex="m">The main fuel tank: about one hour to repair.</o>
+      <o sex="m">OK, the main fuel tank needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the main fuel tank in about one hour.</o>
+      <o sex="f">Understood. The main fuel tank will need about one hour.</o>
+      <o sex="f">Noted: the main fuel tank. Repair time about one hour.</o>
+      <o sex="f">I will take care of the main fuel tank, it needs about one hour.</o>
+      <o sex="f">The main fuel tank: about one hour to repair.</o>
+      <o sex="f">OK, the main fuel tank needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the main fuel tank in about one hour.</o>
+    </message>
+    <message key="FTR.FSUP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type FSUP verified in flight, with the repair time">
+      <o sex="m">Understood. The fuel supply of engine {0} will need about one hour.</o>
+      <o sex="m">Noted: the fuel supply of engine {0}. Repair time about one hour.</o>
+      <o sex="m">I will take care of the fuel supply of engine {0}, it needs about one hour.</o>
+      <o sex="m">The fuel supply of engine {0}: about one hour to repair.</o>
+      <o sex="m">OK, the fuel supply of engine {0} needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the fuel supply of engine {0} in about one hour.</o>
+      <o sex="f">Understood. The fuel supply of engine {0} will need about one hour.</o>
+      <o sex="f">Noted: the fuel supply of engine {0}. Repair time about one hour.</o>
+      <o sex="f">I will take care of the fuel supply of engine {0}, it needs about one hour.</o>
+      <o sex="f">The fuel supply of engine {0}: about one hour to repair.</o>
+      <o sex="f">OK, the fuel supply of engine {0} needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the fuel supply of engine {0} in about one hour.</o>
+    </message>
+    <message key="FTR.UPM" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type UPM verified in flight, with the repair time">
+      <o sex="m">Understood. The autopilot will need about 45 minutes.</o>
+      <o sex="m">Noted: the autopilot. Repair time about 45 minutes.</o>
+      <o sex="m">I will take care of the autopilot, it needs about 45 minutes.</o>
+      <o sex="m">The autopilot: about 45 minutes to repair.</o>
+      <o sex="m">OK, the autopilot needs about 45 minutes of work.</o>
+      <o sex="m">Copy, we will repair the autopilot in about 45 minutes.</o>
+      <o sex="f">Understood. The autopilot will need about 45 minutes.</o>
+      <o sex="f">Noted: the autopilot. Repair time about 45 minutes.</o>
+      <o sex="f">I will take care of the autopilot, it needs about 45 minutes.</o>
+      <o sex="f">The autopilot: about 45 minutes to repair.</o>
+      <o sex="f">OK, the autopilot needs about 45 minutes of work.</o>
+      <o sex="f">Copy, we will repair the autopilot in about 45 minutes.</o>
+    </message>
+    <message key="FTR.BKUP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type BKUP verified in flight, with the repair time">
+      <o sex="m">Understood. The backup autopilot will need about 45 minutes.</o>
+      <o sex="m">Noted: the backup autopilot. Repair time about 45 minutes.</o>
+      <o sex="m">I will take care of the backup autopilot, it needs about 45 minutes.</o>
+      <o sex="m">The backup autopilot: about 45 minutes to repair.</o>
+      <o sex="m">OK, the backup autopilot needs about 45 minutes of work.</o>
+      <o sex="m">Copy, we will repair the backup autopilot in about 45 minutes.</o>
+      <o sex="f">Understood. The backup autopilot will need about 45 minutes.</o>
+      <o sex="f">Noted: the backup autopilot. Repair time about 45 minutes.</o>
+      <o sex="f">I will take care of the backup autopilot, it needs about 45 minutes.</o>
+      <o sex="f">The backup autopilot: about 45 minutes to repair.</o>
+      <o sex="f">OK, the backup autopilot needs about 45 minutes of work.</o>
+      <o sex="f">Copy, we will repair the backup autopilot in about 45 minutes.</o>
+    </message>
+    <message key="FTR.APCP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type APCP verified in flight, with the repair time">
+      <o sex="m">Understood. The autopilot control panel will need about one hour.</o>
+      <o sex="m">Noted: the autopilot control panel. Repair time about one hour.</o>
+      <o sex="m">I will take care of the autopilot control panel, it needs about one hour.</o>
+      <o sex="m">The autopilot control panel: about one hour to repair.</o>
+      <o sex="m">OK, the autopilot control panel needs about one hour of work.</o>
+      <o sex="m">Copy, we will repair the autopilot control panel in about one hour.</o>
+      <o sex="f">Understood. The autopilot control panel will need about one hour.</o>
+      <o sex="f">Noted: the autopilot control panel. Repair time about one hour.</o>
+      <o sex="f">I will take care of the autopilot control panel, it needs about one hour.</o>
+      <o sex="f">The autopilot control panel: about one hour to repair.</o>
+      <o sex="f">OK, the autopilot control panel needs about one hour of work.</o>
+      <o sex="f">Copy, we will repair the autopilot control panel in about one hour.</o>
+    </message>
+    <message key="FTR.CHIP" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type CHIP verified in flight, with the repair time">
+      <o sex="m">Understood. The main gearbox chip will need about three hours.</o>
+      <o sex="m">Noted: the main gearbox chip. Repair time about three hours.</o>
+      <o sex="m">I will take care of the main gearbox chip, it needs about three hours.</o>
+      <o sex="m">The main gearbox chip: about three hours to repair.</o>
+      <o sex="m">OK, the main gearbox chip needs about three hours of work.</o>
+      <o sex="m">Copy, we will repair the main gearbox chip in about three hours.</o>
+      <o sex="f">Understood. The main gearbox chip will need about three hours.</o>
+      <o sex="f">Noted: the main gearbox chip. Repair time about three hours.</o>
+      <o sex="f">I will take care of the main gearbox chip, it needs about three hours.</o>
+      <o sex="f">The main gearbox chip: about three hours to repair.</o>
+      <o sex="f">OK, the main gearbox chip needs about three hours of work.</o>
+      <o sex="f">Copy, we will repair the main gearbox chip in about three hours.</o>
+    </message>
+    <message key="FTR.DMGM" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type DMGM verified in flight, with the repair time">
+      <o sex="m">Understood. The main gearbox will need about eight hours.</o>
+      <o sex="m">Noted: the main gearbox. Repair time about eight hours.</o>
+      <o sex="m">I will take care of the main gearbox, it needs about eight hours.</o>
+      <o sex="m">The main gearbox: about eight hours to repair.</o>
+      <o sex="m">OK, the main gearbox needs about eight hours of work.</o>
+      <o sex="m">Copy, we will repair the main gearbox in about eight hours.</o>
+      <o sex="f">Understood. The main gearbox will need about eight hours.</o>
+      <o sex="f">Noted: the main gearbox. Repair time about eight hours.</o>
+      <o sex="f">I will take care of the main gearbox, it needs about eight hours.</o>
+      <o sex="f">The main gearbox: about eight hours to repair.</o>
+      <o sex="f">OK, the main gearbox needs about eight hours of work.</o>
+      <o sex="f">Copy, we will repair the main gearbox in about eight hours.</o>
+    </message>
+    <message key="FTR.DMGT" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type DMGT verified in flight, with the repair time">
+      <o sex="m">Understood. The tail gearbox will need about eight hours.</o>
+      <o sex="m">Noted: the tail gearbox. Repair time about eight hours.</o>
+      <o sex="m">I will take care of the tail gearbox, it needs about eight hours.</o>
+      <o sex="m">The tail gearbox: about eight hours to repair.</o>
+      <o sex="m">OK, the tail gearbox needs about eight hours of work.</o>
+      <o sex="m">Copy, we will repair the tail gearbox in about eight hours.</o>
+      <o sex="f">Understood. The tail gearbox will need about eight hours.</o>
+      <o sex="f">Noted: the tail gearbox. Repair time about eight hours.</o>
+      <o sex="f">I will take care of the tail gearbox, it needs about eight hours.</o>
+      <o sex="f">The tail gearbox: about eight hours to repair.</o>
+      <o sex="f">OK, the tail gearbox needs about eight hours of work.</o>
+      <o sex="f">Copy, we will repair the tail gearbox in about eight hours.</o>
+    </message>
+    <message key="FTR.SEMA" actor="6" radio="auto" group="flt" seq="1" new="1" trigger="the technician answers the failure of type SEMA verified in flight, with the repair time">
+      <o sex="m">Understood. The trim and stabilization actuators will need about ninety minutes.</o>
+      <o sex="m">Noted: the trim and stabilization actuators. Repair time about ninety minutes.</o>
+      <o sex="m">I will take care of the trim and stabilization actuators, it needs about ninety minutes.</o>
+      <o sex="m">The trim and stabilization actuators: about ninety minutes to repair.</o>
+      <o sex="m">OK, the trim and stabilization actuators needs about ninety minutes of work.</o>
+      <o sex="m">Copy, we will repair the trim and stabilization actuators in about ninety minutes.</o>
+      <o sex="f">Understood. The trim and stabilization actuators will need about ninety minutes.</o>
+      <o sex="f">Noted: the trim and stabilization actuators. Repair time about ninety minutes.</o>
+      <o sex="f">I will take care of the trim and stabilization actuators, it needs about ninety minutes.</o>
+      <o sex="f">The trim and stabilization actuators: about ninety minutes to repair.</o>
+      <o sex="f">OK, the trim and stabilization actuators needs about ninety minutes of work.</o>
+      <o sex="f">Copy, we will repair the trim and stabilization actuators in about ninety minutes.</o>
+    </message>
+    <message key="IMP.ASK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="after an impact that hurt somebody: the pilot asks the crew for their status">
+      <o>Everybody okay? Crew, report!</o>
+      <o>Is everybody all right? Report!</o>
+      <o>Crew, are you okay? Status!</o>
+      <o>Everyone okay back there? Give me a status!</o>
+      <o>Is anyone hurt? Report in!</o>
+      <o>Report, everybody! Are you okay?</o>
+    </message>
+    <message key="IMP.PAT" actor="2" radio="auto" group="flt" seq="1" new="1" trigger="after an impact that hurt somebody, with a patient aboard: the copilot asks the doctor">
+      <o>Doc, how is the patient?</o>
+      <o>Doc, how is the patient doing?</o>
+      <o>Doc, check the patient, how is he?</o>
+      <o>Doc, is the patient okay?</o>
+      <o>How is the patient, Doc?</o>
+      <o>Doc, status of the patient?</o>
+    </message>
+    <message key="IMP.DOC" actor="3" radio="auto" group="flt" seq="1" new="1" trigger="after an impact, with a patient aboard: the doctor answers about the patient">
+      <o>I am checking him now.</o>
+      <o>Checking the patient now.</o>
+      <o>Give me a moment, I am checking him.</o>
+      <o>Looking at him now.</o>
+      <o>I am on it, checking his vitals.</o>
+      <o>Checking his vital signs now.</o>
     </message>
 </voicepack>
