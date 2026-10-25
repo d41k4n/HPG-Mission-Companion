@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="18" basever="31" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="19" basever="31" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -42,19 +42,19 @@
     <name role="MIN_N">Minuten</name>
   </names>
     <message key="APR.CHF.G" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="ground operation expected">
-      <o>Crew: Trage und Notfalltasche bereit, ich folge dem Notarzt am Boden.</o>
+      <o>Trage und Notfalltasche bereit, ich folge dem Notarzt am Boden.</o>
       <o>Kabine: Trage ist vorbereitet, ich gehe mit dem Notarzt, sobald wir unten sind.</o>
-      <o>Crew bereit für den Bodeneinsatz, Trage an der Tür.</o>
+      <o>Bereit für den Bodeneinsatz, Trage an der Tür.</o>
       <o>Kabine hier, ich übernehme die Trage und folge dem Arzt am Boden.</o>
-      <o>Crew bereit. Trage und Tasche an der Tür, ich folge dem Arzt.</o>
+      <o>Alles bereit. Trage und Tasche an der Tür, ich folge dem Arzt.</o>
       <o>Kabine hier. Trage ist bereit, ich folge dem Notarzt, sobald wir aufgesetzt haben.</o>
     </message>
     <message key="APR.CHF.H" actor="4" radio="auto" group="approach" seq="4" new="1" trigger="hoist expected">
-      <o>Crew: Winde geprüft, Notarzt geht zuerst runter, ich bediene die Winde.</o>
+      <o>Winde geprüft, Notarzt geht zuerst runter, ich bediene die Winde.</o>
       <o>Kabine: Die Winde ist einsatzbereit. Zuerst der Arzt, ich fahre das Seil.</o>
-      <o>Crew bereit für Windenbetrieb, Gurtzeug und Trage vorbereitet.</o>
+      <o>Alles bereit für Windenbetrieb, Gurtzeug und Trage vorbereitet.</o>
       <o>Kabine hier, Winde einsatzbereit. Ich bediene sie, der Arzt geht zuerst runter.</o>
-      <o>Crew bereit. Winde geprüft, Arzt geht zuerst runter, ich bediene die Winde.</o>
+      <o>Kabine bereit. Winde geprüft, Arzt geht zuerst runter, ich bediene die Winde.</o>
       <o>Kabine hier. Winde ist bereit, Notarzt geht zuerst und ich fahre das Seil.</o>
     </message>
     <message key="APR.CPL.N" actor="2" radio="auto" group="approach" seq="2" new="1" trigger="no police or fire service">
@@ -91,18 +91,18 @@
     </message>
     <message key="APR.END" actor="1" radio="auto" group="approach" seq="5" new="1" trigger="end of the briefing">
       <o>Gut. Alle wachsam bleiben und Hindernisse sofort melden.</o>
-      <o>Danke, Crew. Augen nach draußen, Hindernisse und Leitungen ansagen.</o>
+      <o>Danke. Augen nach draußen, Hindernisse und Leitungen ansagen.</o>
       <o>Alles klar. Haltet die Augen offen und meldet, was ihr seht.</o>
       <o>Verstanden. Fokussiert bleiben, wir landen, sobald der Bereich frei ist.</o>
       <o>Gut. Wachsam bleiben, alle zusammen, und jedes Hindernis melden.</o>
-      <o>Danke, Leute. Augen raus und rufen, wenn ihr was seht.</o>
+      <o>Danke. Augen raus und rufen, wenn ihr was seht.</o>
     </message>
     <message key="APR.ORG.CHF" actor="4" radio="auto" group="aprorg" seq="3" new="1">
-      <o>Crew bereit. Der Behälter kommt direkt in die Kabine.</o>
+      <o>Kabine bereit. Der Behälter kommt direkt in die Kabine.</o>
       <o>Kabine hier. Wir sichern den Behälter sofort nach dem Einladen.</o>
       <o>Kabine bereit. Haltegurte für den Behälter liegen bereit.</o>
       <o>Verstanden. Wir nehmen den Behälter entgegen und sichern ihn.</o>
-      <o>Crew bereit. Der Behälter geht direkt in die Kabine.</o>
+      <o>Kabine bereit. Der Behälter geht direkt in die Kabine.</o>
       <o>Kapiert. Wir übernehmen den Behälter und zurren ihn sofort fest.</o>
     </message>
     <message key="APR.ORG.DOC" actor="3" radio="auto" group="aprorg" seq="2" new="1">
@@ -127,7 +127,7 @@
       <o>Fast am Übergabepunkt. Zeit im Auge behalten, wir müssen effizient sein.</o>
       <o>Organübernahme zwei Meilen voraus. Bereitmachen für eine zügige Landung.</o>
       <o>Zwei Meilen bis zur Organübernahme. Wir landen, verladen und starten sofort.</o>
-      <o>Gleich da, Leute. Die Übergabe ist zwei Meilen voraus, macht schnell.</o>
+      <o>Gleich da. Die Übergabe ist zwei Meilen voraus, macht schnell.</o>
     </message>
     <message key="APR.PLT.G" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, a landing spot near the patient is expected">
       <o>Im Anflug auf die Einsatzstelle. Wir erwarten eine Landung nahe am Patienten, also Bodeneinsatz.</o>
@@ -135,7 +135,7 @@
       <o>Wir sollten nah bei ihnen landen können. Bodeneinsatz.</o>
       <o>Noch zwei Meilen. Wir peilen eine Landung nahe am Patienten an, Bodeneinsatz.</o>
       <o>Zwei Meilen entfernt. Wir sollten nahe beim Patienten aufsetzen, also Einsatz am Boden.</o>
-      <o>Fast da, Leute. Landung direkt beim Patienten geplant, Bodeneinsatz.</o>
+      <o>Fast da. Landung direkt beim Patienten geplant, Bodeneinsatz.</o>
     </message>
     <message key="APR.PLT.H" actor="1" radio="auto" group="approach" seq="1" new="1" trigger="2 NM from the accident, no landing spot near the patient: hoist expected">
       <o>Im Anflug auf die Einsatzstelle. Kein geeigneter Landeplatz nahe am Patienten, wir planen den Windeneinsatz.</o>
@@ -143,15 +143,15 @@
       <o>Kein Landeplatz in der Nähe. Wir bereiten die Rettungswinde vor.</o>
       <o>Zwei Meilen entfernt. Keine passende Landestelle beim Patienten, wir stellen uns auf Winde ein.</o>
       <o>Noch zwei Meilen. Keine Landemöglichkeit nahe am Patienten, wir machen die Winde klar.</o>
-      <o>Fast da, Leute. Können beim Patienten nicht landen, wird also ein Windeneinsatz.</o>
+      <o>Fast da. Können beim Patienten nicht landen, wird also ein Windeneinsatz.</o>
     </message>
     <message key="APR.TRF.CHF" actor="4" radio="auto" group="aprtrf" seq="3" new="1">
-      <o>Crew bereit zum Einladen, Trage ist vorbereitet.</o>
+      <o>Kabine bereit zum Einladen, Trage ist vorbereitet.</o>
       <o>Kabine hier. Die Trage ist bereit und die Kabine frei.</o>
-      <o>Crew bereit. Wir verladen, sobald der Notarzt das Go gibt.</o>
+      <o>Wir verladen, sobald der Notarzt grünes Licht gibt.</o>
       <o>Verstanden. Trage und Haltegurte bereit.</o>
-      <o>Crew bereit. Trage ist für das Einladen vorbereitet.</o>
-      <o>Kapiert. Trage und Gurte bereit, wir laden ein, wenn der Arzt Bescheid gibt.</o>
+      <o>Kabine bereit. Trage ist für das Einladen vorbereitet.</o>
+      <o>Verstanden. Trage und Gurte bereit, wir laden ein, wenn der Arzt Bescheid gibt.</o>
     </message>
     <message key="APR.TRF.DOC" actor="3" radio="auto" group="aprtrf" seq="2" new="1">
       <o>Notarzt bereit. Ich übernehme den Patienten und prüfe sofort das Monitoring.</o>
@@ -175,23 +175,23 @@
       <o>Zwei Meilen bis zum abgebenden Krankenhaus. Bereitmachen für die Übergabe.</o>
       <o>Fast am Abholpunkt. Landevorbereitung.</o>
       <o>Noch zwei Meilen bis zur Abholung. Landen, Patienten übernehmen und los.</o>
-      <o>Gleich da, Leute. Wir landen am Übergabepunkt und übernehmen den Patienten.</o>
+      <o>Gleich da. Wir landen am Übergabepunkt und übernehmen den Patienten.</o>
     </message>
     <message key="BRF.ORG.CHF" actor="4" radio="auto" group="brforg" seq="4" new="1">
-      <o>Crew verstanden. Der Behälter reist in der Kabine mit und wird für den Flug gesichert.</o>
+      <o>Verstanden. Der Behälter reist in der Kabine mit und wird für den Flug gesichert.</o>
       <o>Kabine verstanden. Wir sichern den Behälter und halten die Kabine frei.</o>
-      <o>Crew bereit. Der Behälter wird vor dem Abheben festgezurrt.</o>
+      <o>Alles bereit. Der Behälter wird vor dem Abheben festgezurrt.</o>
       <o>Verstanden. Wir behandeln den Behälter vorsichtig und sichern ihn in der Kabine.</o>
-      <o>Crew verstanden. Der Behälter wird vor dem Start in der Kabine gesichert.</o>
-      <o>Kapiert. Wir passen gut auf den Behälter auf und sichern ihn in der Kabine.</o>
+      <o>Verstanden. Der Behälter wird vor dem Start in der Kabine gesichert.</o>
+      <o>Verstanden. Wir passen gut auf den Behälter auf und sichern ihn in der Kabine.</o>
     </message>
     <message key="BRF.ORG.CPL" actor="2" radio="auto" group="brforg" seq="2" new="1">
       <o>Verstanden. Ich plane den schnellsten Flugweg und behalte die Uhr im Auge. Das Ziel wird informiert.</o>
       <o>Verstanden. Flugweg steht, ich gebe in jeder Phase die verbleibende Zeit durch.</o>
       <o>Copilot verstanden. Direkter Kurs zur Abholung, dann zum Zielkrankenhaus, keine Umwege.</o>
-      <o>Kapiert. Ich übernehme die Navigation und die Funksprüche an die Zielklinik.</o>
+      <o>Verstanden. Ich übernehme die Navigation und die Funksprüche an die Zielklinik.</o>
       <o>Verstanden. Schnellster Flugweg, und ich behalte die Zeit im Blick.</o>
-      <o>Kapiert. Keine Umwege, ich achte auf die Uhr und funke die Klinik an.</o>
+      <o>Verstanden. Keine Umwege, ich achte auf die Uhr und funke die Klinik an.</o>
     </message>
     <message key="BRF.ORG.DOC" actor="3" radio="auto" group="brforg" seq="3" new="1">
       <o>Notarzt verstanden. Bei der Abholung prüfe ich den Behälter: Siegel, Temperatur und Papiere.</o>
@@ -203,27 +203,27 @@
     </message>
     <message key="BRF.ORG.END" actor="1" radio="auto" group="brforg" seq="5" new="1">
       <o>Gut. Los geht's, und lasst uns im Zeitplan bleiben.</o>
-      <o>Danke, Crew. Schnell und sicher.</o>
+      <o>Danke. Schnell und sicher.</o>
       <o>Alles klar. Jede Minute zählt, los geht's.</o>
       <o>Perfekt. Wir heben ab, sobald wir bereit sind.</o>
-      <o>Gut. Zügig und sicher arbeiten, Crew.</o>
+      <o>Gut. Zügig und sicher arbeiten.</o>
       <o>Super, jede Minute zählt, bringen wir es hinter uns.</o>
     </message>
     <message key="BRF.ORG.PLT" actor="1" radio="auto" group="brforg" seq="1" new="1">
       <o>Organtransport. Hohe Dringlichkeit: Wir holen das Organ ab und liefern es innerhalb des Zeitfensters ab.</o>
-      <o>Das ist ein Organtransport, Crew. Die Uhr tickt, also halten wir die Abläufe straff.</o>
+      <o>Das ist ein Organtransport. Die Uhr tickt, also halten wir die Abläufe straff.</o>
       <o>Organtransport. Abholung, dann den kürzesten, sicheren Flugweg zum Zielort.</o>
-      <o>Wir müssen ein Organ pünktlich abliefern. Zügig und sauber arbeiten, bitte.</o>
-      <o>Organtransport, Crew. Höchste Eile geboten, lasst uns keine Zeit verlieren.</o>
-      <o>Organtransport, Leute. Die Uhr läuft, arbeiten wir schnell und präzise.</o>
+      <o>Wir müssen ein Organ pünktlich abliefern. Zügig und sauber arbeiten.</o>
+      <o>Organtransport. Höchste Eile geboten, lasst uns keine Zeit verlieren.</o>
+      <o>Organtransport. Die Uhr läuft, arbeiten wir schnell und präzise.</o>
     </message>
     <message key="BRF.SAR.CHF" actor="4" radio="auto" group="brfsar" seq="4" new="1">
-      <o>Crew verstanden. Windenausrüstung und Bodenausrüstung sind bereit, ich beobachte die linke Seite.</o>
+      <o>Verstanden. Windenausrüstung und Bodenausrüstung sind bereit, ich beobachte die linke Seite.</o>
       <o>Kabine verstanden. Die Ausrüstung für Winden- oder Bodeneinsatz ist vorbereitet.</o>
-      <o>Crew bereit. Wir sind für jedes Gelände gerüstet.</o>
+      <o>Alles bereit. Wir sind für jedes Gelände gerüstet.</o>
       <o>Verstanden. Ich behalte die linke Seite im Auge und halte die Ausrüstung parat.</o>
-      <o>Crew verstanden. Ausrüstung bereit, ich scanne links.</o>
-      <o>Kapiert. Alles ist einsatzbereit, ich halte links Ausschau.</o>
+      <o>Verstanden. Ausrüstung bereit, ich scanne links.</o>
+      <o>Verstanden. Alles ist einsatzbereit, ich halte links Ausschau.</o>
     </message>
     <message key="BRF.SAR.CPL" actor="2" radio="auto" group="brfsar" seq="2" new="1">
       <o>Verstanden. Ich lege das Suchgebiet und die Grenzen fest und melde, was ich auf meiner Seite sehe.</o>
@@ -244,25 +244,25 @@
     <message key="BRF.SAR.END" actor="1" radio="auto" group="brfsar" seq="5" new="1">
       <o>Gut. Augen auf und meldet alles, was ihr seht.</o>
       <o>Danke. Lasst sie uns finden.</o>
-      <o>Alles klar, Crew. Beginnen wir mit der Suche.</o>
+      <o>Alles klar. Beginnen wir mit der Suche.</o>
       <o>Perfekt. Wir starten, sobald alle bereit sind, und jeder hält Ausschau.</o>
-      <o>Gut. Augen offen halten, Crew, finden wir sie.</o>
+      <o>Gut. Augen offen halten, finden wir sie.</o>
       <o>Super, fliegen wir los und suchen sie, Augen nach draußen.</o>
     </message>
     <message key="BRF.SAR.PLT" actor="1" radio="auto" group="brfsar" seq="1" new="1">
       <o>Such- und Rettungseinsatz. Wir beginnen an der zuletzt bekannten Position und suchen das Gebiet systematisch ab. Alle Augen nach draußen.</o>
-      <o>Das ist eine Suchmission, Crew. Wir fliegen ein Suchmuster, alle halten Ausschau.</o>
+      <o>Das ist eine Suchmission. Wir fliegen ein Suchmuster, alle halten Ausschau.</o>
       <o>Heute Such- und Rettungseinsatz. Wir tasten uns schrittweise von der letzten bekannten Position vor.</o>
       <o>Such- und Rettungsauftrag. Wir suchen gründlich und sagen jede Sichtung sofort an.</o>
-      <o>Sucheinsatz, Crew. Suchmuster ab letzter bekannter Position, Augen nach draußen.</o>
-      <o>Suchflug heute, Leute. Augen raus und alles melden, was auffällt.</o>
+      <o>Sucheinsatz. Suchmuster ab letzter bekannter Position, Augen nach draußen.</o>
+      <o>Suchflug heute. Augen raus und alles melden, was auffällt.</o>
     </message>
     <message key="BRF.TRF.CHF" actor="4" radio="auto" group="brftrf" seq="4" new="1">
-      <o>Crew verstanden. Trage und Monitoring sind bereit für die Aufnahme.</o>
+      <o>Verstanden. Trage und Monitoring sind bereit für die Aufnahme.</o>
       <o>Kabine verstanden. Die Kabine ist frei und die Trage vorbereitet.</o>
-      <o>Crew bereit. Wir helfen beim Einladen und sichern alles für den Flug.</o>
+      <o>Kabine bereit. Wir helfen beim Einladen und sichern alles für den Flug.</o>
       <o>Verstanden. Trage, Gurte und Ausrüstung sind bereit. Wir verladen ohne Hektik.</o>
-      <o>Crew verstanden. Trage ist bereit, wir laden vorsichtig ein.</o>
+      <o>Verstanden. Trage ist bereit, wir laden vorsichtig ein.</o>
       <o>Alles klar. Trage und Gurte liegen bereit, wir verladen ganz in Ruhe.</o>
     </message>
     <message key="BRF.TRF.CPL" actor="2" radio="auto" group="brftrf" seq="2" new="1">
@@ -282,20 +282,20 @@
       <o>Alles klar. Ich spreche mich erst mit dem Team vor Ort ab und stelle sicher, dass der Flug machbar ist.</o>
     </message>
     <message key="BRF.TRF.END" actor="1" radio="auto" group="brftrf" seq="5" new="1">
-      <o>Gut. Sichere Verlegung, Crew. Wir heben ab, sobald die Checklisten durch sind.</o>
+      <o>Gut. Sichere Verlegung. Wir heben ab, sobald die Tschecklisten durch sind.</o>
       <o>Danke euch allen. Bringen wir das sauber über die Bühne.</o>
       <o>Perfekt. Ruhig und sicher, wie immer.</o>
       <o>Alles klar, lasst uns den Patienten sicher rüberbringen.</o>
-      <o>Gut. Eine sichere Verlegung, Crew, fliegen wir los.</o>
+      <o>Gut. Eine sichere Verlegung, fliegen wir los.</o>
       <o>Super, bringen wir den Patienten rüber, schön ruhig und sicher.</o>
     </message>
     <message key="BRF.TRF.PLT" actor="1" radio="auto" group="brftrf" seq="1" new="1">
       <o>Verlegungsflug. Wir übernehmen den Patienten am vereinbarten Punkt und fliegen ihn zur Zielklinik. Sorgfältig planen.</o>
       <o>Das ist eine Patientenverlegung. Aufnahme am abgebenden Standort, dann direkt zum Zielkrankenhaus.</o>
-      <o>Verlegungsflug, Crew. Wir laden den Patienten ein und fliegen ihn so erschütterungsfrei wie möglich ans Ziel.</o>
+      <o>Verlegungsflug. Wir laden den Patienten ein und fliegen ihn so erschütterungsfrei wie möglich ans Ziel.</o>
       <o>Verlegung heute. Priorität hat ein patientenschonender Flug.</o>
-      <o>Verlegungseinsatz, Crew. Erst Abholung, dann Zielort und ein ruhiger Flug für den Patienten.</o>
-      <o>Heute eine Verlegung, Leute. Machen wir es so ruhig und angenehm wie möglich.</o>
+      <o>Verlegungseinsatz. Erst Abholung, dann Zielort und ein ruhiger Flug für den Patienten.</o>
+      <o>Heute eine Verlegung. Machen wir es so ruhig und angenehm wie möglich.</o>
     </message>
     <message key="CPL.1" actor="2" radio="auto" lvar="L:CPL{VCP}1" wav="AND.cpl.all.engine.started.successfully.wav" sleep="0">
       <o>Alle erfolgreich gestartet.</o>
@@ -370,28 +370,28 @@
       <o>Wir haben einen Ausfall, und das sieht nicht gut aus.</o>
     </message>
     <message key="CPL.10" actor="2" radio="auto" lvar="L:CPL{VCP}10" wav="AND.cpl.holdon.performing.leak.checks.wav" sleep="0">
-      <o>Aussen-Check, bitte warten.</o>
-      <o>Aussen-Check, einen Moment bitte.</o>
+      <o>Aussen-Kontrolle, bitte warten.</o>
+      <o>Aussen-Kontrolle, einen Moment bitte.</o>
       <o>Bitte warten, ich mache die Aussen-Kontrolle.</o>
       <o>Aussen-Kontrolle, kurz warten.</o>
       <o>Ich mache die Aussen-Kontrolle, bitte warten.</o>
       <o>Augenblick, ich mache die Aussen-Kontrolle.</o>
     </message>
     <message key="CPL.11" actor="2" radio="auto" lvar="L:CPL{VCP}11" wav="AND.cpl.prepare.for.gnd.op.wav" sleep="0">
-      <o>Crew, bereitmachen für Bodeneinsatz.</o>
-      <o>Crew, fertigmachen für Arbeiten am Boden.</o>
-      <o>Crew, als Nächstes Bodeneinsatz. Vorbereiten.</o>
-      <o>Crew, wir gehen in den Bodeneinsatz.</o>
-      <o>Leute hinten, macht euch bereit für den Einsatz am Boden.</o>
-      <o>Crew, Bodeneinsatz steht an, fertigmachen.</o>
+      <o>Bereitmachen für Bodeneinsatz.</o>
+      <o>Fertigmachen für Arbeiten am Boden.</o>
+      <o>Als Nächstes Bodeneinsatz. Vorbereiten.</o>
+      <o>Wir gehen in den Bodeneinsatz.</o>
+      <o>Macht euch bereit für den Einsatz am Boden.</o>
+      <o>Bodeneinsatz steht an, fertigmachen.</o>
     </message>
     <message key="CPL.12" actor="2" radio="auto" lvar="L:CPL{VCP}12" wav="AND.cpl.prepare.for.hoist.op.wav" sleep="0">
-      <o>Crew, bereitmachen für Windenbetrieb.</o>
-      <o>Crew, fertigmachen für den Windeneinsatz.</o>
-      <o>Crew, als Nächstes Windenbetrieb. Vorbereiten.</o>
-      <o>Crew, wir gehen auf Windenbetrieb.</o>
-      <o>Leute hinten, fertigmachen für die Winde.</o>
-      <o>Crew, Winde steht an, macht euch bereit.</o>
+      <o>Bereitmachen für Windenbetrieb.</o>
+      <o>Fertigmachen für den Windeneinsatz.</o>
+      <o>Als Nächstes Windenbetrieb. Vorbereiten.</o>
+      <o>Wir gehen auf Windenbetrieb.</o>
+      <o>Macht euch bereit für die Winde.</o>
+      <o>Winde steht an, macht euch bereit.</o>
     </message>
     <message key="CPL.13" actor="2" radio="auto" lvar="L:CPL{VCP}13" wav="AND.cpl.preparing.for.engine.1.2.wav" sleep="0">
       <o>Vorbereitung für Anlasssequenz: Nummer eins, dann zwei.</o>
@@ -410,20 +410,20 @@
       <o>Okay, erst Nummer zwei, danach eins.</o>
     </message>
     <message key="CPL.15" actor="2" radio="auto" lvar="L:CPL{VCP}15" wav="AND.cpl.rearcrew.ready.to.start.op.wav" sleep="0">
-      <o>Heli in Position. Crew, Freigabe für Einsatzbeginn.</o>
-      <o>Heli in Position, Crew für den Einsatz freigegeben.</o>
-      <o>Wir sind in Position. Kabine, ihr könnt mit den Maßnahmen beginnen.</o>
-      <o>In Position. Crew, ihr könnt loslegen.</o>
-      <o>Wir stehen, Leute, ihr könnt raus.</o>
-      <o>Wir sind in Position, Kabine, ihr habt Freigabe, viel Erfolg.</o>
+      <o>Heli in Position. Freigabe für Einsatz.</o>
+      <o>Heli in Position, Einsatz freigegeben.</o>
+      <o>Wir sind in Position. Ihr könnt mit den Maßnahmen beginnen.</o>
+      <o>In Position. Ihr könnt loslegen.</o>
+      <o>Wir stehen, ihr könnt raus.</o>
+      <o>Wir sind in Position, ihr habt Freigabe, viel Erfolg.</o>
     </message>
     <message key="CPL.16" actor="2" radio="auto" lvar="L:CPL{VCP}16" wav="AND.cpl.rearcrew.we.are.appr.to.site.wav" sleep="0">
-      <o>Crew, wir nähern uns dem Landeplatz.</o>
-      <o>Crew, Landeplatz liegt voraus.</o>
-      <o>Kabine, Anflug auf den Landeplatz.</o>
-      <o>Crew, wir sind nah am Landeplatz.</o>
-      <o>Leute, wir sind gleich am Landeplatz.</o>
-      <o>Gleich da, Kabine, Landeplatz direkt voraus.</o>
+      <o>Wir nähern uns dem Landeplatz.</o>
+      <o>Landeplatz liegt voraus.</o>
+      <o>Anflug auf den Landeplatz.</o>
+      <o>Wir sind nah am Landeplatz.</o>
+      <o>Wir sind gleich am Landeplatz.</o>
+      <o>Gleich da, Landeplatz direkt voraus.</o>
     </message>
     <message key="CPL.17" actor="2" radio="auto" lvar="L:CPL{VCP}17" wav="AND.cpl.site.is.not.safe.for.us.wav" sleep="0">
       <o>Der Platz ist nicht sicher. Warten auf Freigabe.</o>
@@ -431,7 +431,7 @@
       <o>Der Landeplatz ist noch nicht gesichert. Wir warten auf Freigabe.</o>
       <o>Keine Landung möglich: Platz ist unsicher. Warten auf Freigabe.</o>
       <o>Da unten ist es nicht sicher. Wir warten auf das Go.</o>
-      <o>Noch nicht sicher, Leute. Warten wir auf die Freigabe.</o>
+      <o>Noch nicht sicher. Warten wir auf die Freigabe.</o>
     </message>
     <message key="CPL.18" actor="2" radio="auto" lvar="L:CPL{VCP}18" wav="AND.cpl.site.is.safe.we.can.proceed.wav" sleep="0">
       <o>Der Platz ist sicher. Maßnahmen können fortgesetzt werden.</o>
@@ -442,10 +442,10 @@
       <o>Alles sicher, ihr könnt anfangen.</o>
     </message>
     <message key="CPL.19" actor="2" radio="auto" lvar="L:CPL{VCP}19" wav="AND.cpl.skid.ldg.wav" sleep="0">
-      <o>Crew, bereitmachen für Kufen-Landung.</o>
+      <o>Bereitmachen für Kufen-Landung.</o>
       <o>Alle, fertigmachen für Kufen-Landung.</o>
       <o>Kabine, klarmachen für Kufen-Landung.</o>
-      <o>Crew, wir gehen in eine Kufen-Landung.</o>
+      <o>Wir gehen in eine Kufen-Landung.</o>
       <o>Alle, bereitmachen für Kufen-Landung.</o>
       <o>Kabine, Kufen-Landung steht an, macht euch bereit.</o>
     </message>
@@ -468,10 +468,10 @@
     <message key="CPL.22" actor="2" radio="auto" lvar="L:CPL{VCP}22" wav="AND.cpl.t.crew.prepare.op.wav" sleep="0">
       <o>Ganze Besatzung, bereitmachen für den Einsatz.</o>
       <o>Besatzung, vorbereiten auf den Einsatz.</o>
-      <o>Crew, fertigmachen für die Maßnahmen.</o>
+      <o>Fertigmachen für die Maßnahmen.</o>
       <o>Besatzung, Einsatz beginnt gleich, vorbereiten.</o>
-      <o>Okay Leute, macht euch bereit für den Einsatz.</o>
-      <o>Alles klar, Crew, machen wir uns fertig.</o>
+      <o>Okay, macht euch bereit für den Einsatz.</o>
+      <o>Alles klar, machen wir uns fertig.</o>
     </message>
     <message key="CPL.23" actor="2" radio="auto" lvar="L:CPL{VCP}23" wav="AND.cpl.t.goodmorning.frank.wav" sleep="0" futile="1" to="tech">
       <o silent="1"/>
@@ -498,12 +498,12 @@
       <o>Wir müssen alles herunterfahren, inklusive Triebwerke.</o>
     </message>
     <message key="CPL.26" actor="2" radio="auto" lvar="L:CPL{VCP}26" wav="AND.cpl.u.due.to.patient.wav" sleep="0">
-      <o>An alle, der Arzt meldet, dass der Rettungswagen zu einer anderen Klinik umgeleitet wurde. Position auf der Karte prüfen.</o>
-      <o>Besatzung, laut Arzt wurde der RTW zu einem Ausweichkrankenhaus umgeleitet. Position auf der Karte checken.</o>
+      <o>An alle, der Notarzt meldet, dass der Rettungswagen zu einer anderen Klinik umgeleitet wurde. Position auf der Karte prüfen.</o>
+      <o>Besatzung, laut Notarzt wurde der RTW zu einem Ausweichkrankenhaus umgeleitet. Position auf der Karte prüfen.</o>
       <o>Der Rettungswagen wurde zu einer anderen Klinik umgeleitet, meldet der Notarzt. Prüft die Karte für den Standort.</o>
-      <o>Crew, der RTW fährt laut Arzt ein anderes Krankenhaus an. Bitte auf der Karte nachsehen.</o>
+      <o>Der RTW fährt laut Notarzt ein anderes Krankenhaus an. Bitte auf der Karte nachsehen.</o>
       <o>Der Notarzt sagt, der RTW fährt eine andere Klinik an. Schaut mal auf die Karte.</o>
-      <o>Der RTW wird zu einem anderen Krankenhaus umgeleitet, sagt der Arzt. Karte prüfen, Leute.</o>
+      <o>Der RTW wird zu einem anderen Krankenhaus umgeleitet, sagt der Notarzt. Karte prüfen.</o>
     </message>
     <message key="CPL.27" actor="2" radio="auto" lvar="L:CPL{VCP}27" wav="AND.cpl.v.above.max.hoist.wav" sleep="0">
       <o>Wir liegen über der maximalen Winden-Ausfahrgeschwindigkeit.</o>
@@ -526,7 +526,7 @@
       <o>Schräglage ist zu hoch. Das bringt den Patienten und den Windenführer in Gefahr.</o>
       <o>Die Schräglage ist übermäßig groß und gefährdet Patient und Windenbediener.</o>
       <o>Zu viel Querneigung, du gefährdest den Patienten und den Windenführer.</o>
-      <o>Zu viel Schräglage, wir bringen Patient und Operateur in Gefahr!</o>
+      <o>Zu viel Schräglage, wir bringen Patient und Helfer in Gefahr!</o>
       <o>Horizont aufrichten, der Patient und der Windenführer sind in Gefahr!</o>
     </message>
     <message key="CPL.30" actor="2" radio="auto" lvar="L:CPL{VCP}30" wav="AND.cpl.v.keep.bank.angle.wav" sleep="0">
@@ -541,9 +541,9 @@
       <o>Wir sind zu schnell. Wir gefährden Patient, Windenbediener und Heli.</o>
       <o>Wir sind zu schnell. Patient, Windenbediener und Heli sind in Gefahr.</o>
       <o>Zu hohe Geschwindigkeit: Patient, Windenführer und Heli sind gefährdet.</o>
-      <o>Kapitän, wir sind zu schnell. Wir riskieren Patient, Operateur und Maschine.</o>
+      <o>Kapitän, wir sind zu schnell. Wir riskieren Patient, Helfer und Maschine.</o>
       <o>Wir sind zu schnell, langsamer! Das gefährdet alle an Bord.</o>
-      <o>Langsamer! Wir bringen den Patienten, den Windenmann und die Maschine in Gefahr!</o>
+      <o>Langsamer! Wir bringen den Patienten, den Helfer und die Maschine in Gefahr!</o>
     </message>
     <message key="CPL.32" actor="2" radio="auto" lvar="L:CPL{VCP}32" wav="AND.cpl.v.we.have.to.abort.wav" sleep="0">
       <o>Wir müssen die Mission jetzt abbrechen.</o>
@@ -620,9 +620,9 @@
     <message key="CPL.41" actor="2" radio="auto" lvar="L:CPL{VCP}41" wav="AND.cpl.x.nice.touch.wav" sleep="3" futile="1">
       <o silent="1"/>
       <o silent="1"/>
-      <o>Schöner Touchdown, Kapitän.</o>
+      <o>Schöne Landung, Kapitän.</o>
       <o>Sehr sanfte Landung, Kapitän.</o>
-      <o>Wow, nette Geste, Kapitän.</o>
+      <o>Das war schön, Kapitän.</o>
       <o>Wow, butterweich, Kapitän.</o>
     </message>
     <message key="CPL.42" actor="2" radio="auto" lvar="L:CPL{VCP}42" wav="AND.cpl.x.VNE.wav" sleep="0">
@@ -707,7 +707,7 @@
     </message>
     <message key="CPL.52" actor="2" radio="auto" lvar="L:CPL{VCP}52" wav="AND.cpl.ya.we.received.call.from.doc.modify.wav" sleep="10" tight="1">
       <o>An die gesamte Besatzung: Der Arzt meldet, dass der RTW zu einer anderen Klinik umgeleitet wurde. Wir müssen den Kurs zum neuen Abholpunkt ändern.</o>
-      <o>Crew, der Notarzt meldet Umleitung des RTWs zu einer anderen Klinik. Wir passen den Kurs zum neuen Abholort an.</o>
+      <o>Der Notarzt meldet Umleitung des RTWs zu einer anderen Klinik. Wir passen den Kurs zum neuen Abholort an.</o>
       <o>Der Rettungswagen wurde zu einem anderen Krankenhaus umgeleitet, laut Arzt. Neuer Kurs zum neuen Treffpunkt erforderlich.</o>
       <o>Besatzung, der RTW fährt laut Arzt eine andere Klinik an. Wir brauchen einen neuen Kurs zum neuen Abholort.</o>
       <o>Der Arzt sagt, der RTW hat die Klinik gewechselt. Neuer Abholort, neue Route.</o>
@@ -719,14 +719,14 @@
       <o>Bodenverladung durch medizinisches Team läuft. Wir bleiben hier.</o>
       <o>Das medizinische Team verlädt am Boden. Wir warten.</o>
       <o>Das medizinische Personal lädt den Patienten ein. Wir warten hier.</o>
-      <o>Sie laden am Boden ein. Wir warten hier, Leute.</o>
+      <o>Sie laden am Boden ein. Wir warten hier.</o>
     </message>
     <message key="CPL.54" actor="2" radio="auto" lvar="L:CPL{VCP}54" wav="AND.cpl.yb.medical.crew.ready.hoist.forced.wav" sleep="0">
       <o>Das medizinische Team meldet, dass die Entfernung einen Windeneinsatz erfordert. Das Team ist bereit und wartet auf uns.</o>
       <o>Laut medizinischem Team erfordert die Distanz einen Windeneinsatz. Sie sind bereit und warten.</o>
       <o>Windeneinsatz wegen der Distanz erforderlich, meldet das medizinische Team. Sie sind bereit für uns.</o>
       <o>Das Team sagt, es ist zu weit, also Winde. Sie stehen bereit und warten.</o>
-      <o>Zu weit für den Bodenweg, wir müssen winden. Die Crew steht bereit.</o>
+      <o>Zu weit für den Bodenweg, wir müssen winden. Wir sind bereit.</o>
       <o>Zu weit zu Fuß, läuft auf Winde hinaus. Sie sind bereit und warten auf uns.</o>
     </message>
     <message key="CPL.55" actor="2" radio="auto" lvar="L:CPL{VCP}55" wav="AND.cpl.yb.medical.crew.ready.hoist.wav" sleep="0">
@@ -735,7 +735,7 @@
       <o>Medizinisches Team bereit für Windenbetrieb.</o>
       <o>Medizinisches Team steht für die Winde parat.</o>
       <o>Das Team ist fertig für den Windenbetrieb.</o>
-      <o>Sie sind bereit für die Winde, Leute.</o>
+      <o>Sie sind bereit für die Winde.</o>
     </message>
     <message key="CPL.56" actor="2" radio="auto" lvar="L:CPL{VCP}56" wav="AND.cpl.yb.patient.will.be.transported.by.ambudoc.wav" sleep="0">
       <o>Patient und Notarzt fahren im Rettungswagen mit. Wir holen den Arzt am Krankenhaus ab.</o>
@@ -781,9 +781,9 @@
       <o>Besatzung steht am Landeplatz bereit. Wir können weitermachen.</o>
       <o>Die Besatzung ist am Landeplatz bereit. Wir können fortfahren.</o>
       <o>Besatzung am Landeplatz in Position. Fortfahren.</o>
-      <o>Die Crew ist am Landeplatz bereit, wir können weitermachen.</o>
+      <o>Bereit zur Aufnahme, wir können weitermachen.</o>
       <o>Die Besatzung steht bereit, fliegen wir weiter.</o>
-      <o>Die Crew ist unten bereit, weiter geht's.</o>
+      <o>Sie sind unten bereit, weiter geht's.</o>
     </message>
     <message key="CPL.62" actor="2" radio="auto" lvar="L:CPL{VCP}62" wav="AND.route.unavailable.check.tablet.wav" trigger="routeupdate records a missing or failed destination after its retry.">
       <o>Das Ziel wird nicht gefunden. Bitt auf dem Tablet auswählen oder bestätigen.</o>
@@ -807,7 +807,7 @@
       <o>Triebwerke noch nicht anlassen. Bodeneinsatz ist noch im Gange.</o>
       <o>Triebwerksstart abwarten: Bodenarbeiten laufen noch.</o>
       <o>Warte mit dem Anlassen, am Boden wird noch gearbeitet.</o>
-      <o>Start stoppen, Leute, die Bodenmaßnahmen sind noch nicht durch.</o>
+      <o>Start stoppen, die Bodenmaßnahmen sind noch nicht durch.</o>
     </message>
     <message key="CPL.65" actor="2" radio="auto" group="board" seq="2" lvar="L:CPL{VCP}65" sleep="0.4" new="1">
       <o>Copilot: Gurte angelegt und Cockpittüren verriegelt.</o>
@@ -994,11 +994,11 @@
       <o>Kein Puls. Es tut mir leid, der Aufprall war zu heftig für ihn.</o>
     </message>
     <message key="DTH.IMP.PLT" actor="1" radio="auto" group="dthimp" seq="3" new="1">
-      <o>Verstanden. Es tut mir leid, Crew.</o>
+      <o>Verstanden. Es tut mir leid, Arzt.</o>
       <o>Verstanden. Das ging auf meine Kappe. Arzt, nimm dir Zeit.</o>
       <o>Verstanden, Arzt. Es tut mir leid.</o>
       <o>Verstanden. Wir übernehmen von hier an.</o>
-      <o>Verstanden. Es tut mir leid, Leute.</o>
+      <o>Verstanden. Es tut mir leid.</o>
       <o>Verstanden. Das ging auf mich, tut mir furchtbar leid.</o>
     </message>
     <message key="FRA.1" actor="6" radio="auto" lvar="L:FRA{VCP}1" wav="AND.frank.doyou.need.fuel.wav" sleep="4.5">
@@ -1117,13 +1117,13 @@
       <o sex="m">Eine Inspektion ist erforderlich. Nicht vor der Freigabe durch die Instandhaltung abfliegen.</o>
       <o sex="m">Die Maschine braucht eine Überprüfung. Bitte vor dem Start auf den Maintenance Release warten.</o>
       <o sex="m">Der Heli muss erst kontrolliert werden. Nicht starten, bis die Technik die Freigabe erteilt.</o>
-      <o sex="m">Der Heli braucht einen Check. Wartet, bis die Instandhaltung abgezeichnet hat.</o>
+      <o sex="m">Der Heli braucht einen Tscheck. Wartet, bis die Instandhaltung abgezeichnet hat.</o>
       <o sex="f">Das Luftfahrzeug muss inspiziert werden. Bitte vor der Freigabe durch die Technik nicht abfliegen.</o>
       <o sex="f">Der Heli benötigt eine Inspektion. Vor der technischen Freigabe bitte nicht abfliegen.</o>
       <o sex="f">Eine Inspektion ist erforderlich. Nicht vor der technischen Freigabe starten.</o>
       <o sex="f">Inspektion für diese Maschine fällig. Wartet auf die Freigabe durch die Technik, bevor ihr startet.</o>
       <o sex="f">Der Heli muss erst durchgecheckt werden. Bitte auf die Freigabe durch die Wartung warten.</o>
-      <o sex="f">Der Heli braucht einen Check. Bitte warten, bis die Technik unterschrieben hat.</o>
+      <o sex="f">Der Heli braucht einen Tscheck. Bitte warten, bis die Technik unterschrieben hat.</o>
     </message>
     <message key="GRD.CPR.DOC" actor="3" radio="auto" group="grd" seq="2" new="1" trigger="stage CPR">
       <o>Laufende Reanimation. Wir setzen die Wiederbelebung fort.</o>
@@ -1187,15 +1187,15 @@
       <o>Notarzt, wie steht es um den Patienten?</o>
       <o>Irgendwelche Neuigkeiten vom Boden, TC?</o>
       <o>Arzt, TC, wie läuft es da unten?</o>
-      <o>Wie läuft's bei euch, Leute? Gibt es was Neues?</o>
+      <o>Wie läuft's bei euch? Gibt es was Neues?</o>
     </message>
     <message key="GRD.RET.CHF" actor="4" radio="auto" group="grd" seq="2" new="1" trigger="stage final crew return">
       <o>Die Besatzung ist zurück. Wir sind gleich bereit.</o>
       <o>Alle kehren zurück, fast fertig.</o>
-      <o>Letzte Checks, dann machen wir dicht.</o>
+      <o>Letzte Tschecks, dann machen wir dicht.</o>
       <o>Das Team ist wieder an Bord, wir sind fast fertig.</o>
       <o>Besatzung ist fast wieder da, letzte Überprüfungen laufen.</o>
-      <o>Wir sind fast zurück, letzte Checks und wir schließen ab.</o>
+      <o>Wir sind fast zurück, letzte Tschecks und wir schließen ab.</o>
     </message>
     <message key="GRD.TRT.C" actor="3" radio="auto" group="grd" seq="2" new="1" trigger="stage assessment and treatment, patient critical">
       <o>Der Patient ist kritisch. Wir tun alles, was wir können, bitte dranbleiben.</o>
@@ -1298,7 +1298,7 @@
       <o>Hier Notarzt. Wir gehen rein zum Papierkram, wir beeilen uns.</o>
       <o>Übergabe erledigt, jetzt der Papierkram drinnen. Bitte warten, Pilot.</o>
       <o>Der Patient ist in guten Händen. Wir gehen hinein und schließen Bericht und Formalitäten ab.</o>
-      <o>Wir gehen hinein für Bericht und Formalitäten. Pilot, bitte beim Hubschrauber warten.</o>
+      <o>Wir gehen hinein für Bericht und Formalitäten. Pilot, bitte beim Helikopter warten.</o>
       <o>Wir erledigen drinnen die Formalitäten und kommen direkt zurück. Bitte warten.</o>
     </message>
     <message key="HOS.PAP.O" actor="4" radio="auto" group="hospap" seq="3" new="1" trigger="the operator follows the hospital team inside after the organ delivery">
@@ -1306,13 +1306,13 @@
       <o>Organ übergeben. Ich gehe mit dem Team hinein zum Papierkram, ich beeile mich.</o>
       <o>Übergabe erledigt, jetzt der Papierkram drinnen. Bitte warten, Pilot.</o>
       <o>Das Organ ist beim Team. Ich gehe hinein, unterschreibe das Protokoll und komme direkt zurück.</o>
-      <o>Ich gehe hinein für das Übergabeprotokoll. Pilot, bitte beim Hubschrauber warten.</o>
+      <o>Ich gehe hinein für das Übergabeprotokoll. Pilot, bitte beim Helikopter warten.</o>
       <o>Ich erledige drinnen die Formalitäten und komme zurück. Bitte warten.</o>
     </message>
     <message key="HOS.ORG" actor="9" radio="ext-near" group="hoshnd" seq="2" new="1" trigger="the hospital receives the organ">
       <o>Wir haben das Organ übernommen. Vielen Dank, das OP-Team übernimmt ab hier.</o>
       <o>Erhalten. Vielen Dank für die pünktliche Lieferung.</o>
-      <o>Das Organ ist bei uns. Hervorragende Arbeit, Crew.</o>
+      <o>Das Organ ist bei uns. Hervorragende Arbeit.</o>
       <o>Danke, das OP-Team wartet bereits. Großartige Arbeit.</o>
       <o>Wir haben das Organ. Vielen Dank, das Team übernimmt.</o>
       <o>Übernommen, danke für die pünktliche Bereitstellung. Tolle Arbeit, Besatzung.</o>
@@ -1367,11 +1367,11 @@
     </message>
     <message key="HW.2" actor="1" radio="auto" lvar="L:{VCP}HW2" wav="AND.HW2.wav" sleep="0">
       <o>An die gesamte Besatzung: Dringende Meldung der Leitstelle. Bitte lesen.</o>
-      <o>Crew, Notfallmeldung von der Leitstelle eingegangen. Bitte sofort prüfen.</o>
+      <o>Notfallmeldung von der Leitstelle eingegangen. Bitte sofort prüfen.</o>
       <o>Besatzung, die Leitstelle hat eine Prioritätsnachricht gesendet. Bitte lesen.</o>
       <o>Dringende Nachricht von der Leitstelle. Bitte alle lesen.</o>
       <o>Leitstelle hat eine Notfallmeldung geschickt, bitte alle sofort lesen.</o>
-      <o>Leute, dringende Meldung von der Leitstelle. Schaut euch das bitte an.</o>
+      <o>Achtung, dringende Meldung von der Leitstelle. Schaut euch das bitte an.</o>
     </message>
     <message key="HW.3" actor="1" radio="auto" lvar="L:{VCP}HW3" wav="AND.HW3.wav" sleep="2" tight="1">
       <o>Überall Rauch und Feuer. Das sieht da draußen wie in einem Kriegsgebiet aus.</o>
@@ -1384,10 +1384,10 @@
     <message key="HW.4" actor="1" radio="auto" lvar="L:{VCP}HW4" wav="AND.HW4.wav" sleep="5">
       <o>Besatzung, wir haben ein Triebwerksfeuer.</o>
       <o>Achtung Besatzung, Triebwerksbrand.</o>
-      <o>Crew, Triebwerksbrand, ich wiederhole, Triebwerksbrand.</o>
+      <o>Triebwerksbrand, ich wiederhole, Triebwerksbrand.</o>
       <o>Wir haben ein Triebwerksfeuer, Besatzung.</o>
-      <o>Crew, Triebwerksfeuer! Vorbereiten auf Notlandung.</o>
-      <o>Verdammt, Triebwerksbrand! Crew, wir haben ein Feuer im Triebwerk!</o>
+      <o>Triebwerksfeuer! Vorbereiten auf Notlandung.</o>
+      <o>Verdammt, Triebwerksbrand! Wir haben ein Feuer im Triebwerk!</o>
     </message>
     <message key="HW.5" actor="2" radio="auto" lvar="L:{VCP}HW5" wav="AND.HW5.wav" sleep="0">
       <o>Kopilot bestätigt Brand an Nummer zwei.</o>
@@ -1407,11 +1407,11 @@
     </message>
     <message key="HW.7" actor="1" radio="auto" lvar="L:{VCP}HW7" wav="AND.HW7.wav" sleep="0">
       <o>Brand Nummer zwei. Feuerlöschflasche eins auslösen; Besatzung, Evakuierung vorbereiten.</o>
-      <o>Feuer Nummer zwei. Löschflasche eins wird ausgelöst. Crew, Notausstieg vorbereiten.</o>
+      <o>Feuer Nummer zwei. Löschflasche eins wird ausgelöst. Alle, Notausstieg vorbereiten.</o>
       <o>Triebwerksbrand zwei. Flasche eins ausgelöst. Besatzung, Evakuierung vorbereiten.</o>
       <o>Brand an Nummer zwei, löse Flasche eins aus. Alle auf sofortiges Verlassen vorbereiten.</o>
-      <o>Feuer Nummer zwei! Flasche eins geht raus. Crew, bereitmachen zum schnellen Aussteigen!</o>
-      <o>Nummer zwei brennt! Löschflasche eins, jetzt! Crew, macht euch bereit, die Maschine zu verlassen!</o>
+      <o>Feuer Nummer zwei! Flasche eins geht raus. Alle, bereitmachen zum schnellen Aussteigen!</o>
+      <o>Nummer zwei brennt! Löschflasche eins, jetzt! Alle, macht euch bereit, die Maschine zu verlassen!</o>
     </message>
     <message key="HW.8" actor="1" radio="auto" lvar="L:{VCP}HW8" wav="AND.HW8.wav" sleep="0">
       <o>Das Feuer ist aus, aber wir haben mehrere Systemausfälle. Fraglich, ob wir wieder abheben können.</o>
@@ -1441,17 +1441,17 @@
       <o>Habt ihr das gesehen? Kommen die auf uns zu?</o>
       <o>Habt ihr das gesehen? Bewegt sich da etwas auf uns zu?</o>
       <o>Habt ihr das gesehen? Die bewegen sich direkt auf uns zu.</o>
-      <o>Habt ihr das gesehen? Leute, kommen die auf uns zu?</o>
+      <o>Habt ihr das gesehen? Kommen die auf uns zu?</o>
       <o>Habt ihr das gesehen?! Haben die es auf uns abgesehen?</o>
-      <o>Habt ihr das gesehen? Leute, die halten genau auf uns zu!</o>
+      <o>Habt ihr das gesehen? Die halten genau auf uns zu!</o>
     </message>
     <message key="HW.12" actor="1" radio="auto" lvar="L:{VCP}HW12" wav="AND.HW12.wav" sleep="0">
       <o>Wir müssen abbrechen. Bitte prüfen, ob Fortsetzung noch vertretbar ist; falls nicht, schnellstmöglicher Abbruch.</o>
       <o>Wir müssen abbrechen. Prüft, ob wir weitermachen können – wenn nicht, unverzüglich abbrechen.</o>
-      <o>Wir müssen den Einsatz abbrechen. Checkt, ob es noch sicher ist; wenn nicht, sofortiger Abbruch.</o>
-      <o>Leute, wir müssen abbrechen. Prüft, ob wir noch safe sind; falls nicht, brechen wir sofort ab.</o>
+      <o>Wir müssen den Einsatz abbrechen. Tscheckt, ob es noch sicher ist; wenn nicht, sofortiger Abbruch.</o>
+      <o>Achtung, wir müssen abbrechen. Prüft, ob wir noch safe sind; falls nicht, brechen wir sofort ab.</o>
       <o>Einsatzabbruch droht. Prüft, ob es noch geht, ansonsten drehen wir auf der Stelle ab.</o>
-      <o>Wir müssen hier weg, Leute! Prüfen, ob wir bleiben können, oder wir hauen sofort ab.</o>
+      <o>Wir müssen hier weg! Prüfen, ob wir bleiben können, oder wir hauen sofort ab.</o>
     </message>
     <message key="HW.13" actor="1" radio="auto" lvar="L:{VCP}HW13" wav="AND.HW13.wav" sleep="0">
       <o>Arzt meldet, sie sind fast fertig. Wir sollten auf ihre Rückkehr warten.</o>
@@ -1475,7 +1475,7 @@
       <o>Startversuch. Könnte schwierig werden. Vorbereiten auf sofortiges Verlassen des Helis.</o>
       <o>Wir probieren jetzt den Take-off. Könnte eng werden, seid bereit, sofort rauszuspringen.</o>
       <o>Wir wagen den Start. Wird nicht einfach, macht euch bereit, die Maschine sofort zu verlassen.</o>
-      <o>Startversuch, Leute. Könnte brenzlig werden, seid bereit, sofort rauszuhechten.</o>
+      <o>Startversuch. Könnte brenzlig werden, seid bereit, sofort rauszuhechten.</o>
     </message>
     <message key="MAR.1" actor="9" radio="auto" lvar="L:MAR{VCP}1" wav="AND.marshal.move.left.wav" trigger="Shared marshall/pisteur3 controller selects the left correction.">
       <o>Langsam nach links.</o>
@@ -1779,7 +1779,7 @@
       <o>Die Einsatzkräfte sind unten und ausgehängt.</o>
       <o>Personal unten und ausgeklinkt.</o>
       <o>Die Kollegen sind unten und vom Windenhaken frei.</o>
-      <o>Die Leute sind am Boden und ausgehängt, alles in Ordnung.</o>
+      <o>Das Personal ist am Boden und ausgehängt, alles in Ordnung.</o>
     </message>
     <message key="PAX1.22" actor="4" radio="auto" lvar="L:{VCP}22" wav="AND.pax1.position.is.good.wav" sleep="0">
       <o>Position ist gut.</o>
@@ -1810,7 +1810,7 @@
       <o>Eins, Sprechfunkprobe.</o>
       <o>Funkprobe eins.</o>
       <o>Funkprobe Kabine / Windenbediener.</o>
-      <o>Crew, Funkprobe, eins.</o>
+      <o>Alle, Funkprobe, eins.</o>
       <o>Funkcheck von hinten, eins.</o>
     </message>
     <message key="PAX1.26" actor="4" radio="auto" lvar="L:{VCP}26" wav="AND.pax1.st.hoist.1.to.helicopter.wav" sleep="0">
@@ -2054,12 +2054,12 @@
       <o>Tür ist offen, Winde wird klargemacht.</o>
     </message>
     <message key="PAX1.56" actor="4" radio="auto" lvar="L:{VCP}56" wav="AND.pax1.wf.operator.has.been.disconnected.wav" sleep="0">
-      <o>Operateur ist ausgeklinkt.</o>
-      <o>Die Crew ist vom Haken getrennt.</o>
-      <o>Crew ist vom Haken.</o>
-      <o>Operateur ist ausgehängt.</o>
+      <o>Der Retter ist ausgeklinkt.</o>
+      <o>Der Haken ist frei.</o>
+      <o>Haken frei.</o>
+      <o>Der Retter ist frei.</o>
       <o>Der Retter ist ausgehängt.</o>
-      <o>Die Crew ist am Boden und vom Haken ab.</o>
+      <o>Der Retter ist am Boden und vom Haken ab.</o>
     </message>
     <message key="PAX1.57" actor="4" radio="auto" lvar="L:{VCP}57" wav="AND.pax1.wf.operator.is.getting.hooked.wav" sleep="0">
       <o>Operateur wird eingeklinkt.</o>
@@ -2080,7 +2080,7 @@
     <message key="PAX1.59" actor="4" radio="auto" lvar="L:{VCP}59" wav="AND.pax1.wg.crew.boarded.ready.to.go.wav" sleep="0">
       <o>Besatzung an Bord, Kabine startklar.</o>
       <o>Die Besatzung ist an Bord. Kabine abflugbereit.</o>
-      <o>Crew an Bord, Kabine ist klar.</o>
+      <o>Alle an Bord, Kabine ist klar.</o>
       <o>Alle an Bord, Kabine bereit.</o>
       <o>Alle eingestiegen, die Kabine ist abflugbereit.</o>
       <o>Alle drin, Kabine ist fertig, wir können los.</o>
@@ -2098,7 +2098,7 @@
       <o>Der Bergretter hat die Einsatzstelle und den Verletzten gesichert. Vorbereiten zum Abseilen des restlichen Personals.</o>
       <o>Einsatzstelle und Verunfallter durch Bergretter gesichert. Bereitmachen, den Rest per Winde abzusetzen.</o>
       <o>Bergretter hat die Lage und den Verletzten gesichert. Wir winschen die anderen runter.</o>
-      <o>Der Bergretter hat alles abgesichert. Lassen wir die restliche Crew per Winde ab.</o>
+      <o>Der Bergretter hat alles abgesichert. Lassen wir den Rest per Winde ab.</o>
       <o>Bergretter hat alles gesichert. Fertigmachen, um den Rest der Besatzung runterzulassen.</o>
     </message>
     <message key="PAX1.62" actor="4" radio="auto" lvar="L:{VCP}62" wav="AND.pax1.wg.proposed.meeting.pt.far.away.wav" sleep="0">
@@ -2286,7 +2286,7 @@
       <o>Wir lassen zwei an der Winde runter.</o>
     </message>
     <message key="PAX1.90" actor="4" radio="auto" group="board" seq="4" lvar="L:{VCP}90" sleep="0.4" new="1">
-      <o>Crew bereit. Winde und Trage sind gesichert.</o>
+      <o>Alles bereit. Winde und Trage sind gesichert.</o>
       <o>Kabine klar, Rettungswinde und Trage sind arretiert.</o>
       <o>Hier Bordtechniker, die Kabine ist abflugbereit.</o>
       <o>Windenausrüstung und Trage sind überprüft, hinten ist alles bereit.</o>
@@ -2296,9 +2296,9 @@
     <message key="PAX1.91" actor="4" radio="auto" group="brief" seq="4" lvar="L:{VCP}91" sleep="0.4" new="1">
       <o>Kabine verstanden. Winde und Bodenausrüstung sind bereit.</o>
       <o>Bordtechniker verstanden. Ausrüstung für Boden und Winde ist an Bord.</o>
-      <o>Crew bereit für Winden- oder Bodeneinsatz.</o>
+      <o>Bereit für Winden- oder Bodeneinsatz.</o>
       <o>Wir sind auf alles vorbereitet, was vor Ort nötig ist.</o>
-      <o>Verstanden. Die Crew ist für alles einsatzbereit.</o>
+      <o>Verstanden. Alles einsatzbereit.</o>
       <o>Verstanden. Wir haben Gerät für Boden und Winde dabei, wir sind bereit.</o>
     </message>
     <message key="PAX1.92" actor="4" radio="auto" group="debriefok" seq="4" lvar="L:{VCP}92" sleep="0.4" new="1" futile="1">
@@ -2595,7 +2595,7 @@
       <o>Wir treffen als Erste an der Einsatzstelle ein.</o>
       <o>Wir sind zuerst vor Ort.</o>
       <o>Wir sind die Ersten vor Ort.</o>
-      <o>Wir sind erste vor Ort, Leute.</o>
+      <o>Wir sind erste vor Ort.</o>
     </message>
     <message key="PAX3.16" actor="3" radio="auto" lvar="L:PAX3{VCP}16" wav="AND.pax3.we.will.find.ambulance.not.far.away.wav" sleep="0">
       <o>In der Nähe der Unfallstelle steht ein Rettungswagen; er kann den Einsatzort nicht erreichen.</o>
@@ -2808,18 +2808,18 @@
     <message key="PLT.1" actor="1" radio="auto" lvar="L:PLT{VCP}1" wav="AND.plt.comm.check.wav" sleep="2.5">
       <o>Hier Pilot, Funkprobe.</o>
       <o>Pilot an Besatzung, Funkprobe.</o>
-      <o>Funkcheck, hier der Pilot.</o>
+      <o>Funk-Tscheck, hier der Pilot.</o>
       <o>Hier Pilot, wie verstehen Sie mich?</o>
-      <o>Crew, Funküberprüfung vom Piloten.</o>
+      <o>Alle, Funküberprüfung vom Piloten.</o>
       <o>Hey, Funkprobe. Hören mich alle?</o>
     </message>
     <message key="PLT.2" actor="1" radio="auto" lvar="L:PLT{VCP}2" wav="AND.plt.deboard.authorized.wav" sleep="0">
-      <o>Gelandet. Besatzung, Einsteigen nach Freigabe.</o>
-      <o>Wir sind am Boden. Besatzung, Einsteigen ist freigegeben.</o>
-      <o>Gelandet. Besatzung kann einsteigen, sobald bereit.</o>
-      <o>Am Boden, Crew. Einsteigen, wenn ihr soweit seid.</o>
-      <o>Wir stehen. Besatzung, springt rein, sobald ihr fertig seid.</o>
-      <o>Gelandet, Leute. Kommt an Bord, sobald ihr bereit seid.</o>
+      <o>Wir stehen gut. Klar zum Aussteigen.</o>
+      <o>Türen sind freigegeben.</o>
+      <o>Das sieht gut aus. Türen sind frei.</o>
+      <o>Sieht gut aus. Freigabe zum Aussteigen.</o>
+      <o>Wir stehen gut. Klar zum Ausstieg.</o>
+      <o>Wir sind gut gelandet. Türen frei.</o>
     </message>
     <message key="PLT.3" actor="1" radio="auto" lvar="L:PLT{VCP}3" wav="AND.plt.evacuate.wav" sleep="0">
       <o>Heli sofort evakuieren.</o>
@@ -2832,10 +2832,10 @@
     <message key="PLT.4" actor="1" radio="auto" lvar="L:PLT{VCP}4" wav="AND.plt.u.copy.wav">
       <o>Verstanden.</o>
       <o>So verstanden.</o>
-      <o>Roger.</o>
+      <o>Verstanden.</o>
       <o>Okay, danke.</o>
       <o>Alles klar.</o>
-      <o>Roger, danke.</o>
+      <o>Vertanden, danke.</o>
     </message>
     <message key="PLT.5" actor="1" radio="auto" lvar="L:PLT{VCP}5" wav="AND.plt.u.hi.sarah.wav" sleep="6" to="tech">
       <o>Hallo {@TECH}, wie geht es dir? Der Heli ist klar, muss aber aufgetankt werden.</o>
@@ -2883,7 +2883,7 @@
       <o>Wir haben unser Möglichstes getan, konnten aber leider nicht jeden retten.</o>
       <o>Wir haben alles gegeben, aber wir konnten leider nicht alle retten.</o>
       <o>Wir haben unser Bestes gegeben, Team. Leider hat es nicht jeder geschafft.</o>
-      <o>Tut mir leid, Leute. Wir haben alles gegeben, aber wir konnten nicht jeden retten.</o>
+      <o>Tut mir leid. Wir haben alles gegeben, aber wir konnten nicht jeden retten.</o>
     </message>
     <message key="PLT.11" actor="1" radio="auto" lvar="L:PLT{VCP}11" wav="AND.plt.u.well.done.wav" sleep="0" futile="1">
       <o silent="1"/>
@@ -2906,7 +2906,7 @@
       <o>Noch zwei Meilen bis zum Unfallbereich.</o>
       <o>Zwei Meilen vor der Einsatzstelle.</o>
       <o>Fast da, noch zwei Meilen bis zur Unfallstelle.</o>
-      <o>Noch zwei Meilen bis zur Einsatzstelle, Crew.</o>
+      <o>Noch zwei Meilen bis zur Einsatzstelle.</o>
       <o>Wir sind zwei Meilen vor der Einsatzstelle, macht euch bereit.</o>
     </message>
     <message key="PLT.14" actor="1" radio="auto" lvar="L:PLT{VCP}14" wav="AND.plt.v.TWO.NM.base.wav" sleep="0">
@@ -2914,7 +2914,7 @@
       <o>Noch zwei Meilen bis zur Basis.</o>
       <o>Zwei Meilen vor der Station.</o>
       <o>Fast zu Hause, noch zwei Meilen bis zur Basis.</o>
-      <o>Noch zwei Meilen bis zur Station, Crew.</o>
+      <o>Noch zwei Meilen bis zur Station.</o>
       <o>Wir sind zwei Meilen vor der Basis.</o>
     </message>
     <message key="PLT.15" actor="1" radio="auto" lvar="L:PLT{VCP}15" wav="AND.plt.v.TWO.NM.hospital.wav" sleep="0">
@@ -2922,7 +2922,7 @@
       <o>Noch zwei Meilen bis zur Klinik.</o>
       <o>Zwei Meilen vor dem Krankenhaus.</o>
       <o>Gleich da, noch zwei Meilen bis zum Krankenhaus.</o>
-      <o>Noch zwei Meilen bis zur Klinik, Crew.</o>
+      <o>Noch zwei Meilen bis zur Klinik.</o>
       <o>Wir sind zwei Meilen vor der Klinik, macht euch fertig.</o>
     </message>
     <message key="PLT.16" actor="1" radio="auto" lvar="L:PLT{VCP}16" wav="AND.plt.v.TWO.NM.loading.wav" sleep="0">
@@ -3026,7 +3026,7 @@
       <o>Zwei Meilen bis zum Abholort.</o>
       <o>Zwei NM vom Abholer.</o>
       <o>Fast da, noch zwei Meilen bis zur Abholung.</o>
-      <o>Zwei Meilen vom Abholort entfernt, Crew.</o>
+      <o>Zwei Meilen vom Abholort entfernt.</o>
       <o>Wir sind zwei Meilen vom Abholort entfernt, macht euch bereit.</o>
     </message>
     <message key="PLT.29" actor="1" radio="auto" lvar="L:PLT{VCP}29" wav="AND.plt.vaa.approaching.HR.Drop.wav" sleep="4" tight="1">
@@ -3046,16 +3046,16 @@
       <o>Wir sind in der Gegend. Augen auf, alle, lasst uns sie finden.</o>
     </message>
     <message key="PLT.36" actor="1" radio="auto" lvar="L:PLT{VCP}36" wav="AND.plt.vab.crew.is.coming.back.wav" sleep="0">
-      <o>Die Crew kehrt zurück.</o>
+      <o>Sie kehren zurück.</o>
       <o>Die Besatzung kehrt zurück.</o>
       <o>Die Besatzung kehrt zum Heli zurück.</o>
       <o>Die Besatzung ist auf dem Rückweg.</o>
-      <o>Die Jungs kommen zurück.</o>
-      <o>Da kommen die Jungs.</o>
+      <o>Sie kommen zurück.</o>
+      <o>Da kommen sie.</o>
     </message>
     <message key="PLT.37" actor="1" radio="auto" lvar="L:PLT{VCP}37" wav="AND.plt.vab.let.s.go.wav" sleep="0">
       <o>Lass uns gehen.</o>
-      <o>Auf geht's, Leute!</o>
+      <o>Auf geht's!</o>
       <o>Wir können loslegen.</o>
       <o>Okay, los geht's.</o>
       <o>Okay, los geht's.</o>
@@ -3067,11 +3067,11 @@
       <o>Alle Besatzungsmitglieder, können wir einen neuen Einsatz antreten oder müssen wir zur Basis zurückkehren?</o>
       <o>Ich glaube, wir sollten zur Basis zurückkehren, bevor wir einen weiteren Einsatz annehmen.</o>
       <o>Können wir noch einen Flug nehmen, oder müssen wir zur Basis zurückkehren?</o>
-      <o>Leute, sind wir bereit für eine neue Mission oder brauchen wir die Basis?</o>
+      <o>Achtung, sind wir bereit für eine neue Mission oder brauchen wir die Basis?</o>
     </message>
     <message key="PLT.40" actor="1" radio="auto" lvar="L:PLT{VCP}40" wav="AND.plt.vab.new.dispatch1.wav" sleep="0">
       <o>Wir haben eine neue Sendung.</o>
-      <o>Leute, wir haben einen neuen Auftrag.</o>
+      <o>Achtung, wir haben einen neuen Auftrag.</o>
       <o>Wir haben eine weitere Meldung erhalten.</o>
       <o>Wir haben einen weiteren Einsatz.</o>
       <o>Hey, wir haben eine neue Meldung.</o>
@@ -3099,70 +3099,70 @@
       <o>Einsatz storniert. Überprüfen Sie das Tablet und warten Sie auf einen neuen Einsatz.</o>
       <o>Der Versand wurde storniert. Bitte prüfen Sie das Tablet und warten Sie auf eine neue Sendung.</o>
       <o>Die Lieferung wurde storniert. Überprüfen Sie das Tablet und warten Sie auf die nächste Lieferung.</o>
-      <o>Keine weiteren Einsätze, Leute. Folgt dem Tablet und wartet auf den nächsten Auftrag.</o>
+      <o>Keine weiteren Einsätze. Folgt dem Tablet und wartet auf den nächsten Auftrag.</o>
     </message>
     <message key="PLT.47" actor="1" radio="auto" group="board" seq="1" lvar="L:PLT{VCP}47" sleep="0.4" new="1" trigger="after the crew boarded and the comm check">
       <o>Alle an Bord? Bitte Gurte und Türen überprüfen.</o>
       <o>Alle einsteigen. Bitte Gurte, Türen und Gepäck überprüfen.</o>
-      <o>Crew, kurzer Kabinencheck. Gurte und Türen.</o>
+      <o>Alle, kurzer Kabinencheck. Gurte und Türen.</o>
       <o>Lasst uns sicherstellen, dass alles bereit ist. Gurte und Türen prüfen.</o>
       <o>Alle drin? Anschnallen und Türen schließen, bitte.</o>
-      <o>Alle dabei? Anschnallen und Türen schließen, Leute.</o>
+      <o>Alle dabei? Anschnallen und Türen schließen.</o>
     </message>
     <message key="PLT.48" actor="1" radio="auto" group="board" seq="5" lvar="L:PLT{VCP}48" sleep="0.4" new="1">
-      <o>Gut. Dann fangen wir mal mit der Checkliste an.</o>
-      <o>Perfekt. Ich fange jetzt mit der Checkliste an.</o>
-      <o>Vielen Dank an alle. Zeit für die Checkliste.</o>
-      <o>Verstanden, alles erledigt. Wir fahren mit der Checkliste fort.</o>
-      <o>Gut, Zeit für die Checkliste.</o>
-      <o>Super, dann legen wir mal mit der Checkliste los.</o>
+      <o>Gut. Dann fangen wir mal mit der Tscheckliste an.</o>
+      <o>Perfekt. Ich fange jetzt mit der Tscheckliste an.</o>
+      <o>Vielen Dank an alle. Zeit für die Tscheckliste.</o>
+      <o>Verstanden, alles erledigt. Wir fahren mit der Tscheckliste fort.</o>
+      <o>Gut, Zeit für die Tscheckliste.</o>
+      <o>Super, dann legen wir mal mit der Tscheckliste los.</o>
     </message>
     <message key="PLT.49" actor="1" radio="auto" group="brief" seq="1" lvar="L:PLT{VCP}49" sleep="0.4" new="1" trigger="after the dispatcher read the dispatch">
       <o>Einsatzmeldung erhalten. Auf geht's zu dieser Mission.</o>
       <o>Wir haben unsere Einsatzleitung. Kurze Einweisung, alle zusammen.</o>
-      <o>Crew, wir haben einen Einsatzbefehl erhalten. Kurze Besprechung.</o>
+      <o>Wir haben einen Einsatzbefehl erhalten. Kurze Besprechung.</o>
       <o>Der Versand ist da. Wir nehmen ihn entgegen.</o>
-      <o>Die Leitstelle ist da, Leute. Kurze Einsatzbesprechung.</o>
-      <o>Wir haben einen, Leute. Mal sehen, was wir haben.</o>
+      <o>Die Leitstelle ist da. Kurze Einsatzbesprechung.</o>
+      <o>Wir haben einen. Mal sehen, was wir haben.</o>
     </message>
     <message key="PLT.50" actor="1" radio="auto" group="brief" seq="5" lvar="L:PLT{VCP}50" sleep="0.4" new="1">
       <o>Gut. Wir starten, sobald wir bereit sind.</o>
-      <o>Danke. Starten Sie, sobald die Checkliste durch ist.</o>
-      <o>Sehr gut. Lasst uns hingehen und ihnen helfen.</o>
+      <o>Danke. Wir starten, sobald die Tscheckliste durch ist.</o>
+      <o>Sehr gut. Alles bereitmachen, es geht los.</o>
       <o>Okay, lasst uns alle sicher nach Hause bringen.</o>
-      <o>Okay, dann lasst uns ihnen helfen.</o>
+      <o>Okay, wir fliegen. Alles bereitmachen zum Start.</o>
       <o>Super, dann lasst uns loslegen und alle sicher nach Hause bringen.</o>
     </message>
     <message key="PLT.51" actor="1" radio="auto" group="debriefok" seq="1" lvar="L:PLT{VCP}51" sleep="0.4" new="1" trigger="after the mission, landed at the base, patient outcome good">
       <o>Gut gemacht, alle zusammen. Das ist gut gelaufen.</o>
-      <o>Gut gemacht, Crew. Eine saubere Mission.</o>
+      <o>Gut gemacht. Eine saubere Mission.</o>
       <o>Vielen Dank an alle. Gute Teamarbeit.</o>
-      <o>Das war eine gelungene Mission. Danke, Crew.</o>
+      <o>Das war eine gelungene Mission. Danke.</o>
       <o>Gut gemacht, Jungs, das lief wirklich gut.</o>
       <o>Großartige Leistung, alle zusammen, das war ein gutes Spiel.</o>
     </message>
     <message key="PLT.52" actor="1" radio="auto" group="debriefok" seq="5" lvar="L:PLT{VCP}52" sleep="0.4" new="1">
-      <o>Danke. Dann beenden wir jetzt das Herunterfahren.</o>
-      <o>Kopieren. Checkliste zum Herunterfahren jetzt.</o>
-      <o>Großartig. Sichern wir den Heli.</o>
+      <o>Bitte einmal auftanken. Ich fahre jetzt runter.</o>
+      <o>Ich fahre jetzt runter. Dann auftanken bitte.</o>
+      <o>Bitte Heli sichern und auftanken.</o>
       <o>Gut. Jetzt erstmal abschalten, dann einen Kaffee.</o>
-      <o>Okay, erst mal abschalten, dann Kaffee.</o>
+      <o>Okay, erst mal abschalten, dann einen Kaffee.</o>
       <o>Okay, Feierabend, und dann haben wir uns einen Kaffee verdient.</o>
     </message>
     <message key="PLT.53" actor="1" radio="auto" group="debriefbad" seq="1" lvar="L:PLT{VCP}53" sleep="0.4" new="1" trigger="after the mission, landed at the base, patient outcome bad">
-      <o>Das war eine harte Nuss, Leute.</o>
+      <o>Das war eine harte Nuss.</o>
       <o>Eine schwierige Mission. Danke, dass Sie konzentriert geblieben sind.</o>
-      <o>Wir haben alles getan, was wir konnten, Crew.</o>
+      <o>Wir haben alles getan, was wir konnten.</o>
       <o>Nicht das Ergebnis, das wir uns gewünscht hätten, aber wir haben alles gegeben.</o>
-      <o>Das tut weh, Leute. Wir haben alles versucht.</o>
-      <o>Harter Tag, Crew. Vielen Dank für alles, was ihr getan habt.</o>
+      <o>Das tut weh. Wir haben alles versucht.</o>
+      <o>Ein harter Tag. Vielen Dank für alles, was ihr getan habt.</o>
     </message>
     <message key="PLT.54" actor="1" radio="auto" group="debriefbad" seq="4" lvar="L:PLT{VCP}54" sleep="0.4" new="1">
       <o>Vielen Dank euch allen. Wir sprechen später darüber.</o>
       <o>Wir nehmen uns einen Moment Zeit, dann besprechen wir das Ergebnis im Stützpunkt.</o>
       <o>Danke, {@CPL}, danke an alle. Wir werden es gemeinsam prüfen.</o>
       <o>Ruh dich ein wenig aus. Wir sprechen, wenn du bereit bist.</o>
-      <o>Lasst euch Zeit, Leute. Wir reden darüber, wenn ihr bereit seid.</o>
+      <o>Lasst euch Zeit. Wir reden darüber, wenn ihr bereit seid.</o>
       <o>Danke euch allen. Lasst uns kurz frische Luft schnappen und später darüber reden.</o>
     </message>
     <message key="SARA.1" actor="7" radio="auto" lvar="L:SARA{VCP}1" wav="AND.Sarah.bye.wav" sleep="3.5" futile="1">
@@ -3170,12 +3170,12 @@
       <o silent="1"/>
       <o sex="m">Tschüss, bis morgen.</o>
       <o sex="m">Bis später. Schönen Abend noch.</o>
-      <o sex="m">Passt auf euch auf, Leute. Bis morgen.</o>
-      <o sex="m">Tschüss, Leute, bis morgen.</o>
+      <o sex="m">Passt auf euch auf. Bis morgen.</o>
+      <o sex="m">Tschüss, bis morgen.</o>
       <o sex="f">Tschüss, bis morgen.</o>
       <o sex="f">Bis morgen, pass auf dich auf.</o>
       <o sex="f">Tschüss zusammen, bis morgen.</o>
-      <o sex="f">Tschüss Leute, passt auf euch auf, bis morgen.</o>
+      <o sex="f">Tschüss zusammen, passt auf euch auf, bis morgen.</o>
     </message>
     <message key="SARA.2" actor="7" radio="auto" lvar="L:SARA{VCP}2" wav="AND.Sarah.everything.good.wav" sleep="3.5" tight="1" futile="1">
       <o silent="1"/>
@@ -3219,11 +3219,11 @@
       <o sex="m">Hey Leute.</o>
       <o sex="m">Hallo zusammen, willkommen zurück.</o>
       <o sex="m">Hallo zusammen.</o>
-      <o sex="m">Hey, willkommen zurück, Leute.</o>
+      <o sex="m">Hey, willkommen zurück.</o>
       <o sex="f">Hallo Leute.</o>
       <o sex="f">Hallo zusammen.</o>
       <o sex="f">Hallo zusammen, willkommen zurück.</o>
-      <o sex="f">Hey, willkommen zurück, Leute.</o>
+      <o sex="f">Hey, willkommen zurück.</o>
     </message>
     <message key="SARA.6" actor="7" radio="auto" lvar="L:SARA{VCP}6" wav="AND.Sarah.it.seems.i.have.to.work.wav" sleep="3.5" futile="1">
       <o silent="1"/>
@@ -3386,12 +3386,12 @@
       <o>Vor Schichtende werden sie von niemandem angefasst.</o>
     </message>
     <message key="DSA.ASK" actor="2" radio="auto" group="dsa" seq="1" new="1" trigger="a dispatch arrived: the copilot asks the crew what to do">
-      <o>Okay Leute, was machen wir jetzt damit? Können wir es mitnehmen?</o>
-      <o>Crew, lasst uns kurz prüfen: Sind wir bereit, es zu übernehmen?</o>
+      <o>Okay, was machen wir jetzt damit? Können wir es mitnehmen?</o>
+      <o>Lasst uns kurz prüfen: Sind wir bereit, es zu übernehmen?</o>
       <o>Alle zusammen, können wir diese Meldung entgegennehmen? Mal sehen.</o>
-      <o>Also, Leute, was meint ihr? Nehmen wir es an?</o>
-      <o>Mal sehen, ob wir es nehmen können. Kurzer Check, alle zusammen.</o>
-      <o>Crew, können wir das wagen? Kurzer Check.</o>
+      <o>Also, was meint ihr? Nehmen wir es an?</o>
+      <o>Mal sehen, ob wir es nehmen können. Kurzer Tscheck, alle zusammen.</o>
+      <o>Können wir das wagen? Kurzer Tscheck.</o>
     </message>
     <message key="DSA.FUEL.OK" actor="2" radio="ics" group="dsa" seq="2" new="1" trigger="second dispatch: the fuel is above the limit set in the mission options">
       <o>Copilot: Der Treibstoffstand liegt über unserem Minimum, kein Problem.</o>
@@ -3426,11 +3426,11 @@
       <o>Die Ausrüstung ist in Ordnung, alles vollständig.</o>
     </message>
     <message key="DSA.HLT" actor="3" radio="ics" group="dsa" seq="4" new="1" trigger="second dispatch: health check of the crew (always fine)">
-      <o>Arzt: Der Gesundheitszustand der Crew ist gut, alle sind fit für einen weiteren Einsatz.</o>
+      <o>Arzt: Der Gesundheitszustand der Besatzung ist gut, alle sind fit für einen weiteren Einsatz.</o>
       <o>Alle sind fit und bereit, von meiner Seite gibt es keine Probleme.</o>
-      <o>Gesundheitscheck: Alle Crewmitglieder sind wohlauf.</o>
+      <o>Gesundheitscheck: Alle sind wohlauf.</o>
       <o>Uns allen geht es hier gut, niemand braucht eine Pause.</o>
-      <o>Die Crew ist fit, von meiner Seite gibt es keine Probleme.</o>
+      <o>Alle sind fit, von meiner Seite gibt es keine Probleme.</o>
       <o>Alle sind gesund, ich kann mitfahren.</o>
     </message>
     <message key="DSA.GO" actor="2" radio="ics" group="dsa" seq="5" new="1" trigger="the checks are fine (or it is the first dispatch of the shift): the crew can take it">
@@ -3516,7 +3516,7 @@
     <message key="DSP.ANS.ORG" actor="8" radio="ext" new="1" trigger="the dispatcher answers the pilot: organ transport">
       <o>{@HEMS}, {@DSP}. Verstanden. Der Container steht am Abholort bereit, das Empfangsteam wartet. Bitte Ankunftszeit durchgeben.</o>
       <o>{@HEMS}, verstanden. Das Organ ist verpackt und abholbereit. Das Transplantationsteam wartet, Ankunftszeit durchgeben sobald bekannt.</o>
-      <o>{@HEMS}, {@DSP}. Abholung bereit, Zielklinik auf Standby. Zeitfenster ist eng, bitte Ankunftszeit melden.</o>
+      <o>{@HEMS}, {@DSP}. Abholung bereit, Zielklinik ist informiert. Zeitfenster ist eng, bitte Ankunftszeit melden.</o>
       <o>{@HEMS}, der Container steht bereit und das OP-Team wartet. Bitte Ankunftszeit durchgeben, wenn möglich.</o>
       <o>Verstanden, {@HEMS}. Container steht bereit, Zielort wartet. Bitte Ankunftszeit durchgeben.</o>
       <o>Alles bereit für Sie, {@HEMS}. Das Team am Zielort wartet, bitte Ankunftszeit durchgeben.</o>
@@ -3525,9 +3525,9 @@
       <o silent="1"/>
       <o silent="1"/>
       <o>Guten Morgen zusammen. Ich bin heute im Flug. Kommt gut durch die Schicht.</o>
-      <o>Guten Morgen, Crew. Ich sitze heute am Steuer, also lasst uns auf Sicherheit achten.</o>
+      <o>Guten Morgen. Ich sitze heute am Steuer, also lasst uns auf Sicherheit achten.</o>
       <o>Hallo zusammen, ich bin heute derjenige, der fliegt. Lasst uns einen schönen Tag haben.</o>
-      <o>Guten Morgen, Leute. Ich fliege heute, also seid bitte nett zu mir.</o>
+      <o>Guten Morgen. Ich fliege heute, also seid bitte nett zu mir.</o>
     </message>
     <message key="BRF.INT.CPL" actor="2" radio="auto" group="brfint" seq="2" futile="1" new="1">
       <o silent="1"/>
@@ -3603,19 +3603,19 @@
     </message>
     <message key="BRF.ORG.PLT.T" actor="1" radio="auto" group="brforg" seq="1" trigger="BRF.ORG.PLT for the medical team transport" new="1">
       <o>Teamtransport. Ohne sie kann die Operation nicht beginnen: Wir nehmen das Team auf und bringen es vor der Frist zum Ziel.</o>
-      <o>Das ist ein Teamflug, Crew. Wir holen die Ärzte mit ihrer Ausrüstung ab und fliegen sie rechtzeitig ins Krankenhaus.</o>
+      <o>Das ist ein Teamflug. Wir holen die Ärzte mit ihrer Ausrüstung ab und fliegen sie rechtzeitig ins Krankenhaus.</o>
       <o>Transport eines medizinischen Teams, zeitkritisch. Aufnehmen, einladen und direkt zum Ziel.</o>
-      <o>Crew, wir fliegen ein Operationsteam. Die Uhr läuft, also halten wir alles straff.</o>
+      <o>Wir fliegen ein Operationsteam. Die Uhr läuft, also halten wir alles straff.</o>
       <o>Gut, ein Teamflug: Ärzte einsteigen, Koffer sichern, und wir fliegen so schnell wie sicher möglich.</o>
-      <o>Heute sind wir das Taxi der Chirurgen. Schnell und sauber, Crew.</o>
+      <o>Heute sind wir das Taxi der Chirurgen. Schnell und sauber.</o>
     </message>
     <message key="BRF.ORG.PLT.B" actor="1" radio="auto" group="brforg" seq="1" trigger="BRF.ORG.PLT for the blood supply transport" new="1">
       <o>Blutlieferung. Die Zeit ist kritisch: Wir holen die Konserven ab und liefern sie innerhalb der Frist.</o>
-      <o>Das ist eine dringende Blutlieferung, Crew. Wir halten den Behälter waagerecht und verlieren keine Minute.</o>
+      <o>Das ist eine dringende Blutlieferung. Wir halten den Behälter waagerecht und verlieren keine Minute.</o>
       <o>Bluttransport, zeitkritisch. Aufnehmen, einladen und direkt ins Krankenhaus.</o>
-      <o>Crew, das Krankenhaus braucht dieses Blut. Wir holen es ab und fliegen es rechtzeitig hin.</o>
-      <o>Blutflug, Crew: Wir laden sorgfältig ein und fliegen dann so schnell wie sicher möglich.</o>
-      <o>Eine Kühlbox mit Leben darin. Schnell und ruhig, Crew.</o>
+      <o>Das Krankenhaus braucht dieses Blut. Wir holen es ab und fliegen es rechtzeitig hin.</o>
+      <o>Bluttransport: Wir laden sorgfältig ein und fliegen dann so schnell wie sicher möglich.</o>
+      <o>Eine Kühlbox mit Leben darin. Schnell und ruhig.</o>
     </message>
     <message key="APR.ORG.PLT.T" actor="1" radio="auto" group="aprorg" seq="1" trigger="two nautical miles from the pickup point of an organ transport (medical team transport)" new="1">
       <o>Zwei Meilen bis zum Abholpunkt des Teams. Wir landen, laden das Team ein und starten sofort.</o>
@@ -3650,20 +3650,20 @@
       <o>{@HEMS}, {@DSP}. Verstanden. Das Blut ist zum Einladen bereit. Das Krankenhaus fragt nach eurer Ankunftszeit.</o>
     </message>
     <message key="ORG.PCK.T" actor="4" radio="auto" group="orgpck" seq="1" trigger="organ transport: the rear crew collects the organ container at the pickup point (medical team transport)" new="1">
-      <o>Hier die hintere Crew. Wir treffen das Team am Abholpunkt und prüfen zuerst Namen und Ausrüstung.</o>
-      <o>Wir übernehmen jetzt das Team und seine Ausrüstung. Zuerst Namen und Koffer prüfen.</o>
-      <o>Hintere Crew an der Abholung. Das Team steigt mit seiner Ausrüstung ein, wir zählen die Koffer.</o>
-      <o>Wir sind da. Wir nehmen das Team auf und sichern die Ausrüstung für den Flug.</o>
-      <o>Hintere Crew: Die Ärzte sind drin, die Koffer festgezurrt. Wir können los.</o>
-      <o>Team übernommen, Ausrüstung gesichert. Hintere Crew bereit.</o>
+      <o>Hier Kabine. Wir treffen das Personal am Abholpunkt und prüfen zuerst Namen und Ausrüstung.</o>
+      <o>Wir übernehmen jetzt das Personal und seine Ausrüstung. Zuerst Namen und Koffer prüfen.</o>
+      <o>Wir starten die jetzt die Übernahme. Das Personal steigt mit seiner Ausrüstung ein, wir zählen die Koffer.</o>
+      <o>Wir sind da. Wir nehmen das Personal auf und sichern die Ausrüstung für den Flug.</o>
+      <o>Kabine: Das Personal ist drin, die Koffer festgezurrt. Wir können los.</o>
+      <o>Personal übernommen, Ausrüstung gesichert. Kabine bereit.</o>
     </message>
     <message key="ORG.PCK.B" actor="4" radio="auto" group="orgpck" seq="1" trigger="organ transport: the rear crew collects the organ container at the pickup point (blood supply transport)" new="1">
-      <o>Hier die hintere Crew. Wir holen den Blutbehälter ab und prüfen Siegel und Papiere.</o>
+      <o>Wir holen den Blutbehälter ab und prüfen Siegel und Papiere.</o>
       <o>Wir nehmen jetzt die Blutkonserven auf. Zuerst Siegel, Temperatur und Papiere prüfen.</o>
-      <o>Hintere Crew an der Abholung. Der Behälter kommt in die Kabine und wir prüfen das Etikett.</o>
+      <o>Wir starten jetzt die Übernahme. Der Behälter kommt in die Kabine und wir prüfen das Etikett.</o>
       <o>Wir sind da. Wir übernehmen den Blutvorrat und sichern den Behälter für den Flug.</o>
-      <o>Hintere Crew: Der Behälter ist drin und festgezurrt. Wir können los.</o>
-      <o>Blut übernommen, Behälter gesichert. Hintere Crew bereit.</o>
+      <o>Der Behälter ist drin und festgezurrt. Wir können los.</o>
+      <o>Blut übernommen, Behälter gesichert. Kabine bereit.</o>
     </message>
     <message key="ORG.INF.T" actor="3" radio="ics" group="orgb" seq="1" prio="2" age="90" trigger="organ transport briefing: the organ, the recipient and the hospital (args: organ H L K U P, name, age, hospital) (medical team transport)" new="1">
       <o>Wir fliegen das Operationsteam für {name:1}, {2} Jahre alt, der in {3} wartet. Die Operation ist vorbereitet.</o>
@@ -3717,7 +3717,7 @@
       <o>Das Team ist angekommen. Danke, der Operationssaal ist bereit, sie gehen direkt hinein.</o>
       <o>Verstanden. Die Ärzte sind rechtzeitig da, der Patient ist schon vorbereitet.</o>
       <o>Wir nehmen das Team in Empfang. Danke für den schnellen Flug.</o>
-      <o>Team übernommen. Danke, Crew, die Operation kann jetzt beginnen.</o>
+      <o>Team übernommen. Danke, die Operation kann jetzt beginnen.</o>
       <o>Super, das Team ist da. Der Patient liegt schon auf dem Tisch, sie gehen direkt hinein.</o>
       <o>Team angekommen, danke. Alles ist für sie vorbereitet.</o>
     </message>
@@ -3725,7 +3725,7 @@
       <o>Wir haben das Blut. Danke, die Station übernimmt ab hier.</o>
       <o>Verstanden. Die Blutkonserven sind rechtzeitig da, die Transfusion beginnt jetzt.</o>
       <o>Wir übernehmen den Behälter. Danke für den schnellen Flug.</o>
-      <o>Blutvorrat übernommen. Danke, Crew, der Vorrat ist gerettet.</o>
+      <o>Blutvorrat übernommen. Vielen Dank.</o>
       <o>Super, das Blut ist da. Wir beginnen sofort mit der Transfusion.</o>
       <o>Blut angekommen, danke. Die Station hat darauf gewartet.</o>
     </message>
@@ -3795,7 +3795,7 @@
     </message>
   <!-- MISSION TEXTS BEGIN: generated by node tools/sync-pack-texts.js from the mission tools/voice-texts.json. Do not edit this block by hand: translate it in your own pack. -->
     <message key="CHK.afterengstartckl.01" text="1" actor="11" trigger="checklist afterengstartckl">
-      <o>Checkliste nach dem Triebwerksstart!</o>
+      <o>Tscheckliste nach dem Triebwerksstart!</o>
     </message>
     <message key="CHK.afterengstartckl.02" text="1" actor="11" trigger="checklist afterengstartckl">
       <o>STANDBY BAT und AVIO Master 1 und 2 Schalter EIN!</o>
@@ -3825,10 +3825,10 @@
       <o>Stellen Sie die Belüftung nach Bedarf ein!</o>
     </message>
     <message key="CHK.afterengstartckl1b.01" text="1" actor="11" trigger="checklist afterengstartckl1b">
-      <o>Checkliste nach dem Triebwerksstart, Heizungs- und Avionikprüfungen!</o>
+      <o>Tscheckliste nach dem Triebwerksstart, Heizungs- und Avionikprüfungen!</o>
     </message>
     <message key="CHK.afterengstartckl1c.01" text="1" actor="11" trigger="checklist afterengstartckl1c">
-      <o>Nach der Checkliste für den Triebwerksstart: Avionikprüfung!</o>
+      <o>Nach der Tscheckliste für den Triebwerksstart: Avionikprüfung!</o>
     </message>
     <message key="CHK.afterengstartckl1c.02" text="1" actor="11" trigger="checklist afterengstartckl1c">
       <o>Avionikprüfung. GTN: Datenbanken auf Gültigkeit prüfen!</o>
@@ -3852,7 +3852,7 @@
       <o>Hinweis! Vor jedem IFR-Flug bzw. bei VFR-Flügen mindestens einmal täglich sind Tests durchzuführen.</o>
     </message>
     <message key="CHK.afterengstartckl2.01" text="1" actor="11" trigger="checklist afterengstartckl2">
-      <o>Checkliste nach dem Triebwerksstart, Teil zwei!</o>
+      <o>Tscheckliste nach dem Triebwerksstart, Teil zwei!</o>
     </message>
     <message key="CHK.afterengstartckl2.02" text="1" actor="11" trigger="checklist afterengstartckl2">
       <o>AP1,AP2 und Backup aktivieren!</o>
@@ -3864,7 +3864,7 @@
       <o>Kollektiv: Bei Bedarf verriegeln!</o>
     </message>
     <message key="CHK.afterengstartckl2.05" text="1" actor="11" trigger="checklist afterengstartckl2">
-      <o>Vorbereitung auf den Nachtflug. Wählen Sie eine Option, die Checkliste wartet schon!</o>
+      <o>Vorbereitung auf den Nachtflug. Wählen Sie eine Option, die Tscheckliste wartet schon!</o>
     </message>
     <message key="CHK.afterengstartckl2.06" text="1" actor="11" trigger="checklist afterengstartckl2">
       <o>Nachtflug. An den M F Ds die Helligkeit anpassen!</o>
@@ -3879,7 +3879,7 @@
       <o>Prüfen Sie, ob der Blendschutz aus Stoff angebracht ist!</o>
     </message>
     <message key="CHK.afterengstartckl2b.01" text="1" actor="11" trigger="checklist afterengstartckl2b">
-      <o>Checkliste nach dem Triebwerksstart, Teil zwei, Teil 2!</o>
+      <o>Tscheckliste nach dem Triebwerksstart, Teil zwei, Teil 2!</o>
     </message>
     <message key="CHK.afterengstartckl2b.02" text="1" actor="11" trigger="checklist afterengstartckl2b">
       <o>Überprüfung der optionalen Ausrüstung. Bei Bedarf prüfen, siehe Abschnitt 7 und Abschnitt 9!</o>
@@ -3927,7 +3927,7 @@
       <o>Generatorstrom: Prüfen Sie, ob eine Erhöhung um etwa 30 Ampere erforderlich ist, jedoch nur, wenn die elektrische Heizung installiert ist!</o>
     </message>
     <message key="CHK.aviopftckl.01" text="1" actor="11" trigger="checklist aviopftckl">
-      <o>Checkliste für den Avionik-Vorflugtest!</o>
+      <o>Tscheckliste für den Avionik-Vorflugtest!</o>
     </message>
     <message key="CHK.aviopftckl.02" text="1" actor="11" trigger="checklist aviopftckl">
       <o>Entriegeln Sie den Kollektivhebel und drücken Sie ihn vollständig nach unten!</o>
@@ -3960,7 +3960,7 @@
       <o>Zentrieren Sie den Zyklus und stellen Sie die Pedale parallel ein!</o>
     </message>
     <message key="CHK.beforetockl.01" text="1" actor="11" trigger="checklist beforetockl">
-      <o>Checkliste vor dem Start.</o>
+      <o>Tscheckliste vor dem Start.</o>
     </message>
     <message key="CHK.beforetockl.02" text="1" actor="11" trigger="checklist beforetockl">
       <o>Hauptschalter für Nummer eins und zwei. Flugbetrieb, Schutzvorrichtungen geschlossen.</o>
@@ -3996,13 +3996,13 @@
       <o>Nachtflug. Feste und sekundäre Landescheinwerfer. Prüfen und einstellen.</o>
     </message>
     <message key="CHK.beforetockl.13" text="1" actor="11" trigger="checklist beforetockl">
-      <o>Checkliste vor dem Start vollständig ausfüllen.</o>
+      <o>Tscheckliste vor dem Start vollständig ausfüllen.</o>
     </message>
     <message key="CHK.checklisthome.01" text="1" actor="11" trigger="checklist checklisthome">
-      <o>Automatischer Checklisten-Assistent online!</o>
+      <o>Automatischer Tschecklisten-Assistent online!</o>
     </message>
     <message key="CHK.engstartckl.01" text="1" actor="11" trigger="checklist engstartckl">
-      <o>Checkliste für den Schnellstart des Triebwerks!</o>
+      <o>Tscheckliste für den Schnellstart des Triebwerks!</o>
     </message>
     <message key="CHK.engstartckl.02" text="1" actor="11" trigger="checklist engstartckl">
       <o>Kraftstoffvorpumpen 1 und 2 eingeschaltet!</o>
@@ -4056,7 +4056,7 @@
       <o>Nach dem Durchlaufen der oberen Modi VTOSS und AFCS gemäß Verfahren und Flugplan!</o>
     </message>
     <message key="CHK.ifrdep2ckl.09" text="1" actor="11" trigger="checklist ifrdep2ckl">
-      <o>Checkliste für den Abflug mit der I F R vollständig.</o>
+      <o>Tscheckliste für den Abflug mit der I F R vollständig.</o>
     </message>
     <message key="CHK.ifrdepckl.01" text="1" actor="11" trigger="checklist ifrdepckl">
       <o>IFR-Abflug!</o>
@@ -4080,13 +4080,13 @@
       <o>Softkey zum Aufheben der Sperre auf dem G T N: Touch!</o>
     </message>
     <message key="CHK.ifrhold2ckl.05" text="1" actor="11" trigger="checklist ifrhold2ckl">
-      <o>Die Meldung "Check S U S P" verschwindet auf dem F N D und dem N A V D!</o>
+      <o>Die Meldung "Tscheck S U S P" verschwindet auf dem F N D und dem N A V D!</o>
     </message>
     <message key="CHK.ifrhold2ckl.06" text="1" actor="11" trigger="checklist ifrhold2ckl">
       <o>Prüfen Sie, ob das Flugzeug die Warteschleife verlässt!</o>
     </message>
     <message key="CHK.ifrhold2ckl.07" text="1" actor="11" trigger="checklist ifrhold2ckl">
-      <o>Checkliste für die Warteschleife vollständig.</o>
+      <o>Tscheckliste für die Warteschleife vollständig.</o>
     </message>
     <message key="CHK.ifrholdckl.01" text="1" actor="11" trigger="checklist ifrholdckl">
       <o>Warteschleife!</o>
@@ -4260,7 +4260,7 @@
       <o>Hinweis! Ohne G A-Modus die Softkey-Taste „Verfehlten Anflug aktivieren“ verwenden.</o>
     </message>
     <message key="CHK.ifrmissedckl.08" text="1" actor="11" trigger="checklist ifrmissedckl">
-      <o>Checkliste für verpasste Anflüge vollständig ausgefüllt.</o>
+      <o>Tscheckliste für verpasste Anflüge vollständig ausgefüllt.</o>
     </message>
     <message key="CHK.ifrobscancelckl.01" text="1" actor="11" trigger="checklist ifrobscancelckl">
       <o>O B S-Navigation abbrechen!</o>
@@ -4488,10 +4488,10 @@
       <o>Zyklischer Trimm-Entriegelungsschalter: drücken!</o>
     </message>
     <message key="CHK.landingckl.06" text="1" actor="11" trigger="checklist landingckl">
-      <o>Checkliste für die Landung abgeschlossen.</o>
+      <o>Tscheckliste für die Landung abgeschlossen.</o>
     </message>
     <message key="CHK.normengstartckl.01" text="1" actor="11" trigger="checklist normengstartckl">
-      <o>Checkliste für den normalen Triebwerksstart!</o>
+      <o>Tscheckliste für den normalen Triebwerksstart!</o>
     </message>
     <message key="CHK.normengstartckl.02" text="1" actor="11" trigger="checklist normengstartckl">
       <o>Kraftstoffvorförderpumpen 1 und 2 EINschalten!</o>
@@ -4536,7 +4536,7 @@
       <o>Prüfen Sie, ob keine systembezogenen Warnmeldungen angezeigt werden!</o>
     </message>
     <message key="CHK.normhydckl.01" text="1" actor="11" trigger="checklist normhydckl">
-      <o>Checkliste für Hydraulikprüfungen!</o>
+      <o>Tscheckliste für Hydraulikprüfungen!</o>
     </message>
     <message key="CHK.normhydckl.02" text="1" actor="11" trigger="checklist normhydckl">
       <o>Stellen Sie den Schalter TEST HYD auf SYS1 und halten Sie ihn gedrückt. Prüfen Sie, ob in der Masterliste LOW PRESS HYD2 und im VMS die gelbe Anzeige HYD2 P vorhanden ist!</o>
@@ -4566,7 +4566,7 @@
       <o>Stellen Sie den TEST HYD-Schalter auf AUS!</o>
     </message>
     <message key="CHK.normstartupckl.01" text="1" actor="11" trigger="checklist normstartupckl">
-      <o>Normale Checkliste für den Start!</o>
+      <o>Normale Tscheckliste für den Start!</o>
     </message>
     <message key="CHK.normstartupckl.02" text="1" actor="11" trigger="checklist normstartupckl">
       <o>Stellen Sie den Instrumentenmodusschalter je nach Bedarf auf TAG, NACHT oder NVG ein!</o>
@@ -4623,7 +4623,7 @@
       <o>Suchscheinwerfer-Landescheinwerfer: eingeschaltet und eingestellt!</o>
     </message>
     <message key="CHK.prelandingckl.04" text="1" actor="11" trigger="checklist prelandingckl">
-      <o>Alle Instrumente: Check!</o>
+      <o>Alle Instrumente: Tscheck!</o>
     </message>
     <message key="CHK.prelandingckl.05" text="1" actor="11" trigger="checklist prelandingckl">
       <o>Alle Warnungen, Hinweise und die Gesamtliste: geprüft!</o>
@@ -4803,7 +4803,7 @@
       <o>Schnellstart: Zusätzliche Vorflugkontrollen, Teil 5!</o>
     </message>
     <message key="CHK.quickprep5ckl.02" text="1" actor="11" trigger="checklist quickprep5ckl">
-      <o>Vorbereitung auf den Nachtflug. Wählen Sie eine Option, die Checkliste wartet schon!</o>
+      <o>Vorbereitung auf den Nachtflug. Wählen Sie eine Option, die Tscheckliste wartet schon!</o>
     </message>
     <message key="CHK.quickprep5ckl.03" text="1" actor="11" trigger="checklist quickprep5ckl">
       <o>Notstromaggregat eingeschaltet. Lesen Sie die Meldung!</o>
@@ -4818,7 +4818,7 @@
       <o>Stoffblendschutz: installiert!</o>
     </message>
     <message key="CHK.shutdown2ckl.01" text="1" actor="11" trigger="checklist shutdown2ckl">
-      <o>Checkliste zum Abstellen des Triebwerks, Teil 2!</o>
+      <o>Tscheckliste zum Abstellen des Triebwerks, Teil 2!</o>
     </message>
     <message key="CHK.shutdown2ckl.02" text="1" actor="11" trigger="checklist shutdown2ckl">
       <o>Wenn der Rotor zum Stillstand gekommen ist, Schalter für die Antikollisionsbeleuchtung außen: aus!</o>
@@ -4836,10 +4836,10 @@
       <o>Batterie-Hauptschalter: Aus!</o>
     </message>
     <message key="CHK.shutdown2ckl.07" text="1" actor="11" trigger="checklist shutdown2ckl">
-      <o>Checkliste zum Abstellen des Triebwerks abgeschlossen.</o>
+      <o>Tscheckliste zum Abstellen des Triebwerks abgeschlossen.</o>
     </message>
     <message key="CHK.shutdownckl.01" text="1" actor="11" trigger="checklist shutdownckl">
-      <o>Checkliste zum Abstellen des Triebwerks!</o>
+      <o>Tscheckliste zum Abstellen des Triebwerks!</o>
     </message>
     <message key="CHK.shutdownckl.02" text="1" actor="11" trigger="checklist shutdownckl">
       <o>Fahrradstock: Neutralstellung!</o>
@@ -4866,7 +4866,7 @@
       <o>Rotorbremse, falls erforderlich: unter 50 Prozent N R anwenden!</o>
     </message>
     <message key="CHK.startupckl.01" text="1" actor="11" trigger="checklist startupckl">
-      <o>Checkliste für den Schnellstart!</o>
+      <o>Tscheckliste für den Schnellstart!</o>
     </message>
     <message key="CHK.startupckl.02" text="1" actor="11" trigger="checklist startupckl">
       <o>Instrumentenmodusschalter: Stellen Sie je nach Bedarf TAG, NACHT oder NVG ein!</o>
@@ -4887,7 +4887,7 @@
       <o>Antikollisionsleuchten: nach Bedarf einstellen (zum Triebwerksstart einschalten)!</o>
     </message>
     <message key="CHK.takeoffckl.01" text="1" actor="11" trigger="checklist takeoffckl">
-      <o>Automatischer Checklisten-Assistent online!</o>
+      <o>Automatischer Tschecklisten-Assistent online!</o>
     </message>
     <message key="CHK.takeoffckl.02" text="1" actor="11" trigger="checklist takeoffckl">
       <o>Schwebeflug. Vorführen.</o>
@@ -4905,7 +4905,7 @@
       <o>Alle Warnungen und Vorsichtsmaßnahmen, Gesamtliste. Abhaken.</o>
     </message>
     <message key="CHK.takeoffckl.07" text="1" actor="11" trigger="checklist takeoffckl">
-      <o>Checkliste für den Start abgeschlossen.</o>
+      <o>Tscheckliste für den Start abgeschlossen.</o>
     </message>
     <message key="CHK.takeoffprocckl.01" text="1" actor="11" trigger="checklist takeoffprocckl">
       <o>Abheben! </o>
@@ -6405,7 +6405,7 @@
     <message key="HST.ARR.S" actor="3" radio="auto" group="hstarr" seq="1" new="1" trigger="hoist operation: the doctor reaches a stable patient">
       <o>Notarzt beim Patienten. Zustand stabil, beginne Untersuchung.</o>
       <o>Notarzt am Patienten. Sieht stabil aus, Erstuntersuchung läuft.</o>
-      <o>Bin beim Patienten. Erscheint stabil, beginne den Check.</o>
+      <o>Bin beim Patienten. Erscheint stabil, beginne den Tscheck.</o>
       <o>Patient erreicht, Zustand wirkt stabil. Ich beginne mit der Beurteilung.</o>
       <o>Patient erreicht. Vorerst stabil, ich untersuche ihn gründlich.</o>
       <o>Beim Patienten, wirkt stabil. Ich verschaffe mir einen Überblick.</o>
@@ -6429,7 +6429,7 @@
     <message key="HST.DONE.S" actor="3" radio="auto" group="hstdone" seq="1" new="1" trigger="hoist operation: the doctor finishes the visit of a stable patient">
       <o>Untersuchung abgeschlossen. Patient ist stabil, bereit für den Transport.</o>
       <o>Untersuchung beendet. Er ist stabil, wir können ihn einfliegen.</o>
-      <o>Check abgeschlossen, Patient stabil und transportbereit.</o>
+      <o>Tscheck abgeschlossen, Patient stabil und transportbereit.</o>
       <o>Hier alles fertig. Patient stabil, bereit für die Aufnahme.</o>
       <o>Versorgung beendet. Patient stabil, bereit zum Transport.</o>
       <o>Fertig. Er ist stabil und bereit für den Flug.</o>
@@ -6456,7 +6456,7 @@
       <o>Am Seil, fahre runter. Ich sichere das Gelände.</o>
       <o>Gehe runter zur Einsatzstelle. Ich sichere zuerst den Bereich ab.</o>
       <o>Bergretter verlässt die Kabine, ich übernehme die Einsatzstelle.</o>
-      <o>Ich fahre runter und bereite alles für die Crew vor.</o>
+      <o>Ich fahre runter und bereite alles vor.</o>
     </message>
     <message key="HRS.MID" actor="12" radio="on" group="hrs" seq="2" new="1" trigger="the heli rescuer is half way down">
       <o>Halber Weg, der Bereich unten sieht frei aus.</o>
@@ -6470,33 +6470,33 @@
       <o>Bergretter am Boden. Bereich gesichert, alles in Ordnung.</o>
       <o>Am Boden. Der Bereich ist gesichert, alles bereit.</o>
       <o>Bergretter unten. Einsatzstelle gesichert, ihr könnt fortfahren.</o>
-      <o>Ich bin unten, Bereich ist sicher. Alles frei für die Crew.</o>
+      <o>Ich bin unten, Bereich ist sicher. Alles frei.</o>
       <o>Unten und gesichert. Einsatzstelle frei, macht weiter.</o>
       <o>Am Boden, Bereich abgesichert. Alles okay, Landung freigegeben.</o>
     </message>
     <message key="HRS.W.POS" actor="12" radio="on" group="hrsw" seq="1" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is not on the skid point or not inside the landing spot">
       <o>Pilot, ich warte am Landepunkt. Landen Sie auf dem Landepunkt, innerhalb des Landeplatzes.</o>
-      <o>Pilot, Sie stehen noch nicht auf dem Landepunkt. Setzen Sie den Hubschrauber dort ab, innerhalb des Landeplatzes.</o>
+      <o>Pilot, Sie stehen noch nicht auf dem Landepunkt. Setzen Sie den Helikopter dort ab, innerhalb des Landeplatzes.</o>
       <o>Ich komme nicht zu Ihnen. Landen Sie auf dem Landepunkt im Landeplatz, dann steige ich ein.</o>
       <o>Pilot, hier der Bergretter. Positionieren Sie sich neu auf dem Landepunkt, innerhalb des Landeplatzes.</o>
       <o>Ich warte am Landepunkt auf Sie. Landen Sie im Landeplatz, dann steige ich ein.</o>
       <o>Pilot, ich brauche Sie auf dem Landepunkt im Landeplatz, um einzusteigen.</o>
     </message>
     <message key="HRS.W.GND" actor="12" radio="on" group="hrsw" seq="2" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is not fully on the ground">
-      <o>Pilot, setzen Sie den Hubschrauber ganz auf den Boden, dann steige ich ein.</o>
+      <o>Pilot, setzen Sie den Helikopter ganz auf den Boden, dann steige ich ein.</o>
       <o>Ich kann noch nicht einsteigen. Setzen Sie bitte die Kufen auf den Boden.</o>
       <o>Pilot, Sie sind noch zu hoch. Kufen auf den Boden und ich steige ein.</o>
-      <o>Bergretter wartet. Bringen Sie den Hubschrauber zuerst auf den Boden.</o>
+      <o>Bergretter wartet. Bringen Sie den Helikopter zuerst auf den Boden.</o>
       <o>Bitte ganz landen. Ich steige ein, sobald die Kufen unten sind.</o>
       <o>Pilot, ich brauche die Kufen am Boden, bevor ich einsteigen kann.</o>
     </message>
     <message key="HRS.W.STILL" actor="12" radio="on" group="hrsw" seq="3" new="1" trigger="the heli rescuer waits at the skid point and the helicopter is still moving">
-      <o>Pilot, der Hubschrauber bewegt sich noch. Halten Sie ihn ruhig, dann steige ich ein.</o>
-      <o>Ich kann nicht einsteigen, solange Sie sich bewegen. Halten Sie den Hubschrauber bitte ruhig.</o>
-      <o>Pilot, halten Sie die Position. Der Hubschrauber muss ganz ruhig stehen.</o>
+      <o>Pilot, der Helikopter bewegt sich noch. Halten Sie ihn ruhig, dann steige ich ein.</o>
+      <o>Ich kann nicht einsteigen, solange Sie sich bewegen. Halten Sie den Helikopter bitte ruhig.</o>
+      <o>Pilot, halten Sie die Position. Der Helikopter muss ganz ruhig stehen.</o>
       <o>Bergretter wartet. Jede Bewegung stoppen, dann steige ich ein.</o>
       <o>Halten Sie ihn ruhig, Pilot. Ich steige ein, sobald er sich nicht mehr bewegt.</o>
-      <o>Pilot, bitte keine Bewegung. Halten Sie den Hubschrauber stabil.</o>
+      <o>Pilot, bitte keine Bewegung. Halten Sie den Helikopter stabil.</o>
     </message>
     <message key="HRS.W.COLL" actor="12" radio="on" group="hrsw" seq="4" new="1" trigger="the heli rescuer waits at the skid point and the collective is not up">
       <o>Pilot, halten Sie das Kollektiv oben, dann steige ich ein.</o>
@@ -6632,7 +6632,7 @@
       <o>{@HEMS}, {hrs:1}. Verstanden, sie steigen jetzt ein.</o>
       <o>{@HEMS}, {hrs:1}. Sie kommen zu euch rüber. Guten Flug.</o>
       <o>{@HEMS}, {hrs:1}. Verstanden, das Team kommt rüber.</o>
-      <o>{@HEMS}, {hrs:1}. Willkommen, das Team ist auf dem Weg zum Hubschrauber.</o>
+      <o>{@HEMS}, {hrs:1}. Willkommen, das Team ist auf dem Weg zum Helikopter.</o>
     </message>
     <message key="DSP.NAME.MAN" actor="8" radio="off" text="1" new="1" trigger="who the dispatcher is on the manual frequency (words only, {DSP})">
       <o>Leitstelle</o>
@@ -6908,9 +6908,9 @@
       <o>Wer gibt das Go, wenn ich die Stelle sicher gemacht habe?</o>
     </message>
     <message key="HRB.A.1" actor="3" radio="auto" group="hrbrief" seq="9" new="1" trigger="the doctor answers: the rescuer gives the go">
-      <o>Du. Deine Meldung, dass die Stelle sicher ist, ist unser Go. Vorher verlässt niemand den Hubschrauber.</o>
+      <o>Du. Deine Meldung, dass die Stelle sicher ist, ist unser Go. Vorher verlässt niemand den Helikopter.</o>
       <o>Das Go liegt bei dir. Sobald du die Stelle als sicher meldest, machen wir weiter. Nicht vorher.</o>
-      <o>Du gibst es. Deine Sicherheitsmeldung ist das grüne Licht, und davor verlässt niemand den Hubschrauber.</o>
+      <o>Du gibst es. Deine Sicherheitsmeldung ist das grüne Licht, und davor verlässt niemand den Helikopter.</o>
       <o>Das ist deine Entscheidung. Wenn du sicher sagst, rücken wir aus. Keine Sekunde früher.</o>
       <o>Du. Wir warten auf deine Sicherheitsmeldung, dann kommen wir.</o>
       <o>Das liegt bei dir. Deine Meldung ist unser grünes Licht.</o>
@@ -6980,7 +6980,7 @@
       <o>Was, wenn wir zuerst da sind und es nicht sicher ist?</o>
     </message>
     <message key="HRB.DBA.2" actor="12" radio="ics" group="hrbrief" seq="13" new="1" trigger="the rescuer answers: I secure it myself first">
-      <o>Dann sichere ich sie zuerst selbst. Niemand verlässt den Hubschrauber, bevor ich es melde.</o>
+      <o>Dann sichere ich sie zuerst selbst. Niemand verlässt den Helikopter, bevor ich es melde.</o>
       <o>Ich sichere die Stelle zuerst, egal was die Bodenkräfte tun. Niemand bewegt sich, bis ich es melde.</o>
       <o>In dem Fall mache ich die Stelle selbst sicher, bevor jemand anderes runterkommt.</o>
       <o>Dann mache ich es selbst. Niemand kommt raus, bis ich es sage.</o>
@@ -6993,7 +6993,7 @@
       <o>Wiederholung: zuerst raus oder zuerst runter, sichern, melden, die Besatzung folgt auf meine Meldung, als Letzter wieder an Bord.</o>
       <o>Habe verstanden. Ich gehe zuerst, mache die Stelle sicher, melde sie, und ihr folgt. Ich komme als Letzter zurück.</o>
       <o>Alles verstanden. Zuerst runter, die Stelle sichern, meine Meldung ist das Go, und ich steige zuletzt ein.</o>
-      <o>Alles klar. Ich gehe zuerst und mache es sicher, ihr kommt auf meine Meldung, und ich bin der Letzte im Hubschrauber.</o>
+      <o>Alles klar. Ich gehe zuerst und mache es sicher, ihr kommt auf meine Meldung, und ich bin der Letzte im Helikopter.</o>
     </message>
     <message key="HRB.RB.X" actor="12" radio="ics" group="hrbrief" seq="14" new="1" trigger="the rescuer reads back his role on a transfer or an organ transport">
       <o>Verstanden. Ich bleibe an Bord, helfe beim Laden und halte die Kabine frei.</o>
@@ -7247,7 +7247,7 @@
       <o>Augen: Ich nehme die linke Seite, der Copilot die rechte, der Kapitän schaut nach vorn. Alles wird nach Uhrzeit gemeldet.</o>
       <o>Jeder hat eine Seite: links ich, rechts der Copilot, voraus der Kapitän. Wir melden Positionen wie auf einer Uhr.</o>
       <o>Die linke Seite ist meine, die rechte die des Copiloten, und wir sagen, wo wir etwas sehen, wie auf einer Uhr: zwölf Uhr ist voraus.</o>
-      <o>Uhrzeiten, Crew: Zwölf Uhr ist die Nase. Ich beobachte links, der Copilot rechts.</o>
+      <o>Uhrzeiten: Zwölf Uhr ist die Nase. Ich beobachte links, der Copilot rechts.</o>
       <o>Ich decke links ab, der Copilot rechts, und jede Sichtung wird mit der Uhrzeit gemeldet.</o>
       <o>Wir teilen den Blick: links, rechts, voraus. Jede Sichtung geht mit ihrer Uhrzeit raus.</o>
     </message>
@@ -7381,45 +7381,45 @@
     </message>
     <message key="GRT.TEC.M" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, morning of the simulator: the technician greets the crew by name">
       <o sex="m">Guten Morgen, {@PLT}! Guten Morgen, {@CPL}. Ich hoffe, ihr habt gut geschlafen.</o>
-      <o sex="m">Morgen, {@PLT}. Morgen, {@CPL}. Bereit für eine neue Schicht?</o>
-      <o sex="m">Guten Morgen, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit für den Tag?</o>
+      <o sex="m">Guten Morgen, {@PLT}. Morgen, {@CPL}. Bereit für eine neue Schicht?</o>
+      <o sex="m">Guten Morgen. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit für den Tag?</o>
       <o sex="m">Guten Morgen euch beiden. Im Hangar gibt es Kaffee, wenn du magst, {@PLT}.</o>
       <o sex="f">Guten Morgen, {@PLT}, guten Morgen, {@CPL}! Habt ihr gut geschlafen?</o>
-      <o sex="f">Morgen, {@PLT}, morgen, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Morgen, {@PLT}, morgen, {@CPL}. Bereit für die Schicht?</o>
       <o sex="f">Guten Morgen, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
       <o sex="f">Guten Morgen, ihr zwei. Der Kaffee ist im Hangar fertig, {@PLT}, bedien dich.</o>
-      <o sex="m">Morgen, {@PLT}, morgen, {@CPL}. Neuer Tag, neue Schicht.</o>
-      <o sex="m">Guten Morgen, Crew. Alles ist für euch bereit, {@PLT}.</o>
+      <o sex="m">Guten Morgen, {@PLT}, morgen, {@CPL}. Neuer Tag, neue Schicht.</o>
+      <o sex="m">Guten Morgen. Alles ist für euch bereit, {@PLT}.</o>
       <o sex="f">Guten Morgen, ihr zwei! Bereit, heute Leben zu retten?</o>
-      <o sex="f">Morgen, {@PLT}, morgen, {@CPL}. Im Hangar ist es ruhig, genießt es, solange es hält.</o>
+      <o sex="f">Guten Morgen, {@PLT}, morgen, {@CPL}. Im Hangar ist es ruhig, genießt es, solange es hält.</o>
     </message>
     <message key="GRT.TEC.A" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, afternoon of the simulator: the technician greets the crew by name">
       <o sex="m">Guten Tag, {@PLT}! Guten Tag, {@CPL}. Willkommen zurück.</o>
-      <o sex="m">Tag, {@PLT}. Tag, {@CPL}. Bereit für den Rest der Schicht?</o>
-      <o sex="m">Guten Tag, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
+      <o sex="m">Guten Tag, {@PLT}. Tag, {@CPL}. Bereit für den Rest der Schicht?</o>
+      <o sex="m">Guten Tag. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
       <o sex="m">Guten Tag euch beiden. Ich hoffe, das Mittagessen war gut, {@PLT}.</o>
       <o sex="f">Guten Tag, {@PLT}, guten Tag, {@CPL}! Schön, dass ihr da seid.</o>
-      <o sex="f">Tag, {@PLT}, Tag, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Tag, {@PLT}, Tag, {@CPL}. Bereit für die Schicht?</o>
       <o sex="f">Guten Tag, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
       <o sex="f">Guten Tag, ihr zwei. Ich hoffe, der Tag war bisher freundlich zu dir, {@PLT}.</o>
-      <o sex="m">Tag, Crew. Schön, dass du da bist, {@PLT}.</o>
+      <o sex="m">Guten Tag. Schön, dass du da bist, {@PLT}.</o>
       <o sex="m">Guten Tag, {@PLT}, {@CPL}. Bisher ist es ruhig auf dem Vorfeld.</o>
-      <o sex="f">Tag, {@PLT}, Tag, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
-      <o sex="f">Guten Tag, Crew. Hier ist alles in Ordnung.</o>
+      <o sex="f">Guten Tag, {@PLT}, Tag, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
+      <o sex="f">Guten Tag. Hier ist alles in Ordnung.</o>
     </message>
     <message key="GRT.TEC.E" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="1" new="1" trigger="hangar, evening or night of the simulator: the technician greets the crew by name">
       <o sex="m">Guten Abend, {@PLT}! Guten Abend, {@CPL}. Willkommen.</o>
-      <o sex="m">Abend, {@PLT}. Abend, {@CPL}. Bereit für die Schicht?</o>
-      <o sex="m">Guten Abend, Crew. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
+      <o sex="m">Guten Abend, {@PLT}. Abend, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="m">Guten Abend. {@PLT}, {@CPL}, schön, euch zu sehen. Bereit zum Fliegen?</o>
       <o sex="m">Guten Abend euch beiden. Ich hoffe, es wird eine ruhige, {@PLT}.</o>
       <o sex="f">Guten Abend, {@PLT}, guten Abend, {@CPL}! Schön, euch zu sehen.</o>
-      <o sex="f">Abend, {@PLT}, Abend, {@CPL}. Bereit für die Schicht?</o>
+      <o sex="f">Guten Abend, {@PLT}, Abend, {@CPL}. Bereit für die Schicht?</o>
       <o sex="f">Guten Abend, Team. Schön, euch zu sehen, {@PLT} und {@CPL}. Bereit loszulegen?</o>
       <o sex="f">Guten Abend, ihr zwei. Hoffen wir auf eine ruhige Nacht, {@PLT}.</o>
-      <o sex="m">Abend, Crew. Schön, dich zu sehen, {@PLT}.</o>
+      <o sex="m">Guten Abend. Schön, dich zu sehen, {@PLT}.</o>
       <o sex="m">Guten Abend, {@PLT}, {@CPL}. Bisher ist es ruhig auf dem Vorfeld.</o>
-      <o sex="f">Abend, {@PLT}, Abend, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
-      <o sex="f">Guten Abend, Crew. Hier ist alles in Ordnung.</o>
+      <o sex="f">Guten Abend, {@PLT}, Abend, {@CPL}. Wir sind so weit, wenn ihr es seid.</o>
+      <o sex="f">Guten Abend. Hier ist alles in Ordnung.</o>
     </message>
     <message key="GRT.TEC.R3" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="2" new="1" trigger="hangar, 3 or more in the crew: the technician greets the doctor too">
       <o sex="m">Und schön, Sie auch zu sehen, {@PAX3}. Willkommen im Team.</o>
@@ -7468,28 +7468,28 @@
       <o>Morgen, {@TECH}. Hattest du eine ruhige Nacht?</o>
       <o>Guten Morgen, {@TECH}. Danke, wir sind bereit.</o>
       <o>Guten Morgen! Immer schön, dich zu sehen, {@TECH}.</o>
-      <o>Morgen, {@TECH}. Wie geht es dem Hubschrauber heute?</o>
+      <o>Morgen, {@TECH}. Wie geht es dem Helikopter heute?</o>
       <o>Hallo, {@TECH}, guten Morgen. Alles gut bei dir?</o>
     </message>
     <message key="GRT.CPL.A" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, afternoon: the copilot answers the technician by name">
       <o>Guten Tag, {@TECH}! Alles in Ordnung hier?</o>
-      <o>Tag, {@TECH}. War es ein hektischer Tag?</o>
+      <o>Hallo, {@TECH}. War es ein hektischer Tag?</o>
       <o>Guten Tag, {@TECH}. Danke, wir sind bereit.</o>
       <o>Guten Tag! Immer schön, dich zu sehen, {@TECH}.</o>
-      <o>Tag, {@TECH}. Wie geht es dem Hubschrauber heute?</o>
+      <o>Hallo, {@TECH}. Wie geht es dem Helikopter heute?</o>
       <o>Hallo, {@TECH}, guten Tag. Alles gut bei dir?</o>
     </message>
     <message key="GRT.CPL.E" actor="2" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="2" new="1" trigger="hangar, evening or night: the copilot answers the technician by name">
       <o>Guten Abend, {@TECH}! Alles in Ordnung hier?</o>
-      <o>Abend, {@TECH}. War es ein ruhiger Tag?</o>
+      <o>Hallo, {@TECH}. War es ein ruhiger Tag?</o>
       <o>Guten Abend, {@TECH}. Danke, wir sind bereit.</o>
       <o>Guten Abend! Immer schön, dich zu sehen, {@TECH}.</o>
-      <o>Abend, {@TECH}. Wie geht es dem Hubschrauber heute Abend?</o>
+      <o>Hallo, {@TECH}. Wie geht es dem Helikopter heute Abend?</o>
       <o>Hallo, {@TECH}, guten Abend. Alles gut bei dir?</o>
     </message>
     <message key="GRT.PLT.M" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, morning: the pilot greets the technician by name">
       <o>Guten Morgen, {@TECH}. Wie geht es ihr?</o>
-      <o>Morgen, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Morgen, {@TECH}. Gibt es etwas, das ich über den Helikopter wissen sollte?</o>
       <o>Guten Morgen, {@TECH}. Danke, dass du da bist.</o>
       <o>Morgen, {@TECH}. Bei dir alles bereit?</o>
       <o>Guten Morgen, {@TECH}. Wir sind so weit, wenn du es bist.</o>
@@ -7497,28 +7497,28 @@
     </message>
     <message key="GRT.PLT.A" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, afternoon: the pilot greets the technician by name">
       <o>Guten Tag, {@TECH}. Wie geht es ihr?</o>
-      <o>Tag, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Hallo, {@TECH}. Gibt es etwas, das ich über den Helikopter wissen sollte?</o>
       <o>Guten Tag, {@TECH}. Danke, dass du da bist.</o>
-      <o>Tag, {@TECH}. Bei dir alles bereit?</o>
+      <o>Hallo, {@TECH}. Bei dir alles bereit?</o>
       <o>Guten Tag, {@TECH}. Wir sind so weit, wenn du es bist.</o>
       <o>Hallo, {@TECH}. Guten Tag, und danke für die Vorbereitung.</o>
     </message>
     <message key="GRT.PLT.E" actor="1" radio="auto" group="hgr" prio="1" age="90" to="tech" seq="3" new="1" trigger="hangar, evening or night: the pilot greets the technician by name">
       <o>Guten Abend, {@TECH}. Wie geht es ihr?</o>
-      <o>Abend, {@TECH}. Gibt es etwas, das ich über den Hubschrauber wissen sollte?</o>
+      <o>Hallo, {@TECH}. Gibt es etwas, das ich über den Helikopter wissen sollte?</o>
       <o>Guten Abend, {@TECH}. Danke, dass du da bist.</o>
-      <o>Abend, {@TECH}. Bei dir alles bereit?</o>
+      <o>Hallo, {@TECH}. Bei dir alles bereit?</o>
       <o>Guten Abend, {@TECH}. Wir sind so weit, wenn du es bist.</o>
       <o>Hallo, {@TECH}. Guten Abend, und danke für die Vorbereitung.</o>
     </message>
     <message key="CHT.TEC" actor="6" radio="auto" group="hgr" prio="1" age="90" seq="4" new="1" trigger="hangar: the technician tells how the helicopter is (the circumstances)">
       <o sex="m">Sie ist in gutem Zustand. Die Tanks sind voll, das Öl ist in Ordnung und das Bordbuch ist unterschrieben.</o>
       <o sex="m">Alles geprüft: Rotor, Türen, Reifen. Nichts ist auf der Liste offen.</o>
-      <o sex="m">Keine Mängel, keine offenen Punkte. Der Hubschrauber ist bereit, wann immer ihr es seid.</o>
+      <o sex="m">Keine Mängel, keine offenen Punkte. Der Helikopter ist bereit, wann immer ihr es seid.</o>
       <o sex="m">Ich habe die Frontscheibe geputzt und die Kabine kontrolliert. Ihr könnt fliegen, wann ihr wollt.</o>
       <o sex="f">Sie ist in bestem Zustand. Der Tank ist voll, das Öl ist in Ordnung und das Bordbuch ist unterschrieben.</o>
       <o sex="f">Ich habe alles geprüft: Rotor, Türen, Reifen. Nichts ist auf der Liste offen.</o>
-      <o sex="f">Keine Mängel und keine offenen Punkte. Der Hubschrauber ist bereit, wenn ihr es seid.</o>
+      <o sex="f">Keine Mängel und keine offenen Punkte. Der Helikopter ist bereit, wenn ihr es seid.</o>
       <o sex="f">Ich habe die Frontscheibe geputzt und die Kabine kontrolliert. Sie gehört euch.</o>
       <o sex="m">Alles in Ordnung. Hydraulik, Treibstoff, Reifen: alles geprüft.</o>
       <o sex="m">Sie ist sauber, betankt und bereit. Nichts zu melden.</o>
@@ -7551,13 +7551,13 @@
       <o>Heute nieselt es ein bisschen. Nimm eine Jacke mit, {@PLT}.</o>
       <o>Es regnet ein wenig. Nichts Ernstes, aber das Vorfeld ist nass.</o>
       <o>Leichter Regen heute, achtet also auf den nassen Boden, wenn ihr herumlauft.</o>
-      <o>Ein leichter Regen, nichts, womit der Hubschrauber nicht fertig wird.</o>
+      <o>Ein leichter Regen, nichts, womit der Helikopter nicht fertig wird.</o>
       <o>Es nieselt. Das Vorfeld ist rutschig, achtet auf euren Schritt.</o>
       <o>Ein bisschen Regen da draußen, nichts, worüber man sich sorgen muss.</o>
     </message>
     <message key="WXD.RL" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (light rain)">
       <o>Ihr seid im Nieselregen zurückgekommen. Geht rein und trocknet euch ab.</o>
-      <o>Leichter Regen da draußen, ich habe es gesehen. Der Hubschrauber trocknet im Hangar.</o>
+      <o>Leichter Regen da draußen, ich habe es gesehen. Der Helikopter trocknet im Hangar.</o>
       <o>Zurück durch den Regen. Zum Glück nur ein leichter.</o>
       <o>Das Vorfeld ist wieder nass. Achtet auf euren Schritt auf dem Weg hinein.</o>
       <o>Zurück aus dem Nieselregen. Geht trocknen, ich kümmere mich um sie.</o>
@@ -7583,7 +7583,7 @@
       <o>Es schüttet immer noch! Ihr seid sicher durchnässt, kommt herein.</o>
       <o>Was für ein Wolkenbruch. Was für ein Pech, da draußen zu sein.</o>
       <o>Ihr seid durch diesen ganzen Regen geflogen? Mir hätte das nicht gefallen.</o>
-      <o>Starker Regen auf dem Vorfeld. Geht schnell hinein, ich kümmere mich um den Hubschrauber.</o>
+      <o>Starker Regen auf dem Vorfeld. Geht schnell hinein, ich kümmere mich um den Helikopter.</o>
       <o>Ihr seid bestimmt durchnässt. Geht hinein und trocknet euch ab, ich übernehme hier.</o>
       <o>Das war viel Regen. Gut gemacht, sie zurückzubringen.</o>
     </message>
@@ -7591,9 +7591,9 @@
       <o>Wem sagst du das. Nicht der beste Tag, um draußen zu sein.</o>
       <o>Ja, und wir müssen darin fliegen.</o>
       <o>Hoffen wir, dass es bald aufklart.</o>
-      <o>Mir ist das Dach des Hubschraubers jederzeit lieber als das hier.</o>
+      <o>Mir ist das Dach des Helikopters jederzeit lieber als das hier.</o>
       <o>Ich will nur ein trockenes Handtuch und einen heißen Kaffee.</o>
-      <o>Es war stark, aber dem Hubschrauber hat es nichts ausgemacht.</o>
+      <o>Es war stark, aber dem Helikopter hat es nichts ausgemacht.</o>
     </message>
     <message key="WXH.SN" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (snow)">
       <o>Schnee heute! Es sieht wunderschön aus, aber hier draußen ist es kalt und glatt.</o>
@@ -7605,10 +7605,10 @@
     </message>
     <message key="WXD.SN" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (snow)">
       <o>Willkommen zurück im Schnee. Geht hinein und wärmt euch auf.</o>
-      <o>Es schneit weiter. Ich reinige den Hubschrauber und prüfe ihn auf Eis.</o>
+      <o>Es schneit weiter. Ich reinige den Helikopter und prüfe ihn auf Eis.</o>
       <o>Eine weiße Landung, wie schön. Achtet auf das rutschige Vorfeld.</o>
       <o>Wieder Schnee auf dem Vorfeld. Holt euch ein heißes Getränk.</o>
-      <o>Überall Schnee. Ich räume den Hubschrauber frei, ihr geht hinein.</o>
+      <o>Überall Schnee. Ich räume den Helikopter frei, ihr geht hinein.</o>
       <o>Willkommen zurück. Wärmt euch auf, ich fege den Schnee von ihr.</o>
     </message>
     <message key="WXC.SN" actor="2" radio="auto" group="wxh" seq="2" prio="1" age="90" to="tech" new="1" trigger="hangar: the copilot answers the remark of the technician about the weather (snow)">
@@ -7629,9 +7629,9 @@
     </message>
     <message key="WXD.HT" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (heat)">
       <o>Zurück in dieser Hitze. Kommt in den Schatten, ich habe kaltes Wasser.</o>
-      <o>Es ist immer noch so heiß. Der Hubschrauber braucht Zeit zum Abkühlen.</o>
+      <o>Es ist immer noch so heiß. Der Helikopter braucht Zeit zum Abkühlen.</o>
       <o>Was für eine Hitze, und ihr seid darin geflogen. Trinkt etwas Wasser.</o>
-      <o>Das Vorfeld glüht. Ich stelle den Hubschrauber in den Schatten.</o>
+      <o>Das Vorfeld glüht. Ich stelle den Helikopter in den Schatten.</o>
       <o>Zurück in der Hitze. Holt euch Wasser, das habt ihr verdient.</o>
       <o>Hier draußen kocht es. Geht hinein und kühlt euch ab.</o>
     </message>
@@ -7646,14 +7646,14 @@
     <message key="WXH.CD" actor="6" radio="auto" group="wxh" seq="1" prio="1" age="90" new="1" trigger="hangar, before the flight: the technician jokes about the weather (cold)">
       <o>Heute ist es kalt! Meine Finger sind schon steif.</o>
       <o>Es ist frisch hier draußen. Zieht euch warm an, wenn ihr herumlauft.</o>
-      <o>Ein kalter Tag. Dem Hubschrauber macht es wenigstens nichts aus.</o>
+      <o>Ein kalter Tag. Dem Helikopter macht es wenigstens nichts aus.</o>
       <o>Es ist kalt, aber trocken. Es könnte schlimmer sein.</o>
       <o>Es ist kalt. Vergesst eure Handschuhe nicht.</o>
       <o>Ein kalter Wind heute. Wärmt euch gut auf, bevor ihr los geht.</o>
     </message>
     <message key="WXD.CD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (cold)">
       <o>Willkommen zurück. Es ist kalt, geht hinein und holt euch etwas Warmes.</o>
-      <o>Es ist frisch hier draußen. Ich kümmere mich um den Hubschrauber, geht hinein.</o>
+      <o>Es ist frisch hier draußen. Ich kümmere mich um den Helikopter, geht hinein.</o>
       <o>Kalter Tag, heißer Kaffee. Ihr wisst, wo er steht.</o>
       <o>Der Wind auf dem Vorfeld ist kalt. Geht schnell hinein.</o>
       <o>Ihr seid bestimmt durchgefroren. Drinnen wartet heißer Tee.</o>
@@ -7676,7 +7676,7 @@
       <o>Es ist so kalt, dass mein Kaffee gefriert. Passt da draußen auf euch auf.</o>
     </message>
     <message key="WXD.FZ" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (freezing cold)">
-      <o>Hier draußen herrscht Frost! Geht hinein und wärmt euch auf, ich kümmere mich um den Hubschrauber.</o>
+      <o>Hier draußen herrscht Frost! Geht hinein und wärmt euch auf, ich kümmere mich um den Helikopter.</o>
       <o>Es ist unter null. Ich prüfe Rotor und Türen auf Eis.</o>
       <o>Ihr seid bei dieser Kälte geflogen? Mutig. Kommt rein und wärmt eure Hände.</o>
       <o>Es ist bitterkalt. Geht hinein, im Hangar gibt es heißen Kaffee.</o>
@@ -7726,7 +7726,7 @@
     <message key="WXD.WD" actor="6" radio="auto" group="wxd" seq="1" prio="1" age="90" new="1" trigger="hangar, after the flight: the technician jokes about the weather (strong wind)">
       <o>Eine windige Landung, nehme ich an. Willkommen zurück.</o>
       <o>Der Wind ist stark auf dem Vorfeld. Achtet auf die Türen.</o>
-      <o>Es gibt Böen. Ich sichere den Hubschrauber.</o>
+      <o>Es gibt Böen. Ich sichere den Helikopter.</o>
       <o>Was für ein Wind heute. Gut gemacht, sie hereinzubringen.</o>
       <o>Starker Wind, ich habe sie hereinkommen sehen. Schöne Landung.</o>
       <o>Böen auf dem Vorfeld. Ich sichere sie sofort.</o>
@@ -7847,7 +7847,7 @@
       <o>Einen schönen Tag, {@PLT}.</o>
       <o>Geh einen Kaffee holen, den hast du dir verdient. Einen schönen Tag.</o>
       <o>Ruh dich gut aus, und einen schönen Tag.</o>
-      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Tag.</o>
+      <o>Ich kümmere mich um den Helikopter. Genieß deinen Tag.</o>
       <o>Nimm es ruhig, {@PLT}. Einen schönen Tag.</o>
       <o>Gut gemacht heute. Einen schönen Tag.</o>
     </message>
@@ -7855,7 +7855,7 @@
       <o>Einen schönen Nachmittag, {@PLT}.</o>
       <o>Geh etwas essen, das hast du dir verdient. Einen schönen Nachmittag.</o>
       <o>Ruh dich gut aus und genieß den Rest des Tages.</o>
-      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Nachmittag.</o>
+      <o>Ich kümmere mich um den Helikopter. Genieß deinen Nachmittag.</o>
       <o>Nimm es ruhig, {@PLT}. Einen schönen Nachmittag.</o>
       <o>Gut gemacht heute. Einen schönen Nachmittag.</o>
     </message>
@@ -7863,7 +7863,7 @@
       <o>Einen schönen Abend, {@PLT}.</o>
       <o>Geh dich ausruhen, das hast du dir verdient. Gute Nacht.</o>
       <o>Ruh dich gut aus, und gute Nacht.</o>
-      <o>Ich kümmere mich um den Hubschrauber. Genieß deinen Abend.</o>
+      <o>Ich kümmere mich um den Helikopter. Genieß deinen Abend.</o>
       <o>Nimm es ruhig, {@PLT}. Einen schönen Abend.</o>
       <o>Gut gemacht heute. Gute Nacht.</o>
     </message>
@@ -7918,18 +7918,18 @@
     <message key="SAR.FND.A" actor="8" radio="ext" group="sarf" seq="2" prio="2" age="90" new="1" trigger="search and rescue: the dispatcher answers the report of the find (external radio; same args)">
       <o>{@HEMS}, Leitstelle. Verstanden, Ziel gefunden bei {0} Grad {mins:1} {comp:2}, {3} Grad {mins:4} {comp:5}. Haltet uns über den Zustand auf dem Laufenden.</o>
       <o>{@HEMS}, Leitstelle. Gut gemacht. Wir notieren die Position, {0} Grad {mins:1} {comp:2}, {3} Grad {mins:4} {comp:5}. Sagt uns, was ihr vorfindet.</o>
-      <o>{@HEMS}, Leitstelle. Fund verstanden. Braucht ihr Bodenkräfte oder einen zweiten Hubschrauber?</o>
+      <o>{@HEMS}, Leitstelle. Fund verstanden. Braucht ihr Bodenkräfte oder einen zweiten Helikopter?</o>
       <o>{@HEMS}, Leitstelle. Verstanden, Position notiert. Meldet den Zustand der Person, sobald ihr könnt.</o>
       <o>{@HEMS}, Leitstelle. Sehr gut, Position verstanden. Ich alarmiere den Rettungswagen für den Weg ins Krankenhaus.</o>
       <o>{@HEMS}, Leitstelle. Erhalten, Position {0} Grad {mins:1} {comp:2}, {3} Grad {mins:4} {comp:5}. Fahrt mit eurer Einschätzung fort.</o>
     </message>
     <message key="HOS.MAR.P" actor="2" radio="ext" group="hosm" seq="1" prio="2" age="90" new="1" trigger="the hospital marshal is expected: the copilot asks the hospital to send him to the helipad">
-      <o>Krankenhaus, {@HEMS}. Wir bitten um den Einweiser am Hubschrauberlandeplatz.</o>
-      <o>Krankenhaus, {@HEMS}. Könnt ihr den Einweiser für unsere Landung zum Landeplatz schicken?</o>
-      <o>Krankenhaus, {@HEMS}. Wir hätten gern den Einweiser am Landeplatz.</o>
-      <o>Krankenhaus, {@HEMS}. Bitte haltet den Einweiser auf dem Landeplatz bereit.</o>
-      <o>Krankenhaus, {@HEMS}. Einweiser bitte auf den Landeplatz, wir landen in wenigen Minuten.</o>
-      <o>Krankenhaus, {@HEMS}. Anforderung des Einweisers für die Landung.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir bitten um den Einweiser am Helikopterlandeplatz.</o>
+      <o>Bodenpersonal, {@HEMS}. Könnt ihr den Einweiser für unsere Landung zum Landeplatz schicken?</o>
+      <o>Bodenpersonal, {@HEMS}. Wir hätten gern den Einweiser am Landeplatz.</o>
+      <o>Bodenpersonal, {@HEMS}. Bitte haltet den Einweiser auf dem Landeplatz bereit.</o>
+      <o>Bodenpersonal, {@HEMS}. Einweiser bitte auf den Landeplatz, wir landen in wenigen Minuten.</o>
+      <o>Bodenpersonal, {@HEMS}. Anforderung des Einweisers für die Landung.</o>
     </message>
     <message key="HOS.MAR.A" actor="9" radio="ext" group="hosm" seq="2" prio="2" age="90" new="1" trigger="the hospital answers that the marshal is going to the helipad (external radio)">
       <o>{@HEMS}, verstanden. Der Einweiser ist auf dem Weg zum Landeplatz.</o>
@@ -7940,12 +7940,12 @@
       <o>Verstanden, {@HEMS}. Der Einweiser kommt zum Landeplatz.</o>
     </message>
     <message key="HOS.FIN.P" actor="2" radio="ext" group="hosf" seq="1" prio="2" age="90" new="1" trigger="final approach to the hospital helipad (about 900 m): the copilot asks to land">
-      <o>Krankenhaus, {@HEMS}. Kurzer Endanflug, bitten um Landung auf dem Landeplatz.</o>
-      <o>Krankenhaus, {@HEMS}. Wir sind im Endanflug auf den Landeplatz, bitten um Landefreigabe.</o>
-      <o>Krankenhaus, {@HEMS}. Endanflug, bitte bestätigt, dass der Landeplatz frei ist.</o>
-      <o>Krankenhaus, {@HEMS}. Etwa eine Minute vor dem Landeplatz, bereit zur Landung. Bestätigt frei.</o>
-      <o>Krankenhaus, {@HEMS}. Endanflug auf den Landeplatz. Landefreigabe bitte.</o>
-      <o>Krankenhaus, {@HEMS}. Wir sind im kurzen Endanflug, bitten um Landung.</o>
+      <o>Bodenpersonal, {@HEMS}. Kurzer Endanflug, bitten um Landung auf dem Landeplatz.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir sind im Endanflug auf den Landeplatz, bitten um Landefreigabe.</o>
+      <o>Bodenpersonal, {@HEMS}. Endanflug, bitte bestätigt, dass der Landeplatz frei ist.</o>
+      <o>Bodenpersonal, {@HEMS}. Etwa eine Minute vor dem Landeplatz, bereit zur Landung. Bestätigt frei.</o>
+      <o>Bodenpersonal, {@HEMS}. Endanflug auf den Landeplatz. Landefreigabe bitte.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir sind im kurzen Endanflug, bitten um Landung.</o>
     </message>
     <message key="HOS.FIN.A" actor="9" radio="ext" group="hosf" seq="2" prio="2" age="90" new="1" trigger="the hospital clears the landing with the wind (external radio; args: wind direction, wind knots)">
       <o>{@HEMS}, Landung auf dem Landeplatz freigegeben. Wind {0} Grad mit {1} Knoten.</o>
@@ -7956,19 +7956,19 @@
       <o>{@HEMS}, die Landung ist genehmigt. Wind {0} mit {1} Knoten.</o>
     </message>
     <message key="HOS.PAD.P" actor="2" radio="ext" group="hosp" seq="1" prio="2" age="90" new="1" trigger="the helicopter is on the hospital helipad: the copilot announces the handover">
-      <o>Krankenhaus, {@HEMS}. Auf dem Landeplatz. Wir beginnen jetzt mit der Übergabe.</o>
-      <o>Krankenhaus, {@HEMS}. Wir stehen auf dem Landeplatz. Bitte schickt das Team.</o>
-      <o>Krankenhaus, {@HEMS}. Gelandet. Bereit zur Übergabe.</o>
-      <o>Krankenhaus, {@HEMS}. Am Boden. Team bitte zum Hubschrauber.</o>
-      <o>Krankenhaus, {@HEMS}. Sicher auf dem Landeplatz. Beginn der Übergabe.</o>
-      <o>Krankenhaus, {@HEMS}. Auf dem Landeplatz. Wir öffnen die Türen für das Team.</o>
+      <o>Bodenpersonal, {@HEMS}. Auf dem Landeplatz. Wir beginnen jetzt mit der Übergabe.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir stehen auf dem Landeplatz. Bitte schickt das Team.</o>
+      <o>Bodenpersonal, {@HEMS}. Gelandet. Bereit zur Übergabe.</o>
+      <o>Bodenpersonal, {@HEMS}. Am Boden. Team bitte zum Helikopter.</o>
+      <o>Bodenpersonal, {@HEMS}. Sicher auf dem Landeplatz. Beginn der Übergabe.</o>
+      <o>Bodenpersonal, {@HEMS}. Auf dem Landeplatz. Wir öffnen die Türen für das Team.</o>
     </message>
     <message key="HOS.PAD.A" actor="9" radio="ext-near" group="hosp" seq="2" prio="2" age="90" new="1" trigger="the hospital answers that the team is coming to the helicopter (external radio, near)">
-      <o>{@HEMS}, verstanden. Das Team kommt zum Hubschrauber.</o>
+      <o>{@HEMS}, verstanden. Das Team kommt zum Helikopter.</o>
       <o>Verstanden. Das Team ist unterwegs.</o>
       <o>{@HEMS}, verstanden. Das Team ist gleich bei euch.</o>
       <o>Verstanden, {@HEMS}. Wir kommen, bleibt auf dem Landeplatz.</o>
-      <o>Verstanden. Das Team ist in einer Minute am Hubschrauber.</o>
+      <o>Verstanden. Das Team ist in einer Minute am Helikopter.</o>
       <o>{@HEMS}, verstanden. Team unterwegs, Türen bitte öffnen.</o>
     </message>
     <message key="HOS.Q" actor="9" radio="ext-near" group="hosq" seq="1" prio="1" age="45" new="1" trigger="the handover of a patient: the hospital asks a question (near)">
@@ -7988,19 +7988,19 @@
       <o>Die letzten Werte stehen auf dem Monitor und im Bericht. Nichts Unerwartetes.</o>
     </message>
     <message key="HOS.DEP.P" actor="2" radio="ext" group="hosd" seq="1" prio="2" age="90" new="1" trigger="the handover is done and the crew is aboard: the copilot tells the hospital that the helicopter leaves">
-      <o>Krankenhaus, {@HEMS}. Übergabe abgeschlossen, wir sind startbereit.</o>
-      <o>Krankenhaus, {@HEMS}. Crew an Bord, startbereit. Danke für eure Hilfe.</o>
-      <o>Krankenhaus, {@HEMS}. Wir verlassen jetzt den Landeplatz, zurück zur Basis.</o>
-      <o>Krankenhaus, {@HEMS}. Startbereit, bitten um Freigabe zum Abheben.</o>
-      <o>Krankenhaus, {@HEMS}. Alles erledigt, wir starten gleich.</o>
-      <o>Krankenhaus, {@HEMS}. Wir starten jetzt. Danke, habt einen guten Tag.</o>
+      <o>Bodenpersonal, {@HEMS}. Übergabe abgeschlossen, wir sind startbereit.</o>
+      <o>Bodenpersonal, {@HEMS}. Alle an Bord, startbereit. Danke für eure Hilfe.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir verlassen jetzt den Landeplatz, zurück zur Basis.</o>
+      <o>Bodenpersonal, {@HEMS}. Startbereit, bitten um Freigabe zum Abheben.</o>
+      <o>Bodenpersonal, {@HEMS}. Alles erledigt, wir starten gleich.</o>
+      <o>Bodenpersonal, {@HEMS}. Wir starten jetzt. Danke, habt einen guten Tag.</o>
     </message>
     <message key="HOS.DEP.A" actor="9" radio="ext" group="hosd" seq="2" prio="2" age="90" new="1" trigger="the hospital clears the departure (external radio)">
       <o>{@HEMS}, verstanden. Start freigegeben. Danke für den Transport.</o>
       <o>Verstanden, {@HEMS}. Der Landeplatz gehört euch, Start frei. Guten Flug.</o>
       <o>{@HEMS}, verstanden. Start frei, danke für alles.</o>
       <o>Verstanden. Ihr seid zum Abheben freigegeben, guten Rückflug.</o>
-      <o>{@HEMS}, Start genehmigt. Danke, Crew.</o>
+      <o>{@HEMS}, Start genehmigt. Danke.</o>
       <o>Verstanden, {@HEMS}. Guten Flug und gut gemacht.</o>
     </message>
     <message key="HOS.ORG.LT" actor="9" radio="ext-near" group="hoshnd" seq="2" new="1" trigger="the hospital receives the organ after the deadline">
@@ -8008,7 +8008,7 @@
       <o>Erhalten. Die Frist ist überschritten, das Team prüft es jetzt.</o>
       <o>Wir nehmen es, aber wir sind spät dran. Das OP-Team sieht, was möglich ist.</o>
       <o>Das Organ ist da. Über der Frist, das Transplantationsteam entscheidet.</o>
-      <o>Danke, Crew. Die Zeit ist abgelaufen, wir tun mit dem Organ unser Bestes.</o>
+      <o>Danke. Die Zeit ist abgelaufen, wir tun mit dem Organ unser Bestes.</o>
       <o>Verstanden. Spät, aber wir versuchen es. Das Team übernimmt.</o>
     </message>
     <message key="PCK.CALL.TRF" actor="2" radio="ext" group="pckt" seq="1" prio="2" age="90" new="1" trigger="patient transfer: some minutes before the pick-up place the copilot gives the minutes to go (arg: minutes) and asks to be ready">
@@ -8134,7 +8134,7 @@
     <message key="ORG.DEL.OK" actor="2" radio="auto" group="orgd" seq="1" prio="1" age="60" new="1" trigger="organ transport: the organ was delivered in time, the copilot comments">
       <o>Pünktlich, gut. Das war ein sauberer Transport.</o>
       <o>Innerhalb der Zeit abgeliefert. Gute Arbeit, alle zusammen.</o>
-      <o>Wir haben es mit Zeitreserve geschafft. Gut gemacht, Crew.</o>
+      <o>Wir haben es mit Zeitreserve geschafft. Gut gemacht alle.</o>
       <o>Das Organ ist rechtzeitig abgeliefert. Tolle Arbeit.</o>
       <o>Übergabe erledigt, und innerhalb der Frist. Perfekt.</o>
       <o>Rechtzeitig, wie geplant. Danke, alle zusammen.</o>
@@ -8156,11 +8156,11 @@
       <o>Unser Ziel ist {0}. Der Patient ist stabil, fliegen wir ruhig.</o>
     </message>
     <message key="SVC.REQ" actor="2" radio="ext" new="1" trigger="back at the base damaged or with a failure, the crew is taken by the van: the copilot asks the dispatcher for technical assistance">
-      <o>{@DSP}, {@HEMS}. Wir sind mit Schäden und Störungen am Hubschrauber zurück. Technische Unterstützung am Landeplatz angefordert.</o>
-      <o>{@DSP}, {@HEMS}. Der Hubschrauber ist beschädigt. Bitte schicken Sie die Techniker zu unserer Position.</o>
+      <o>{@DSP}, {@HEMS}. Wir sind mit Schäden und Störungen am Heli zurück. Technische Unterstützung am Landeplatz angefordert.</o>
+      <o>{@DSP}, {@HEMS}. Der Heli ist beschädigt. Bitte schicken Sie die Techniker zu unserer Position.</o>
       <o>{@DSP} von {@HEMS}. Wir haben Störungen an Bord, technische Unterstützung angefordert.</o>
-      <o>{@DSP}, {@HEMS}. Hubschrauber nach dem Flug beschädigt, technische Unterstützung am Landeplatz angefordert.</o>
-      <o>{@DSP}, {@HEMS}. Wir brauchen die Techniker hier, der Hubschrauber hat Schäden und Störungen.</o>
+      <o>{@DSP}, {@HEMS}. Helikopter nach dem Flug beschädigt, technische Unterstützung am Landeplatz angefordert.</o>
+      <o>{@DSP}, {@HEMS}. Wir brauchen die Techniker hier, der Helikopter hat Schäden und Störungen.</o>
       <o>{@HEMS} an {@DSP}. Schäden und Störungen nach dem Einsatz, bitte technische Unterstützung schicken.</o>
     </message>
     <message key="SVC.ACK" actor="8" radio="ext" new="1" trigger="the dispatcher confirms the technical assistance: the technician comes with the service truck">
@@ -8174,7 +8174,7 @@
     <message key="SVC.ARR" actor="8" radio="ext" new="1" trigger="the service truck is parked behind the helicopter">
       <o>{@HEMS}, {@DSP}. Das Servicefahrzeug ist vor Ort, der Techniker wartet auf Sie.</o>
       <o>{@DSP} an {@HEMS}. Der Techniker ist mit dem Servicefahrzeug eingetroffen.</o>
-      <o>{@HEMS}, {@DSP}. Die technische Unterstützung steht hinter Ihrem Hubschrauber.</o>
+      <o>{@HEMS}, {@DSP}. Die technische Unterstützung steht hinter Ihrem Helikopter.</o>
       <o>{@HEMS}, {@DSP}. Das Servicefahrzeug ist an Ihrer Position angekommen.</o>
       <o>{@DSP} an {@HEMS}. Der Techniker ist mit dem Servicefahrzeug vor Ort.</o>
       <o>{@HEMS}, {@DSP}. Das Fahrzeug steht hinter Ihnen, der Techniker ist bereit.</o>
@@ -8192,7 +8192,7 @@
       <o>{@DSP} an {@HEMS}. Die Polizei ist vor Ort, Sie können landen.</o>
       <o>{@HEMS}, {@DSP}. Ein Polizeifahrzeug ist bereits am Landeplatz.</o>
       <o>{@HEMS}, {@DSP}. Die Polizei erwartet Sie am Landeplatz.</o>
-      <o>{@DSP} an {@HEMS}. Eine Streife steht am Landeplatz bereit.</o>
+      <o>{@DSP} an {@HEMS}. Die Polizei steht am Landeplatz bereit.</o>
       <o>{@HEMS}, {@DSP}. Die Polizei ist an Ihrem Landeplatz.</o>
     </message>
     <message key="FLT.GEN" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 2: one crew member says that there is a failure">
@@ -8204,7 +8204,7 @@
       <o>Wir haben ein Problem!</o>
     </message>
     <message key="FLT.CHK" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="a random failure, manner 1: the other crew member verifies">
-      <o>Check.</o>
+      <o>Tscheck.</o>
       <o>Bestätigt.</o>
       <o>Geprüft.</o>
       <o>Bestätigt, ich sehe es.</o>
@@ -8212,7 +8212,7 @@
       <o>Verstanden, bestätigt.</o>
     </message>
     <message key="FLT.CHIPV" actor="1" radio="auto" group="flt" seq="1" new="1" trigger="MGB chip: the other crew member verifies and proposes the chip burn">
-      <o>Check. Späne bestätigt, wir machen den Chip Burn.</o>
+      <o>Tscheck. Späne bestätigt, wir machen den Chip Burn.</o>
       <o>Bestätigt. Sollen wir den Chip Burn machen?</o>
       <o>Geprüft. Ich schlage den Chip Burn vor.</o>
       <o>Bestätigt. Machen wir einen Chip Burn?</o>
