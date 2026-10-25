@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack FR. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="FR" language="FR" version="20" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="31">
+<voicepack name="FR" language="FR" version="22" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="33">
   <names>
     <name role="PLT">Pilote</name>
     <name role="CPL">Copilote</name>
@@ -2805,6 +2805,30 @@
       <o>Je vais tout documenter pour l'équipe.</o>
       <o>Le rapport médical, c'est pour moi, on le passera en revue.</o>
     </message>
+    <message key="PAX3.42" actor="3" radio="auto" lvar="L:PAX3{VCP}42" sleep="0" trigger="ops_progress_warning after 120 seconds without progress while the crew is still walking (ground ops stall reason CREW_MOVING).">
+      <o>L'équipe est encore en route vers le point de chargement. Tout se déroule comme prévu.</o>
+      <o>L'équipe marche vers le point de chargement, pas de retard de notre côté.</o>
+      <o>Nous nous rendons au point de chargement. Un instant.</o>
+      <o>Nous marchons encore vers le point de chargement, ça avance.</o>
+      <o>L'équipe est en chemin, laissez-nous un instant.</o>
+      <o>Nous sommes en route vers le point de chargement, un instant s'il vous plaît.</o>
+    </message>
+    <message key="PAX3.43" actor="3" radio="auto" lvar="L:PAX3{VCP}43" sleep="0" trigger="ops_progress_warning after 120 seconds without progress while the helicopter is away from the landing spot (ground ops stall reason HELI_ARRIVAL).">
+      <o>L'équipe attend l'arrivée de l'hélicoptère sur la zone de poser.</o>
+      <o>Nous attendons l'hélicoptère. Amenez-le sur la zone de poser.</o>
+      <o>L'équipe au sol est prête et attend l'hélicoptère sur la zone.</o>
+      <o>Nous attendons que l'hélicoptère arrive.</o>
+      <o>Nous attendons l'hélicoptère, la zone de poser n'est pas encore atteinte.</o>
+      <o>Pilote, nous vous attendons sur la zone de poser.</o>
+    </message>
+    <message key="PAX3.44" actor="3" radio="auto" lvar="L:PAX3{VCP}44" sleep="0" trigger="ops_progress_warning after 120 seconds without progress while the hoist waits for the helicopter on the ground or out of the hover window (ground ops stall reason HELI_GROUND or HELI_HOVER).">
+      <o>Pilote, l'équipe attend l'hélicoptère. Décollez et tenez un vol stationnaire au-dessus du point.</o>
+      <o>Nous attendons au treuil. Tenez un stationnaire stable au-dessus du point, pilote.</o>
+      <o>Pilote, il nous faut l'hélicoptère en stationnaire au-dessus du point de treuillage.</o>
+      <o>L'équipe au sol vous attend, pilote. Stationnaire au-dessus du point pour le treuil.</o>
+      <o>Nous attendons que l'hélicoptère se mette en stationnaire au-dessus de nous. Vérifiez les conditions.</o>
+      <o>Nous sommes prêts pour le treuillage. Mettez l'hélicoptère en stationnaire, pilote.</o>
+    </message>
     <message key="PLT.1" actor="1" radio="auto" lvar="L:PLT{VCP}1" wav="AND.plt.comm.check.wav" sleep="2.5">
       <o>Pilote, vérification des communications.</o>
       <o>Pilote à équipage, vérification des communications.</o>
@@ -3264,6 +3288,20 @@
       <o sex="f">Hé, qu'est-ce que vous avez fait à mon hélicoptère ?</o>
     </message>
     <message key="SYS.DEAD" actor="1" radio="auto" lvar="L:DEAD{VCP}" wav="AND.dead.wav" sleep="3" sfx="1">
+    </message>
+    <message key="SYS.CRY1" actor="1" radio="off" lvar="L:CRY{VCP}1" wav="AND.crash.groan1.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a groan at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY2" actor="1" radio="off" lvar="L:CRY{VCP}2" wav="AND.crash.groan2.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a longer groan at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY3" actor="1" radio="off" lvar="L:CRY{VCP}3" wav="AND.crash.ow.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a pain cry (ow) at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY4" actor="1" radio="off" lvar="L:CRY{VCP}4" wav="AND.crash.rattle.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a death rattle at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY5" actor="1" radio="off" lvar="L:CRY{VCP}5" wav="AND.crash.gasp_f.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a gasp at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY6" actor="1" radio="off" lvar="L:CRY{VCP}6" wav="AND.crash.cough1.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a short cough at the impact (random, low volume, no radio effect; never for a patient)">
+    </message>
+    <message key="SYS.CRY7" actor="1" radio="off" lvar="L:CRY{VCP}7" wav="AND.crash.cough2.wav" sleep="0" sfx="1" vol="45" new="1" trigger="a crew member dies in the crash: a labored cough at the impact (random, low volume, no radio effect; never for a patient)">
     </message>
     <message key="SYS.DISPATCH2" actor="1" radio="auto" lvar="L:{VCP}DISPATCH2" wav="AND.Inside.TabletAlarm2.wav" sleep="0" sfx="1" vol="70">
     </message>
