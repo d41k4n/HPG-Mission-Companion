@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="EN" language="EN" version="30" vcp="APP" title="English crew voices of the HEMS missions">
+<voicepack name="EN" language="EN" version="31" vcp="APP" title="English crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -1702,12 +1702,12 @@
       <o>Boom is out, hoist is up. Patient and Doc are hooked on, hanging outside.</o>
     </message>
     <message key="PAX1.14" actor="4" radio="auto" lvar="L:{VCP}14" wav="AND.pax1.hoist.is.up.personnel.is.strapped.in.wav" sleep="0">
-      <o>Hoist is up; personnel are strapped in.</o>
-      <o>Hoist is up. Personnel are strapped in.</o>
-      <o>Hoist up, personnel strapped in.</o>
-      <o>The hoist is up and the personnel are strapped in.</o>
-      <o>Hoist is up, and everybody is strapped in.</o>
-      <o>Hoist is up, everybody is in and strapped.</o>
+      <o>Hoist is up; getting the last of them inside.</o>
+      <o>Hoist is up. Final hoist at the door, getting them inside.</o>
+      <o>Hoist up, bringing them in through the door.</o>
+      <o>The hoist is up and we are getting the personnel inside.</o>
+      <o>Hoist is up, they are at the door, getting them in.</o>
+      <o>Hoist is up, pulling them inside now.</o>
     </message>
     <message key="PAX1.15" actor="4" radio="auto" lvar="L:{VCP}15" wav="AND.pax1.hoist.on.ground.personnel.getting.hooked.wav" sleep="0">
       <o>Hoist on the ground. Personnel are being hooked on.</o>
@@ -1740,6 +1740,22 @@
       <o>Hook in, boom in. You can leave the hover.</o>
       <o>Hook is in and the boom is in, you can leave the hover.</o>
       <o>Hook and boom are in, go ahead and leave the hover.</o>
+    </message>
+    <message key="PAX1.INS" actor="4" radio="auto" group="hoistend" seq="1" new="1" trigger="the hoisted persons are all inside and the hoist is stowed: the rear crew tells the pilot that he is clear to leave the hover">
+      <o>Everybody is inside, hook and boom are in. You are clear to leave the hover.</o>
+      <o>Everyone is inside, door closed, hook and boom stowed. Clear to leave the hover.</o>
+      <o>All aboard and secured, the hook is in and the boom is retracted. You can leave the hover.</o>
+      <o>They are all inside. Hook in, boom in, you are free to leave the hover.</o>
+      <o>Everybody is in the cabin, the hoist is stowed. You are clear to leave the hover.</o>
+      <o>All inside and the hoist is stowed. Go ahead and leave the hover.</o>
+    </message>
+    <message key="PAX1.OUT" actor="4" radio="auto" group="hoistend" seq="2" new="1" trigger="a crew member stays on the ground (medic with the ambulance or heli rescuers dropped): doors closed, hook in, boom retracted, clear to leave the hover">
+      <o>Door closed, hook in and boom retracted. You are clear to leave the hover.</o>
+      <o>Doors are closed, the hook is in and the boom is retracted. Clear to leave the hover.</o>
+      <o>Hook in, boom in, door closed. You can leave the hover.</o>
+      <o>Door is closed, hoist stowed. You are free to leave the hover.</o>
+      <o>Boom retracted, door closed, the hook is in. Go ahead and leave the hover.</o>
+      <o>Everything is stowed and the door is closed. Clear to leave the hover.</o>
     </message>
     <message key="PAX1.19" actor="4" radio="auto" lvar="L:{VCP}19" wav="AND.pax1.medic.on.ground.and.disconnected.wav" sleep="0">
       <o>Medic is on the ground and disconnected.</o>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack EN. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="DE" language="DE" version="17" basever="30" vcp="APP" title="German crew voices of the HEMS missions">
+<voicepack name="DE" language="DE" version="18" basever="31" vcp="APP" title="German crew voices of the HEMS missions">
   <names>
     <name role="PLT">Pilot</name>
     <name role="CPL">Copilot</name>
@@ -1702,12 +1702,12 @@
       <o>Arm ist draußen, Winde ganz oben. Patient und Arzt hängen außen am Haken.</o>
     </message>
     <message key="PAX1.14" actor="4" radio="auto" lvar="L:{VCP}14" wav="AND.pax1.hoist.is.up.personnel.is.strapped.in.wav" sleep="0">
-      <o>Winde ist oben; Personal ist angeschnallt.</o>
-      <o>Winde ist oben. Besatzung ist gesichert.</o>
-      <o>Winde oben, Personal angeschnallt.</o>
-      <o>Die Winde ist oben und das Personal ist gesichert.</o>
-      <o>Winde oben und alle sind angeschnallt.</o>
-      <o>Winde ist oben, alle sind drin und festgeschnallt.</o>
+      <o>Winde ist oben; wir holen die Letzten herein.</o>
+      <o>Winde ist oben. Letzte Person an der Tür, wir holen sie herein.</o>
+      <o>Winde oben, wir ziehen sie durch die Tür herein.</o>
+      <o>Die Winde ist oben und wir holen das Personal herein.</o>
+      <o>Winde ist oben, sie sind an der Tür, wir holen sie herein.</o>
+      <o>Winde ist oben, wir ziehen sie jetzt herein.</o>
     </message>
     <message key="PAX1.15" actor="4" radio="auto" lvar="L:{VCP}15" wav="AND.pax1.hoist.on.ground.personnel.getting.hooked.wav" sleep="0">
       <o>Winde am Boden. Personal klinkt sich ein.</o>
@@ -1740,6 +1740,22 @@
       <o>Haken drin, Arm drin. Du kannst aus dem Schwebeflug abfliegen.</o>
       <o>Haken und Arm sind drin, Schwebeflug kann beendet werden.</o>
       <o>Haken und Windenarm sind eingefahren, Übergang in Vorwärtsflug freigegeben.</o>
+    </message>
+    <message key="PAX1.INS" actor="4" radio="auto" group="hoistend" seq="1" new="1" trigger="the hoisted persons are all inside and the hoist is stowed: the rear crew tells the pilot that he is clear to leave the hover">
+      <o>Alle sind drin, Haken und Ausleger sind eingefahren. Du kannst den Schwebeflug verlassen.</o>
+      <o>Alle sind innen, Tür zu, Haken und Ausleger verstaut. Schwebeflug frei.</o>
+      <o>Alle an Bord und gesichert, der Haken ist drin und der Ausleger eingefahren. Du kannst den Schwebeflug verlassen.</o>
+      <o>Sie sind alle drin. Haken drin, Ausleger drin, du kannst den Schwebeflug verlassen.</o>
+      <o>Alle sind in der Kabine, die Winde ist verstaut. Du kannst den Schwebeflug verlassen.</o>
+      <o>Alle drin und die Winde ist verstaut. Du kannst den Schwebeflug verlassen.</o>
+    </message>
+    <message key="PAX1.OUT" actor="4" radio="auto" group="hoistend" seq="2" new="1" trigger="a crew member stays on the ground (medic with the ambulance or heli rescuers dropped): doors closed, hook in, boom retracted, clear to leave the hover">
+      <o>Tür geschlossen, Haken drin und Ausleger eingefahren. Du kannst den Schwebeflug verlassen.</o>
+      <o>Türen sind zu, der Haken ist drin und der Ausleger eingefahren. Schwebeflug frei.</o>
+      <o>Haken drin, Ausleger drin, Tür zu. Du kannst den Schwebeflug verlassen.</o>
+      <o>Die Tür ist zu, die Winde ist verstaut. Du kannst den Schwebeflug verlassen.</o>
+      <o>Ausleger eingefahren, Tür zu, der Haken ist drin. Du kannst den Schwebeflug verlassen.</o>
+      <o>Alles ist verstaut und die Tür ist zu. Schwebeflug frei.</o>
     </message>
     <message key="PAX1.19" actor="4" radio="auto" lvar="L:{VCP}19" wav="AND.pax1.medic.on.ground.and.disconnected.wav" sleep="0">
       <o>Notfallsanitäter ist am Boden und ausgeklinkt.</o>

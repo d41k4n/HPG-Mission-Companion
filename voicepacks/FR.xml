@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- HPG Mission Companion voice pack FR. Edit the texts freely; raise version="" at every change (see docs/architecture/VOICEPACKS.md). -->
-<voicepack name="FR" language="FR" version="19" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="30">
+<voicepack name="FR" language="FR" version="20" vcp="APP" title="Voix françaises de l'équipage des missions HEMS" basever="31">
   <names>
     <name role="PLT">Pilote</name>
     <name role="CPL">Copilote</name>
@@ -1702,12 +1702,12 @@
       <o>Potence sortie, treuil en haut. Le patient et le Doc sont accrochés, suspendus dehors.</o>
     </message>
     <message key="PAX1.14" actor="4" radio="auto" lvar="L:{VCP}14" wav="AND.pax1.hoist.is.up.personnel.is.strapped.in.wav" sleep="0">
-      <o>Treuil en haut ; le personnel est attaché.</o>
-      <o>Treuil en haut. Le personnel est attaché.</o>
-      <o>Treuil en haut, personnel attaché.</o>
-      <o>Le treuil est en haut et le personnel est attaché.</o>
-      <o>Le treuil est en haut, et tout le monde est attaché.</o>
-      <o>Treuil en haut, tout le monde est à bord et attaché.</o>
+      <o>Treuil en haut ; on fait rentrer les derniers.</o>
+      <o>Treuil en haut. Dernier treuillage à la porte, on les fait rentrer.</o>
+      <o>Treuil en haut, on les fait entrer par la porte.</o>
+      <o>Le treuil est en haut et on fait rentrer le personnel.</o>
+      <o>Le treuil est en haut, ils sont à la porte, on les fait rentrer.</o>
+      <o>Treuil en haut, on les tire à l&apos;intérieur maintenant.</o>
     </message>
     <message key="PAX1.15" actor="4" radio="auto" lvar="L:{VCP}15" wav="AND.pax1.hoist.on.ground.personnel.getting.hooked.wav" sleep="0">
       <o>Treuil au sol. On accroche le personnel.</o>
@@ -1740,6 +1740,22 @@
       <o>Crochet rentré, potence rentrée. Vous pouvez quitter le stationnaire.</o>
       <o>Le crochet et la potence sont rentrés, vous pouvez quitter le stationnaire.</o>
       <o>Crochet et potence rentrés, allez-y, quittez le stationnaire.</o>
+    </message>
+    <message key="PAX1.INS" actor="4" radio="auto" group="hoistend" seq="1" new="1" trigger="the hoisted persons are all inside and the hoist is stowed: the rear crew tells the pilot that he is clear to leave the hover">
+      <o>Tout le monde est à l&apos;intérieur, le crochet et la flèche sont rentrés. Vous pouvez quitter le vol stationnaire.</o>
+      <o>Tout le monde est dedans, porte fermée, crochet et flèche rentrés. Vous pouvez quitter le stationnaire.</o>
+      <o>Tous à bord et sanglés, le crochet est rentré et la flèche rétractée. Vous pouvez quitter le stationnaire.</o>
+      <o>Ils sont tous à l&apos;intérieur. Crochet rentré, flèche rentrée, vous pouvez quitter le stationnaire.</o>
+      <o>Tout le monde est dans la cabine, le treuil est rangé. Vous pouvez quitter le stationnaire.</o>
+      <o>Tous à l&apos;intérieur et le treuil est rangé. Vous pouvez quitter le stationnaire.</o>
+    </message>
+    <message key="PAX1.OUT" actor="4" radio="auto" group="hoistend" seq="2" new="1" trigger="a crew member stays on the ground (medic with the ambulance or heli rescuers dropped): doors closed, hook in, boom retracted, clear to leave the hover">
+      <o>Porte fermée, crochet rentré et flèche rétractée. Vous pouvez quitter le stationnaire.</o>
+      <o>Les portes sont fermées, le crochet est rentré et la flèche rétractée. Vous pouvez quitter le stationnaire.</o>
+      <o>Crochet rentré, flèche rentrée, porte fermée. Vous pouvez quitter le stationnaire.</o>
+      <o>La porte est fermée, le treuil est rangé. Vous pouvez quitter le stationnaire.</o>
+      <o>Flèche rétractée, porte fermée, le crochet est rentré. Vous pouvez quitter le stationnaire.</o>
+      <o>Tout est rangé et la porte est fermée. Vous pouvez quitter le stationnaire.</o>
     </message>
     <message key="PAX1.19" actor="4" radio="auto" lvar="L:{VCP}19" wav="AND.pax1.medic.on.ground.and.disconnected.wav" sleep="0">
       <o>Le secouriste est au sol et décroché.</o>
